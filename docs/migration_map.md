@@ -22,10 +22,10 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 | `econometrics/kalman.py` | `ects/state_space_model.m`, `ssm_set.m`, `ssm_steady_state.m`, `Kalman_filtering.m`, `stats/kalman_filter.m` | ⬜ |
 | `econometrics/whittle.py` | `ects/whittle_estimation.m`, `whittle_constrained_estimation.m`, `whittle_local_level.m`, `whittle_local_linear_trend.m`, `maths/pdgm.m`, `periodogram.m` | ⬜ |
 | `econometrics/tests.py` | `ects/adf_test.m`, `wald_test.m` | ⬜ |
-| `optim/proximal.py` | `optim/proximal_L1.m`, `proximal_L2.m`, `proximal_Linfinity.m`, `proximal_bounds.m`, `proximal_equality.m`, `proximal_inequality.m`, `proximal_linear_constraints.m`, `proximal_max.m`, `proximal_turnover.m`, `soft_thresholding.m` | ⬜ |
-| `optim/projection.py` | `optim/projection_L1.m`, `projection_L2.m`, `projection_Linfinity.m`, `projection_box_L2.m` | ⬜ |
-| `optim/quadprog.py` | `optim/quadprog_bc_ccd.m`, `quadprog_lasso.m`, `quadprog_mixed_norm.m`, `quadprog_mixed2_norm.m`, `quadprog_ridge.m`, `quadprog_turnover.m`, `qp_hyperplane.m` | ⬜ |
-| `optim/bisection.py` | `optim/bisection.m`, `bisection2.m`, `explicit2implicit.m`, `implicit2explicit.m` | ⬜ |
+| `optim/proximal.py` | `optim/proximal_L1.m`, `proximal_L2.m`, `proximal_Linfinity.m`, `proximal_bounds.m`, `proximal_equality.m`, `proximal_inequality.m`, `proximal_linear_constraints.m`, `proximal_max.m`, `proximal_turnover.m`, `soft_thresholding.m` | ✅ |
+| `optim/projection.py` | `optim/projection_L1.m`, `projection_L2.m`, `projection_Linfinity.m`, `projection_box_L2.m` | ✅ |
+| `optim/quadprog.py` | `optim/quadprog_bc_ccd.m`, `quadprog_lasso.m`, `quadprog_mixed_norm.m`, `quadprog_mixed2_norm.m`, `quadprog_ridge.m`, `quadprog_turnover.m`, `qp_hyperplane.m` | ✅ |
+| `optim/bisection.py` | `optim/bisection.m`, `bisection2.m`, `explicit2implicit.m`, `implicit2explicit.m` | ✅ |
 | `portfolio/risk_budgeting.py` | `rpb/compute_rb_*.m`, `crb/compute_rb_sd_*.m` (~55 files), `mloapa/compute_ERC_*.m`, `lagrange_rb_sd.m` | ⬜ |
 | `portfolio/mean_variance.py` | `rpb/compute_mvo_portfolio*.m`, `compute_minvar_portfolio.m`, `compute_mixed2_portfolio*.m`, `mloapa/compute_MinVar_ADMM*.m`, `compute_MDP_ADMM.m`, `compute_mdp_*.m` | ⬜ |
 | `portfolio/tracking_error.py` | `rpb/compute_te_portfolio*.m`, `compute_minimum_te_portfolio.m`, `compute_RB_maximum_te.m`, `compute_BL_maximum_te.m` | ⬜ |

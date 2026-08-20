@@ -67,6 +67,14 @@ class EstimationConfig:
 
 
 @dataclass(frozen=True)
+class BisectionConfig:
+    """Replaces the BISECTION_Tol global."""
+
+    tol: float = 1e-8
+    max_iters: int = 1000
+
+
+@dataclass(frozen=True)
 class SVMConfig:
     """Replaces SVM_macheps global."""
 
