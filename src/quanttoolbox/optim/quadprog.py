@@ -51,6 +51,8 @@ an exact closed-form Lagrangian solution and needs no solver at all.
 
 from __future__ import annotations
 
+import warnings
+
 import cvxpy as cp
 import numpy as np
 
@@ -142,7 +144,17 @@ def solve_qp(
         constraints.append(cp.norm1(x - np.asarray(x0, dtype=float).flatten()) <= tau)
 
     problem = cp.Problem(cp.Minimize(objective), constraints)
-    problem.solve()
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        problem.solve()
+
+        if problem.status not in ("optimal", "optimal_inaccurate"):
+            # the default solver (OSQP) can struggle with poorly-conditioned
+            # or rank-deficient Q (e.g. block-structured QPs like
+            # epsilon-insensitive SVM regression's stacked [[Q,-Q],[-Q,Q]]);
+            # CLARABEL is a robust interior-point fallback for exactly this
+            # kind of case.
+            problem.solve(solver=cp.CLARABEL)
 
     if problem.status not in ("optimal", "optimal_inaccurate"):
         raise RuntimeError(f"solve_qp: solver did not converge (status={problem.status})")

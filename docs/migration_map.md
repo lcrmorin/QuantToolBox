@@ -33,10 +33,10 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 | `portfolio/erc_mdp.py` | `rpb/compute_erc_portfolio.m`, `mloapa/compute_ERC_*.m`, `compute_MDP_ADMM.m` | ✅ |
 | `mixtures/gaussian_mixture.py` | `mixture/mixture_*.m` | ⬜ |
 | `mixtures/jump_diffusion.py` | `mixture/jump_*.m`, `bivariate_lognormal_skewness.m`, `lognormal_moments.m`, `lognormal_skewness.m` | ⬜ |
-| `svm/svm.py` | `svm/svm_classification_dual.m`, `svm_classification_primal.m`, `svm_regression_dual.m`, `svm_regression_primal.m` (+ `theo/` duplicates) | ⬜ |
-| `spline/spline.py` | `spline/csspline.m`, `dspline.m`, `fspline.m`, `intspline.m`, `invspline.m`, `band.m`, `bandrv.m`, `bandsolpd.m`, `rotater.m` | ⬜ |
-| `maths/numerical_diff.py` | `maths/numerical_gradient.m`, `numerical_hessian.m`, `numerical_jacobian.m`, `stats/ml_robust_vcv.m`, `robust_vcv.m` | ⬜ |
-| `maths/simulation.py` | `maths/simulate_gbm.m`, `simulate_gbm2.m`, `simulate_multi_gbm.m`, `compute_ewma.m`, `momentum_ewma.m`, `volatility_target.m`, `algebraic_riccati_equation.m`, `lyapunov_equation.m` | ⬜ |
+| `svm/svm.py` | `svm/svm_classification_dual.m`, `svm_classification_primal.m`, `svm_regression_dual.m`, `svm_regression_primal.m` (+ `theo/` duplicates) | ✅ |
+| `spline/spline.py` | `spline/csspline.m`, `dspline.m`, `fspline.m`, `intspline.m`, `invspline.m`, `band.m`, `bandrv.m`, `bandsolpd.m`, `rotater.m` | ✅ |
+| `maths/numerical_diff.py` | `maths/numerical_gradient.m`, `numerical_hessian.m`, `numerical_jacobian.m`, `sign_operator.m` (`stats/robust_vcv.m`/`ml_robust_vcv.m` are superseded by `econometrics.estimation.ml_estimation(..., cov="hc")`, not separately ported) | ✅ |
+| `maths/simulation.py` | `maths/simulate_gbm.m`, `simulate_gbm2.m`, `simulate_multi_gbm.m`, `compute_ewma.m`, `momentum_ewma.m`, `volatility_target.m`, `algebraic_riccati_equation.m`, `lyapunov_equation.m` | ✅ |
 | `linalg/special_matrices.py` | `matrix/vec.m`, `vech.m`, `vecr.m`, `xpnd.m`, `commutation_matrix.m`, `duplication_matrix.m`, `elimination_matrix.m`, `reshapec.m`, `reshaper.m`, `diagrv.m`, `lowmat.m`, `upmat.m`, `design.m` | ✅ |
 | `viz/export.py` | `tools/save_graphic.m`, `save_graphic2.m` | ⬜ |
 
@@ -52,6 +52,37 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 | `init_global.m` | Superseded by `config.py` dataclasses (defaults live with each config class instead of one monolithic init script). |
 
 ## Notes for translators
+
+- `maths/simulation.py` is now fully ported, including `momentum_ewma`
+  (an EWMA-momentum trend-following strategy simulator with an
+  analytical gamma/theta return decomposition) -- verified via an
+  algebraic identity that must hold exactly (`v_tilde_t == g_t * g_small_t
+  / 100`) and against the underlying `compute_ewma` drift estimate for
+  the applied exposure.
+- `svm/svm.py`: two real bugs were caught and fixed during porting, both
+  verified against sklearn (SVC/SVR) and internal primal-dual consistency:
+  (1) the epsilon-insensitive dual QP's block matrix [[Q,-Q],[-Q,Q]] is
+  PSD but rank-deficient, which made the default solver fail to converge
+  -- fixed with a small diagonal regularization plus a CLARABEL solver
+  fallback in `optim.quadprog.solve_qp` (a general robustness improvement,
+  not SVM-specific); (2) a boolean-array negation bug (`-(bool_array)`
+  isn't valid in NumPy, needs `.astype(float)` first).
+- `spline/spline.py`: several indexing bugs were caught by testing against
+  `scipy.interpolate.CubicSpline` (which the p=1 pure-interpolation case
+  should reproduce exactly, and does, to machine precision after fixes):
+  an off-by-one in which coefficient array was used for c0 vs c1 in both
+  `evaluate_spline` and `invert_spline`; a MATLAB-1-indexed vs.
+  Python-0-indexed error in the knot-bracketing search (the direct `1 +
+  sum(...)` translation over-counts by one once arrays are 0-indexed);
+  and a wrong matrix dimension in the smoothing-spline system (traced by
+  hand through the original's `rotater`-based matrix construction to
+  determine the correct shape).
+- `maths/numerical_diff.py`: `numerical_gradient` initially perturbed all
+  parameters simultaneously instead of one at a time (only valid for the
+  original's specific elementwise-vector-function case, not for a general
+  scalar function) -- caught by testing against a known quadratic form's
+  analytical gradient and fixed to match `numerical_jacobian`'s
+  one-parameter-at-a-time pattern.
 
 - `econometrics/whittle.py`: two real bugs were caught and fixed while
   porting (both verified against known simulated parameters and against
