@@ -26,11 +26,11 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 | `optim/projection.py` | `optim/projection_L1.m`, `projection_L2.m`, `projection_Linfinity.m`, `projection_box_L2.m` | ✅ |
 | `optim/quadprog.py` | `optim/quadprog_bc_ccd.m`, `quadprog_lasso.m`, `quadprog_mixed_norm.m`, `quadprog_mixed2_norm.m`, `quadprog_ridge.m`, `quadprog_turnover.m`, `qp_hyperplane.m` | ✅ |
 | `optim/bisection.py` | `optim/bisection.m`, `bisection2.m`, `explicit2implicit.m`, `implicit2explicit.m` | ✅ |
-| `portfolio/risk_budgeting.py` | `rpb/compute_rb_*.m`, `crb/compute_rb_sd_*.m` (~55 files), `mloapa/compute_ERC_*.m`, `lagrange_rb_sd.m` | ⬜ |
-| `portfolio/mean_variance.py` | `rpb/compute_mvo_portfolio*.m`, `compute_minvar_portfolio.m`, `compute_mixed2_portfolio*.m`, `mloapa/compute_MinVar_ADMM*.m`, `compute_MDP_ADMM.m`, `compute_mdp_*.m` | ⬜ |
-| `portfolio/tracking_error.py` | `rpb/compute_te_portfolio*.m`, `compute_minimum_te_portfolio.m`, `compute_RB_maximum_te.m`, `compute_BL_maximum_te.m` | ⬜ |
-| `portfolio/black_litterman.py` | `rpb/compute_Black_Litterman_moments.m`, `implied_risk_premia.m` | ⬜ |
-| `portfolio/erc_mdp.py` | `rpb/compute_erc_portfolio.m`, `mloapa/compute_ERC_*.m`, `compute_MDP_ADMM.m` | ⬜ |
+| `portfolio/risk_budgeting.py` | `rpb/compute_rb_*.m`, `crb/compute_rb_sd_*.m` (~55 files), `mloapa/compute_ERC_*.m`, `lagrange_rb_sd.m` | ✅ |
+| `portfolio/mean_variance.py` | `rpb/compute_mvo_portfolio*.m`, `compute_minvar_portfolio.m`, `mloapa/compute_MinVar_ADMM*.m`, `compute_MDP_ADMM.m`, `compute_mdp_*.m` | ✅ |
+| `portfolio/tracking_error.py` | `rpb/compute_te_portfolio*.m`, `compute_minimum_te_portfolio.m`, `compute_te_portfolio_mixed_norm.m` | ✅ |
+| `portfolio/black_litterman.py` | `rpb/compute_Black_Litterman_moments.m`, `implied_risk_premia.m` | ✅ |
+| `portfolio/erc_mdp.py` | `rpb/compute_erc_portfolio.m`, `mloapa/compute_ERC_*.m`, `compute_MDP_ADMM.m` | ✅ |
 | `mixtures/gaussian_mixture.py` | `mixture/mixture_*.m` | ⬜ |
 | `mixtures/jump_diffusion.py` | `mixture/jump_*.m`, `bivariate_lognormal_skewness.m`, `lognormal_moments.m`, `lognormal_skewness.m` | ⬜ |
 | `svm/svm.py` | `svm/svm_classification_dual.m`, `svm_classification_primal.m`, `svm_regression_dual.m`, `svm_regression_primal.m` (+ `theo/` duplicates) | ⬜ |
@@ -52,6 +52,21 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 | `init_global.m` | Superseded by `config.py` dataclasses (defaults live with each config class instead of one monolithic init script). |
 
 ## Notes for translators
+
+- `portfolio/risk_budgeting.py` is now fully ported: the classic
+  budget-constrained case, box-constrained case, general
+  linear-equality/inequality-constrained case, VaR/ES risk measures, and
+  the mu-target/sigma-target frontier search modes (`risk_budgeting_target`)
+  are all implemented and tested (consolidating ~75+ original files, most
+  of them near-duplicate solver variants). No remaining gaps in this file.
+  One real numerical bug was caught and fixed along the way: Newton's
+  method (used inside the ADMM x-update) had no positivity floor on the
+  weight vector, and could diverge to large negative values at extreme
+  risk-aversion (c) settings -- undetected, this caused both the inner
+  ADMM loop and the outer lambda/target-bisection to burn their full
+  iteration budgets on a broken, non-converging state (observed as a
+  multi-minute hang on `solve_box_constrained(..., c=100)`). Fixed with a
+  small positivity floor (`x = max(x, 1e-8)`) each Newton iteration.
 
 - Every module still using MATLAB `global` state (ADMM/CCD tolerances, MVO
   problem context, Proximal_Algorithm, GMM/ML/Whittle settings) should take
