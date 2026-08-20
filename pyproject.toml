@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "quanttoolbox"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Python port of the MATLAB QuantToolbox: econometrics, portfolio optimization, and risk analytics."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,13 +14,14 @@ authors = [
 ]
 keywords = ["quant", "portfolio-optimization", "econometrics", "risk-parity", "finance"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Financial and Insurance Industry",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Office/Business :: Financial :: Investment",
+    "Typing :: Typed",
 ]
 
 dependencies = [
@@ -44,10 +45,19 @@ dev = [
 ]
 
 [project.urls]
-Repository = "https://github.com/lcrmorin/hfs-archive"
+Repository = "https://github.com/lcrmorin/QuantToolBox"
+
+[tool.hatch.version]
+source = "vcs"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/quanttoolbox"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/quanttoolbox/py.typed" = "quanttoolbox/py.typed"
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "README.md", "pyproject.toml"]
 
 # ---------------------------------------------------------------------------
 # Tooling configuration
