@@ -60,7 +60,7 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "NPY"]
-ignore = ["N803", "N806"]  # allow MATLAB-style variable names during transition (X, Y, RB, etc.)
+ignore = ["N803", "N806", "E501"]
 
 [tool.black]
 line-length = 100
