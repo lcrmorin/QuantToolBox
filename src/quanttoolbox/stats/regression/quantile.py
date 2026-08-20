@@ -68,7 +68,9 @@ def quantile_regression(
     return beta, u, v
 
 
-def qr_copula_normal(u1: np.ndarray, rho: float, alpha: float) -> np.ndarray:
+def qr_copula_normal(
+    u1: float | np.ndarray, rho: float, alpha: float | np.ndarray
+) -> float | np.ndarray:
     """Conditional quantile u2 = Q(alpha | u1) implied by a bivariate Gaussian
     copula with correlation rho.
 
@@ -77,7 +79,9 @@ def qr_copula_normal(u1: np.ndarray, rho: float, alpha: float) -> np.ndarray:
     return normal_cdf(rho * normal_ppf(u1) + np.sqrt(1 - rho**2) * normal_ppf(alpha))
 
 
-def qr_copula_student(u1: np.ndarray, rho: float, nu: float, alpha: float) -> np.ndarray:
+def qr_copula_student(
+    u1: float | np.ndarray, rho: float, nu: float, alpha: float | np.ndarray
+) -> float | np.ndarray:
     """Conditional quantile u2 = Q(alpha | u1) implied by a bivariate Student-t
     copula with correlation rho and nu degrees of freedom.
 

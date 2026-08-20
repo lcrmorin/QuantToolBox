@@ -37,7 +37,7 @@ def excel_to_datetime(
     Original: dates/Excel2Matlab_Dates.m
     """
     if isinstance(excel_dates, str) or (
-        isinstance(excel_dates, (list | np.ndarray))
+        isinstance(excel_dates, list | np.ndarray)
         and len(excel_dates) > 0
         and isinstance(np.asarray(excel_dates).flat[0], str)
     ):
@@ -56,7 +56,7 @@ def datetime_to_excel(dates: pd.Timestamp | pd.DatetimeIndex | np.ndarray) -> np
 
     Original: dates/Matlab2Excel_Dates.m
     """
-    if isinstance(dates, (pd.Timestamp | pd.DatetimeIndex)):
+    if isinstance(dates, pd.Timestamp | pd.DatetimeIndex):
         idx = pd.DatetimeIndex([dates]) if isinstance(dates, pd.Timestamp) else dates
         delta = idx - _EXCEL_EPOCH
         return delta.days.to_numpy().astype(float)
@@ -80,7 +80,7 @@ def is_yyyymmdd(x: np.ndarray | int | float) -> tuple[bool, np.ndarray, np.ndarr
     """
     x = np.asarray(x, dtype=float)
 
-    if np.any(np.fix(x) != x):
+    if np.any(np.trunc(x) != x):
         return False, np.array([]), np.array([]), np.array([])
 
     dd = x - 100 * np.floor(x / 100)

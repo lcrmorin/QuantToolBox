@@ -229,7 +229,9 @@ def generate_backtest_funded_unfunded(
     n_rb = rb_idx.shape[0]
     rb_effective = np.zeros(n_dates, dtype=bool)
 
-    def _prep(weights, prices):
+    def _prep(
+        weights: np.ndarray | float, prices: np.ndarray | float
+    ) -> tuple[np.ndarray, np.ndarray, int]:
         if np.isscalar(weights) and weights == 0:
             return np.ones((n_dates, 1)), np.ones((n_dates, 1)), 1
         w = np.asarray(weights, dtype=float)
@@ -417,10 +419,10 @@ def backtest_reporting(
 
     max_dd, *_ = maximum_drawdown(backtest_m, relative=True)
     if use_benchmark:
-        max_dd_b, *_ = maximum_drawdown(b_index_m[:, None], relative=True)
-        max_dd_b = max_dd_b[0]
+        max_dd_b_arr, *_ = maximum_drawdown(b_index_m[:, None], relative=True)
+        max_dd_b: float = float(max_dd_b_arr[0])
     else:
-        max_dd_b = np.nan
+        max_dd_b = float("nan")
 
     return BacktestReport(
         frequency_label=freq_label,

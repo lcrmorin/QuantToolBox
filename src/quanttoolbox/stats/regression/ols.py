@@ -123,6 +123,12 @@ def conditional_normal_regression(
     if mu is not None and sigma is not None:
         return _conditional_normal_leave_one_out(mu, sigma)
 
+    if mu_y is None or mu_x is None or sigma_yy is None or sigma_yx is None or sigma_xx is None:
+        raise ValueError(
+            "conditional_normal_regression: provide either (mu, sigma) or "
+            "all of (mu_y, mu_x, sigma_yy, sigma_yx, sigma_xx)"
+        )
+
     sigma_xy = sigma_yx.T
     sigma_xx_inv = np.linalg.inv(sigma_xx)
     beta0 = mu_y - sigma_yx @ sigma_xx_inv @ mu_x

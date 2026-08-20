@@ -40,12 +40,12 @@ from scipy.stats import chi2, f, multivariate_normal, ncx2, norm, t
 # ---------------------------------------------------------------------------
 
 
-def normal_cdf(x: np.ndarray, mu: float = 0.0, sigma: float = 1.0) -> np.ndarray:
+def normal_cdf(x: float | np.ndarray, mu: float = 0.0, sigma: float = 1.0) -> float | np.ndarray:
     """Original: stats/cdfn.m"""
     return norm.cdf(x, loc=mu, scale=sigma)
 
 
-def normal_ppf(p: np.ndarray) -> np.ndarray:
+def normal_ppf(p: float | np.ndarray) -> float | np.ndarray:
     """Quantile function of N(0,1). Original: stats/cdfni.m"""
     return norm.ppf(p)
 
@@ -55,12 +55,12 @@ def normal_pdf(x: np.ndarray, mu: float = 0.0, sigma: float = 1.0) -> np.ndarray
     return norm.pdf(x, loc=mu, scale=sigma)
 
 
-def student_t_cdf(x: np.ndarray, nu: float) -> np.ndarray:
+def student_t_cdf(x: float | np.ndarray, nu: float) -> float | np.ndarray:
     """Original: stats/cdft.m"""
     return t.cdf(x, df=nu)
 
 
-def student_t_ppf(p: np.ndarray, nu: float) -> np.ndarray:
+def student_t_ppf(p: float | np.ndarray, nu: float) -> float | np.ndarray:
     """Original: stats/cdfti.m"""
     return t.ppf(p, df=nu)
 

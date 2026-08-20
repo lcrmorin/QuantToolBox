@@ -6,9 +6,9 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 |---|---|---|
 | `dates/convert.py` | `dates/Excel2Matlab_Dates.m`, `Matlab2Excel_Dates.m`, `is_yyyymmdd.m`, `numdate.m`, `datenum2.m`, `excel_column.m` | ✅ |
 | `dates/rebalancing.py` | `dates/generic_rebalancing.m` + `annual/monthly/quarterly/semi_annual/weekly_rebalancing.m`, `generate_trading_dates.m` | ✅ |
-| `backtest/returns.py` | `backtest/price2return.m`, `price2return2.m`, `return2price.m`, `price2unfunded.m`, `unfunded2price.m`, `capitalized_libor*.m` | ⬜ |
-| `backtest/stats.py` | `backtest/maximum_drawdown.m`, `static_turnover.m`, `annualized_turnover.m`, `average_return.m`, `monthly_statistics.m`, `yearly_statistics.m`, `index_repeated_data.m` | ⬜ |
-| `backtest/reporting.py` | `backtest/generate_backtest.m`, `generate_backtest2.m`, `backtest_reporting.m` | ⬜ |
+| `backtest/returns.py` | `backtest/price2return.m`, `price2return2.m`, `return2price.m`, `price2unfunded.m`, `unfunded2price.m`, `capitalized_libor*.m` | ✅ |
+| `backtest/stats.py` | `backtest/maximum_drawdown.m`, `static_turnover.m`, `annualized_turnover.m`, `average_return.m`, `monthly_statistics.m`, `yearly_statistics.m`, `index_repeated_data.m` | ✅ |
+| `backtest/reporting.py` | `backtest/generate_backtest.m`, `generate_backtest2.m`, `backtest_reporting.m` | ✅ |
 | `stats/distributions.py` | `stats/cdfn.m`, `cdfni.m`, `cdft.m`, `cdfti.m`, `cdftc.m`, `cdfchi2.m`, `cdfchi2c.m`, `cdff.m`, `cdffc.m`, `cdfmvn.m`, `pdfmvn.m`, `pdfn.m`, `rndmvn.m`, `gqf1_*.m`, `gqf2_*.m` | ✅ |
 | `stats/moments.py` | `stats/skewness_coefficient.m`, `kurtosis_coefficient.m`, `herfindahl_index.m`, `mean_absolute_difference.m`, `cov2cor.m`, `cor2cov.m`, `corrx.m`, `pearson_correlation.m`, `active_share*.m`, `asynchronous_cov.m`, `weekly_cov.m`, `rolling_correlation.m`, `rolling_volatility.m` | ✅ |
 | `stats/regression/ols.py` | `stats/regOLS.m`, `regCenter.m`, `regStandardize.m`, `regCND.m`, `regPCA.m` | ✅ |
