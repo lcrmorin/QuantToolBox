@@ -1,11 +1,12 @@
 """Tests for quanttoolbox.viz.export."""
 
-import matplotlib
+import pytest
 
+matplotlib = pytest.importorskip("matplotlib")
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # noqa: E402 (must come after matplotlib.use)
 
-from quanttoolbox.viz.export import save_graphic
+from quanttoolbox.viz.export import save_graphic  # noqa: E402
 
 
 def test_save_graphic_creates_expected_files(tmp_path):
