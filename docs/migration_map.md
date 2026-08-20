@@ -31,14 +31,14 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 | `portfolio/tracking_error.py` | `rpb/compute_te_portfolio*.m`, `compute_minimum_te_portfolio.m`, `compute_te_portfolio_mixed_norm.m` | ✅ |
 | `portfolio/black_litterman.py` | `rpb/compute_Black_Litterman_moments.m`, `implied_risk_premia.m` | ✅ |
 | `portfolio/erc_mdp.py` | `rpb/compute_erc_portfolio.m`, `mloapa/compute_ERC_*.m`, `compute_MDP_ADMM.m` | ✅ |
-| `mixtures/gaussian_mixture.py` | `mixture/mixture_*.m` | ⬜ |
-| `mixtures/jump_diffusion.py` | `mixture/jump_*.m`, `bivariate_lognormal_skewness.m`, `lognormal_moments.m`, `lognormal_skewness.m` | ⬜ |
+| `mixtures/gaussian_mixture.py` | `mixture/mixture_*.m`, `estimate_em_mixture.m`, `logl_em_mixture.m` | ✅ |
+| `mixtures/jump_diffusion.py` | `mixture/jump_*.m`, `bivariate_lognormal_skewness.m`, `lognormal_moments.m`, `lognormal_skewness.m` | ✅ |
 | `svm/svm.py` | `svm/svm_classification_dual.m`, `svm_classification_primal.m`, `svm_regression_dual.m`, `svm_regression_primal.m` (+ `theo/` duplicates) | ✅ |
 | `spline/spline.py` | `spline/csspline.m`, `dspline.m`, `fspline.m`, `intspline.m`, `invspline.m`, `band.m`, `bandrv.m`, `bandsolpd.m`, `rotater.m` | ✅ |
 | `maths/numerical_diff.py` | `maths/numerical_gradient.m`, `numerical_hessian.m`, `numerical_jacobian.m`, `sign_operator.m` (`stats/robust_vcv.m`/`ml_robust_vcv.m` are superseded by `econometrics.estimation.ml_estimation(..., cov="hc")`, not separately ported) | ✅ |
 | `maths/simulation.py` | `maths/simulate_gbm.m`, `simulate_gbm2.m`, `simulate_multi_gbm.m`, `compute_ewma.m`, `momentum_ewma.m`, `volatility_target.m`, `algebraic_riccati_equation.m`, `lyapunov_equation.m` | ✅ |
 | `linalg/special_matrices.py` | `matrix/vec.m`, `vech.m`, `vecr.m`, `xpnd.m`, `commutation_matrix.m`, `duplication_matrix.m`, `elimination_matrix.m`, `reshapec.m`, `reshaper.m`, `diagrv.m`, `lowmat.m`, `upmat.m`, `design.m` | ✅ |
-| `viz/export.py` | `tools/save_graphic.m`, `save_graphic2.m` | ⬜ |
+| `viz/export.py` | `tools/save_graphic.m`, `save_graphic2.m` | ✅ |
 
 ## Not ported (intentionally dropped)
 
