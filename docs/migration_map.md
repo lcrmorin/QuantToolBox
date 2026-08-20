@@ -4,17 +4,18 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 
 | Python module | Original MATLAB files | Status |
 |---|---|---|
-| `dates/convert.py` | `dates/Excel2Matlab_Dates.m`, `Matlab2Excel_Dates.m`, `is_yyyymmdd.m`, `numdate.m`, `datenum2.m`, `excel_column.m` | ⬜ |
-| `dates/rebalancing.py` | `dates/generic_rebalancing.m` + `annual/monthly/quarterly/semi_annual/weekly_rebalancing.m`, `generate_trading_dates.m` | ⬜ |
+| `dates/convert.py` | `dates/Excel2Matlab_Dates.m`, `Matlab2Excel_Dates.m`, `is_yyyymmdd.m`, `numdate.m`, `datenum2.m`, `excel_column.m` | ✅ |
+| `dates/rebalancing.py` | `dates/generic_rebalancing.m` + `annual/monthly/quarterly/semi_annual/weekly_rebalancing.m`, `generate_trading_dates.m` | ✅ |
 | `backtest/returns.py` | `backtest/price2return.m`, `price2return2.m`, `return2price.m`, `price2unfunded.m`, `unfunded2price.m`, `capitalized_libor*.m` | ⬜ |
 | `backtest/stats.py` | `backtest/maximum_drawdown.m`, `static_turnover.m`, `annualized_turnover.m`, `average_return.m`, `monthly_statistics.m`, `yearly_statistics.m`, `index_repeated_data.m` | ⬜ |
 | `backtest/reporting.py` | `backtest/generate_backtest.m`, `generate_backtest2.m`, `backtest_reporting.m` | ⬜ |
-| `stats/distributions.py` | `stats/cdfn.m`, `cdfni.m`, `cdft.m`, `cdfti.m`, `cdftc.m`, `cdfchi2.m`, `cdfchi2c.m`, `cdff.m`, `cdffc.m`, `cdfmvn.m`, `pdfmvn.m`, `pdfn.m`, `rndmvn.m`, `gqf1_*.m`, `gqf2_*.m` | ⬜ |
-| `stats/moments.py` | `stats/skewness_coefficient.m`, `kurtosis_coefficient.m`, `herfindahl_index.m`, `mean_absolute_difference.m`, `cov2cor.m`, `cor2cov.m`, `corrx.m`, `active_share*.m`, `asynchronous_cov.m`, `weekly_cov.m`, `rolling_correlation.m`, `rolling_volatility.m` | ⬜ |
-| `stats/regression/ols.py` | `stats/regOLS.m`, `regCenter.m`, `regStandardize.m`, `regCND.m`, `regPCA.m` | ⬜ |
-| `stats/regression/ridge.py` | `stats/regRidge.m`, `regRidge2.m` (+ `theo/` duplicates) | ⬜ |
-| `stats/regression/lasso.py` | `stats/regLasso.m`, `regLasso2.m`, `regLassoCCD.m`, `regLassoADMM.m`, `regLassoADMM2.m`, `regElasticNet.m`, `selectLasso.m` (+ `theo/` duplicates) | ⬜ |
-| `stats/regression/kernel.py` | `stats/regKernelDensity.m`, `regKernelMean.m`, `regKernelQuantile.m`, `regKernelPayoff.m` | ⬜ |
+| `stats/distributions.py` | `stats/cdfn.m`, `cdfni.m`, `cdft.m`, `cdfti.m`, `cdftc.m`, `cdfchi2.m`, `cdfchi2c.m`, `cdff.m`, `cdffc.m`, `cdfmvn.m`, `pdfmvn.m`, `pdfn.m`, `rndmvn.m`, `gqf1_*.m`, `gqf2_*.m` | ✅ |
+| `stats/moments.py` | `stats/skewness_coefficient.m`, `kurtosis_coefficient.m`, `herfindahl_index.m`, `mean_absolute_difference.m`, `cov2cor.m`, `cor2cov.m`, `corrx.m`, `pearson_correlation.m`, `active_share*.m`, `asynchronous_cov.m`, `weekly_cov.m`, `rolling_correlation.m`, `rolling_volatility.m` | ✅ |
+| `stats/regression/ols.py` | `stats/regOLS.m`, `regCenter.m`, `regStandardize.m`, `regCND.m`, `regPCA.m` | ✅ |
+| `stats/regression/ridge.py` | `stats/regRidge.m`, `regRidge2.m` (+ `theo/` duplicates) | ✅ |
+| `stats/regression/lasso.py` | `stats/regLassoCCD.m`, `regLassoADMM.m`, `regLasso.m`, `selectLasso.m`, `regElasticNet.m` (+ `theo/` duplicates) | ✅ |
+| `stats/regression/kernel.py` | `stats/regKernelDensity.m`, `regKernelMean.m`, `regKernelQuantile.m`, `regKernelPayoff.m` | ✅ |
+| `stats/regression/quantile.py` (new, not in original module map) | `stats/quantile_regression.m`, `qrCopulaNormal.m`, `qrCopulaStudent.m` | ✅ |
 | `stats/regression/robust.py` | `ects/robust_regression.m`, `robust_huber_regression.m`, `robust_lad_regression.m`, `robust_quantile_regression.m`, `robust_inverse_quantile_regression.m` | ⬜ |
 | `econometrics/estimation.py` | `ects/ols_estimation.m`, `ols_constrained_estimation.m`, `gmm_estimation.m`, `gmm_constrained_estimation.m`, `ml_estimation.m`, `ml_constrained_estimation.m` | ⬜ |
 | `econometrics/var.py` | `ects/varx_cls.m`, `varx_cml.m`, `varx_ls.m`, `varx_ml.m`, `varx_order.m`, `varx_constrained_estimation_onestep.m`, `var_constrained_estimation_onestep.m` | ⬜ |
