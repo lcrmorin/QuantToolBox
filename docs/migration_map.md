@@ -36,7 +36,7 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 | `spline/spline.py` | `spline/csspline.m`, `dspline.m`, `fspline.m`, `intspline.m`, `invspline.m`, `band.m`, `bandrv.m`, `bandsolpd.m`, `rotater.m` | ⬜ |
 | `maths/numerical_diff.py` | `maths/numerical_gradient.m`, `numerical_hessian.m`, `numerical_jacobian.m`, `stats/ml_robust_vcv.m`, `robust_vcv.m` | ⬜ |
 | `maths/simulation.py` | `maths/simulate_gbm.m`, `simulate_gbm2.m`, `simulate_multi_gbm.m`, `compute_ewma.m`, `momentum_ewma.m`, `volatility_target.m`, `algebraic_riccati_equation.m`, `lyapunov_equation.m` | ⬜ |
-| `linalg/special_matrices.py` | `matrix/vec.m`, `vech.m`, `vecr.m`, `xpnd.m`, `commutation_matrix.m`, `duplication_matrix.m`, `elimination_matrix.m`, `reshapec.m`, `reshaper.m`, `diagrv.m`, `lowmat.m`, `upmat.m`, `design.m` | ⬜ |
+| `linalg/special_matrices.py` | `matrix/vec.m`, `vech.m`, `vecr.m`, `xpnd.m`, `commutation_matrix.m`, `duplication_matrix.m`, `elimination_matrix.m`, `reshapec.m`, `reshaper.m`, `diagrv.m`, `lowmat.m`, `upmat.m`, `design.m` | ✅ |
 | `viz/export.py` | `tools/save_graphic.m`, `save_graphic2.m` | ⬜ |
 
 ## Not ported (intentionally dropped)
