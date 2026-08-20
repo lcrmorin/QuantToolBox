@@ -17,11 +17,11 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 | `stats/regression/kernel.py` | `stats/regKernelDensity.m`, `regKernelMean.m`, `regKernelQuantile.m`, `regKernelPayoff.m` | ✅ |
 | `stats/regression/quantile.py` (new, not in original module map) | `stats/quantile_regression.m`, `qrCopulaNormal.m`, `qrCopulaStudent.m` | ✅ |
 | `stats/regression/robust.py` | `ects/robust_regression.m`, `robust_huber_regression.m`, `robust_lad_regression.m`, `robust_quantile_regression.m`, `robust_inverse_quantile_regression.m` | ✅ |
-| `econometrics/estimation.py` | `ects/ols_estimation.m`, `ols_constrained_estimation.m`, `gmm_estimation.m`, `gmm_constrained_estimation.m`, `ml_estimation.m`, `ml_constrained_estimation.m` | ⬜ |
-| `econometrics/var.py` | `ects/varx_cls.m`, `varx_cml.m`, `varx_ls.m`, `varx_ml.m`, `varx_order.m`, `varx_constrained_estimation_onestep.m`, `var_constrained_estimation_onestep.m` | ⬜ |
-| `econometrics/kalman.py` | `ects/state_space_model.m`, `ssm_set.m`, `ssm_steady_state.m`, `Kalman_filtering.m`, `stats/kalman_filter.m` | ⬜ |
-| `econometrics/whittle.py` | `ects/whittle_estimation.m`, `whittle_constrained_estimation.m`, `whittle_local_level.m`, `whittle_local_linear_trend.m`, `maths/pdgm.m`, `periodogram.m` | ⬜ |
-| `econometrics/tests.py` | `ects/adf_test.m`, `wald_test.m` | ⬜ |
+| `econometrics/estimation.py` | `ects/ols_estimation.m`, `ols_constrained_estimation.m`, `gmm_estimation.m`, `gmm_constrained_estimation.m`, `ml_estimation.m`, `ml_constrained_estimation.m`, `wald_test.m` | ✅ |
+| `econometrics/var.py` | `ects/varx_cls.m`, `varx_cml.m`, `varx_ls.m`, `varx_ml.m`, `varx_order.m`, `varx_constrained_estimation_onestep.m`, `var_constrained_estimation_onestep.m` | ✅ |
+| `econometrics/kalman.py` | `ects/state_space_model.m`, `ssm_set.m`, `ssm_steady_state.m`, `Kalman_filtering.m` | ✅ |
+| `econometrics/whittle.py` | `ects/whittle_estimation.m`, `whittle_constrained_estimation.m`, `whittle_local_level.m`, `whittle_local_linear_trend.m`, `maths/pdgm.m`, `maths/periodogram.m` | ✅ |
+| `econometrics/tests.py` | `ects/adf_test.m` (via `statsmodels.tsa.stattools.adfuller` -- see module docstring) | ✅ |
 | `optim/proximal.py` | `optim/proximal_L1.m`, `proximal_L2.m`, `proximal_Linfinity.m`, `proximal_bounds.m`, `proximal_equality.m`, `proximal_inequality.m`, `proximal_linear_constraints.m`, `proximal_max.m`, `proximal_turnover.m`, `soft_thresholding.m` | ✅ |
 | `optim/projection.py` | `optim/projection_L1.m`, `projection_L2.m`, `projection_Linfinity.m`, `projection_box_L2.m` | ✅ |
 | `optim/quadprog.py` | `optim/quadprog_bc_ccd.m`, `quadprog_lasso.m`, `quadprog_mixed_norm.m`, `quadprog_mixed2_norm.m`, `quadprog_ridge.m`, `quadprog_turnover.m`, `qp_hyperplane.m` | ✅ |
@@ -52,6 +52,18 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 | `init_global.m` | Superseded by `config.py` dataclasses (defaults live with each config class instead of one monolithic init script). |
 
 ## Notes for translators
+
+- `econometrics/whittle.py`: two real bugs were caught and fixed while
+  porting (both verified against known simulated parameters and against
+  analytical-vs-numerical gradient agreement, not just code review): (1)
+  the initial port called the periodogram with the wrong scaling flag
+  (the original always uses `periodogram(y, 1)`, i.e. divided by 2*pi);
+  (2) more notably, the *original MATLAB* `local_level_sdf_jacobian.m`
+  (and its local-linear-trend counterpart) differentiates the *unscaled*
+  spectral density while the SDF itself is scaled by 1/(2*pi) --
+  confirmed by comparing analytical vs. numerical gradients (off by
+  exactly a factor of 2*pi). The Python port adds the missing 1/(2*pi)
+  factor, documented inline in `_local_level_sdf_jacobian`.
 
 - `portfolio/risk_budgeting.py` is now fully ported: the classic
   budget-constrained case, box-constrained case, general
