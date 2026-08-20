@@ -16,7 +16,7 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 | `stats/regression/lasso.py` | `stats/regLassoCCD.m`, `regLassoADMM.m`, `regLasso.m`, `selectLasso.m`, `regElasticNet.m` (+ `theo/` duplicates) | ✅ |
 | `stats/regression/kernel.py` | `stats/regKernelDensity.m`, `regKernelMean.m`, `regKernelQuantile.m`, `regKernelPayoff.m` | ✅ |
 | `stats/regression/quantile.py` (new, not in original module map) | `stats/quantile_regression.m`, `qrCopulaNormal.m`, `qrCopulaStudent.m` | ✅ |
-| `stats/regression/robust.py` | `ects/robust_regression.m`, `robust_huber_regression.m`, `robust_lad_regression.m`, `robust_quantile_regression.m`, `robust_inverse_quantile_regression.m` | ⬜ |
+| `stats/regression/robust.py` | `ects/robust_regression.m`, `robust_huber_regression.m`, `robust_lad_regression.m`, `robust_quantile_regression.m`, `robust_inverse_quantile_regression.m` | ✅ |
 | `econometrics/estimation.py` | `ects/ols_estimation.m`, `ols_constrained_estimation.m`, `gmm_estimation.m`, `gmm_constrained_estimation.m`, `ml_estimation.m`, `ml_constrained_estimation.m` | ⬜ |
 | `econometrics/var.py` | `ects/varx_cls.m`, `varx_cml.m`, `varx_ls.m`, `varx_ml.m`, `varx_order.m`, `varx_constrained_estimation_onestep.m`, `var_constrained_estimation_onestep.m` | ⬜ |
 | `econometrics/kalman.py` | `ects/state_space_model.m`, `ssm_set.m`, `ssm_steady_state.m`, `Kalman_filtering.m`, `stats/kalman_filter.m` | ⬜ |
