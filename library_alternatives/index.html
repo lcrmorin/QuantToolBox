@@ -734,6 +734,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../api/credit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    credit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../api/dates/" class="md-nav__link">
         
   
@@ -1379,6 +1407,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#credit-models-credit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credit models (credit/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#summary-where-the-strongest-switch-cases-are" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1568,6 +1607,17 @@
     <span class="md-ellipsis">
       
         Bond &amp; sustainable finance (bond/, sustainable_finance/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credit-models-credit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credit models (credit/)
       
     </span>
   </a>
@@ -2166,6 +2216,49 @@ port has a capability the alternative lacks.</p>
 <td><strong>KEEP</strong></td>
 <td>The Israel-Rosenthal-Wei (2001) generator-repair technique (used here for rating-migration-generator estimation) doesn't appear as a public utility in any credit-risk or Markov-chain library surveyed.</td>
 <td>Small, self-contained, dependency-free (pure <code>numpy</code>) — a plausible narrow PR to a credit-risk-modeling library, if one with an active generator-estimation module exists; none identified during this survey.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="credit-models-credit">Credit models (<code>credit/</code>)<a class="headerlink" href="#credit-models-credit" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+<th>Upstream potential</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>credit/structural.py</code> — <code>black_scholes</code></td>
+<td><a href="https://github.com/vollib/py_vollib"><code>py_vollib</code></a>, <code>mibian</code></td>
+<td><strong>HYBRID</strong></td>
+<td>Both are more complete for implied-volatility solving and Greeks. Neither exposes a single generalized cost-of-carry <code>b</code> parameter the way this function does (they split by asset class -- equity, futures, FX -- into separate functions instead); keep this one when a single function covering all of those via <code>b</code> is convenient, e.g. inside <code>merton_jump_model</code>'s per-jump-count loop.</td>
+<td><code>py_vollib</code>/<code>mibian</code> already cover the general case with a more complete feature set (Greeks, implied vol) — no real gap to contribute into.</td>
+</tr>
+<tr>
+<td><code>credit/structural.py</code> — <code>pd_merton_model</code>, <code>b0_extended_merton_model</code>/<code>e0_extended_merton_model</code>/<code>pd_extended_merton_model</code>, <code>pd_black_cox_model</code>, <code>merton_jump_model</code>, <code>merton_jump_climate_model</code>, <code>reinders_credit_model</code></td>
+<td><em>(none found)</em></td>
+<td><strong>KEEP</strong></td>
+<td>Each is a specific published structural credit model (Merton 1974/1976, Black-Cox 1976, Blasberg 2024's extended Merton, Reinders et al.'s transition-loss model) — no general credit-risk or derivatives-pricing Python library surveyed (<code>QuantLib-Python</code> included) implements this particular family as public utilities; <code>QuantLib</code>'s credit machinery targets CDS/bond pricing given a hazard curve, not firm-value calibration from equity data.</td>
+<td>Niche enough, and tied to specific named academic models, that a standalone package (or PR into a structural-credit-model-focused project, none identified) is more plausible than folding into a general derivatives library.</td>
+</tr>
+<tr>
+<td><code>credit/reduced_form.py</code> — <code>survival_markov_generator</code>, <code>density_markov_generator</code>, <code>hazard_markov_generator</code></td>
+<td><em>(none found)</em></td>
+<td><strong>KEEP</strong></td>
+<td>Survival/density/hazard functions implied by a continuous-time Markov generator matrix (e.g. a credit-rating transition-intensity matrix) are a <code>scipy.linalg.expm</code>-backed niche calculation specific to Markov-chain-based credit/reliability modeling; no general survival-analysis library exposes this generator-to-hazard mapping directly.</td>
+<td>Small, <code>scipy</code>-backed, dependency-free beyond that — a plausible narrow PR to a credit-risk-modeling library with an active Markov-generator module, none identified during this survey.</td>
+</tr>
+<tr>
+<td><code>credit/reduced_form.py</code> — <code>survival_exponential</code>, <code>cdf_exponential</code>, <code>pdf_exponential</code>, <code>inv_exponential</code>, <code>rnd_exponential</code></td>
+<td><a href="https://github.com/CamDavidsonPilon/lifelines"><code>lifelines</code></a>, <code>scikit-survival</code></td>
+<td><strong>HYBRID</strong></td>
+<td>Both are full <em>survival-analysis</em> libraries: they <em>estimate</em> hazard/survival functions from observed (possibly censored) event-time data (Kaplan-Meier, Cox PH, etc.). This module instead <em>simulates from</em> and <em>inverts</em> an already-specified (piecewise-constant) hazard curve — a different, complementary use case neither library targets directly. Keep for simulation/quantile-inversion given an assumed hazard; reach for <code>lifelines</code>/<code>scikit-survival</code> when the hazard itself needs to be estimated from data.</td>
+<td>Different use case from what these libraries solve — not a natural upstream target.</td>
 </tr>
 </tbody>
 </table>

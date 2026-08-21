@@ -736,6 +736,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../api/credit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    credit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../api/dates/" class="md-nav__link">
         
   
@@ -1896,14 +1924,15 @@ maintained as a separate package. Its source (167 files) lives at
 <a href="../reference/hsf_toolbox_matlab"><code>reference/hsf_toolbox_matlab/</code></a> as
 reference material for the port; that folder is excluded from the
 installable package (not listed in <code>pyproject.toml</code>'s package scoping).</p>
-<p>Port status: <code>bond/pricing.py</code>, <code>sustainable_finance/risk.py</code>,
+<p>Port status: <code>bond/pricing.py</code>, <code>credit/structural.py</code>,
+<code>credit/reduced_form.py</code>, <code>sustainable_finance/risk.py</code>,
 <code>sustainable_finance/carbon.py</code>, <code>sustainable_finance/esg.py</code>,
 <code>sustainable_finance/climate.py</code>, <code>sustainable_finance/ecology.py</code>,
 <code>sustainable_finance/entropy.py</code>, <code>stats/multivariate.py</code>,
 <code>stats/distributions.py</code> (extension), and <code>stats/dose_response.py</code> are
 done (ported, tested, lint/type-clean) -- all of <code>sustainable_finance/</code>
-is now fully ported; the rest of the tables below are still the planned
-module breakdown. See
+and <code>credit/</code> are now fully ported; the rest of the tables below are
+still the planned module breakdown. See
 <a href="https://github.com/lcrmorin/HSF-Notebooks">HSF-Notebooks</a>'s
 <code>CHAPTERS.md</code> for the per-chapter notebooks that will use these
 modules once ported.</p>
@@ -1992,13 +2021,13 @@ modules once ported.</p>
 </tr>
 <tr>
 <td><code>credit/structural.py</code> (new module)</td>
-<td><code>credit/Black_Scholes_Model.m</code>, <code>PD_Merton_Model.m</code>, <code>B0_Extended_Merton_Model.m</code>, <code>E0_Extended_Merton_Model.m</code>, <code>PD_Extended_Merton_Model.m</code>, <code>PD_Black_Cox_Model.m</code>, <code>Merton_Jump_Model.m</code>, <code>Merton_Jump_Climate_Model.m</code>, <code>Reinders_Credit_Model.m</code></td>
-<td>⬜</td>
+<td><code>credit/Black_Scholes_Model.m</code>, <code>PD_Merton_Model.m</code>, <code>B0_Extended_Merton_Model.m</code>, <code>E0_Extended_Merton_Model.m</code>, <code>PD_Extended_Merton_Model.m</code>, <code>PD_Black_Cox_Model.m</code>, <code>Merton_Jump_Model.m</code>, <code>Merton_Jump_Climate_Model.m</code>, <code>Reinders_Credit_Model.m</code> -- <code>Reinders_Credit_Model.m</code>'s unused <code>mu_A</code> argument dropped (no cross-function-consistency rationale, unlike the extended-Merton trio's documented one); <code>pd_merton_model</code>'s asset-value/volatility calibration uses <code>scipy.optimize.minimize(method="BFGS")</code> in place of <code>fminunc</code></td>
+<td>✅</td>
 </tr>
 <tr>
 <td><code>credit/reduced_form.py</code></td>
-<td><code>credit/Density_Markov_Generator.m</code>, <code>Hazard_Markov_Generator.m</code>, <code>Survival_Markov_Generator.m</code>, <code>cdfExponential.m</code>, <code>pdfExponential.m</code>, <code>invExponential.m</code>, <code>rndExponential.m</code>, <code>survivalExponential.m</code></td>
-<td>⬜</td>
+<td><code>credit/Density_Markov_Generator.m</code>, <code>Hazard_Markov_Generator.m</code>, <code>Survival_Markov_Generator.m</code>, <code>cdfExponential.m</code>, <code>pdfExponential.m</code>, <code>invExponential.m</code>, <code>rndExponential.m</code>, <code>survivalExponential.m</code> -- <code>Hazard_Markov_Generator.m</code>'s internal function name (a copy-paste error in the original, silently harmless under MATLAB's filename dispatch) resolved to <code>hazard_markov_generator</code>, matching the filename and computation, see module docstring</td>
+<td>✅</td>
 </tr>
 <tr>
 <td><code>stats/multivariate.py</code> (new module)</td>

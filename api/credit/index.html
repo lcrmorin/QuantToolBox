@@ -1,0 +1,3908 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Python port of the MATLAB QuantToolbox — econometrics, portfolio optimization, and risk analytics.">
+      
+      
+      
+      
+        <link rel="prev" href="../bond/">
+      
+      
+        <link rel="next" href="../dates/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>credit - QuantToolBox</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quanttoolboxcredit" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="QuantToolBox" class="md-header__button md-logo" aria-label="QuantToolBox" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            QuantToolBox
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              credit
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/lcrmorin/QuantToolBox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lcrmorin/QuantToolBox
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="QuantToolBox" class="md-nav__button md-logo" aria-label="QuantToolBox" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    QuantToolBox
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/lcrmorin/QuantToolBox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lcrmorin/QuantToolBox
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Featured examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Featured examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/risk_budgeting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Budget risk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/black_litterman/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blend market views
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/mean_variance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimize portfolios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/whittle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fit spectral models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fit regressions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/svm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Classify data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/building_blocks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Combine core tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/bond/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Price bonds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backtest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    backtest
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bond/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    bond
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    credit
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    credit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creditstructural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        credit.structural
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        structural
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="structural">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.BlackScholesResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BlackScholesResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.MertonJumpClimateResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MertonJumpClimateResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.MertonJumpResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MertonJumpResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.PdBlackCoxResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PdBlackCoxResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.PdMertonModelResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PdMertonModelResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.ReindersCreditModelResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ReindersCreditModelResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.b0_extended_merton_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        b0_extended_merton_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.black_scholes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        black_scholes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.e0_extended_merton_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        e0_extended_merton_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.merton_jump_climate_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        merton_jump_climate_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.merton_jump_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        merton_jump_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.pd_black_cox_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pd_black_cox_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.pd_extended_merton_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pd_extended_merton_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.pd_merton_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pd_merton_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.reinders_credit_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reinders_credit_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creditreduced_form" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        credit.reduced_form
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reduced_form
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="reduced_form">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.cdf_exponential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cdf_exponential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.density_markov_generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        density_markov_generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.hazard_markov_generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hazard_markov_generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.inv_exponential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inv_exponential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.pdf_exponential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdf_exponential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.rnd_exponential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rnd_exponential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.survival_exponential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        survival_exponential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.survival_markov_generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        survival_markov_generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    dates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../econometrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    econometrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linalg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    linalg
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../maths/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    maths
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mixtures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    mixtures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../optim/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    optim
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../portfolio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    portfolio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    spline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stats/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sustainable_finance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    sustainable_finance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../svm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    svm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../viz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    viz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notes for translators
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes for translators
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration_map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../matlab_bugs_found/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MATLAB bugs found
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../library_alternatives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library alternatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creditstructural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        credit.structural
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        structural
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="structural">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.BlackScholesResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BlackScholesResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.MertonJumpClimateResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MertonJumpClimateResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.MertonJumpResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MertonJumpResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.PdBlackCoxResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PdBlackCoxResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.PdMertonModelResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PdMertonModelResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.ReindersCreditModelResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ReindersCreditModelResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.b0_extended_merton_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        b0_extended_merton_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.black_scholes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        black_scholes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.e0_extended_merton_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        e0_extended_merton_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.merton_jump_climate_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        merton_jump_climate_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.merton_jump_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        merton_jump_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.pd_black_cox_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pd_black_cox_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.pd_extended_merton_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pd_extended_merton_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.pd_merton_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pd_merton_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.structural.reinders_credit_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reinders_credit_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creditreduced_form" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        credit.reduced_form
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reduced_form
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="reduced_form">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.cdf_exponential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cdf_exponential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.density_markov_generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        density_markov_generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.hazard_markov_generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hazard_markov_generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.inv_exponential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inv_exponential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.pdf_exponential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdf_exponential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.rnd_exponential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rnd_exponential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.survival_exponential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        survival_exponential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.credit.reduced_form.survival_markov_generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        survival_markov_generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="quanttoolboxcredit"><code>quanttoolbox.credit</code><a class="headerlink" href="#quanttoolboxcredit" title="Permanent link">&para;</a></h1>
+<h2 id="creditstructural"><code>credit.structural</code><a class="headerlink" href="#creditstructural" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">Python alternatives</p>
+<p><strong>Hybrid</strong>: <code>black_scholes</code>'s generalized cost-of-carry <code>b</code> parameterization has no single-function equivalent in <code>py_vollib</code>/<code>mibian</code> (both split by asset class instead) -- keep for that convenience, or call <code>scipy.stats.norm.cdf</code> directly for a one-off. The Merton (1974/1976), Black-Cox (1976), Blasberg (2024) extended-Merton, and Reinders et al. structural credit models are niche enough (each a specific published model, not a general option-pricing primitive) that no general credit-risk or derivatives-pricing library surveyed implements them as public utilities -- <strong>keep</strong>. <code>pd_merton_model</code>'s asset-value/volatility calibration uses <code>scipy.optimize.minimize(method="BFGS")</code> in place of MATLAB's <code>fminunc</code>, one line doing what a hand-rolled Newton loop would otherwise require.</p>
+</div>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="quanttoolbox.credit.structural" class="doc doc-heading">
+            <code>quanttoolbox.credit.structural</code>
+
+
+<a href="#quanttoolbox.credit.structural" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Structural (asset-value) credit models: Black-Scholes option pricing, the
+classic Merton (1974) firm-value default model (calibrated from observed
+equity value/volatility), Blasberg (2024)'s extended Merton model with a
+stochastic growth-adjustment factor, the Black-Cox (1976) first-passage
+model, Merton (1976) jump-diffusion option/credit pricing, and the Reinders
+et al. credit-transition-loss model.</p>
+<p>Ported from HSF toolbox <code>credit/{Black_Scholes_Model,PD_Merton_Model,
+B0_Extended_Merton_Model,E0_Extended_Merton_Model,
+PD_Extended_Merton_Model,PD_Black_Cox_Model,Merton_Jump_Model,
+Merton_Jump_Climate_Model,Reinders_Credit_Model}.m</code>.</p>
+<p>Translation notes:</p>
+<ul>
+<li><code>B0_Extended_Merton_Model.m</code>/<code>E0_Extended_Merton_Model.m</code> accept <code>mu_a</code>
+  but never use it in the formula body -- kept in the Python signature
+  anyway, matching the original's own documented reason ("not used here,
+  kept for consistent signature with merton_PD"): all three
+  <code>*_extended_merton_model</code> functions share one 10-argument call
+  signature, and <code>pd_extended_merton_model</code> <em>does</em> use <code>mu_a</code>.</li>
+<li><code>Reinders_Credit_Model.m</code> accepts <code>mu_A</code> but never uses it anywhere in
+  the function body, with no such cross-function-consistency rationale
+  documented (unlike the extended-Merton trio above) -- dropped from
+  <code>reinders_credit_model</code>'s signature as genuinely vestigial, the same
+  treatment given to <code>dice_temperature_simulation</code>'s unused <code>parameters</code>
+  argument in <code>sustainable_finance/climate.py</code>.</li>
+<li><code>Merton_Jump_Model.m</code> sums <code>n_max = max(50, ceil(...))</code> Poisson-weighted
+  Black-Scholes terms with no early exit for <code>lambda=0</code>, while its sibling
+  <code>Merton_Jump_Climate_Model.m</code> does <code>break</code> once <code>lambda=0</code> is detected.
+  Both are mathematically equivalent either way -- once <code>lambda=0</code>, the
+  Poisson weight <code>p_n</code> is exactly <code>0.0</code> for every <code>n &gt;= 1</code> (verified: <code>p_n</code>
+  recurses as <code>p_n *= lambda*T/(n+1)</code>, which multiplies by <code>0.0</code> once
+  <code>lambda=0</code>), so the terms for <code>n &gt;= 1</code> contribute nothing regardless of
+  whether the loop keeps running. The same early exit is added to both
+  functions here as a pure performance improvement (skips the redundant
+  <code>n_max</code> remaining iterations), not a behavior change.</li>
+<li><code>pd_merton_model</code> (<code>PD_Merton_Model.m</code>) calibrates the unobserved asset
+  value/volatility <code>(A0, sigma_A)</code> from observed equity value/volatility
+  <code>(E0, sigma_E)</code> by minimizing a 2-equation least-squares objective --
+  MATLAB's <code>fminunc</code> (unconstrained quasi-Newton) is <code>scipy.optimize.
+  minimize(method="BFGS")</code> here. Positivity of <code>(A0, sigma_A)</code> is enforced
+  via <code>abs()</code> inside the objective and on the final result, exactly as in
+  the original (no bounds are passed to the optimizer either way). The
+  original's manual "replicate every scalar/array input to a common length
+  <code>n</code>" broadcasting (<code>e = ones(n,1); E0 = E0.*e; ...</code>) is replaced with
+  <code>numpy.broadcast_arrays</code>, which does the same thing more directly; the
+  per-scenario nonlinear solve itself still runs in a loop, since each
+  scenario is an independent 2-parameter optimization.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="quanttoolbox.credit.structural.BlackScholesResult" class="doc doc-heading">
+              <code class="highlight language-python"><span class="n">BlackScholesResult</span><span class="p">(</span><span class="n">call</span><span class="p">,</span> <span class="n">put</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#quanttoolbox.credit.structural.BlackScholesResult" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>European call/put prices under the generalized Black-Scholes
+model with cost-of-carry <code>b</code> (<code>b = r</code> for equities with no dividend,
+<code>b = r - q</code> for a dividend yield <code>q</code>, <code>b = 0</code> for futures, <code>b = r -
+r_f</code> for FX).</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="quanttoolbox.credit.structural.MertonJumpClimateResult" class="doc doc-heading">
+              <code class="highlight language-python"><span class="n">MertonJumpClimateResult</span><span class="p">(</span><span class="n">e0</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#quanttoolbox.credit.structural.MertonJumpClimateResult" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>Merton (1976) jump-diffusion firm-value equity/bond values (a
+climate-risk application: sudden jumps represent transition-risk
+shocks to asset value), plus <code>k</code> (the expected relative jump size).</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="quanttoolbox.credit.structural.MertonJumpResult" class="doc doc-heading">
+              <code class="highlight language-python"><span class="n">MertonJumpResult</span><span class="p">(</span><span class="n">call</span><span class="p">,</span> <span class="n">put</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#quanttoolbox.credit.structural.MertonJumpResult" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>Merton (1976) jump-diffusion European call/put prices, plus <code>k</code>
+(the expected relative jump size, used in the risk-neutral drift
+correction).</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="quanttoolbox.credit.structural.PdBlackCoxResult" class="doc doc-heading">
+              <code class="highlight language-python"><span class="n">PdBlackCoxResult</span><span class="p">(</span><span class="n">pd_tau</span><span class="p">,</span> <span class="n">s_tau</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">varphi</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#quanttoolbox.credit.structural.PdBlackCoxResult" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>Black-Cox (1976) first-passage default probability at horizon
+<code>tau</code>, plus the intermediate <code>d1</code>/<code>d2</code>/<code>varphi</code> terms.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="quanttoolbox.credit.structural.PdMertonModelResult" class="doc doc-heading">
+              <code class="highlight language-python"><span class="n">PdMertonModelResult</span><span class="p">(</span><span class="n">pd_tau</span><span class="p">,</span> <span class="n">a0</span><span class="p">,</span> <span class="n">sigma_a</span><span class="p">,</span> <span class="n">s_tau</span><span class="p">,</span> <span class="n">dd_tau</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#quanttoolbox.credit.structural.PdMertonModelResult" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>Merton (1974) calibrated default probability: <code>a0</code>/<code>sigma_a</code> are
+the calibrated (unobserved) asset value/volatility, <code>dd_tau</code> the
+distance-to-default and <code>s_tau</code>/<code>pd_tau</code> the survival/default
+probability at horizon <code>tau</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="quanttoolbox.credit.structural.ReindersCreditModelResult" class="doc doc-heading">
+              <code class="highlight language-python"><span class="n">ReindersCreditModelResult</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">d_loss</span><span class="p">,</span> <span class="n">d2_loss</span><span class="p">,</span> <span class="n">mv_e_t0</span><span class="p">,</span> <span class="n">mv_d_t0</span><span class="p">,</span> <span class="n">mv_e_t</span><span class="p">,</span> <span class="n">mv_d_t</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#quanttoolbox.credit.structural.ReindersCreditModelResult" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>Reinders et al. credit-transition loss at asset-value shock <code>xi</code>:
+<code>loss</code> (the equity+debt mark-to-market loss), its first (<code>d_loss</code>)
+and second (<code>d2_loss</code>) derivatives with respect to <code>xi</code>, and the
+pre-/post-shock equity/debt values.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.structural.b0_extended_merton_model" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">b0_extended_merton_model</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">mu_a</span><span class="p">,</span> <span class="n">delta0</span><span class="p">,</span> <span class="n">mu_delta</span><span class="p">,</span> <span class="n">sigma_a</span><span class="p">,</span> <span class="n">sigma_delta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.structural.b0_extended_merton_model" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Bond (debt) value at t=0 in Blasberg (2024)'s extended Merton
+model, where the firm's growth-adjustment factor <code>delta(t)</code> follows
+its own Brownian motion correlated (<code>rho</code>) with the asset value.
+<code>mu_a</code> is accepted but unused -- see module docstring.</p>
+<p>Balance-sheet check: <code>e0 + b0 == a0 * exp(-delta0_prime * t)</code>.</p>
+<p>Original: credit/B0_Extended_Merton_Model.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/structural.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">b0_extended_merton_model</span><span class="p">(</span>
+    <span class="n">a0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">delta0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu_delta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_delta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rho</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Bond (debt) value at t=0 in Blasberg (2024)'s extended Merton</span>
+<span class="sd">    model, where the firm's growth-adjustment factor `delta(t)` follows</span>
+<span class="sd">    its own Brownian motion correlated (`rho`) with the asset value.</span>
+<span class="sd">    `mu_a` is accepted but unused -- see module docstring.</span>
+
+<span class="sd">    Balance-sheet check: ``e0 + b0 == a0 * exp(-delta0_prime * t)``.</span>
+
+<span class="sd">    Original: credit/B0_Extended_Merton_Model.m</span>
+<span class="sd">    """</span>
+    <span class="n">sigma_a_prime</span><span class="p">,</span> <span class="n">delta0_prime</span> <span class="o">=</span> <span class="n">_extended_merton_reparametrize</span><span class="p">(</span>
+        <span class="n">sigma_a</span><span class="p">,</span> <span class="n">sigma_delta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">delta0</span><span class="p">,</span> <span class="n">mu_delta</span><span class="p">,</span> <span class="n">t</span>
+    <span class="p">)</span>
+    <span class="n">d1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a0</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="n">delta0_prime</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+        <span class="n">sigma_a_prime</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_a_prime</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">-</span> <span class="n">sigma_a_prime</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">a0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">delta0_prime</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d1</span><span class="p">)</span> <span class="o">+</span> <span class="n">d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.structural.black_scholes" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">black_scholes</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.structural.black_scholes" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generalized Black-Scholes European call/put prices with
+cost-of-carry <code>b</code> (spot <code>s0</code>, strike <code>k</code>, volatility <code>sigma</code>, maturity
+<code>t</code>, risk-free rate <code>r</code>).</p>
+<p>Original: credit/Black_Scholes_Model.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/structural.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">black_scholes</span><span class="p">(</span>
+    <span class="n">s0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">k</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BlackScholesResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Generalized Black-Scholes European call/put prices with</span>
+<span class="sd">    cost-of-carry `b` (spot `s0`, strike `k`, volatility `sigma`, maturity</span>
+<span class="sd">    `t`, risk-free rate `r`).</span>
+
+<span class="sd">    Original: credit/Black_Scholes_Model.m</span>
+<span class="sd">    """</span>
+    <span class="n">d1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">s0</span> <span class="o">/</span> <span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">-</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+    <span class="n">call</span> <span class="o">=</span> <span class="n">s0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">b</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+    <span class="n">put</span> <span class="o">=</span> <span class="o">-</span><span class="n">s0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">b</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d1</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">BlackScholesResult</span><span class="p">(</span><span class="n">call</span><span class="o">=</span><span class="n">call</span><span class="p">,</span> <span class="n">put</span><span class="o">=</span><span class="n">put</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.structural.e0_extended_merton_model" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">e0_extended_merton_model</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">mu_a</span><span class="p">,</span> <span class="n">delta0</span><span class="p">,</span> <span class="n">mu_delta</span><span class="p">,</span> <span class="n">sigma_a</span><span class="p">,</span> <span class="n">sigma_delta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.structural.e0_extended_merton_model" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Equity value at t=0 in Blasberg (2024)'s extended Merton model --
+see <code>b0_extended_merton_model</code> for the model description.</p>
+<p>Original: credit/E0_Extended_Merton_Model.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/structural.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">e0_extended_merton_model</span><span class="p">(</span>
+    <span class="n">a0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">delta0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu_delta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_delta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rho</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Equity value at t=0 in Blasberg (2024)'s extended Merton model --</span>
+<span class="sd">    see `b0_extended_merton_model` for the model description.</span>
+
+<span class="sd">    Original: credit/E0_Extended_Merton_Model.m</span>
+<span class="sd">    """</span>
+    <span class="n">sigma_a_prime</span><span class="p">,</span> <span class="n">delta0_prime</span> <span class="o">=</span> <span class="n">_extended_merton_reparametrize</span><span class="p">(</span>
+        <span class="n">sigma_a</span><span class="p">,</span> <span class="n">sigma_delta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">delta0</span><span class="p">,</span> <span class="n">mu_delta</span><span class="p">,</span> <span class="n">t</span>
+    <span class="p">)</span>
+    <span class="n">d1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a0</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="n">delta0_prime</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+        <span class="n">sigma_a_prime</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_a_prime</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">-</span> <span class="n">sigma_a_prime</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">a0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">delta0_prime</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span> <span class="o">-</span> <span class="n">d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.structural.merton_jump_climate_model" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">merton_jump_climate_model</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">sigma_a</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="n">mu_z</span><span class="p">,</span> <span class="n">sigma_z</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.structural.merton_jump_climate_model" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Merton (1976) jump-diffusion firm-value equity/bond values: the
+firm's asset value follows a jump-diffusion (Poisson rate <code>lambda_</code>,
+lognormal jump sizes <code>mu_z</code>/<code>sigma_z</code>) rather than plain geometric
+Brownian motion, otherwise the classic Merton (1974) structural
+setup (debt face value <code>d</code>, maturity <code>t</code>, risk-free rate <code>r</code>).</p>
+<p>Original: credit/Merton_Jump_Climate_Model.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/structural.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">merton_jump_climate_model</span><span class="p">(</span>
+    <span class="n">a0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">lambda_</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu_z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MertonJumpClimateResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Merton (1976) jump-diffusion firm-value equity/bond values: the</span>
+<span class="sd">    firm's asset value follows a jump-diffusion (Poisson rate `lambda_`,</span>
+<span class="sd">    lognormal jump sizes `mu_z`/`sigma_z`) rather than plain geometric</span>
+<span class="sd">    Brownian motion, otherwise the classic Merton (1974) structural</span>
+<span class="sd">    setup (debt face value `d`, maturity `t`, risk-free rate `r`).</span>
+
+<span class="sd">    Original: credit/Merton_Jump_Climate_Model.m</span>
+<span class="sd">    """</span>
+    <span class="n">jump_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">mu_z</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span>
+    <span class="n">e0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">sigma_a</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">r</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">b0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">e0</span><span class="p">)</span>
+
+    <span class="n">n_max</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mf">500.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">lambda_</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lambda_</span> <span class="o">*</span> <span class="n">t</span><span class="p">)))))</span>
+    <span class="n">p_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">lambda_</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">b_n</span> <span class="o">=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">lambda_</span> <span class="o">*</span> <span class="n">jump_k</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">jump_k</span><span class="p">)</span> <span class="o">/</span> <span class="n">t</span>
+        <span class="n">sigma_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sigma_a</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">sigma_z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">d1_n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a0</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">b_n</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_n</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma_n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+        <span class="n">d2_n</span> <span class="o">=</span> <span class="n">d1_n</span> <span class="o">-</span> <span class="n">sigma_n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="n">e_n</span> <span class="o">=</span> <span class="n">a0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">b_n</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d1_n</span><span class="p">)</span> <span class="o">-</span> <span class="n">d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d2_n</span><span class="p">)</span>
+        <span class="n">b_n_value</span> <span class="o">=</span> <span class="n">a0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">b_n</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d1_n</span><span class="p">)</span> <span class="o">+</span> <span class="n">d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span>
+            <span class="n">d2_n</span>
+        <span class="p">)</span>
+
+        <span class="n">e0</span> <span class="o">=</span> <span class="n">e0</span> <span class="o">+</span> <span class="n">p_n</span> <span class="o">*</span> <span class="n">e_n</span>
+        <span class="n">b0</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">p_n</span> <span class="o">*</span> <span class="n">b_n_value</span>
+        <span class="n">p_n</span> <span class="o">=</span> <span class="n">p_n</span> <span class="o">*</span> <span class="p">(</span><span class="n">lambda_</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lambda_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">MertonJumpClimateResult</span><span class="p">(</span><span class="n">e0</span><span class="o">=</span><span class="n">e0</span><span class="p">,</span> <span class="n">b0</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">jump_k</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.structural.merton_jump_model" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">merton_jump_model</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="n">mu_z</span><span class="p">,</span> <span class="n">sigma_z</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.structural.merton_jump_model" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Merton (1976) jump-diffusion European option prices: a Poisson
+(rate <code>lambda_</code>) mixture of Black-Scholes prices, one per possible
+jump count <code>n</code>, with lognormal jump sizes (<code>mu_z</code>, <code>sigma_z</code>).</p>
+<p>Original: credit/Merton_Jump_Model.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/structural.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">merton_jump_model</span><span class="p">(</span>
+    <span class="n">s0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">k</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">lambda_</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu_z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MertonJumpResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Merton (1976) jump-diffusion European option prices: a Poisson</span>
+<span class="sd">    (rate `lambda_`) mixture of Black-Scholes prices, one per possible</span>
+<span class="sd">    jump count `n`, with lognormal jump sizes (`mu_z`, `sigma_z`).</span>
+
+<span class="sd">    Original: credit/Merton_Jump_Model.m</span>
+<span class="sd">    """</span>
+    <span class="n">jump_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">mu_z</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span>
+    <span class="n">call</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">r</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">put</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">call</span><span class="p">)</span>
+
+    <span class="n">n_max</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mf">50.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">lambda_</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lambda_</span> <span class="o">*</span> <span class="n">t</span><span class="p">)))))</span>
+    <span class="n">p_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">lambda_</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">b_n</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">lambda_</span> <span class="o">*</span> <span class="n">jump_k</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">jump_k</span><span class="p">)</span> <span class="o">/</span> <span class="n">t</span>
+        <span class="n">sigma_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">sigma_z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">bs_n</span> <span class="o">=</span> <span class="n">black_scholes</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">sigma_n</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">b_n</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+
+        <span class="n">call</span> <span class="o">=</span> <span class="n">call</span> <span class="o">+</span> <span class="n">p_n</span> <span class="o">*</span> <span class="n">bs_n</span><span class="o">.</span><span class="n">call</span>
+        <span class="n">put</span> <span class="o">=</span> <span class="n">put</span> <span class="o">+</span> <span class="n">p_n</span> <span class="o">*</span> <span class="n">bs_n</span><span class="o">.</span><span class="n">put</span>
+        <span class="n">p_n</span> <span class="o">=</span> <span class="n">p_n</span> <span class="o">*</span> <span class="p">(</span><span class="n">lambda_</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lambda_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">MertonJumpResult</span><span class="p">(</span><span class="n">call</span><span class="o">=</span><span class="n">call</span><span class="p">,</span> <span class="n">put</span><span class="o">=</span><span class="n">put</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">jump_k</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.structural.pd_black_cox_model" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pd_black_cox_model</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">mu_a</span><span class="p">,</span> <span class="n">sigma_a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">tau</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.structural.pd_black_cox_model" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Black-Cox (1976) first-passage-time default probability: the firm
+defaults as soon as its asset value <code>A(t)</code> (geometric Brownian motion
+with drift <code>mu_a</code>, volatility <code>sigma_a</code>, starting at <code>a0</code>) first
+crosses the constant barrier <code>b</code>, evaluated over horizon <code>tau</code>.</p>
+<p>Original: credit/PD_Black_Cox_Model.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/structural.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pd_black_cox_model</span><span class="p">(</span>
+    <span class="n">a0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">tau</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PdBlackCoxResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Black-Cox (1976) first-passage-time default probability: the firm</span>
+<span class="sd">    defaults as soon as its asset value `A(t)` (geometric Brownian motion</span>
+<span class="sd">    with drift `mu_a`, volatility `sigma_a`, starting at `a0`) first</span>
+<span class="sd">    crosses the constant barrier `b`, evaluated over horizon `tau`.</span>
+
+<span class="sd">    Original: credit/PD_Black_Cox_Model.m</span>
+<span class="sd">    """</span>
+    <span class="n">sigma_tau</span> <span class="o">=</span> <span class="n">sigma_a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
+    <span class="n">sigma2_a</span> <span class="o">=</span> <span class="n">sigma_a</span> <span class="o">*</span> <span class="n">sigma_a</span>
+    <span class="n">nu_a</span> <span class="o">=</span> <span class="n">mu_a</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma2_a</span>
+    <span class="n">varphi</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">/</span> <span class="n">a0</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">nu_a</span> <span class="o">/</span> <span class="n">sigma2_a</span><span class="p">)</span>
+
+    <span class="n">d1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a0</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="n">mu_a</span> <span class="o">*</span> <span class="n">tau</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma_tau</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_tau</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a0</span><span class="p">)</span> <span class="o">+</span> <span class="n">mu_a</span> <span class="o">*</span> <span class="n">tau</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma_tau</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_tau</span>
+
+    <span class="n">s_tau</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span> <span class="o">-</span> <span class="n">varphi</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+    <span class="n">pd_tau</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">s_tau</span>
+
+    <span class="k">return</span> <span class="n">PdBlackCoxResult</span><span class="p">(</span><span class="n">pd_tau</span><span class="o">=</span><span class="n">pd_tau</span><span class="p">,</span> <span class="n">s_tau</span><span class="o">=</span><span class="n">s_tau</span><span class="p">,</span> <span class="n">d1</span><span class="o">=</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="o">=</span><span class="n">d2</span><span class="p">,</span> <span class="n">varphi</span><span class="o">=</span><span class="n">varphi</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.structural.pd_extended_merton_model" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pd_extended_merton_model</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">mu_a</span><span class="p">,</span> <span class="n">delta0</span><span class="p">,</span> <span class="n">mu_delta</span><span class="p">,</span> <span class="n">sigma_a</span><span class="p">,</span> <span class="n">sigma_delta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.structural.pd_extended_merton_model" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Physical (real-world, drift <code>mu_a</code>) probability of default at
+horizon <code>t</code> in Blasberg (2024)'s extended Merton model. <code>r</code> is
+accepted but unused (kept for signature consistency with
+<code>b0_extended_merton_model</code>/<code>e0_extended_merton_model</code>).</p>
+<p>Original: credit/PD_Extended_Merton_Model.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/structural.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pd_extended_merton_model</span><span class="p">(</span>
+    <span class="n">a0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">delta0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu_delta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_delta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rho</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Physical (real-world, drift `mu_a`) probability of default at</span>
+<span class="sd">    horizon `t` in Blasberg (2024)'s extended Merton model. `r` is</span>
+<span class="sd">    accepted but unused (kept for signature consistency with</span>
+<span class="sd">    `b0_extended_merton_model`/`e0_extended_merton_model`).</span>
+
+<span class="sd">    Original: credit/PD_Extended_Merton_Model.m</span>
+<span class="sd">    """</span>
+    <span class="n">sigma_a_prime</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_extended_merton_reparametrize</span><span class="p">(</span>
+        <span class="n">sigma_a</span><span class="p">,</span> <span class="n">sigma_delta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">delta0</span><span class="p">,</span> <span class="n">mu_delta</span><span class="p">,</span> <span class="n">t</span>
+    <span class="p">)</span>
+    <span class="n">dd</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a0</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">mu_a</span> <span class="o">-</span> <span class="n">delta0</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_a</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">mu_delta</span> <span class="o">*</span> <span class="n">t</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+        <span class="n">sigma_a_prime</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">dd</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.structural.pd_merton_model" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pd_merton_model</span><span class="p">(</span><span class="n">e0</span><span class="p">,</span> <span class="n">sigma_e</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">mu_a</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.structural.pd_merton_model" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calibrate the Merton (1974) model's unobserved asset value/
+volatility <code>(A0, sigma_A)</code> from observed equity value/volatility
+<code>(E0, sigma_E)</code> and debt face value <code>D</code> at maturity <code>T</code> (via a
+2-equation least-squares fit), then compute the physical
+(real-world, drift <code>mu_a</code>) probability of default at horizon <code>tau</code>.</p>
+<p>Original: credit/PD_Merton_Model.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/structural.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pd_merton_model</span><span class="p">(</span>
+    <span class="n">e0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_e</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">tau</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">EstimationConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PdMertonModelResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Calibrate the Merton (1974) model's unobserved asset value/</span>
+<span class="sd">    volatility `(A0, sigma_A)` from observed equity value/volatility</span>
+<span class="sd">    `(E0, sigma_E)` and debt face value `D` at maturity `T` (via a</span>
+<span class="sd">    2-equation least-squares fit), then compute the physical</span>
+<span class="sd">    (real-world, drift `mu_a`) probability of default at horizon `tau`.</span>
+
+<span class="sd">    Original: credit/PD_Merton_Model.m</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">EstimationConfig</span><span class="p">()</span>
+
+    <span class="n">e0_arr</span><span class="p">,</span> <span class="n">sigma_e_arr</span><span class="p">,</span> <span class="n">d_arr</span><span class="p">,</span> <span class="n">mu_a_arr</span><span class="p">,</span> <span class="n">r_arr</span><span class="p">,</span> <span class="n">t_arr</span><span class="p">,</span> <span class="n">tau_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">e0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sigma_e</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mu_a</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tau</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">e0_arr</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">e0_arr</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="n">a0_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">sigma_a_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">e0_i</span><span class="p">,</span> <span class="n">sigma_e_i</span><span class="p">,</span> <span class="n">d_i</span><span class="p">,</span> <span class="n">r_i</span><span class="p">,</span> <span class="n">t_i</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+        <span class="nb">zip</span><span class="p">(</span>
+            <span class="n">e0_arr</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+            <span class="n">sigma_e_arr</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+            <span class="n">d_arr</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+            <span class="n">r_arr</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+            <span class="n">t_arr</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+            <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span>
+            <span class="n">_pd_merton_model_objective</span><span class="p">,</span>
+            <span class="n">x0</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e0_i</span><span class="p">,</span> <span class="n">sigma_e_i</span><span class="p">]),</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">e0_i</span><span class="p">,</span> <span class="n">sigma_e_i</span><span class="p">,</span> <span class="n">d_i</span><span class="p">,</span> <span class="n">r_i</span><span class="p">,</span> <span class="n">t_i</span><span class="p">),</span>
+            <span class="n">method</span><span class="o">=</span><span class="s2">"BFGS"</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">"gtol"</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">tol</span><span class="p">,</span> <span class="s2">"maxiter"</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">max_iters</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">a0_i</span><span class="p">,</span> <span class="n">sigma_a_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">a0_flat</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a0_i</span>
+        <span class="n">sigma_a_flat</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigma_a_i</span>
+
+    <span class="n">a0</span> <span class="o">=</span> <span class="n">a0_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">sigma_a</span> <span class="o">=</span> <span class="n">sigma_a_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">dd_tau</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a0</span> <span class="o">/</span> <span class="n">d_arr</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">mu_a_arr</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_a</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">tau_arr</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+        <span class="n">sigma_a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tau_arr</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">s_tau</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">dd_tau</span><span class="p">)</span>
+    <span class="n">pd_tau</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">s_tau</span>
+
+    <span class="k">return</span> <span class="n">PdMertonModelResult</span><span class="p">(</span><span class="n">pd_tau</span><span class="o">=</span><span class="n">pd_tau</span><span class="p">,</span> <span class="n">a0</span><span class="o">=</span><span class="n">a0</span><span class="p">,</span> <span class="n">sigma_a</span><span class="o">=</span><span class="n">sigma_a</span><span class="p">,</span> <span class="n">s_tau</span><span class="o">=</span><span class="n">s_tau</span><span class="p">,</span> <span class="n">dd_tau</span><span class="o">=</span><span class="n">dd_tau</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.structural.reinders_credit_model" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">reinders_credit_model</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">a0</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma_a</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">omega_e</span><span class="p">,</span> <span class="n">omega_d</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.structural.reinders_credit_model" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Reinders et al.'s credit-transition loss model: the equity+debt
+mark-to-market loss from an instantaneous fractional shock <code>xi</code> to
+the firm's asset value (<code>A(t) = A0 * (1 - xi)</code>), weighted by
+<code>omega_e</code>/<code>omega_d</code> (e.g. the investor's equity/debt holdings), plus
+the loss's first/second derivatives with respect to <code>xi</code>.</p>
+<p>Original: credit/Reinders_Credit_Model.m (the <code>mu_A</code> parameter is
+accepted but never used in the original's formula body, with no
+documented reason -- dropped here, see module docstring)</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/structural.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reinders_credit_model</span><span class="p">(</span>
+    <span class="n">xi</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">a0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">omega_e</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">omega_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReindersCreditModelResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Reinders et al.'s credit-transition loss model: the equity+debt</span>
+<span class="sd">    mark-to-market loss from an instantaneous fractional shock `xi` to</span>
+<span class="sd">    the firm's asset value (`A(t) = A0 * (1 - xi)`), weighted by</span>
+<span class="sd">    `omega_e`/`omega_d` (e.g. the investor's equity/debt holdings), plus</span>
+<span class="sd">    the loss's first/second derivatives with respect to `xi`.</span>
+
+<span class="sd">    Original: credit/Reinders_Credit_Model.m (the `mu_A` parameter is</span>
+<span class="sd">    accepted but never used in the original's formula body, with no</span>
+<span class="sd">    documented reason -- dropped here, see module docstring)</span>
+<span class="sd">    """</span>
+    <span class="n">d1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a0</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma_a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">-</span> <span class="n">sigma_a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">mv_e_t0</span> <span class="o">=</span> <span class="n">a0</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span> <span class="o">-</span> <span class="n">d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+    <span class="n">mv_d_t0</span> <span class="o">=</span> <span class="n">a0</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d1</span><span class="p">)</span> <span class="o">+</span> <span class="n">d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+
+    <span class="n">a_t</span> <span class="o">=</span> <span class="n">a0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">xi</span><span class="p">)</span>
+    <span class="n">d1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a_t</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma_a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">-</span> <span class="n">sigma_a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">mv_e_t</span> <span class="o">=</span> <span class="n">a_t</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span> <span class="o">-</span> <span class="n">d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+    <span class="n">mv_d_t</span> <span class="o">=</span> <span class="n">a_t</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d1</span><span class="p">)</span> <span class="o">+</span> <span class="n">d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">omega_e</span> <span class="o">*</span> <span class="p">(</span><span class="n">mv_e_t0</span> <span class="o">-</span> <span class="n">mv_e_t</span><span class="p">)</span> <span class="o">+</span> <span class="n">omega_d</span> <span class="o">*</span> <span class="p">(</span><span class="n">mv_d_t0</span> <span class="o">-</span> <span class="n">mv_d_t</span><span class="p">)</span>
+    <span class="n">d_loss</span> <span class="o">=</span> <span class="n">a0</span> <span class="o">*</span> <span class="p">(</span><span class="n">omega_e</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span> <span class="o">+</span> <span class="n">omega_d</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d1</span><span class="p">))</span>
+    <span class="n">d2_loss</span> <span class="o">=</span> <span class="n">a0</span> <span class="o">*</span> <span class="p">(</span><span class="n">omega_d</span> <span class="o">-</span> <span class="n">omega_e</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">xi</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma_a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">ReindersCreditModelResult</span><span class="p">(</span>
+        <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span>
+        <span class="n">d_loss</span><span class="o">=</span><span class="n">d_loss</span><span class="p">,</span>
+        <span class="n">d2_loss</span><span class="o">=</span><span class="n">d2_loss</span><span class="p">,</span>
+        <span class="n">mv_e_t0</span><span class="o">=</span><span class="n">mv_e_t0</span><span class="p">,</span>
+        <span class="n">mv_d_t0</span><span class="o">=</span><span class="n">mv_d_t0</span><span class="p">,</span>
+        <span class="n">mv_e_t</span><span class="o">=</span><span class="n">mv_e_t</span><span class="p">,</span>
+        <span class="n">mv_d_t</span><span class="o">=</span><span class="n">mv_d_t</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="creditreduced_form"><code>credit.reduced_form</code><a class="headerlink" href="#creditreduced_form" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">Python alternatives</p>
+<p><strong>Keep</strong> -- default-time survival/density/hazard functions implied by a continuous-time Markov generator matrix (via <code>scipy.linalg.expm</code>), and the (piecewise-)exponential default-time model (survival/CDF/PDF/quantile/simulation). No general-purpose equivalent found: <code>lifelines</code> and <code>scikit-survival</code> model <em>estimation</em> from observed survival data, not simulation/inversion from an assumed hazard specification given up front.</p>
+</div>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="quanttoolbox.credit.reduced_form" class="doc doc-heading">
+            <code>quanttoolbox.credit.reduced_form</code>
+
+
+<a href="#quanttoolbox.credit.reduced_form" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Reduced-form (intensity/hazard-based) credit models: default-time
+survival/density/hazard functions implied by a continuous-time Markov
+generator matrix (e.g. a credit-rating transition-intensity matrix, with
+default as the absorbing state), and the (piecewise-)exponential default
+model used elsewhere in the toolbox for simulating default times.</p>
+<p>Ported from HSF toolbox <code>credit/{Survival_Markov_Generator,
+Density_Markov_Generator,Hazard_Markov_Generator,survivalExponential,
+cdfExponential,pdfExponential,invExponential,rndExponential}.m</code>.</p>
+<p>Translation notes:</p>
+<ul>
+<li><code>Hazard_Markov_Generator.m</code>'s function body is declared as <code>function
+  lambda = Density_Markov_Generator(t, Lambda)</code> -- an apparent
+  copy-paste error in the original (the internal function name doesn't
+  match its own filename or its actual computation, <code>f / S</code>). MATLAB
+  still dispatches by <em>filename</em> when calling <code>Hazard_Markov_Generator(...)</code>
+  from another script, so the bug is silently harmless in the original.
+  Named <code>hazard_markov_generator</code> here, matching the filename and the
+  actual computation rather than the erroneous internal name.</li>
+<li><code>survivalExponential.m</code>/<code>pdfExponential.m</code>/<code>invExponential.m</code> all branch
+  on <code>size(lambda, 2) == 1</code> to distinguish a <em>homogeneous</em> per-scenario
+  hazard-rate vector from a <em>piecewise-constant</em> hazard matrix (knots in
+  column 1, per-scenario rates in the remaining columns) -- but the
+  homogeneous docstring also describes a "1 x C" row-vector case that, if
+  <code>C &gt; 1</code>, would actually have <code>size(lambda, 2) == C != 1</code> and fall
+  through to the (wrong) piecewise branch. That row-vector case is
+  unreachable under the code's own dispatch condition; only the
+  column-vector ("C x 1") reading is actually exercised anywhere in the
+  original. This ambiguity doesn't translate cleanly to numpy (which has
+  no row/column distinction for 1-D arrays), so the Python API instead
+  dispatches on array dimensionality: a 1-D <code>lambda_</code> (shape <code>(C,)</code>) is
+  always the homogeneous case, and a 2-D <code>lambda_</code> (shape <code>(M, 1+C)</code>)
+  is always the piecewise case -- unambiguous, and consistent with the
+  cases the original code actually exercises.</li>
+<li>MATLAB's <code>discretize(t, edges)</code> (returns the 1-based bin index of
+  each element of <code>t</code>, or <code>NaN</code> outside all bins) is reimplemented as a
+  private <code>_discretize_bin</code> helper via <code>numpy.searchsorted</code>, returning a
+  0-based index and clamping out-of-range values to the first bin --
+  matching the originals' own "safeguard for t &lt; 0" <code>NaN</code>-clamping
+  (<code>idx(isnan(idx)) = 1</code>), since every bin sequence here already extends
+  to <code>+inf</code> on the right.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.reduced_form.cdf_exponential" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">cdf_exponential</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.reduced_form.cdf_exponential" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Cumulative distribution function <code>F(t) = 1 - S(t)</code> of the
+(piecewise) exponential default model. See <code>survival_exponential</code>.</p>
+<p>Original: credit/cdfExponential.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/reduced_form.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cdf_exponential</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Cumulative distribution function ``F(t) = 1 - S(t)`` of the</span>
+<span class="sd">    (piecewise) exponential default model. See `survival_exponential`.</span>
+
+<span class="sd">    Original: credit/cdfExponential.m</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">survival_exponential</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.reduced_form.density_markov_generator" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">density_markov_generator</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">lambda_matrix</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.reduced_form.density_markov_generator" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Default-time density <code>f(t)</code> implied by a continuous-time Markov
+generator <code>lambda_matrix</code>: <code>f(t) = (Lambda @ expm(t * Lambda))[:,
+K-1]</code> (<code>f(0) = Lambda[:, K-1]</code>).</p>
+<p>Returns an array of shape <code>(len(t), K)</code>.</p>
+<p>Original: credit/Density_Markov_Generator.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/reduced_form.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">density_markov_generator</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Default-time density ``f(t)`` implied by a continuous-time Markov</span>
+<span class="sd">    generator `lambda_matrix`: ``f(t) = (Lambda @ expm(t * Lambda))[:,</span>
+<span class="sd">    K-1]`` (``f(0) = Lambda[:, K-1]``).</span>
+
+<span class="sd">    Returns an array of shape ``(len(t), K)``.</span>
+
+<span class="sd">    Original: credit/Density_Markov_Generator.m</span>
+<span class="sd">    """</span>
+    <span class="n">t_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">lambda_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">lambda_matrix</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">lambda_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">t_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">pdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">t_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">pdf</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">lambda_matrix</span><span class="p">[:,</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">lambda_matrix</span> <span class="o">@</span> <span class="n">expm</span><span class="p">(</span><span class="n">t_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">lambda_matrix</span><span class="p">)</span>
+            <span class="n">pdf</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[:,</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">pdf</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.reduced_form.hazard_markov_generator" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">hazard_markov_generator</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">lambda_matrix</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.reduced_form.hazard_markov_generator" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Hazard rate <code>lambda(t) = f(t) / S(t)</code> implied by a continuous-time
+Markov generator <code>lambda_matrix</code>.</p>
+<p>Original: credit/Hazard_Markov_Generator.m (see module docstring for
+the source function-name mismatch this resolves)</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/reduced_form.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hazard_markov_generator</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Hazard rate ``lambda(t) = f(t) / S(t)`` implied by a continuous-time</span>
+<span class="sd">    Markov generator `lambda_matrix`.</span>
+
+<span class="sd">    Original: credit/Hazard_Markov_Generator.m (see module docstring for</span>
+<span class="sd">    the source function-name mismatch this resolves)</span>
+<span class="sd">    """</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">survival_markov_generator</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">lambda_matrix</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">density_markov_generator</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">lambda_matrix</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f</span> <span class="o">/</span> <span class="n">s</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.reduced_form.inv_exponential" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">inv_exponential</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.reduced_form.inv_exponential" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Quantile function (inverse CDF): <code>t</code> such that
+<code>Pr(tau &lt;= t) = p</code>, for the (piecewise) exponential default model.
+<code>p</code> is an array of shape <code>(N,)</code> or <code>(N, C)</code> of probabilities in
+<code>(0, 1)</code>; values too close to 0 or 1 to invert safely return <code>nan</code>.</p>
+<p>Original: credit/invExponential.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/reduced_form.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">inv_exponential</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Quantile function (inverse CDF): `t` such that</span>
+<span class="sd">    ``Pr(tau &lt;= t) = p``, for the (piecewise) exponential default model.</span>
+<span class="sd">    `p` is an array of shape ``(N,)`` or ``(N, C)`` of probabilities in</span>
+<span class="sd">    ``(0, 1)``; values too close to 0 or 1 to invert safely return `nan`.</span>
+
+<span class="sd">    Original: credit/invExponential.m</span>
+<span class="sd">    """</span>
+    <span class="n">p_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p_arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">p_arr</span> <span class="o">=</span> <span class="n">p_arr</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="n">lambda_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">lambda_</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">tolp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">p_arr</span>
+    <span class="n">bad</span> <span class="o">=</span> <span class="p">(</span><span class="n">sp</span> <span class="o">&gt;=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">tolp</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">sp</span> <span class="o">&lt;=</span> <span class="n">tolp</span><span class="p">)</span>
+    <span class="n">sp_safe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bad</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">sp</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">lambda_</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sp_safe</span><span class="p">)</span> <span class="o">/</span> <span class="n">lambda_</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bad</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="n">tm</span> <span class="o">=</span> <span class="n">lambda_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">lam</span> <span class="o">=</span> <span class="n">lambda_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">lam</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">sm</span> <span class="o">=</span> <span class="n">survival_exponential</span><span class="p">(</span><span class="n">tm</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span>  <span class="c1"># M x C</span>
+    <span class="n">sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">sm</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">sm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="p">)),</span> <span class="n">sm</span><span class="p">])</span>  <span class="c1"># (M+1) x C</span>
+    <span class="n">tm0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">tm</span><span class="p">))</span>  <span class="c1"># (M+1,)</span>
+
+    <span class="k">if</span> <span class="n">sp_safe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">sp_safe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">sp_safe</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">bad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">bad</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">sp_safe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+        <span class="c1"># count of knot-survival values (incl. S(0)=1) strictly above the</span>
+        <span class="c1"># target -- indexes the bracketing interval's left endpoint.</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sm</span><span class="p">[:,</span> <span class="n">col</span><span class="p">][:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">sp_safe</span><span class="p">[:,</span> <span class="n">col</span><span class="p">][</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># 1-based -&gt; 0-based</span>
+
+        <span class="n">s0</span> <span class="o">=</span> <span class="n">sm</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">tm0</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="n">l0</span> <span class="o">=</span> <span class="n">lam</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+        <span class="n">t</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">t0</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">s0</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sp_safe</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]))</span> <span class="o">/</span> <span class="n">l0</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bad</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.reduced_form.pdf_exponential" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pdf_exponential</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.reduced_form.pdf_exponential" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Density function <code>f(t) = lambda_m(t) * S(t)</code> of the (piecewise)
+exponential default model. See <code>survival_exponential</code>.</p>
+<p>Original: credit/pdfExponential.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/reduced_form.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pdf_exponential</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Density function ``f(t) = lambda_m(t) * S(t)`` of the (piecewise)</span>
+<span class="sd">    exponential default model. See `survival_exponential`.</span>
+
+<span class="sd">    Original: credit/pdfExponential.m</span>
+<span class="sd">    """</span>
+    <span class="n">t_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">lambda_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">lambda_</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">survival_exponential</span><span class="p">(</span><span class="n">t_arr</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">lambda_</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">lambda_</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> <span class="n">s</span>
+
+    <span class="n">tm0</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_piecewise_pieces</span><span class="p">(</span><span class="n">lambda_</span><span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">_discretize_bin</span><span class="p">(</span><span class="n">t_arr</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lam</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> <span class="n">s</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.reduced_form.rnd_exponential" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">rnd_exponential</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.reduced_form.rnd_exponential" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Simulated default times for the (piecewise) exponential default
+model. If <code>c != 0</code>, generates an <code>r</code> x <code>c</code> matrix of uniforms and
+inverts them via <code>inv_exponential</code>; if <code>c == 0</code>, <code>r</code> is instead
+treated as a pre-generated matrix of uniforms (mirrors the original
+GAUSS calling convention).</p>
+<p>Original: credit/rndExponential.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/reduced_form.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rnd_exponential</span><span class="p">(</span>
+    <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Simulated default times for the (piecewise) exponential default</span>
+<span class="sd">    model. If ``c != 0``, generates an `r` x `c` matrix of uniforms and</span>
+<span class="sd">    inverts them via `inv_exponential`; if ``c == 0``, `r` is instead</span>
+<span class="sd">    treated as a pre-generated matrix of uniforms (mirrors the original</span>
+<span class="sd">    GAUSS calling convention).</span>
+
+<span class="sd">    Original: credit/rndExponential.m</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">inv_exponential</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.reduced_form.survival_exponential" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">survival_exponential</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.reduced_form.survival_exponential" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Survival function <code>S(t) = Pr(tau &gt; t)</code> of the (piecewise)
+exponential default model. <code>lambda_</code> is either a 1-D array of shape
+<code>(C,)</code> (homogeneous hazard rate per scenario) or a 2-D array of
+shape <code>(M, 1+C)</code> (column 0 = knots <code>t*_1 &lt; ... &lt; t*_M</code>, columns
+1: = piecewise hazard rates per scenario, extended to <code>+inf</code> beyond
+the last knot).</p>
+<p>Returns an array of shape <code>(len(t), C)</code>.</p>
+<p>Original: credit/survivalExponential.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/reduced_form.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">survival_exponential</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Survival function ``S(t) = Pr(tau &gt; t)`` of the (piecewise)</span>
+<span class="sd">    exponential default model. `lambda_` is either a 1-D array of shape</span>
+<span class="sd">    ``(C,)`` (homogeneous hazard rate per scenario) or a 2-D array of</span>
+<span class="sd">    shape ``(M, 1+C)`` (column 0 = knots ``t*_1 &lt; ... &lt; t*_M``, columns</span>
+<span class="sd">    1: = piecewise hazard rates per scenario, extended to `+inf` beyond</span>
+<span class="sd">    the last knot).</span>
+
+<span class="sd">    Returns an array of shape ``(len(t), C)``.</span>
+
+<span class="sd">    Original: credit/survivalExponential.m</span>
+<span class="sd">    """</span>
+    <span class="n">t_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">lambda_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">lambda_</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">lambda_</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">t_arr</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">))</span>
+
+    <span class="n">tm0</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">hcum</span> <span class="o">=</span> <span class="n">_piecewise_pieces</span><span class="p">(</span><span class="n">lambda_</span><span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">_discretize_bin</span><span class="p">(</span><span class="n">t_arr</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">hcum</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">lam</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> <span class="p">(</span><span class="n">t_arr</span> <span class="o">-</span> <span class="n">tm0</span><span class="p">[</span><span class="n">idx</span><span class="p">])[:,</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">h</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.credit.reduced_form.survival_markov_generator" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">survival_markov_generator</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">lambda_matrix</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.credit.reduced_form.survival_markov_generator" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Survival probabilities <code>S(t) = Pr(tau &gt; t)</code> implied by a
+continuous-time Markov generator <code>lambda_matrix</code> (K x K), where state
+K is the absorbing "default" state: <code>S(t) = 1 - expm(t * Lambda)[:,
+K-1]</code>.</p>
+<p>Returns an array of shape <code>(len(t), K)</code>.</p>
+<p>Original: credit/Survival_Markov_Generator.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/credit/reduced_form.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">survival_markov_generator</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Survival probabilities ``S(t) = Pr(tau &gt; t)`` implied by a</span>
+<span class="sd">    continuous-time Markov generator `lambda_matrix` (K x K), where state</span>
+<span class="sd">    K is the absorbing "default" state: ``S(t) = 1 - expm(t * Lambda)[:,</span>
+<span class="sd">    K-1]``.</span>
+
+<span class="sd">    Returns an array of shape ``(len(t), K)``.</span>
+
+<span class="sd">    Original: credit/Survival_Markov_Generator.m</span>
+<span class="sd">    """</span>
+    <span class="n">t_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">lambda_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">lambda_matrix</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">lambda_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">t_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">t_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">expm</span><span class="p">(</span><span class="n">t_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">lambda_matrix</span><span class="p">)</span>
+            <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">m</span><span class="p">[:,</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">s</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
