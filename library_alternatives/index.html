@@ -1703,6 +1703,55 @@ port has a capability the alternative lacks.</p>
 <td>No clean existing home found. <code>scipy.stats</code> is conservative about adding new distribution families, and no general econometrics/risk package is a natural fit either — more realistic as its own small standalone release than a PR into an existing library.</td>
 </tr>
 <tr>
+<td><code>distributions.py</code> — beta/lognormal/inverse-Gaussian wrappers</td>
+<td><code>scipy.stats.{beta,lognorm,invgauss}</code> (already the backend, or algebraically equivalent under reparameterization)</td>
+<td><strong>KEEP</strong> (as call-site convenience)</td>
+<td>Same reasoning as the simple normal/t/chi2/F wrappers — verified numerically equivalent to the scipy distributions under each one's own shape/scale convention; kept so callers don't have to compute that reparameterization themselves.</td>
+<td>Not worth upstreaming — no capability gap.</td>
+</tr>
+<tr>
+<td><code>distributions.py</code> — <code>bates_cdf</code>/<code>bates_pdf</code></td>
+<td><em>(none)</em></td>
+<td><strong>KEEP</strong></td>
+<td><code>scipy.stats</code> has no named Bates distribution (mean of n iid Uniform(0,1) variables).</td>
+<td>Small, self-contained (a finite sum with <code>scipy.special.comb</code>) — a plausible <code>scipy.stats</code> PR, but a genuinely new distribution addition is a scoping conversation with scipy maintainers, not a drive-by PR.</td>
+</tr>
+<tr>
+<td><code>distributions.py</code> — <code>poisson_binomial_pmf</code></td>
+<td><code>scipy.stats.poisson_binom</code> (available since SciPy ~1.17)</td>
+<td><strong>SWITCH</strong></td>
+<td>Verified numerically identical to the original's own FFT and direct-recursion branches — no reason to hand-roll either.</td>
+<td>N/A — scipy already covers this.</td>
+</tr>
+<tr>
+<td><code>distributions.py</code> — <code>order_statistic_cdf</code>/<code>order_statistic_ppf</code></td>
+<td><code>scipy.stats.binom.sf</code> (for the CDF formula)</td>
+<td><strong>HYBRID</strong></td>
+<td>The order-statistic CDF is exactly <code>scipy.stats.binom.sf(i-1, n, F_x)</code> — evaluated via that rather than hand-computed binomial coefficients (more numerically stable for large n). The quantile version (grid search over sample points) has no scipy equivalent — kept as a hand-ported utility.</td>
+<td>The CDF formula itself isn't a gap (it's one line of <code>scipy.stats.binom</code>); the grid-search quantile utility is too narrow/implementation-specific to propose upstream.</td>
+</tr>
+<tr>
+<td><code>distributions.py</code> — <code>normal_ratio_cdf</code>/<code>normal_ratio_pdf</code> (Hinkley's ratio distribution)</td>
+<td><em>(none)</em></td>
+<td><strong>KEEP</strong></td>
+<td>The distribution of the ratio of two independent normals has no scipy equivalent (scipy has no "ratio distribution" family).</td>
+<td>Niche enough (a two-normal-ratio distribution, used here for risk-model diagnostics) that no obvious library is a natural home.</td>
+</tr>
+<tr>
+<td><code>distributions.py</code> — skew-normal (<code>skew_normal_{cdf,ppf,pdf,moments,rvs}</code>)</td>
+<td><code>scipy.stats.skewnorm</code> (already the backend)</td>
+<td><strong>SWITCH</strong></td>
+<td>Verified numerically exact match (pdf, cdf, and <code>moments="mvsk"</code> all agree under the direct <code>eta</code>/<code>xi</code>/<code>omega</code> -&gt; <code>a</code>/<code>loc</code>/<code>scale</code> mapping) — the original's dual numerical CDF branches and hand-rolled Newton-iteration quantile function are unnecessary once routed through <code>scipy</code>.</td>
+<td>N/A — scipy already covers this exactly.</td>
+</tr>
+<tr>
+<td><code>distributions.py</code> — skew-t (<code>skew_t_{cdf,ppf,pdf,moments,rvs}</code>)</td>
+<td><code>scipy.stats.jf_skew_t</code> (Jones &amp; Faddy's skew-t — checked and confirmed <strong>not</strong> the same family)</td>
+<td><strong>KEEP</strong></td>
+<td>This is Azzalini's skew-t (one skewness parameter + degrees of freedom); <code>scipy</code>'s only skew-t is a different two-shape-parameter family (Jones &amp; Faddy) with an incompatible parameterization. No scipy equivalent for Azzalini's version.</td>
+<td>Genuinely missing from <code>scipy.stats</code> — a plausible feature request, but skew-t already exists there under a different family, so framing (and possibly naming) would need care; a scoping conversation, not a drive-by PR.</td>
+</tr>
+<tr>
 <td><code>multivariate.py</code> — <code>bvn_cdf</code>/<code>bvn_pdf</code>/<code>bvt_cdf</code></td>
 <td><code>scipy.stats.multivariate_normal</code>/<code>multivariate_t</code> (already the backend)</td>
 <td><strong>KEEP</strong> (as a call-site convenience)</td>
@@ -1771,6 +1820,13 @@ port has a capability the alternative lacks.</p>
 <td><strong>HYBRID</strong></td>
 <td>RLM covers Huber, Tukey biweight, Andrew's wave, Hampel, and trimmed-mean M-estimators via IRLS — a superset of our Huber implementation, and more robustly tested. It does <em>not</em> cover LAD or quantile M-estimation directly (though <code>QuantReg(q=0.5)</code> is exactly LAD). Recommend: <code>RLM</code> for Huber/general M-estimation, keep our <code>lad_regression</code>/<code>quantile_m_regression</code>/<code>inverse_quantile_m_regression</code> for those specific losses.</td>
 <td>LAD/quantile M-estimation aren't in <code>RLM</code> today — worth raising as a statsmodels issue, though its estimator set is deliberately curated around IRLS M-estimators, so acceptance isn't a given.</td>
+</tr>
+<tr>
+<td><code>dose_response.py</code> (log-logistic/log-normal/Weibull/hormetic curves)</td>
+<td><em>(none)</em></td>
+<td><strong>KEEP</strong></td>
+<td><code>scipy</code> has no dose-response-curve module (this is toxicology/ecotoxicology territory, closer to R's <code>drc</code> package than anything in the scipy/statsmodels ecosystem).</td>
+<td><code>R</code>'s <code>drc</code> package is the closest prior art but there's no obvious Python home; niche enough that a standalone small package (mirroring <code>drc</code>'s scope) is more realistic than a PR into an existing general-purpose library.</td>
 </tr>
 </tbody>
 </table>
