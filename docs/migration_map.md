@@ -2,6 +2,12 @@
 
 Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 
+See also: [`matlab_bugs_found.md`](./matlab_bugs_found.md) for genuine
+defects found in the *original* MATLAB source during porting, and
+[`library_alternatives.md`](./library_alternatives.md) for an assessment
+of which ported modules should be replaced with mature Python libraries
+versus which genuinely justify staying custom.
+
 | Python module | Original MATLAB files | Status |
 |---|---|---|
 | `dates/convert.py` | `dates/Excel2Matlab_Dates.m`, `Matlab2Excel_Dates.m`, `is_yyyymmdd.m`, `numdate.m`, `datenum2.m`, `excel_column.m` | ✅ |
@@ -53,63 +59,9 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 
 ## Notes for translators
 
-- `maths/simulation.py` is now fully ported, including `momentum_ewma`
-  (an EWMA-momentum trend-following strategy simulator with an
-  analytical gamma/theta return decomposition) -- verified via an
-  algebraic identity that must hold exactly (`v_tilde_t == g_t * g_small_t
-  / 100`) and against the underlying `compute_ewma` drift estimate for
-  the applied exposure.
-- `svm/svm.py`: two real bugs were caught and fixed during porting, both
-  verified against sklearn (SVC/SVR) and internal primal-dual consistency:
-  (1) the epsilon-insensitive dual QP's block matrix [[Q,-Q],[-Q,Q]] is
-  PSD but rank-deficient, which made the default solver fail to converge
-  -- fixed with a small diagonal regularization plus a CLARABEL solver
-  fallback in `optim.quadprog.solve_qp` (a general robustness improvement,
-  not SVM-specific); (2) a boolean-array negation bug (`-(bool_array)`
-  isn't valid in NumPy, needs `.astype(float)` first).
-- `spline/spline.py`: several indexing bugs were caught by testing against
-  `scipy.interpolate.CubicSpline` (which the p=1 pure-interpolation case
-  should reproduce exactly, and does, to machine precision after fixes):
-  an off-by-one in which coefficient array was used for c0 vs c1 in both
-  `evaluate_spline` and `invert_spline`; a MATLAB-1-indexed vs.
-  Python-0-indexed error in the knot-bracketing search (the direct `1 +
-  sum(...)` translation over-counts by one once arrays are 0-indexed);
-  and a wrong matrix dimension in the smoothing-spline system (traced by
-  hand through the original's `rotater`-based matrix construction to
-  determine the correct shape).
-- `maths/numerical_diff.py`: `numerical_gradient` initially perturbed all
-  parameters simultaneously instead of one at a time (only valid for the
-  original's specific elementwise-vector-function case, not for a general
-  scalar function) -- caught by testing against a known quadratic form's
-  analytical gradient and fixed to match `numerical_jacobian`'s
-  one-parameter-at-a-time pattern.
-
-- `econometrics/whittle.py`: two real bugs were caught and fixed while
-  porting (both verified against known simulated parameters and against
-  analytical-vs-numerical gradient agreement, not just code review): (1)
-  the initial port called the periodogram with the wrong scaling flag
-  (the original always uses `periodogram(y, 1)`, i.e. divided by 2*pi);
-  (2) more notably, the *original MATLAB* `local_level_sdf_jacobian.m`
-  (and its local-linear-trend counterpart) differentiates the *unscaled*
-  spectral density while the SDF itself is scaled by 1/(2*pi) --
-  confirmed by comparing analytical vs. numerical gradients (off by
-  exactly a factor of 2*pi). The Python port adds the missing 1/(2*pi)
-  factor, documented inline in `_local_level_sdf_jacobian`.
-
-- `portfolio/risk_budgeting.py` is now fully ported: the classic
-  budget-constrained case, box-constrained case, general
-  linear-equality/inequality-constrained case, VaR/ES risk measures, and
-  the mu-target/sigma-target frontier search modes (`risk_budgeting_target`)
-  are all implemented and tested (consolidating ~75+ original files, most
-  of them near-duplicate solver variants). No remaining gaps in this file.
-  One real numerical bug was caught and fixed along the way: Newton's
-  method (used inside the ADMM x-update) had no positivity floor on the
-  weight vector, and could diverge to large negative values at extreme
-  risk-aversion (c) settings -- undetected, this caused both the inner
-  ADMM loop and the outer lambda/target-bisection to burn their full
-  iteration budgets on a broken, non-converging state (observed as a
-  multi-minute hang on `solve_box_constrained(..., c=100)`). Fixed with a
-  small positivity floor (`x = max(x, 1e-8)`) each Newton iteration.
+General guidance for anyone extending or re-verifying this port (see
+[`matlab_bugs_found.md`](./matlab_bugs_found.md) for the specific,
+already-resolved bugs found in the original source along the way):
 
 - Every module still using MATLAB `global` state (ADMM/CCD tolerances, MVO
   problem context, Proximal_Algorithm, GMM/ML/Whittle settings) should take
@@ -125,3 +77,8 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ ported & tested
 - `quadprog(...)` calls (MATLAB Optimization Toolbox) map to `qpsolvers.solve_qp`
   or `cvxpy` — solver choice affects numerical tolerance, so regression-test
   against the MATLAB output where precision matters (e.g. SVM support vectors).
+- When translating a formula that depends on a specific scaling/normalization
+  convention (e.g. a `2π` factor, a `1/n` normalization), verify it against
+  a known closed-form result or a numerical derivative rather than trusting
+  the transcription — several of the found bugs were exactly this kind of
+  silent scaling-factor mismatch.
