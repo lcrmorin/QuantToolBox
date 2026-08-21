@@ -51,13 +51,24 @@ nav:
       - Overview: examples/index.md
       - Risk budgeting (ERC / VaR / ES): examples/risk_budgeting.md
       - Black-Litterman: examples/black_litterman.md
+      - Mean-variance / MinVar / Tracking error: examples/mean_variance.md
+      - Ridge, OLS, robust regression: examples/regression.md
+      - SVM classification: examples/svm.md
+      - Building blocks (bisection, linalg, numerical diff): examples/building_blocks.md
   - API Reference:
       - Overview: api/index.md
-      - portfolio.risk_budgeting: api/portfolio_risk_budgeting.md
-      - portfolio.black_litterman: api/portfolio_black_litterman.md
-      - portfolio.mean_variance: api/portfolio_mean_variance.md
-      - stats.regression: api/stats_regression.md
+      - dates: api/dates.md
+      - backtest: api/backtest.md
+      - stats: api/stats.md
       - econometrics: api/econometrics.md
+      - optim: api/optim.md
+      - portfolio: api/portfolio.md
+      - mixtures: api/mixtures.md
+      - svm: api/svm.md
+      - spline: api/spline.md
+      - maths: api/maths.md
+      - linalg: api/linalg.md
+      - viz: api/viz.md
   - Notes for translators:
       - MATLAB bugs found: matlab_bugs_found.md
       - Library alternatives: library_alternatives.md
