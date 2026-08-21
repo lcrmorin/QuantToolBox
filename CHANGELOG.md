@@ -3,6 +3,39 @@
 All notable changes to this project are documented here. Versions follow
 [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`.
 
+## [0.2.0] - Target-matching portfolios, wider example coverage
+
+### Added
+
+- `portfolio.mean_variance.mvo_target_portfolio` and
+  `portfolio.tracking_error.te_target_portfolio`: mu-problem/sigma-problem
+  target-matching (bisect on risk-aversion gamma to hit a target expected
+  return, volatility, or tracking error) — closes a gap that was
+  previously documented as not ported.
+
+### Fixed
+
+- mypy `Cannot infer type of lambda` at the two new bisection call sites.
+
+### Docs
+
+- Every translated example script now shows up live-synced, directly on
+  its matching API reference page — the full ~150-script original
+  example set, not just the curated subset. Added a curated deep dive on
+  Whittle (frequency-domain) estimation, and a new
+  `docs/upstreaming_candidates.md` identifying which modules do something
+  no existing Python library does.
+- 13 more example scripts translated and cross-verified against the
+  original MATLAB source via Octave, including the `ects/` VARX/Kalman/
+  Whittle cluster and the `rpb/` Black-Litterman/MVO target-matching
+  set — tracker now at 30/149 cross-verified, 0 remaining untranslated
+  in `rpb/`. Found and documented a genuine bug in the original
+  `Examples/rpb/test_mvo3.m` along the way (missing `init_global` call
+  silently breaks target-matching — see `docs/matlab_bugs_found.md`).
+- Fixed a broken `mkdocs build --strict`, corrected the site title
+  casing, and reorganized the nav (translation tracker moved into
+  "Notes for translators").
+
 ## [0.1.0] - Initial release
 
 Complete Python port of the MATLAB QuantToolbox library. See
