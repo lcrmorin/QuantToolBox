@@ -18,6 +18,17 @@ Translation notes:
 - `stats/cdfbvt.m` wraps MATLAB's Statistics Toolbox `mvtcdf`; ported the
   same way, via `scipy.stats.multivariate_t.cdf` (arbitrary dimension,
   available since SciPy 1.9).
+- Both `bvn_cdf` and `bvt_cdf` clip `rho` a hair inside (-1, 1) before
+  building the 2x2 correlation matrix: `scipy`'s `multivariate_normal`/
+  `multivariate_t` raise `LinAlgError` on an exactly-singular (`|rho| ==
+  1`) matrix rather than falling back to the (well-defined) degenerate
+  limit, and `rho` can round to exactly +/-1 in float64 even when the
+  caller's inputs are only extremely close to that boundary -- e.g.
+  `stats.distributions.skew_t_cdf` hits this at `eta` near 0, where
+  `delta = (1 - eta^2) / (1 + eta^2)` underflows to `1.0`. Clipping is a
+  robustness addition beyond a literal transliteration of the original,
+  not a behavior change: the clipped and unclipped results agree to
+  float64 precision anywhere `scipy` would have succeeded anyway.
 - `genz/{qsimvn,qsimvnv,qsimvt,qsimvtv,qsilatmvnv,qsilatmvtv,qsimvnauto,
   mvnrcnv}.m` (8 of the 10 files in `genz/`) are randomized quasi-Monte-Carlo
   integrators solving exactly the same problem as
@@ -51,6 +62,7 @@ def bvn_cdf(x: np.ndarray | float, y: np.ndarray | float, rho: np.ndarray | floa
     x_arr, y_arr, rho_arr = np.broadcast_arrays(
         np.asarray(x, dtype=float), np.asarray(y, dtype=float), np.asarray(rho, dtype=float)
     )
+    rho_arr = np.clip(rho_arr, -1.0 + 1e-8, 1.0 - 1e-8)
     out = np.empty(x_arr.shape, dtype=float)
     for idx in np.ndindex(x_arr.shape):
         cov = np.array([[1.0, rho_arr[idx]], [rho_arr[idx], 1.0]])
@@ -103,6 +115,7 @@ def bvt_cdf(
         np.asarray(rho, dtype=float),
         np.asarray(nu, dtype=float),
     )
+    rho_arr = np.clip(rho_arr, -1.0 + 1e-8, 1.0 - 1e-8)
     out = np.empty(x_arr.shape, dtype=float)
     for idx in np.ndindex(x_arr.shape):
         shape = np.array([[1.0, rho_arr[idx]], [rho_arr[idx], 1.0]])

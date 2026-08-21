@@ -3,7 +3,7 @@
 ## `stats.distributions`
 
 !!! info "Python alternatives"
-    Simple wrappers (normal/t/chi2/F/MVN) are one-liners around `scipy.stats` — **keep**, but no reason to avoid calling `scipy.stats` directly either. The GQF1/GQF2 (generalized quadratic-form) distributions are genuinely niche — nothing in scipy, statsmodels, or elsewhere implements these. **Keep.**
+    Simple wrappers (normal/t/chi2/F/MVN/beta/skew-normal) are one-liners around `scipy.stats` — **switch**/**keep** as call-site convenience, no reason to avoid calling `scipy.stats` directly either. Skew-normal in particular fully **switches** to `scipy.stats.skewnorm` (verified numerically equivalent — no hand-rolled Newton iteration needed for its quantile function). GQF1/GQF2, skew-t (Azzalini's, not `scipy`'s Jones-Faddy `jf_skew_t`), the Bates distribution, and the normal-ratio (Hinkley) distribution are genuinely niche — nothing in scipy, statsmodels, or elsewhere implements these. **Keep.** Poisson-binomial matches `scipy.stats.poisson_binom` exactly — **switch**. Order-statistic CDF is a thin `scipy.stats.binom.sf`-backed convenience; its quantile counterpart (grid search) has no scipy equivalent — **hybrid**.
 
 ::: quanttoolbox.stats.distributions
 
@@ -13,6 +13,13 @@
     ```python
     --8<-- "examples/ects/quantile1.py"
     ```
+
+## `stats.dose_response`
+
+!!! info "Python alternatives"
+    **Keep** — `scipy` has no dose-response-curve module. These are small, closed-form sigmoidal curves (log-logistic, log-normal, Weibull, and two "hormetic" variants) used in toxicology/ecotoxicology; no general-purpose equivalent found.
+
+::: quanttoolbox.stats.dose_response
 
 ## `stats.multivariate`
 
