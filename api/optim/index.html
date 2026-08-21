@@ -1008,6 +1008,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1063,6 +1074,17 @@
     <span class="md-ellipsis">
       
         solve_qp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
       
     </span>
   </a>
@@ -1135,6 +1157,17 @@
     <span class="md-ellipsis">
       
         implicit_to_explicit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
       
     </span>
   </a>
@@ -1710,6 +1743,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1765,6 +1809,17 @@
     <span class="md-ellipsis">
       
         solve_qp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
       
     </span>
   </a>
@@ -1837,6 +1892,17 @@
     <span class="md-ellipsis">
       
         implicit_to_explicit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
       
     </span>
   </a>
@@ -2947,7 +3013,172 @@ method=2: equivalent computation via proximal_max.</p>
 
     </div>
 
-</div><h2 id="optimquadprog-solve_qp"><code>optim.quadprog</code> (<code>solve_qp</code>)<a class="headerlink" href="#optimquadprog-solve_qp" title="Permanent link">&para;</a></h2>
+</div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<details class="example">
+<summary>optim/prox_turnover1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/prox_turnover1.m -- compares the L1</span>
+<span class="sd">proximal (soft-thresholding) operator against the L1-ball projection (both</span>
+<span class="sd">its default sorted-cumsum algorithm and its `proximal_max`-based</span>
+<span class="sd">alternative) at two different starting points and lambda values.</span>
+
+<span class="sd">The original draws `v` from MATLAB's unseeded `rand`; a fixed seed</span>
+<span class="sd">(`np.random.default_rng(0)`) is substituted here for reproducibility, same</span>
+<span class="sd">convention used elsewhere in this port (see matrix1.py, building_blocks.md)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.projection</span><span class="w"> </span><span class="kn">import</span> <span class="n">projection_l1</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.proximal</span><span class="w"> </span><span class="kn">import</span> <span class="n">soft_thresholding</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">lambda_</span> <span class="o">=</span> <span class="mf">1.20</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">soft_thresholding</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+<span class="n">x3</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">v</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"lambda ="</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="s2">" x0 = 0"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"columns: v, proximal_L1, projection_L1 (method 1), projection_L1 (method 0)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"column sums of |x - x0|:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="n">lambda_</span> <span class="o">=</span> <span class="mf">2.00</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">soft_thresholding</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+<span class="n">x3</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">v</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">lambda ="</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="s2">" x0 = equal-weight (sums to 1)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"columns: v, proximal_L1, projection_L1 (method 1), projection_L1 (method 0)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"column sums of |x - x0|:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>optim/proximal1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/proximal1.m -- proximal projections onto</span>
+<span class="sd">boxes, single/multiple inequality constraints, single/multiple equality</span>
+<span class="sd">constraints, and combined linear-constraint sets, on a fixed random</span>
+<span class="sd">starting point.</span>
+
+<span class="sd">The original compares `Proximal_Algorithm = 1` (closed-form, where one</span>
+<span class="sd">exists) against `Proximal_Algorithm = 2` (an alternate/QP-based</span>
+<span class="sd">computation of the *same* projection) side by side. During porting, the</span>
+<span class="sd">redundant `Proximal_Algorithm == 2` branches for `proximal_bounds` and</span>
+<span class="sd">`proximal_equality` were dropped (see `proximal.py`'s module docstring --</span>
+<span class="sd">they solve the exact same problem the closed form already solves exactly,</span>
+<span class="sd">so keeping both added no information), and `proximal_inequality`/</span>
+<span class="sd">`proximal_linear_constraints` only ever had one (Dykstra) implementation.</span>
+<span class="sd">So there is no second variant left to compare here -- each constraint</span>
+<span class="sd">type is projected onto once below, rather than twice.</span>
+
+<span class="sd">The original draws x from MATLAB's unseeded `rand`; a fixed seed</span>
+<span class="sd">(`np.random.default_rng(0)`) is substituted here."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.proximal</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">proximal_bounds</span><span class="p">,</span>
+    <span class="n">proximal_equality</span><span class="p">,</span>
+    <span class="n">proximal_inequality</span><span class="p">,</span>
+    <span class="n">proximal_linear_constraints</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"x:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># Lower &amp; upper bounds</span>
+<span class="n">lb</span><span class="p">,</span> <span class="n">ub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">proximal_bounds</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Bounds [0, 0.5]:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># One inequality constraint</span>
+<span class="n">c_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">c_ineq</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">d_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">])</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">proximal_inequality</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c_ineq</span><span class="p">,</span> <span class="n">d_ineq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Inequality (1 constraint):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"retcode:"</span><span class="p">,</span> <span class="n">rc</span><span class="p">)</span>
+
+<span class="c1"># Two inequality constraints</span>
+<span class="n">c_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">d_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">c_ineq</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">c_ineq</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">d_ineq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">d_ineq</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">proximal_inequality</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c_ineq</span><span class="p">,</span> <span class="n">d_ineq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Inequality (2 constraints):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"retcode:"</span><span class="p">,</span> <span class="n">rc</span><span class="p">)</span>
+
+<span class="c1"># Four inequality constraints</span>
+<span class="n">c_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">d_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">c_ineq</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">c_ineq</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">c_ineq</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">c_ineq</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">d_ineq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">d_ineq</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span>
+<span class="n">d_ineq</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">d_ineq</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">proximal_inequality</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c_ineq</span><span class="p">,</span> <span class="n">d_ineq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Inequality (4 constraints):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"retcode:"</span><span class="p">,</span> <span class="n">rc</span><span class="p">)</span>
+
+<span class="c1"># One equality constraint</span>
+<span class="n">a_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.0</span><span class="p">])</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">proximal_equality</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Equality (1 constraint):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"retcode:"</span><span class="p">,</span> <span class="n">rc</span><span class="p">)</span>
+
+<span class="c1"># Two equality constraints</span>
+<span class="n">a_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">a_eq</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">a_eq</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">b_eq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.0</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">proximal_equality</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Equality (2 constraints):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"retcode:"</span><span class="p">,</span> <span class="n">rc</span><span class="p">)</span>
+
+<span class="c1"># Linear constraints: 1 equality + 1 inequality + bounds</span>
+<span class="n">a_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.0</span><span class="p">])</span>
+<span class="n">c_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">d_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">])</span>
+<span class="n">c_ineq</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">lb</span><span class="p">,</span> <span class="n">ub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">proximal_linear_constraints</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">c_ineq</span><span class="o">=</span><span class="n">c_ineq</span><span class="p">,</span> <span class="n">d_ineq</span><span class="o">=</span><span class="n">d_ineq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Linear constraints (1 eq, 1 ineq, bounds):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"retcode:"</span><span class="p">,</span> <span class="n">rc</span><span class="p">)</span>
+
+<span class="c1"># Linear constraints: 2 equality + 2 inequality + bounds</span>
+<span class="n">a_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">a_eq</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">a_eq</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">b_eq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.0</span>
+<span class="n">c_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">d_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">c_ineq</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">c_ineq</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">d_ineq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">d_ineq</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">proximal_linear_constraints</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">c_ineq</span><span class="o">=</span><span class="n">c_ineq</span><span class="p">,</span> <span class="n">d_ineq</span><span class="o">=</span><span class="n">d_ineq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Linear constraints (2 eq, 2 ineq, bounds):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"retcode:"</span><span class="p">,</span> <span class="n">rc</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<h2 id="optimquadprog-solve_qp"><code>optim.quadprog</code> (<code>solve_qp</code>)<a class="headerlink" href="#optimquadprog-solve_qp" title="Permanent link">&para;</a></h2>
 <div class="admonition info">
 <p class="admonition-title">Python alternatives</p>
 <p><strong>Hybrid</strong>: for hot loops calling <code>solve_qp</code> many times (e.g. risk-budgeting's inner ADMM loop), calling <code>qpsolvers.solve_qp</code> directly — bypassing cvxpy's DSL-parsing overhead — would likely be faster. Worth profiling if performance matters; keep the cvxpy-based version for its more expressive constraint composition (ridge/lasso penalties, arbitrary constraints).</p>
@@ -3648,7 +3879,218 @@ full matrix.</p>
 
     </div>
 
-</div><h2 id="optimbisection"><code>optim.bisection</code><a class="headerlink" href="#optimbisection" title="Permanent link">&para;</a></h2>
+</div><h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
+<details class="example">
+<summary>rpb/test_lasso1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],</span>
+<span class="sd">"Introduction to Risk Parity and Budgeting", Example 1 (page 53):</span>
+<span class="sd">compares an unconstrained gamma-problem MVO portfolio against the same</span>
+<span class="sd">problem with a budget (sum-to-1) constraint, and ridge/lasso-penalized</span>
+<span class="sd">variants (toward 0 and toward equal-weight) of the unconstrained</span>
+<span class="sd">problem.</span>
+
+<span class="sd">`compute_mvo_portfolio`/`quadprog_ridge`/`quadprog_lasso` map to</span>
+<span class="sd">`mvo_portfolio`/`solve_qp(..., ridge_penalty=...)`/`solve_qp(...,</span>
+<span class="sd">lasso_penalty=...)` as established in test_lasso3.py/test_lasso5.py; the</span>
+<span class="sd">original's `0, 0` sentinel arguments for "no equality constraint" /</span>
+<span class="sd">"no bounds" map to simply omitting those keyword arguments."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># Case gamma-problem</span>
+<span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="p">)</span><span class="o">.</span><span class="n">weights</span>
+
+<span class="n">lambda_ridge</span> <span class="o">=</span> <span class="mf">0.03</span>
+<span class="n">s_ridge</span> <span class="o">=</span> <span class="n">lambda_ridge</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">x3</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">s_ridge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">s_ridge</span><span class="p">,</span> <span class="n">x0</span><span class="p">))</span>
+
+<span class="n">lambda_lasso</span> <span class="o">=</span> <span class="mf">0.03</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">s_lasso</span> <span class="o">=</span> <span class="n">lambda_lasso</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">x5</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">s_lasso</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+<span class="n">x6</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">s_lasso</span><span class="p">,</span> <span class="n">x0</span><span class="p">))</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">x5</span><span class="p">,</span> <span class="n">x6</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"            x1      x2      x3      x4      x5      x6"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_lasso3.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso3.m (byte-identical to</span>
+<span class="sd">test_lasso4.m) -- MVO/ridge/lasso/mixed-penalty portfolios via the</span>
+<span class="sd">consolidated solve_qp (replacing the original's separate quadprog_ridge/</span>
+<span class="sd">quadprog_lasso/quadprog_mixed calls -- see optim/quadprog.py docstring)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
+
+<span class="c1"># gamma-problem (plain MVO)</span>
+<span class="n">r1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">r1</span><span class="o">.</span><span class="n">weights</span>
+
+<span class="c1"># ridge-problem: penalize toward zero, scaled by each asset's own variance</span>
+<span class="n">S_ridge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">))</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># lasso-problem: L1 penalty toward equal weight</span>
+<span class="n">lambda_lasso</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="n">x3</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># mixed-problem: both ridge and lasso, toward various targets</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="n">x5</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">x0</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="n">x6</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">x0</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">x7</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">x0</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">x0</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">"MVO"</span><span class="p">,</span> <span class="n">x1</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Ridge"</span><span class="p">,</span> <span class="n">x2</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Lasso"</span><span class="p">,</span> <span class="n">x3</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(0,0)"</span><span class="p">,</span> <span class="n">x4</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(EW,0)"</span><span class="p">,</span> <span class="n">x5</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(0,EW)"</span><span class="p">,</span> <span class="n">x6</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(EW,EW)"</span><span class="p">,</span> <span class="n">x7</span><span class="p">),</span>
+<span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_lasso5.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
+<span class="sd">portfolios with two different ridge/lasso target vectors (equal-weight</span>
+<span class="sd">and a custom 20/20/30/30 target)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">S_ridge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">))</span>
+<span class="n">lambda_lasso</span> <span class="o">=</span> <span class="mf">0.005</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">x6</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="c1"># mixed with DIFFERENT targets for ridge (toward y1) vs lasso (toward y2)</span>
+<span class="n">x8</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">"MVO"</span><span class="p">,</span> <span class="n">x1</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Ridge-&gt;y1"</span><span class="p">,</span> <span class="n">x2</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Lasso-&gt;y1"</span><span class="p">,</span> <span class="n">x4</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y1)"</span><span class="p">,</span> <span class="n">x6</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y2)"</span><span class="p">,</span> <span class="n">x8</span><span class="p">),</span>
+<span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<h2 id="optimbisection"><code>optim.bisection</code><a class="headerlink" href="#optimbisection" title="Permanent link">&para;</a></h2>
 <div class="admonition info">
 <p class="admonition-title">Python alternatives</p>
 <p><strong>Hybrid</strong>: <code>scipy.optimize.brentq</code>/<code>bisect</code> converge faster (superlinear) for scalar root-finding and are compiled. <strong>Keep</strong> our vectorized (array-broadcast, many-roots-at-once) version — scipy's root finders are scalar-only.</p>
@@ -4065,7 +4507,64 @@ an explicit linear-constraint system (CC @ x = c).</p>
 
     </div>
 
-</div>
+</div><h3 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h3>
+<details class="example">
+<summary>optim/explicit2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/explicit2.m -- explicit&lt;-&gt;implicit</span>
+<span class="sd">constraint conversion for a single equality constraint (x[0] = x[1]), plus</span>
+<span class="sd">a `design` matrix built from a category-index vector."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">design</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.bisection</span><span class="w"> </span><span class="kn">import</span> <span class="n">explicit_to_implicit</span><span class="p">,</span> <span class="n">implicit_to_explicit</span>
+
+<span class="n">CC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>  <span class="c1"># constraint: x[0] - x[1] = 0</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">])</span>
+
+<span class="n">RR</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">explicit_to_implicit</span><span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="n">CC2</span><span class="p">,</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">implicit_to_explicit</span><span class="p">(</span><span class="n">RR</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"R:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">RR</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">r:"</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">C:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">CC2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">c:"</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)])</span>  <span class="c1"># seqa(2,1,6)</span>
+<span class="n">RR2</span> <span class="o">=</span> <span class="n">design</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">R (design(w)):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">RR2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">r:"</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>optim/explicit3.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/explicit3.m -- explicit-to-implicit</span>
+<span class="sd">conversion for three simultaneous zero-restrictions on an 8-parameter</span>
+<span class="sd">vector (as would arise e.g. from AR1_12=0, MA1_11=0, MA1_21=0 in a VAR</span>
+<span class="sd">specification)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.bisection</span><span class="w"> </span><span class="kn">import</span> <span class="n">explicit_to_implicit</span>
+
+<span class="n">CC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">CC</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># beta[2] = 0  (AR1_12)</span>
+<span class="n">CC</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># beta[4] = 0  (MA1_11)</span>
+<span class="n">CC</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># beta[5] = 0  (MA1_21)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">RR</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">explicit_to_implicit</span><span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"R:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">RR</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">r:"</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+</code></pre></div>
+</details>
 
 
 

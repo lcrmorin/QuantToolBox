@@ -1159,6 +1159,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1537,6 +1548,17 @@
     <span class="md-ellipsis">
       
         xpnd
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
       
     </span>
   </a>
@@ -2325,7 +2347,1195 @@ method=2 or 'c': column-wise ordering.</p>
 
     </div>
 
-</div>
+</div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<details class="example">
+<summary>ects/varx1d.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx1d.m -- Lutkepohl [1991], chapter 5:</span>
+<span class="sd">re-estimates the VAR(2) model from varx1a.py with 14 of its 21</span>
+<span class="sd">coefficients restricted to exactly 0 (the ones that came out</span>
+<span class="sd">non-significant in the unrestricted fit), leaving only 7 free</span>
+<span class="sd">parameters, via both the LS (`varx_cls` -&gt; `varx_estimate(...,</span>
+<span class="sd">method="ls")`) and concentrated/iterated-ML (`varx_cml` -&gt;</span>
+<span class="sd">`varx_estimate_cml`) restricted estimators, and compares the two</span>
+<span class="sd">resulting B = [Phi, beta] matrices.</span>
+
+<span class="sd">`RR = design(w)` builds the (21, 7) restriction matrix directly from the</span>
+<span class="sd">free-parameter index vector `w` (0 = restricted to r=0, k = maps to free</span>
+<span class="sd">parameter k), exactly matching `quanttoolbox`'s `restriction=(RR, r)`</span>
+<span class="sd">convention."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.var</span><span class="w"> </span><span class="kn">import</span> <span class="n">varx_estimate</span><span class="p">,</span> <span class="n">varx_estimate_cml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">design</span>
+
+<span class="n">_LUTKEPOHL_DATA</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">       601       180       451       415</span>
+<span class="s2">       602       179       465       421</span>
+<span class="s2">       603       185       485       434</span>
+<span class="s2">       604       192       493       448</span>
+<span class="s2">       611       211       509       459</span>
+<span class="s2">       612       202       520       458</span>
+<span class="s2">       613       207       521       479</span>
+<span class="s2">       614       214       540       487</span>
+<span class="s2">       621       231       548       497</span>
+<span class="s2">       622       229       558       510</span>
+<span class="s2">       623       234       574       516</span>
+<span class="s2">       624       237       583       525</span>
+<span class="s2">       631       206       591       529</span>
+<span class="s2">       632       250       599       538</span>
+<span class="s2">       633       259       610       546</span>
+<span class="s2">       634       263       627       555</span>
+<span class="s2">       641       264       642       574</span>
+<span class="s2">       642       280       653       574</span>
+<span class="s2">       643       282       660       586</span>
+<span class="s2">       644       292       694       602</span>
+<span class="s2">       651       286       709       617</span>
+<span class="s2">       652       302       734       639</span>
+<span class="s2">       653       304       751       653</span>
+<span class="s2">       654       307       763       668</span>
+<span class="s2">       661       317       766       679</span>
+<span class="s2">       662       314       779       686</span>
+<span class="s2">       663       306       808       697</span>
+<span class="s2">       664       304       785       688</span>
+<span class="s2">       671       292       794       704</span>
+<span class="s2">       672       275       799       699</span>
+<span class="s2">       673       273       799       709</span>
+<span class="s2">       674       301       812       715</span>
+<span class="s2">       681       280       837       724</span>
+<span class="s2">       682       289       853       746</span>
+<span class="s2">       683       303       876       758</span>
+<span class="s2">       684       322       897       779</span>
+<span class="s2">       691       315       922       798</span>
+<span class="s2">       692       339       949       816</span>
+<span class="s2">       693       364       979       837</span>
+<span class="s2">       694       371       988       858</span>
+<span class="s2">       701       375      1025       881</span>
+<span class="s2">       702       432      1063       905</span>
+<span class="s2">       703       453      1104       934</span>
+<span class="s2">       704       460      1131       968</span>
+<span class="s2">       711       475      1137       983</span>
+<span class="s2">       712       496      1178      1013</span>
+<span class="s2">       713       494      1211      1034</span>
+<span class="s2">       714       498      1256      1064</span>
+<span class="s2">       721       526      1290      1101</span>
+<span class="s2">       722       519      1314      1102</span>
+<span class="s2">       723       516      1346      1145</span>
+<span class="s2">       724       531      1385      1173</span>
+<span class="s2">       731       573      1416      1216</span>
+<span class="s2">       732       551      1436      1229</span>
+<span class="s2">       733       538      1462      1242</span>
+<span class="s2">       734       532      1493      1267</span>
+<span class="s2">       741       558      1516      1295</span>
+<span class="s2">       742       524      1557      1317</span>
+<span class="s2">       743       525      1613      1355</span>
+<span class="s2">       744       519      1642      1371</span>
+<span class="s2">       751       526      1690      1402</span>
+<span class="s2">       752       510      1759      1452</span>
+<span class="s2">       753       519      1756      1485</span>
+<span class="s2">       754       538      1780      1516</span>
+<span class="s2">       761       549      1807      1549</span>
+<span class="s2">       762       570      1831      1567</span>
+<span class="s2">       763       559      1873      1588</span>
+<span class="s2">       764       584      1897      1631</span>
+<span class="s2">       771       611      1910      1650</span>
+<span class="s2">       772       597      1943      1685</span>
+<span class="s2">       773       603      1976      1722</span>
+<span class="s2">       774       619      2018      1752</span>
+<span class="s2">       781       635      2040      1774</span>
+<span class="s2">       782       658      2070      1807</span>
+<span class="s2">       783       675      2121      1831</span>
+<span class="s2">       784       700      2132      1842</span>
+<span class="s2">"""</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">_LUTKEPOHL_DATA</span><span class="p">))</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">investment</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">income</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">consumption</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_diff1</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">a</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">d</span>
+
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">_diff1</span><span class="p">(</span><span class="n">investment</span><span class="p">),</span> <span class="n">_diff1</span><span class="p">(</span><span class="n">income</span><span class="p">),</span> <span class="n">_diff1</span><span class="p">(</span><span class="n">consumption</span><span class="p">)])</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Use the results of the VAR(2) estimation and set non-significant</span>
+<span class="c1"># estimates equal to 0</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+<span class="n">rr</span> <span class="o">=</span> <span class="n">design</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span>
+
+<span class="n">result1</span> <span class="o">=</span> <span class="n">varx_estimate</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ls"</span><span class="p">)</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">varx_estimate_cml</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">r</span><span class="p">))</span>
+
+<span class="n">b1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">result1</span><span class="o">.</span><span class="n">phi</span><span class="p">,</span> <span class="n">result1</span><span class="o">.</span><span class="n">beta</span><span class="p">])</span>
+<span class="n">b2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">result2</span><span class="o">.</span><span class="n">phi</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">beta</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"B(LS) ="</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">B(ML) ="</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">b2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>ects/varx2b.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx2b.m -- Lutkepohl [1991], chapter</span>
+<span class="sd">10: re-estimates the reduced-form dynamic simultaneous-equations model</span>
+<span class="sd">from varx2a.py with four coefficients restricted: the Inc(t-1)</span>
+<span class="sd">coefficient in the Inc(t) equation fixed at 1, and the Cons(t-1)/</span>
+<span class="sd">constant coefficients in the Inc(t) equation and the Inv(t-1)</span>
+<span class="sd">coefficient in the Cons(t) equation all fixed at 0 -- via `varx_cls` -&gt;</span>
+<span class="sd">`varx_estimate(..., method="ls")`."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.var</span><span class="w"> </span><span class="kn">import</span> <span class="n">varx_estimate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">design</span>
+
+<span class="n">_LUTKEPOHL_DATA</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">       601       180       451       415</span>
+<span class="s2">       602       179       465       421</span>
+<span class="s2">       603       185       485       434</span>
+<span class="s2">       604       192       493       448</span>
+<span class="s2">       611       211       509       459</span>
+<span class="s2">       612       202       520       458</span>
+<span class="s2">       613       207       521       479</span>
+<span class="s2">       614       214       540       487</span>
+<span class="s2">       621       231       548       497</span>
+<span class="s2">       622       229       558       510</span>
+<span class="s2">       623       234       574       516</span>
+<span class="s2">       624       237       583       525</span>
+<span class="s2">       631       206       591       529</span>
+<span class="s2">       632       250       599       538</span>
+<span class="s2">       633       259       610       546</span>
+<span class="s2">       634       263       627       555</span>
+<span class="s2">       641       264       642       574</span>
+<span class="s2">       642       280       653       574</span>
+<span class="s2">       643       282       660       586</span>
+<span class="s2">       644       292       694       602</span>
+<span class="s2">       651       286       709       617</span>
+<span class="s2">       652       302       734       639</span>
+<span class="s2">       653       304       751       653</span>
+<span class="s2">       654       307       763       668</span>
+<span class="s2">       661       317       766       679</span>
+<span class="s2">       662       314       779       686</span>
+<span class="s2">       663       306       808       697</span>
+<span class="s2">       664       304       785       688</span>
+<span class="s2">       671       292       794       704</span>
+<span class="s2">       672       275       799       699</span>
+<span class="s2">       673       273       799       709</span>
+<span class="s2">       674       301       812       715</span>
+<span class="s2">       681       280       837       724</span>
+<span class="s2">       682       289       853       746</span>
+<span class="s2">       683       303       876       758</span>
+<span class="s2">       684       322       897       779</span>
+<span class="s2">       691       315       922       798</span>
+<span class="s2">       692       339       949       816</span>
+<span class="s2">       693       364       979       837</span>
+<span class="s2">       694       371       988       858</span>
+<span class="s2">       701       375      1025       881</span>
+<span class="s2">       702       432      1063       905</span>
+<span class="s2">       703       453      1104       934</span>
+<span class="s2">       704       460      1131       968</span>
+<span class="s2">       711       475      1137       983</span>
+<span class="s2">       712       496      1178      1013</span>
+<span class="s2">       713       494      1211      1034</span>
+<span class="s2">       714       498      1256      1064</span>
+<span class="s2">       721       526      1290      1101</span>
+<span class="s2">       722       519      1314      1102</span>
+<span class="s2">       723       516      1346      1145</span>
+<span class="s2">       724       531      1385      1173</span>
+<span class="s2">       731       573      1416      1216</span>
+<span class="s2">       732       551      1436      1229</span>
+<span class="s2">       733       538      1462      1242</span>
+<span class="s2">       734       532      1493      1267</span>
+<span class="s2">       741       558      1516      1295</span>
+<span class="s2">       742       524      1557      1317</span>
+<span class="s2">       743       525      1613      1355</span>
+<span class="s2">       744       519      1642      1371</span>
+<span class="s2">       751       526      1690      1402</span>
+<span class="s2">       752       510      1759      1452</span>
+<span class="s2">       753       519      1756      1485</span>
+<span class="s2">       754       538      1780      1516</span>
+<span class="s2">       761       549      1807      1549</span>
+<span class="s2">       762       570      1831      1567</span>
+<span class="s2">       763       559      1873      1588</span>
+<span class="s2">       764       584      1897      1631</span>
+<span class="s2">       771       611      1910      1650</span>
+<span class="s2">       772       597      1943      1685</span>
+<span class="s2">       773       603      1976      1722</span>
+<span class="s2">       774       619      2018      1752</span>
+<span class="s2">       781       635      2040      1774</span>
+<span class="s2">       782       658      2070      1807</span>
+<span class="s2">       783       675      2121      1831</span>
+<span class="s2">       784       700      2132      1842</span>
+<span class="s2">"""</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">_LUTKEPOHL_DATA</span><span class="p">))</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">investment</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">income</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">consumption</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">lag_investment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">lag_investment</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">investment</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">lag_investment</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">income</span><span class="p">,</span> <span class="n">consumption</span><span class="p">])</span>
+
+<span class="c1"># Restrictions: Inc(t-1) coeff in Inc(t) eq = 1; Cons(t-1) coeff and</span>
+<span class="c1"># constant in Inc(t) eq = 0; Inv(t-1) coeff in Cons(t) eq = 0.</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">rr</span> <span class="o">=</span> <span class="n">design</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">varx_estimate</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ls"</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">result</span><span class="o">.</span><span class="n">phi</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">beta</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"               Inc(t-1)   Cons(t-1)    Constant    Inv(t-1)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Inc(t)  "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Cons(t) "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>ects/varx2c.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx2c.m -- identical setup to</span>
+<span class="sd">varx2b.py, but estimated via `varx_cml` -&gt; `varx_estimate_cml`</span>
+<span class="sd">(concentrated/iterated ML) instead of restricted LS."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.var</span><span class="w"> </span><span class="kn">import</span> <span class="n">varx_estimate_cml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">design</span>
+
+<span class="n">_LUTKEPOHL_DATA</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">       601       180       451       415</span>
+<span class="s2">       602       179       465       421</span>
+<span class="s2">       603       185       485       434</span>
+<span class="s2">       604       192       493       448</span>
+<span class="s2">       611       211       509       459</span>
+<span class="s2">       612       202       520       458</span>
+<span class="s2">       613       207       521       479</span>
+<span class="s2">       614       214       540       487</span>
+<span class="s2">       621       231       548       497</span>
+<span class="s2">       622       229       558       510</span>
+<span class="s2">       623       234       574       516</span>
+<span class="s2">       624       237       583       525</span>
+<span class="s2">       631       206       591       529</span>
+<span class="s2">       632       250       599       538</span>
+<span class="s2">       633       259       610       546</span>
+<span class="s2">       634       263       627       555</span>
+<span class="s2">       641       264       642       574</span>
+<span class="s2">       642       280       653       574</span>
+<span class="s2">       643       282       660       586</span>
+<span class="s2">       644       292       694       602</span>
+<span class="s2">       651       286       709       617</span>
+<span class="s2">       652       302       734       639</span>
+<span class="s2">       653       304       751       653</span>
+<span class="s2">       654       307       763       668</span>
+<span class="s2">       661       317       766       679</span>
+<span class="s2">       662       314       779       686</span>
+<span class="s2">       663       306       808       697</span>
+<span class="s2">       664       304       785       688</span>
+<span class="s2">       671       292       794       704</span>
+<span class="s2">       672       275       799       699</span>
+<span class="s2">       673       273       799       709</span>
+<span class="s2">       674       301       812       715</span>
+<span class="s2">       681       280       837       724</span>
+<span class="s2">       682       289       853       746</span>
+<span class="s2">       683       303       876       758</span>
+<span class="s2">       684       322       897       779</span>
+<span class="s2">       691       315       922       798</span>
+<span class="s2">       692       339       949       816</span>
+<span class="s2">       693       364       979       837</span>
+<span class="s2">       694       371       988       858</span>
+<span class="s2">       701       375      1025       881</span>
+<span class="s2">       702       432      1063       905</span>
+<span class="s2">       703       453      1104       934</span>
+<span class="s2">       704       460      1131       968</span>
+<span class="s2">       711       475      1137       983</span>
+<span class="s2">       712       496      1178      1013</span>
+<span class="s2">       713       494      1211      1034</span>
+<span class="s2">       714       498      1256      1064</span>
+<span class="s2">       721       526      1290      1101</span>
+<span class="s2">       722       519      1314      1102</span>
+<span class="s2">       723       516      1346      1145</span>
+<span class="s2">       724       531      1385      1173</span>
+<span class="s2">       731       573      1416      1216</span>
+<span class="s2">       732       551      1436      1229</span>
+<span class="s2">       733       538      1462      1242</span>
+<span class="s2">       734       532      1493      1267</span>
+<span class="s2">       741       558      1516      1295</span>
+<span class="s2">       742       524      1557      1317</span>
+<span class="s2">       743       525      1613      1355</span>
+<span class="s2">       744       519      1642      1371</span>
+<span class="s2">       751       526      1690      1402</span>
+<span class="s2">       752       510      1759      1452</span>
+<span class="s2">       753       519      1756      1485</span>
+<span class="s2">       754       538      1780      1516</span>
+<span class="s2">       761       549      1807      1549</span>
+<span class="s2">       762       570      1831      1567</span>
+<span class="s2">       763       559      1873      1588</span>
+<span class="s2">       764       584      1897      1631</span>
+<span class="s2">       771       611      1910      1650</span>
+<span class="s2">       772       597      1943      1685</span>
+<span class="s2">       773       603      1976      1722</span>
+<span class="s2">       774       619      2018      1752</span>
+<span class="s2">       781       635      2040      1774</span>
+<span class="s2">       782       658      2070      1807</span>
+<span class="s2">       783       675      2121      1831</span>
+<span class="s2">       784       700      2132      1842</span>
+<span class="s2">"""</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">_LUTKEPOHL_DATA</span><span class="p">))</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">investment</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">income</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">consumption</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">lag_investment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">lag_investment</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">investment</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">lag_investment</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">income</span><span class="p">,</span> <span class="n">consumption</span><span class="p">])</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">rr</span> <span class="o">=</span> <span class="n">design</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">varx_estimate_cml</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">r</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">result</span><span class="o">.</span><span class="n">phi</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">beta</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"               Inc(t-1)   Cons(t-1)    Constant    Inv(t-1)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Inc(t)  "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Cons(t) "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>ects/varx4a.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx4a.m -- Judge, Hill, Griffiths,</span>
+<span class="sd">Lutkepohl &amp; Lee [1988], "Introduction to the Theory and Practice of</span>
+<span class="sd">Econometrics", pages 444-455: restricted SUR (seemingly-unrelated-</span>
+<span class="sd">regressions) estimation of a 2-equation system with 10 stacked</span>
+<span class="sd">coefficients restricted down to 5 free parameters (via `design(w)`), on</span>
+<span class="sd">a small 20-observation embedded dataset.</span>
+
+<span class="sd">Two-step procedure, exactly as the original: first estimate with an</span>
+<span class="sd">identity residual covariance (`sigma=None`) to obtain a residual</span>
+<span class="sd">covariance estimate, then re-estimate using that Sigma as the GLS</span>
+<span class="sd">weighting matrix (`varx_cls` -&gt; `varx_estimate(..., method="ls")` in</span>
+<span class="sd">both steps; `p=0` means no autoregressive lags, i.e. this is a pure</span>
+<span class="sd">restricted SUR regression via the VARX machinery, `results.B` here is</span>
+<span class="sd">just `result.beta` since `p=0` makes `result.phi` empty)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.var</span><span class="w"> </span><span class="kn">import</span> <span class="n">varx_estimate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">design</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mf">40.05292</span><span class="p">,</span> <span class="mf">1170.6</span><span class="p">,</span> <span class="mf">97.8</span><span class="p">,</span> <span class="mf">2.52813</span><span class="p">,</span> <span class="mf">191.5</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">54.64859</span><span class="p">,</span> <span class="mf">2015.8</span><span class="p">,</span> <span class="mf">104.4</span><span class="p">,</span> <span class="mf">24.91888</span><span class="p">,</span> <span class="mi">516</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">40.31206</span><span class="p">,</span> <span class="mf">2803.3</span><span class="p">,</span> <span class="mi">118</span><span class="p">,</span> <span class="mf">29.3427</span><span class="p">,</span> <span class="mi">729</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">84.21099</span><span class="p">,</span> <span class="mf">2039.7</span><span class="p">,</span> <span class="mf">156.2</span><span class="p">,</span> <span class="mf">27.61823</span><span class="p">,</span> <span class="mf">560.4</span><span class="p">,</span> <span class="mf">18.1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">127.5724</span><span class="p">,</span> <span class="mf">2256.2</span><span class="p">,</span> <span class="mf">172.6</span><span class="p">,</span> <span class="mf">60.35945</span><span class="p">,</span> <span class="mf">519.9</span><span class="p">,</span> <span class="mf">23.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">124.8797</span><span class="p">,</span> <span class="mf">2132.2</span><span class="p">,</span> <span class="mf">186.6</span><span class="p">,</span> <span class="mf">50.61588</span><span class="p">,</span> <span class="mf">628.5</span><span class="p">,</span> <span class="mf">26.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">96.55514</span><span class="p">,</span> <span class="mf">1834.1</span><span class="p">,</span> <span class="mf">220.9</span><span class="p">,</span> <span class="mf">30.70955</span><span class="p">,</span> <span class="mf">537.1</span><span class="p">,</span> <span class="mf">36.2</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">131.1601</span><span class="p">,</span> <span class="mi">1588</span><span class="p">,</span> <span class="mf">287.8</span><span class="p">,</span> <span class="mf">60.69605</span><span class="p">,</span> <span class="mf">561.2</span><span class="p">,</span> <span class="mf">60.8</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">77.02764</span><span class="p">,</span> <span class="mf">1749.4</span><span class="p">,</span> <span class="mf">319.9</span><span class="p">,</span> <span class="mf">30.00972</span><span class="p">,</span> <span class="mf">617.2</span><span class="p">,</span> <span class="mf">84.4</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">46.96689</span><span class="p">,</span> <span class="mf">1687.2</span><span class="p">,</span> <span class="mf">321.3</span><span class="p">,</span> <span class="mf">42.5075</span><span class="p">,</span> <span class="mf">626.7</span><span class="p">,</span> <span class="mf">91.2</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">100.6597</span><span class="p">,</span> <span class="mf">2007.7</span><span class="p">,</span> <span class="mf">319.6</span><span class="p">,</span> <span class="mf">58.61146</span><span class="p">,</span> <span class="mf">737.2</span><span class="p">,</span> <span class="mf">92.4</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">115.7467</span><span class="p">,</span> <span class="mf">2208.3</span><span class="p">,</span> <span class="mi">346</span><span class="p">,</span> <span class="mf">46.96287</span><span class="p">,</span> <span class="mf">760.5</span><span class="p">,</span> <span class="mi">86</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">114.5826</span><span class="p">,</span> <span class="mf">1656.7</span><span class="p">,</span> <span class="mf">456.4</span><span class="p">,</span> <span class="mf">57.87651</span><span class="p">,</span> <span class="mf">581.4</span><span class="p">,</span> <span class="mf">111.1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">119.8762</span><span class="p">,</span> <span class="mf">1604.4</span><span class="p">,</span> <span class="mf">543.4</span><span class="p">,</span> <span class="mf">43.22093</span><span class="p">,</span> <span class="mf">662.3</span><span class="p">,</span> <span class="mf">130.6</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">105.5699</span><span class="p">,</span> <span class="mf">1431.8</span><span class="p">,</span> <span class="mf">618.3</span><span class="p">,</span> <span class="mf">22.87143</span><span class="p">,</span> <span class="mf">583.8</span><span class="p">,</span> <span class="mf">141.8</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">148.4266</span><span class="p">,</span> <span class="mf">1610.5</span><span class="p">,</span> <span class="mf">647.4</span><span class="p">,</span> <span class="mf">52.94754</span><span class="p">,</span> <span class="mf">635.2</span><span class="p">,</span> <span class="mf">136.7</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">194.3622</span><span class="p">,</span> <span class="mf">1819.4</span><span class="p">,</span> <span class="mf">671.3</span><span class="p">,</span> <span class="mf">71.2303</span><span class="p">,</span> <span class="mf">723.8</span><span class="p">,</span> <span class="mf">129.7</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">158.2037</span><span class="p">,</span> <span class="mf">2079.7</span><span class="p">,</span> <span class="mf">726.1</span><span class="p">,</span> <span class="mf">61.7255</span><span class="p">,</span> <span class="mf">864.1</span><span class="p">,</span> <span class="mf">145.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">163.093</span><span class="p">,</span> <span class="mf">2371.6</span><span class="p">,</span> <span class="mf">800.3</span><span class="p">,</span> <span class="mf">85.13053</span><span class="p">,</span> <span class="mf">1193.5</span><span class="p">,</span> <span class="mf">174.8</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">227.5634</span><span class="p">,</span> <span class="mf">2759.9</span><span class="p">,</span> <span class="mf">888.9</span><span class="p">,</span> <span class="mf">88.27518</span><span class="p">,</span> <span class="mf">1188.9</span><span class="p">,</span> <span class="mf">213.5</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]]])</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="n">rr</span> <span class="o">=</span> <span class="n">design</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># First perform a VARX estimation to obtain an estimate of Sigma</span>
+<span class="n">result0</span> <span class="o">=</span> <span class="n">varx_estimate</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ls"</span><span class="p">)</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">result0</span><span class="o">.</span><span class="n">sigma</span>
+
+<span class="c1"># Then, perform a VARX estimation given the estimated Sigma</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">varx_estimate</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ls"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"theta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"stderr:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">B (= beta, since p=0):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>ects/varx4b.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx4b.m -- Judge, Hill, Griffiths,</span>
+<span class="sd">Lutkepohl &amp; Lee [1988], pages 460-462: restricted SUR estimation of a</span>
+<span class="sd">3-equation system (log income on log prices + log quantity, 15 stacked</span>
+<span class="sd">coefficients restricted to 7/9 free parameters) on a 30-observation</span>
+<span class="sd">embedded dataset, comparing two different restricted-residual Sigma</span>
+<span class="sd">estimates used as the GLS weighting matrix for the final restricted SUR</span>
+<span class="sd">fit.</span>
+
+<span class="sd">Three steps, exactly as the original: (1) Sigma1 from a 9-free-parameter</span>
+<span class="sd">restriction (`w`), (2) Sigma2 from a more tightly restricted 7-free-</span>
+<span class="sd">parameter version of the same `w` (indices 8 and 12 tied to the same</span>
+<span class="sd">free parameter as index 4), (3) the final restricted SUR fit run once</span>
+<span class="sd">with each Sigma."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.var</span><span class="w"> </span><span class="kn">import</span> <span class="n">varx_estimate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">design</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mf">10.763</span><span class="p">,</span> <span class="mf">4.474</span><span class="p">,</span> <span class="mf">6.629</span><span class="p">,</span> <span class="mf">487.648</span><span class="p">,</span> <span class="mf">11.632</span><span class="p">,</span> <span class="mf">13.194</span><span class="p">,</span> <span class="mf">45.770</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">13.033</span><span class="p">,</span> <span class="mf">10.836</span><span class="p">,</span> <span class="mf">13.774</span><span class="p">,</span> <span class="mf">364.877</span><span class="p">,</span> <span class="mf">12.029</span><span class="p">,</span> <span class="mf">2.181</span><span class="p">,</span> <span class="mf">13.393</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">9.244</span><span class="p">,</span> <span class="mf">5.856</span><span class="p">,</span> <span class="mf">4.063</span><span class="p">,</span> <span class="mf">514.037</span><span class="p">,</span> <span class="mf">8.196</span><span class="p">,</span> <span class="mf">5.586</span><span class="p">,</span> <span class="mf">104.819</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">4.605</span><span class="p">,</span> <span class="mf">14.010</span><span class="p">,</span> <span class="mf">3.868</span><span class="p">,</span> <span class="mf">760.343</span><span class="p">,</span> <span class="mf">33.908</span><span class="p">,</span> <span class="mf">5.231</span><span class="p">,</span> <span class="mf">137.269</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">13.045</span><span class="p">,</span> <span class="mf">11.417</span><span class="p">,</span> <span class="mf">14.922</span><span class="p">,</span> <span class="mf">421.746</span><span class="p">,</span> <span class="mf">4.561</span><span class="p">,</span> <span class="mf">10.930</span><span class="p">,</span> <span class="mf">15.914</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.706</span><span class="p">,</span> <span class="mf">8.755</span><span class="p">,</span> <span class="mf">14.138</span><span class="p">,</span> <span class="mf">578.214</span><span class="p">,</span> <span class="mf">17.594</span><span class="p">,</span> <span class="mf">11.854</span><span class="p">,</span> <span class="mf">23.667</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.405</span><span class="p">,</span> <span class="mf">7.317</span><span class="p">,</span> <span class="mf">4.794</span><span class="p">,</span> <span class="mf">561.734</span><span class="p">,</span> <span class="mf">18.842</span><span class="p">,</span> <span class="mf">17.045</span><span class="p">,</span> <span class="mf">62.057</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.519</span><span class="p">,</span> <span class="mf">6.360</span><span class="p">,</span> <span class="mf">3.768</span><span class="p">,</span> <span class="mf">301.470</span><span class="p">,</span> <span class="mf">11.637</span><span class="p">,</span> <span class="mf">2.682</span><span class="p">,</span> <span class="mf">52.262</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">8.764</span><span class="p">,</span> <span class="mf">4.188</span><span class="p">,</span> <span class="mf">8.089</span><span class="p">,</span> <span class="mf">379.636</span><span class="p">,</span> <span class="mf">7.645</span><span class="p">,</span> <span class="mf">13.008</span><span class="p">,</span> <span class="mf">31.916</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">13.511</span><span class="p">,</span> <span class="mf">1.996</span><span class="p">,</span> <span class="mf">2.708</span><span class="p">,</span> <span class="mf">478.855</span><span class="p">,</span> <span class="mf">7.881</span><span class="p">,</span> <span class="mf">19.623</span><span class="p">,</span> <span class="mf">123.026</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">4.943</span><span class="p">,</span> <span class="mf">7.268</span><span class="p">,</span> <span class="mf">12.901</span><span class="p">,</span> <span class="mf">433.741</span><span class="p">,</span> <span class="mf">9.614</span><span class="p">,</span> <span class="mf">6.534</span><span class="p">,</span> <span class="mf">26.255</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">8.360</span><span class="p">,</span> <span class="mf">5.839</span><span class="p">,</span> <span class="mf">11.115</span><span class="p">,</span> <span class="mf">525.702</span><span class="p">,</span> <span class="mf">9.067</span><span class="p">,</span> <span class="mf">9.397</span><span class="p">,</span> <span class="mf">35.540</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">5.721</span><span class="p">,</span> <span class="mf">5.160</span><span class="p">,</span> <span class="mf">11.220</span><span class="p">,</span> <span class="mf">513.067</span><span class="p">,</span> <span class="mf">14.070</span><span class="p">,</span> <span class="mf">13.188</span><span class="p">,</span> <span class="mf">32.487</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.225</span><span class="p">,</span> <span class="mf">9.145</span><span class="p">,</span> <span class="mf">5.810</span><span class="p">,</span> <span class="mf">408.666</span><span class="p">,</span> <span class="mf">15.474</span><span class="p">,</span> <span class="mf">3.340</span><span class="p">,</span> <span class="mf">45.838</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.617</span><span class="p">,</span> <span class="mf">5.034</span><span class="p">,</span> <span class="mf">5.516</span><span class="p">,</span> <span class="mf">192.061</span><span class="p">,</span> <span class="mf">3.041</span><span class="p">,</span> <span class="mf">4.716</span><span class="p">,</span> <span class="mf">26.867</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">14.219</span><span class="p">,</span> <span class="mf">5.926</span><span class="p">,</span> <span class="mf">3.707</span><span class="p">,</span> <span class="mf">462.621</span><span class="p">,</span> <span class="mf">14.096</span><span class="p">,</span> <span class="mf">17.141</span><span class="p">,</span> <span class="mf">43.325</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.769</span><span class="p">,</span> <span class="mf">8.187</span><span class="p">,</span> <span class="mf">10.125</span><span class="p">,</span> <span class="mf">312.659</span><span class="p">,</span> <span class="mf">4.118</span><span class="p">,</span> <span class="mf">4.695</span><span class="p">,</span> <span class="mf">24.330</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.769</span><span class="p">,</span> <span class="mf">7.193</span><span class="p">,</span> <span class="mf">2.471</span><span class="p">,</span> <span class="mf">400.848</span><span class="p">,</span> <span class="mf">10.489</span><span class="p">,</span> <span class="mf">7.639</span><span class="p">,</span> <span class="mf">107.017</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">9.804</span><span class="p">,</span> <span class="mf">13.315</span><span class="p">,</span> <span class="mf">8.976</span><span class="p">,</span> <span class="mf">392.215</span><span class="p">,</span> <span class="mf">6.231</span><span class="p">,</span> <span class="mf">9.089</span><span class="p">,</span> <span class="mf">23.407</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">11.063</span><span class="p">,</span> <span class="mf">6.874</span><span class="p">,</span> <span class="mf">12.883</span><span class="p">,</span> <span class="mf">377.724</span><span class="p">,</span> <span class="mf">6.458</span><span class="p">,</span> <span class="mf">10.346</span><span class="p">,</span> <span class="mf">18.254</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.535</span><span class="p">,</span> <span class="mf">15.533</span><span class="p">,</span> <span class="mf">4.115</span><span class="p">,</span> <span class="mf">343.552</span><span class="p">,</span> <span class="mf">8.736</span><span class="p">,</span> <span class="mf">3.901</span><span class="p">,</span> <span class="mf">54.895</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">11.063</span><span class="p">,</span> <span class="mf">4.477</span><span class="p">,</span> <span class="mf">4.962</span><span class="p">,</span> <span class="mf">301.599</span><span class="p">,</span> <span class="mf">5.158</span><span class="p">,</span> <span class="mf">4.350</span><span class="p">,</span> <span class="mf">45.360</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">4.016</span><span class="p">,</span> <span class="mf">9.231</span><span class="p">,</span> <span class="mf">6.294</span><span class="p">,</span> <span class="mf">294.112</span><span class="p">,</span> <span class="mf">16.618</span><span class="p">,</span> <span class="mf">7.371</span><span class="p">,</span> <span class="mf">25.318</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">4.759</span><span class="p">,</span> <span class="mf">5.907</span><span class="p">,</span> <span class="mf">8.298</span><span class="p">,</span> <span class="mf">365.032</span><span class="p">,</span> <span class="mf">11.342</span><span class="p">,</span> <span class="mf">6.507</span><span class="p">,</span> <span class="mf">32.852</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">5.483</span><span class="p">,</span> <span class="mf">7.077</span><span class="p">,</span> <span class="mf">9.638</span><span class="p">,</span> <span class="mf">256.125</span><span class="p">,</span> <span class="mf">2.903</span><span class="p">,</span> <span class="mf">3.770</span><span class="p">,</span> <span class="mf">22.154</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.890</span><span class="p">,</span> <span class="mf">9.942</span><span class="p">,</span> <span class="mf">7.122</span><span class="p">,</span> <span class="mf">184.798</span><span class="p">,</span> <span class="mf">3.138</span><span class="p">,</span> <span class="mf">1.360</span><span class="p">,</span> <span class="mf">20.575</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">8.460</span><span class="p">,</span> <span class="mf">7.043</span><span class="p">,</span> <span class="mf">4.157</span><span class="p">,</span> <span class="mf">359.084</span><span class="p">,</span> <span class="mf">15.315</span><span class="p">,</span> <span class="mf">6.497</span><span class="p">,</span> <span class="mf">44.205</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.195</span><span class="p">,</span> <span class="mf">4.142</span><span class="p">,</span> <span class="mf">10.040</span><span class="p">,</span> <span class="mf">629.378</span><span class="p">,</span> <span class="mf">22.240</span><span class="p">,</span> <span class="mf">10.963</span><span class="p">,</span> <span class="mf">44.443</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.743</span><span class="p">,</span> <span class="mf">3.369</span><span class="p">,</span> <span class="mf">15.459</span><span class="p">,</span> <span class="mf">306.527</span><span class="p">,</span> <span class="mf">10.012</span><span class="p">,</span> <span class="mf">10.140</span><span class="p">,</span> <span class="mf">13.251</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">11.977</span><span class="p">,</span> <span class="mf">4.806</span><span class="p">,</span> <span class="mf">6.172</span><span class="p">,</span> <span class="mf">347.488</span><span class="p">,</span> <span class="mf">3.982</span><span class="p">,</span> <span class="mf">8.637</span><span class="p">,</span> <span class="mf">41.845</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>  <span class="c1"># Prices</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1"># Quantities</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]</span>  <span class="c1"># Income</span>
+
+<span class="n">big_y</span> <span class="o">=</span> <span class="n">q</span>
+<span class="n">big_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+
+<span class="c1"># First, estimate Sigma from the unrestricted least-squares residuals</span>
+<span class="n">w1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+<span class="n">rr1</span> <span class="o">=</span> <span class="n">design</span><span class="p">(</span><span class="n">w1</span><span class="p">)</span>
+<span class="n">r1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">varx_estimate</span><span class="p">(</span><span class="n">big_y</span><span class="p">,</span> <span class="n">big_x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr1</span><span class="p">,</span> <span class="n">r1</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ls"</span><span class="p">)</span>
+<span class="n">sigma1</span> <span class="o">=</span> <span class="n">result1</span><span class="o">.</span><span class="n">sigma</span>
+
+<span class="c1"># Or estimate Sigma from the (more tightly) restricted least-squares</span>
+<span class="c1"># residuals (indices 8 and 12 tied to free parameter 4)</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+<span class="n">rr2</span> <span class="o">=</span> <span class="n">design</span><span class="p">(</span><span class="n">w2</span><span class="p">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">varx_estimate</span><span class="p">(</span><span class="n">big_y</span><span class="p">,</span> <span class="n">big_x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr2</span><span class="p">,</span> <span class="n">r2</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ls"</span><span class="p">)</span>
+<span class="n">sigma2</span> <span class="o">=</span> <span class="n">result2</span><span class="o">.</span><span class="n">sigma</span>
+
+<span class="c1"># Then, perform the restricted SUR estimation with each Sigma</span>
+<span class="n">sur1</span> <span class="o">=</span> <span class="n">varx_estimate</span><span class="p">(</span><span class="n">big_y</span><span class="p">,</span> <span class="n">big_x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr2</span><span class="p">,</span> <span class="n">r2</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ls"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"SUR (Sigma1) theta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">sur1</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">sur2</span> <span class="o">=</span> <span class="n">varx_estimate</span><span class="p">(</span><span class="n">big_y</span><span class="p">,</span> <span class="n">big_x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr2</span><span class="p">,</span> <span class="n">r2</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ls"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">SUR (Sigma2) theta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">sur2</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>ects/varx5a.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx5a.m -- Judge, Hill, Griffiths,</span>
+<span class="sd">Lutkepohl &amp; Lee [1988], pages 636-663: a 3-equation simultaneous linear</span>
+<span class="sd">model estimated four ways -- OLS, GLS-2S, GLS-3S, LIML -- on a</span>
+<span class="sd">20-observation embedded dataset, recovering the structural Gamma/B</span>
+<span class="sd">matrices and the implied reduced form PI = -B @ inv(Gamma) at each step.</span>
+
+<span class="sd">The original manually iterates feasible GLS across steps 1-3 (each</span>
+<span class="sd">`varx_cls` call re-estimates Sigma, then feeds it into the next call as</span>
+<span class="sd">the GLS weight) before switching to `varx_cml` (-&gt; `varx_estimate_cml`,</span>
+<span class="sd">concentrated/iterated ML) for the LIML step, seeded from step 3's Sigma</span>
+<span class="sd">via `VARX_Tol = 1e-20`. `varx_estimate_cml` here always starts its own</span>
+<span class="sd">internal iteration from the identity matrix rather than accepting a</span>
+<span class="sd">seed Sigma -- since concentrated ML converges to the same fixed point</span>
+<span class="sd">regardless of starting Sigma (only the number of iterations to get there</span>
+<span class="sd">differs), this is translated as a plain `varx_estimate_cml(..., tol=</span>
+<span class="sd">1e-20)` call rather than trying to seed it.</span>
+
+<span class="sd">`theta(1:9)` reshaped (row-major, truncating/ignoring the rest) into</span>
+<span class="sd">Gamma, and `theta(10:24)` reshaped into B, are both translated via the</span>
+<span class="sd">ported `reshaper` (row-major reshape/recycle) exactly as in the</span>
+<span class="sd">original."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.var</span><span class="w"> </span><span class="kn">import</span> <span class="n">varx_estimate</span><span class="p">,</span> <span class="n">varx_estimate_cml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">design</span><span class="p">,</span> <span class="n">reshaper</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.06</span><span class="p">,</span> <span class="mf">1.34</span><span class="p">,</span> <span class="mf">8.48</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mf">359.27</span><span class="p">,</span> <span class="mf">102.96</span><span class="p">,</span> <span class="mf">578.49</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.19</span><span class="p">,</span> <span class="mf">1.44</span><span class="p">,</span> <span class="mf">9.16</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mf">415.76</span><span class="p">,</span> <span class="mf">114.38</span><span class="p">,</span> <span class="mf">650.86</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">,</span> <span class="mf">1.54</span><span class="p">,</span> <span class="mf">9.9</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mf">435.11</span><span class="p">,</span> <span class="mf">118.23</span><span class="p">,</span> <span class="mf">684.87</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.4</span><span class="p">,</span> <span class="mf">1.71</span><span class="p">,</span> <span class="mf">11.02</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mf">440.17</span><span class="p">,</span> <span class="mf">120.45</span><span class="p">,</span> <span class="mf">680.47</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.48</span><span class="p">,</span> <span class="mf">1.89</span><span class="p">,</span> <span class="mf">11.64</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mf">410.66</span><span class="p">,</span> <span class="mf">116.25</span><span class="p">,</span> <span class="mf">642.19</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">1.99</span><span class="p">,</span> <span class="mf">12.73</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span> <span class="mf">530.33</span><span class="p">,</span> <span class="mf">140.27</span><span class="p">,</span> <span class="mf">787.41</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.68</span><span class="p">,</span> <span class="mf">2.22</span><span class="p">,</span> <span class="mf">13.88</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">557.15</span><span class="p">,</span> <span class="mf">143.84</span><span class="p">,</span> <span class="mf">818.06</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.72</span><span class="p">,</span> <span class="mf">2.43</span><span class="p">,</span> <span class="mf">14.5</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mf">472.8</span><span class="p">,</span> <span class="mf">128.2</span><span class="p">,</span> <span class="mf">712.16</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.92</span><span class="p">,</span> <span class="mf">2.43</span><span class="p">,</span> <span class="mf">15.47</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mf">471.76</span><span class="p">,</span> <span class="mf">126.65</span><span class="p">,</span> <span class="mf">722.23</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">4.15</span><span class="p">,</span> <span class="mf">2.31</span><span class="p">,</span> <span class="mf">16.61</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mf">538.3</span><span class="p">,</span> <span class="mf">141.05</span><span class="p">,</span> <span class="mf">811.44</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">4.35</span><span class="p">,</span> <span class="mf">2.39</span><span class="p">,</span> <span class="mf">17.4</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mf">547.76</span><span class="p">,</span> <span class="mf">143.71</span><span class="p">,</span> <span class="mf">816.36</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">4.37</span><span class="p">,</span> <span class="mf">2.63</span><span class="p">,</span> <span class="mf">18.83</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">539</span><span class="p">,</span> <span class="mf">142.37</span><span class="p">,</span> <span class="mf">807.78</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">4.59</span><span class="p">,</span> <span class="mf">2.69</span><span class="p">,</span> <span class="mf">20.62</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mf">677.6</span><span class="p">,</span> <span class="mf">173.13</span><span class="p">,</span> <span class="mf">983.53</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.23</span><span class="p">,</span> <span class="mf">3.35</span><span class="p">,</span> <span class="mf">23.76</span><span class="p">,</span> <span class="mi">88</span><span class="p">,</span> <span class="mf">943.85</span><span class="p">,</span> <span class="mf">223.21</span><span class="p">,</span> <span class="mf">1292.99</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">6.04</span><span class="p">,</span> <span class="mf">5.81</span><span class="p">,</span> <span class="mf">26.52</span><span class="p">,</span> <span class="mi">62</span><span class="p">,</span> <span class="mf">893.42</span><span class="p">,</span> <span class="mf">198.64</span><span class="p">,</span> <span class="mf">1179.64</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">6.36</span><span class="p">,</span> <span class="mf">6.38</span><span class="p">,</span> <span class="mf">27.45</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">871</span><span class="p">,</span> <span class="mf">191.89</span><span class="p">,</span> <span class="mf">1134.78</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">7.04</span><span class="p">,</span> <span class="mf">6.14</span><span class="p">,</span> <span class="mf">30.28</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mf">793.93</span><span class="p">,</span> <span class="mf">181.27</span><span class="p">,</span> <span class="mf">1053.16</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">7.81</span><span class="p">,</span> <span class="mf">6.14</span><span class="p">,</span> <span class="mf">25.4</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mf">850.36</span><span class="p">,</span> <span class="mf">180.56</span><span class="p">,</span> <span class="mf">1085.91</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">8.09</span><span class="p">,</span> <span class="mf">6.19</span><span class="p">,</span> <span class="mf">28.84</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mf">967.42</span><span class="p">,</span> <span class="mf">208.24</span><span class="p">,</span> <span class="mf">1246.99</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">9.24</span><span class="p">,</span> <span class="mf">6.69</span><span class="p">,</span> <span class="mf">34.36</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="mf">1102.61</span><span class="p">,</span> <span class="mf">235.43</span><span class="p">,</span> <span class="mf">1401.94</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">y</span><span class="p">,</span> <span class="n">x0</span><span class="p">])</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+<span class="n">rr</span> <span class="o">=</span> <span class="n">design</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+
+<span class="c1"># OLS estimate, see JHGLL page 660</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"OLS"</span><span class="p">,</span> <span class="s2">"GLS-2S"</span><span class="p">,</span> <span class="s2">"GLS-3S"</span><span class="p">,</span> <span class="s2">"LIML"</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">varx_estimate_cml</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">varx_estimate</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ls"</span><span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sigma</span>
+
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">theta</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">reshaper</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">reshaper</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">9</span><span class="p">:</span><span class="mi">24</span><span class="p">],</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">rf</span> <span class="o">=</span> <span class="o">-</span><span class="n">b</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">60</span><span class="p">,</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Gamma:"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">B:"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">PI (reduced form):"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">()</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>matrix/matrix2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/matrix/matrix2.m -- checks seven algebraic</span>
+<span class="sd">identities relating the elimination, duplication, and commutation</span>
+<span class="sd">matrices, for M = 1..10.</span>
+
+<span class="sd">The original compares matrix products against identity/zero matrices with</span>
+<span class="sd">exact `==`; since these matrices are built from exact 0/1 selections the</span>
+<span class="sd">products are exact in floating point for the equality- and sum-based</span>
+<span class="sd">checks, but `inv(D'*D)` (a genuine matrix inversion) is not bit-exact, so</span>
+<span class="sd">`np.isclose`/`np.allclose` are used throughout instead of `==` to make the</span>
+<span class="sd">comparison robust the way an equivalent MATLAB run using a tolerance</span>
+<span class="sd">would be."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">commutation_matrix</span><span class="p">,</span>
+    <span class="n">duplication_matrix</span><span class="p">,</span>
+    <span class="n">elimination_matrix</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">M</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">M</span> <span class="o">*</span> <span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+
+    <span class="n">L</span> <span class="o">=</span> <span class="n">elimination_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">duplication_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">commutation_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+    <span class="n">K1</span> <span class="o">=</span> <span class="n">commutation_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">K2</span> <span class="o">=</span> <span class="n">commutation_matrix</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+
+    <span class="n">checks</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">L</span> <span class="o">@</span> <span class="n">D</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">p</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">K</span> <span class="o">@</span> <span class="n">D</span><span class="p">,</span> <span class="n">D</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">K1</span> <span class="o">==</span> <span class="n">K2</span><span class="p">,</span> <span class="n">K1</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">M</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">K</span><span class="p">)),</span> <span class="n">M</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">D</span><span class="p">)),</span> <span class="n">M</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">L</span> <span class="o">@</span> <span class="n">L</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">p</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">D</span><span class="p">))),</span> <span class="n">M</span> <span class="o">*</span> <span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">verdict</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">"The propositions are verified"</span> <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">checks</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"The propositions are NOT verified"</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"M=</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">verdict</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>matrix/reshape1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/matrix/reshape1.m -- vech/xpnd (both row- and</span>
+<span class="sd">column-wise orderings) and reshaper/reshapec on a fixed 4x4 matrix.</span>
+
+<span class="sd">The original also exercises `shiftr` (a lagged-shift primitive); that</span>
+<span class="sd">function is not ported (superseded by NumPy roll/slicing idioms -- see</span>
+<span class="sd">`matrix/shiftr1.m`'s own tracker entry) and is skipped here rather than</span>
+<span class="sd">reimplemented."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">reshapec</span><span class="p">,</span> <span class="n">reshaper</span><span class="p">,</span> <span class="n">vech</span><span class="p">,</span> <span class="n">xpnd</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">col</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># seqa(1,1,n)</span>
+<span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># seqa(1,0.25,n)'</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">col</span><span class="o">**</span><span class="n">row</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"y:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="n">vech</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">vech(y), row-wise (default):"</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"xpnd(v):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="n">vech</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"c"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">vech(y), column-wise:"</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"c"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"xpnd(v):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">reshaper(y, 3, 2):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reshaper</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"reshaper(y, 5, 1):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reshaper</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"reshaper(y, 1, 5):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reshaper</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">reshapec(y, 3, 2):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reshapec</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"reshapec(y, 5, 1):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reshapec</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"reshapec(y, 1, 5):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reshapec</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>optim/explicit2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/explicit2.m -- explicit&lt;-&gt;implicit</span>
+<span class="sd">constraint conversion for a single equality constraint (x[0] = x[1]), plus</span>
+<span class="sd">a `design` matrix built from a category-index vector."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">design</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.bisection</span><span class="w"> </span><span class="kn">import</span> <span class="n">explicit_to_implicit</span><span class="p">,</span> <span class="n">implicit_to_explicit</span>
+
+<span class="n">CC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>  <span class="c1"># constraint: x[0] - x[1] = 0</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">])</span>
+
+<span class="n">RR</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">explicit_to_implicit</span><span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="n">CC2</span><span class="p">,</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">implicit_to_explicit</span><span class="p">(</span><span class="n">RR</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"R:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">RR</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">r:"</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">C:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">CC2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">c:"</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)])</span>  <span class="c1"># seqa(2,1,6)</span>
+<span class="n">RR2</span> <span class="o">=</span> <span class="n">design</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">R (design(w)):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">RR2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">r:"</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_bl2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl2.m -- Black-Litterman sensitivity</span>
+<span class="sd">analysis across 6 scenarios (base case + 5 view/uncertainty/tau variants),</span>
+<span class="sd">each solved as a fixed-risk-aversion MVO portfolio."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.black_litterman</span><span class="w"> </span><span class="kn">import</span> <span class="n">black_litterman_moments</span><span class="p">,</span> <span class="n">implied_risk_premia</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">])</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mf">0.03</span>
+<span class="n">irp</span> <span class="o">=</span> <span class="n">implied_risk_premia</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">sharpe_ratio</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="n">mu_tilde</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">irp</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">gamma0</span> <span class="o">=</span> <span class="n">irp</span><span class="o">.</span><span class="n">gamma</span>
+
+<span class="n">scenarios</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">P</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">Q</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.04</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">]),</span>
+        <span class="n">Omega</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.10</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span>
+        <span class="n">tau</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">P</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">Q</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">]),</span>
+        <span class="n">Omega</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.10</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span>
+        <span class="n">tau</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">P</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">Q</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.04</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">]),</span>
+        <span class="n">Omega</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.20</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.20</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span>
+        <span class="n">tau</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">P</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">Q</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.04</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">]),</span>
+        <span class="n">Omega</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.10</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span>
+        <span class="n">tau</span><span class="o">=</span><span class="mf">0.10</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">P</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">Q</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.04</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">]),</span>
+        <span class="n">Omega</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.10</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span>
+        <span class="n">tau</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">dict</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">x0</span> <span class="o">@</span> <span class="n">mu_tilde</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x0</span> <span class="o">@</span> <span class="n">cov_matrix</span> <span class="o">@</span> <span class="n">x0</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">te</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">scenarios</span><span class="p">:</span>
+    <span class="n">bl</span> <span class="o">=</span> <span class="n">black_litterman_moments</span><span class="p">(</span><span class="n">mu_tilde</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="s2">"tau"</span><span class="p">]</span> <span class="o">*</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="s2">"P"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"Q"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"Omega"</span><span class="p">])</span>
+    <span class="n">mvo</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma0</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">mvo</span><span class="o">.</span><span class="n">weights</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">@</span> <span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span>
+    <span class="n">te</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">mvo</span><span class="o">.</span><span class="n">weights</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">@</span> <span class="n">cov_matrix</span> <span class="o">@</span> <span class="p">(</span><span class="n">mvo</span><span class="o">.</span><span class="n">weights</span> <span class="o">-</span> <span class="n">x0</span><span class="p">))</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">mvo</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mvo</span><span class="o">.</span><span class="n">expected_return</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">mvo</span><span class="o">.</span><span class="n">volatility</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">te</span><span class="o">=</span><span class="n">te</span><span class="p">)</span>
+    <span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">r_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"scenario </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: weights=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'weights'</span><span class="p">],</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> mu=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'mu'</span><span class="p">],</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2"> te=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'te'</span><span class="p">],</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_box1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_box1.m -- ERC and box-constrained</span>
+<span class="sd">("C-ERC") risk budgeting portfolios at progressively wider bounds around</span>
+<span class="sd">a starting position."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.risk_budgeting</span><span class="w"> </span><span class="kn">import</span> <span class="n">erc_portfolio</span><span class="p">,</span> <span class="n">solve_box_constrained</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.29</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.23</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.60</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.90</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">0.60</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]</span>
+    <span class="p">),</span>
+    <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+
+<span class="n">r1</span> <span class="o">=</span> <span class="n">erc_portfolio</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"ERC weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r1</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">delta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">]:</span>
+    <span class="n">x_minus</span><span class="p">,</span> <span class="n">x_plus</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">-</span> <span class="n">delta</span><span class="p">,</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">delta</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">solve_box_constrained</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">x_minus</span><span class="o">=</span><span class="n">x_minus</span><span class="p">,</span> <span class="n">x_plus</span><span class="o">=</span><span class="n">x_plus</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"box (delta=</span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">) weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_erc2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc2.m -- Example 7 (page 80),</span>
+<span class="sd">Roncalli (2013). Risk contribution decomposition + risk budgeting at</span>
+<span class="sd">various target budgets."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.risk_budgeting</span><span class="w"> </span><span class="kn">import</span> <span class="n">risk_contribution</span><span class="p">,</span> <span class="n">solve_unconstrained</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+
+<span class="n">rc</span> <span class="o">=</span> <span class="n">risk_contribution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"fixed-x risk contribution:"</span><span class="p">,</span> <span class="n">rc</span><span class="o">.</span><span class="n">risk</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rc</span><span class="o">.</span><span class="n">pct_risk_contribution</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">r_equal</span> <span class="o">=</span> <span class="n">solve_unconstrained</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ccd"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"equal-budget RB weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_equal</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">r_custom</span> <span class="o">=</span> <span class="n">solve_unconstrained</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ccd"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"target-x-as-budget RB weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_custom</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_erc3.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc3.m -- Example 17 (page 123),</span>
+<span class="sd">Roncalli (2013). RB portfolio with unequal target budgets."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.risk_budgeting</span><span class="w"> </span><span class="kn">import</span> <span class="n">risk_contribution</span><span class="p">,</span> <span class="n">solve_unconstrained</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+
+<span class="n">rc</span> <span class="o">=</span> <span class="n">risk_contribution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"equal-weight risk contribution:"</span><span class="p">,</span> <span class="n">rc</span><span class="o">.</span><span class="n">risk</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rc</span><span class="o">.</span><span class="n">pct_risk_contribution</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">solve_unconstrained</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ccd"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"RB weights (target budgets 20/20/30/30):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span> <span class="s2">"n_iters:"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">n_iters</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_lasso1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],</span>
+<span class="sd">"Introduction to Risk Parity and Budgeting", Example 1 (page 53):</span>
+<span class="sd">compares an unconstrained gamma-problem MVO portfolio against the same</span>
+<span class="sd">problem with a budget (sum-to-1) constraint, and ridge/lasso-penalized</span>
+<span class="sd">variants (toward 0 and toward equal-weight) of the unconstrained</span>
+<span class="sd">problem.</span>
+
+<span class="sd">`compute_mvo_portfolio`/`quadprog_ridge`/`quadprog_lasso` map to</span>
+<span class="sd">`mvo_portfolio`/`solve_qp(..., ridge_penalty=...)`/`solve_qp(...,</span>
+<span class="sd">lasso_penalty=...)` as established in test_lasso3.py/test_lasso5.py; the</span>
+<span class="sd">original's `0, 0` sentinel arguments for "no equality constraint" /</span>
+<span class="sd">"no bounds" map to simply omitting those keyword arguments."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># Case gamma-problem</span>
+<span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="p">)</span><span class="o">.</span><span class="n">weights</span>
+
+<span class="n">lambda_ridge</span> <span class="o">=</span> <span class="mf">0.03</span>
+<span class="n">s_ridge</span> <span class="o">=</span> <span class="n">lambda_ridge</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">x3</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">s_ridge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">s_ridge</span><span class="p">,</span> <span class="n">x0</span><span class="p">))</span>
+
+<span class="n">lambda_lasso</span> <span class="o">=</span> <span class="mf">0.03</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">s_lasso</span> <span class="o">=</span> <span class="n">lambda_lasso</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">x5</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">s_lasso</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+<span class="n">x6</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">s_lasso</span><span class="p">,</span> <span class="n">x0</span><span class="p">))</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">x5</span><span class="p">,</span> <span class="n">x6</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"            x1      x2      x3      x4      x5      x6"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_lasso3.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso3.m (byte-identical to</span>
+<span class="sd">test_lasso4.m) -- MVO/ridge/lasso/mixed-penalty portfolios via the</span>
+<span class="sd">consolidated solve_qp (replacing the original's separate quadprog_ridge/</span>
+<span class="sd">quadprog_lasso/quadprog_mixed calls -- see optim/quadprog.py docstring)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
+
+<span class="c1"># gamma-problem (plain MVO)</span>
+<span class="n">r1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">r1</span><span class="o">.</span><span class="n">weights</span>
+
+<span class="c1"># ridge-problem: penalize toward zero, scaled by each asset's own variance</span>
+<span class="n">S_ridge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">))</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># lasso-problem: L1 penalty toward equal weight</span>
+<span class="n">lambda_lasso</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="n">x3</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># mixed-problem: both ridge and lasso, toward various targets</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="n">x5</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">x0</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="n">x6</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">x0</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">x7</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">x0</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">x0</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">"MVO"</span><span class="p">,</span> <span class="n">x1</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Ridge"</span><span class="p">,</span> <span class="n">x2</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Lasso"</span><span class="p">,</span> <span class="n">x3</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(0,0)"</span><span class="p">,</span> <span class="n">x4</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(EW,0)"</span><span class="p">,</span> <span class="n">x5</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(0,EW)"</span><span class="p">,</span> <span class="n">x6</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(EW,EW)"</span><span class="p">,</span> <span class="n">x7</span><span class="p">),</span>
+<span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_lasso5.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
+<span class="sd">portfolios with two different ridge/lasso target vectors (equal-weight</span>
+<span class="sd">and a custom 20/20/30/30 target)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">S_ridge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">))</span>
+<span class="n">lambda_lasso</span> <span class="o">=</span> <span class="mf">0.005</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">x6</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="c1"># mixed with DIFFERENT targets for ridge (toward y1) vs lasso (toward y2)</span>
+<span class="n">x8</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">"MVO"</span><span class="p">,</span> <span class="n">x1</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Ridge-&gt;y1"</span><span class="p">,</span> <span class="n">x2</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Lasso-&gt;y1"</span><span class="p">,</span> <span class="n">x4</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y1)"</span><span class="p">,</span> <span class="n">x6</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y2)"</span><span class="p">,</span> <span class="n">x8</span><span class="p">),</span>
+<span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_minvar2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_minvar2.m -- minimum-variance</span>
+<span class="sd">portfolio with general linear equality/inequality constraints and box</span>
+<span class="sd">bounds."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">minvar_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+
+<span class="n">a_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+<span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">c_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]])</span>
+<span class="n">d_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.90</span><span class="p">])</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">minvar_portfolio</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">c_ineq</span><span class="o">=</span><span class="n">c_ineq</span><span class="p">,</span> <span class="n">d_ineq</span><span class="o">=</span><span class="n">d_ineq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">1.50</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">2.00</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"volatility:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_mvo2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_mvo2.m -- gamma-problem MVO frontier</span>
+<span class="sd">(the mu-problem/sigma-problem target-matching sections in the original</span>
+<span class="sd">use a mode not currently ported -- see mean_variance.py docstring)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_frontier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+
+<span class="n">gamma_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">2.00</span><span class="p">,</span> <span class="mf">5.00</span><span class="p">])</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">mvo_frontier</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_values</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gamma_values</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"gamma=</span><span class="si">{</span><span class="n">g</span><span class="si">}</span><span class="s2">: weights=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> mu=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> sigma=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>stats/pca1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/pca1.m -- PCA on a 3-asset correlation</span>
+<span class="sd">matrix."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.ols</span><span class="w"> </span><span class="kn">import</span> <span class="n">pca</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"eigenvalues:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"quality (variance share):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">quality</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"loadings:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">loadings</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+</details>
 
 
 
