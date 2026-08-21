@@ -3,21 +3,49 @@
 All notable changes to this project are documented here. Versions follow
 [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`.
 
-## [Unreleased]
+## [0.3.0] - Copula module, Python 3.13 support, documentation cleanup
 
 ### Added
 
-- Python 3.13 support — full test suite, mypy, and ruff verified clean;
-  added to `classifiers` in `pyproject.toml`.
+- `copula` module: Clayton, Frank, Gumbel, Gaussian, Student-t, and 13
+  further named bivariate copula families (AMH, Gumbel-Barnett,
+  Galambos, Husler-Reiss, Plackett, FGM, Cubic, logistic-Gumbel,
+  Marshall-Olkin, Sloane, nested Gumbel, plus the Fréchet-Hoeffding
+  bounds and independence copula), Kendall's tau / Spearman's rho
+  dependence measures, and generic conditional-CDF-inversion
+  simulation — 73 tests, cross-checked against `statsmodels` where an
+  equivalent exists.
+- Python 3.13 support — full test suite, mypy, and ruff verified clean
+  under a fresh 3.13 install; added to `classifiers` in
+  `pyproject.toml`.
+
+### Fixed
+
+- `bond.pricing`, `stats.distributions.lognormal_cdf`, and
+  `stats.dose_response.drc_log_normal`: 3 mypy type errors.
+- `stats.distributions.skew_t_ppf`: the Newton loop's default tolerance
+  (`1e-8`) was tighter than `bvt_cdf`'s ~1e-4 QMC noise floor could ever
+  satisfy, so every call silently burned its full iteration budget for
+  no accuracy gain (~4x slower than necessary). Loosened the default to
+  `tol=1e-4`, matching the CDF's actual achievable precision.
+- `copula.families.pdfCopulaGumbel3`-equivalent: found (via finite
+  difference and `sympy`) that the original MATLAB PDF formula doesn't
+  match the derivative of its own CDF — not ported; see
+  `docs/matlab_bugs_found.md` #7.
+- Closed the remaining test-coverage gaps in `bond`, `copula`, `credit`,
+  and `sustainable_finance` — those four modules are now at 100%.
 
 ### Docs
 
 - Consistent "QuantToolBox" (3 capitals) capitalization across all docs
-  and source docstrings; replaced the placeholder README; merged the
-  migration map's two source-repo tables into one and added a `Port?`
-  column so remaining work is a precise, checkable count; reordered the
-  featured examples into a simplest-first narrative (bond pricing →
-  portfolio construction → risk budgeting → ...).
+  and source docstrings; replaced the placeholder README.
+- Merged the migration map's two source-repo tables into one and added
+  a `Port?` column, so remaining work is a precise, checkable count
+  (currently 1 item: `stats/lasso3.m`) instead of an ambiguous mix of
+  "not done" and "never going to be done."
+- Reordered the featured examples into a simplest-first narrative:
+  price a bond → build a portfolio → budget its risk → blend in market
+  views → building blocks → regressions → Whittle estimation → SVM.
 
 ## [0.2.0] - Target-matching portfolios, wider example coverage
 
