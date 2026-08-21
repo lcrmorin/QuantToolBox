@@ -5418,7 +5418,7 @@ to keep the original's <code>(mu, lam)</code> call signature)</p>
 <span class="sd">    Original: stats/cdfln.m (HSF toolbox)</span>
 <span class="sd">    """</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">normal_cdf</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">normal_cdf</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6237,20 +6237,7 @@ distribution (requires nu &gt; 4 for the kurtosis to be finite).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/quanttoolbox/stats/distributions.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">791</span>
-<span class="normal">792</span>
-<span class="normal">793</span>
-<span class="normal">794</span>
-<span class="normal">795</span>
-<span class="normal">796</span>
-<span class="normal">797</span>
-<span class="normal">798</span>
-<span class="normal">799</span>
-<span class="normal">800</span>
-<span class="normal">801</span>
-<span class="normal">802</span>
-<span class="normal">803</span>
-<span class="normal">804</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">804</span>
 <span class="normal">805</span>
 <span class="normal">806</span>
 <span class="normal">807</span>
@@ -6262,7 +6249,20 @@ distribution (requires nu &gt; 4 for the kurtosis to be finite).</p>
 <span class="normal">813</span>
 <span class="normal">814</span>
 <span class="normal">815</span>
-<span class="normal">816</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">skew_t_moments</span><span class="p">(</span>
+<span class="normal">816</span>
+<span class="normal">817</span>
+<span class="normal">818</span>
+<span class="normal">819</span>
+<span class="normal">820</span>
+<span class="normal">821</span>
+<span class="normal">822</span>
+<span class="normal">823</span>
+<span class="normal">824</span>
+<span class="normal">825</span>
+<span class="normal">826</span>
+<span class="normal">827</span>
+<span class="normal">828</span>
+<span class="normal">829</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">skew_t_moments</span><span class="p">(</span>
     <span class="n">xi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">omega</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nu</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Mean, std dev, skewness, and excess kurtosis of Azzalini's skew-t</span>
@@ -6347,6 +6347,18 @@ distribution (requires nu &gt; 4 for the kurtosis to be finite).</p>
 
         <p>Quantile function of Azzalini's skew-t distribution, via Newton
 iteration (no closed form / no scipy equivalent).</p>
+<p>The default tolerance is looser than <code>NewtonConfig</code>'s own default
+(<code>1e-4</code> rather than <code>1e-10</code>): <code>skew_t_cdf</code> is itself backed by
+<code>bvt_cdf</code>, whose underlying <code>scipy.stats.multivariate_t.cdf</code> uses a
+randomized quasi-Monte-Carlo integrator with irreducible call-to-call
+noise on the order of <code>1e-4</code> (verified empirically -- repeated calls
+with identical inputs vary by ~7e-5 to ~1e-4). A tighter tolerance
+(e.g. the <code>1e-8</code> this function used before) can never actually be
+satisfied, so the loop always burns its full <code>max_iters</code> budget
+without improving on the noise floor -- roughly a 4x slowdown for no
+accuracy gain, confirmed by direct timing. <code>1e-4</code> lets the loop exit
+as soon as it reaches that floor, matching the precision the
+underlying CDF can actually deliver.</p>
 <p>Original: stats/cdfSTi.m (HSF toolbox)</p>
 
 
@@ -6387,7 +6399,20 @@ iteration (no closed form / no scipy equivalent).</p>
 <span class="normal">785</span>
 <span class="normal">786</span>
 <span class="normal">787</span>
-<span class="normal">788</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">skew_t_ppf</span><span class="p">(</span>
+<span class="normal">788</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span>
+<span class="normal">792</span>
+<span class="normal">793</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span>
+<span class="normal">798</span>
+<span class="normal">799</span>
+<span class="normal">800</span>
+<span class="normal">801</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">skew_t_ppf</span><span class="p">(</span>
     <span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">xi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -6398,10 +6423,23 @@ iteration (no closed form / no scipy equivalent).</p>
 <span class="w">    </span><span class="sd">"""Quantile function of Azzalini's skew-t distribution, via Newton</span>
 <span class="sd">    iteration (no closed form / no scipy equivalent).</span>
 
+<span class="sd">    The default tolerance is looser than `NewtonConfig`'s own default</span>
+<span class="sd">    (`1e-4` rather than `1e-10`): `skew_t_cdf` is itself backed by</span>
+<span class="sd">    `bvt_cdf`, whose underlying `scipy.stats.multivariate_t.cdf` uses a</span>
+<span class="sd">    randomized quasi-Monte-Carlo integrator with irreducible call-to-call</span>
+<span class="sd">    noise on the order of `1e-4` (verified empirically -- repeated calls</span>
+<span class="sd">    with identical inputs vary by ~7e-5 to ~1e-4). A tighter tolerance</span>
+<span class="sd">    (e.g. the `1e-8` this function used before) can never actually be</span>
+<span class="sd">    satisfied, so the loop always burns its full `max_iters` budget</span>
+<span class="sd">    without improving on the noise floor -- roughly a 4x slowdown for no</span>
+<span class="sd">    accuracy gain, confirmed by direct timing. `1e-4` lets the loop exit</span>
+<span class="sd">    as soon as it reaches that floor, matching the precision the</span>
+<span class="sd">    underlying CDF can actually deliver.</span>
+
 <span class="sd">    Original: stats/cdfSTi.m (HSF toolbox)</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">NewtonConfig</span><span class="p">(</span><span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span> <span class="n">max_iters</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">NewtonConfig</span><span class="p">(</span><span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_iters</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 
     <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">student_t_ppf</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
@@ -6447,18 +6485,18 @@ variate divided by sqrt(chi-square(nu) / nu).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/quanttoolbox/stats/distributions.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">819</span>
-<span class="normal">820</span>
-<span class="normal">821</span>
-<span class="normal">822</span>
-<span class="normal">823</span>
-<span class="normal">824</span>
-<span class="normal">825</span>
-<span class="normal">826</span>
-<span class="normal">827</span>
-<span class="normal">828</span>
-<span class="normal">829</span>
-<span class="normal">830</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">skew_t_rvs</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">832</span>
+<span class="normal">833</span>
+<span class="normal">834</span>
+<span class="normal">835</span>
+<span class="normal">836</span>
+<span class="normal">837</span>
+<span class="normal">838</span>
+<span class="normal">839</span>
+<span class="normal">840</span>
+<span class="normal">841</span>
+<span class="normal">842</span>
+<span class="normal">843</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">skew_t_rvs</span><span class="p">(</span>
     <span class="n">xi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">omega</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Draw samples from Azzalini's skew-t distribution: a skew-normal</span>
@@ -6879,7 +6917,7 @@ growing linearly in <code>x</code>.</p>
 <span class="sd">    Original: stats/drcLogNormal.m</span>
 <span class="sd">    """</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">normal_cdf</span><span class="p">(</span><span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">alpha</span><span class="p">)))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">normal_cdf</span><span class="p">(</span><span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">alpha</span><span class="p">))))</span>
     <span class="k">return</span> <span class="n">y_min</span> <span class="o">+</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span>
 </code></pre></div></td></tr></table></div>
             </details>

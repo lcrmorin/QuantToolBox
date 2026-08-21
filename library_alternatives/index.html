@@ -1848,7 +1848,7 @@ port has a capability the alternative lacks.</p>
 <td><code>distributions.py</code> — skew-t (<code>skew_t_{cdf,ppf,pdf,moments,rvs}</code>)</td>
 <td><code>scipy.stats.jf_skew_t</code> (Jones &amp; Faddy's skew-t — checked and confirmed <strong>not</strong> the same family)</td>
 <td><strong>KEEP</strong></td>
-<td>This is Azzalini's skew-t (one skewness parameter + degrees of freedom); <code>scipy</code>'s only skew-t is a different two-shape-parameter family (Jones &amp; Faddy) with an incompatible parameterization. No scipy equivalent for Azzalini's version.</td>
+<td>This is Azzalini's skew-t (one skewness parameter + degrees of freedom); <code>scipy</code>'s only skew-t is a different two-shape-parameter family (Jones &amp; Faddy) with an incompatible parameterization. No scipy equivalent for Azzalini's version. <code>skew_t_cdf</code> is itself backed by <code>bvt_cdf</code> (see the <code>genz/</code> row below) -- a downstream consequence surfaced during a later review pass: <code>skew_t_ppf</code>'s Newton loop originally targeted <code>tol=1e-8</code>, which <code>bvt_cdf</code>'s ~1e-4-noisy QMC integrator can never satisfy, so every call silently burned its full iteration budget for no accuracy gain (~4x slower than necessary). Fixed by loosening the default to <code>tol=1e-4</code>, matching the CDF's actual achievable precision -- see the function's docstring.</td>
 <td>Genuinely missing from <code>scipy.stats</code> — a plausible feature request, but skew-t already exists there under a different family, so framing (and possibly naming) would need care; a scoping conversation, not a drive-by PR.</td>
 </tr>
 <tr>
