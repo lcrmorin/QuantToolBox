@@ -1192,6 +1192,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#6-test_mvo3m-silently-returns-wrong-portfolios-by-skipping-init_global" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. test_mvo3.m silently returns wrong portfolios by skipping init_global
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#summary-table" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1349,6 +1360,17 @@
     <span class="md-ellipsis">
       
         5. Corner-case false-early-termination in the Dykstra projection loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-test_mvo3m-silently-returns-wrong-portfolios-by-skipping-init_global" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. test_mvo3.m silently returns wrong portfolios by skipping init_global
       
     </span>
   </a>
@@ -1598,6 +1620,59 @@ lambda-bisection now auto-expands its search bracket if the default
 window doesn't contain a sign change, since that specific failure mode
 (as opposed to this one) was straightforward to detect and fix safely.</p>
 <hr />
+<h2 id="6-test_mvo3m-silently-returns-wrong-portfolios-by-skipping-init_global">6. <code>test_mvo3.m</code> silently returns wrong portfolios by skipping <code>init_global</code><a class="headerlink" href="#6-test_mvo3m-silently-returns-wrong-portfolios-by-skipping-init_global" title="Permanent link">&para;</a></h2>
+<p><strong>File:</strong> <code>Examples/rpb/test_mvo3.m</code></p>
+<p><strong>The bug:</strong> every other example in this cluster (<code>test_mvo2.m</code>, <code>test_bl3.m</code>
+through <code>test_bl6.m</code>, ...) starts with <code>clear; clc; init_global;</code> before
+calling <code>compute_mvo_portfolio</code>'s mu-problem/sigma-problem (target-matching)
+branches. <code>test_mvo3.m</code> is the one exception: it has <code>clear; clc;</code> but never
+calls <code>init_global</code>. <code>init_global.m</code> is what sets the global
+<code>BISECTION_Tol</code> that <code>optim/bisection.m</code>'s convergence loop depends on:</p>
+<div class="highlight"><pre><span></span><code>while max(abs(a-b)) &gt; BISECTION_Tol
+    ...
+end
+</code></pre></div>
+<p>With <code>BISECTION_Tol</code> undefined, this comparison evaluates against an empty
+value, and both MATLAB and Octave treat <code>while &lt;empty&gt;</code> as false — so the
+loop runs <strong>zero iterations</strong> and <code>bisection</code> silently returns the raw
+bracket midpoint <code>(a+b)/2</code> (0 and 10 are <code>compute_mvo_portfolio.m</code>'s
+hard-coded bisection bounds, so this is always exactly <code>5.0</code>) for <em>every</em>
+target, regardless of what the target actually is.
+<code>compute_mvo_portfolio</code> still reports <code>retcode=1</code> (success) for this
+result, since the QP solve at that bogus gamma succeeds fine — only the
+gamma value itself is wrong.</p>
+<p><strong>How it was found:</strong> while translating <code>test_mvo3.m</code> and cross-checking it
+against Octave, every one of its six sigma-problem calls (two volatility
+targets × three weight-bound configurations) returned <code>gamma=5.0</code> and a
+volatility nowhere near the requested target, even though the identical
+<code>compute_mvo_portfolio</code> call with the identical targets and bounds, made
+from <code>test_mvo2.m</code>'s sigma-problem section, converges correctly. Manually
+tracing the call showed the underlying objective function
+(<code>compute_mvo_portfolio_volatility</code>) was being evaluated correctly at every
+point tried (a real sign change exists between the bracket endpoints), but
+<code>bisection</code>'s loop simply never ran. Instrumenting <code>bisection.m</code> directly
+isolated it to <code>BISECTION_Tol</code> being unset in exactly this one call path.</p>
+<p><strong>Practical impact:</strong> running <code>test_mvo3.m</code> by itself in a fresh MATLAB or
+Octave session reproduces this every time and produces a <em>complete</em> table
+of wrong numbers — every reported volatility target is silently missed
+across all three weight-bound configurations, with no error or warning of
+any kind. It happens to "accidentally" work if <code>test_mvo2.m</code> (or any other
+script that calls <code>init_global</code>) was run earlier in the same session,
+because MATLAB's <code>clear</code> (unlike <code>clear all</code> or <code>clear -global</code>) does not
+clear global variables — so whether this script produces correct output
+depends entirely on execution history, not on anything in the script
+itself. This is exactly the kind of bug that's easy to miss in practice: a
+book/course-notes author testing examples interactively, one after another
+in the same session, would very likely never observe it.</p>
+<p><strong>Fix in the Python port:</strong> not applicable to the library itself --
+<code>quanttoolbox.optim.bisection.bisection</code> always has a well-defined default
+tolerance (<code>BisectionConfig.tol</code>), so this failure mode can't occur in the
+Python port regardless of call order. The example translation,
+<code>docs/examples/rpb/test_mvo3.py</code>, produces the <em>correct</em> target-matching
+numbers throughout (i.e. what <code>test_mvo3.m</code> would produce if it called
+<code>init_global</code> like its neighbors do) rather than faithfully reproducing the
+wrong ones, with this bug documented directly in its docstring.</p>
+<hr />
 <h2 id="summary-table">Summary table<a class="headerlink" href="#summary-table" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1638,6 +1713,12 @@ window doesn't contain a sign change, since that specific failure mode
 <td><code>proximal_linear_constraints.m</code></td>
 <td>Exact-equality convergence check can false-exit on a plateau</td>
 <td>⚠️ Not fixed — faithfully reproduced and documented</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>Examples/rpb/test_mvo3.m</code></td>
+<td>Missing <code>init_global</code> call leaves <code>BISECTION_Tol</code> unset, silently breaking all bisection-based target-matching</td>
+<td>N/A (example script, not library code) — translation produces the correct numbers, bug documented</td>
 </tr>
 </tbody>
 </table>

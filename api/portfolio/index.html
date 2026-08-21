@@ -1119,6 +1119,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.portfolio.mean_variance.mvo_target_portfolio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mvo_target_portfolio
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1202,6 +1213,17 @@
     <span class="md-ellipsis">
       
         te_portfolio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.portfolio.tracking_error.te_target_portfolio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        te_target_portfolio
       
     </span>
   </a>
@@ -1865,6 +1887,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.portfolio.mean_variance.mvo_target_portfolio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mvo_target_portfolio
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1948,6 +1981,17 @@
     <span class="md-ellipsis">
       
         te_portfolio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.portfolio.tracking_error.te_target_portfolio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        te_target_portfolio
       
     </span>
   </a>
@@ -3501,11 +3545,22 @@ compute_MinVar_ADMM2}.m.</p>
   variable-splitting machinery); <code>minvar_portfolio</code> is literally
   <code>mvo_portfolio</code> with mu=0.</li>
 <li><code>mvo_frontier</code> evaluates at a list of risk-aversion (gamma) values,
-  covering the original's "gamma-problem" mode. The "mu-problem"/
-  "sigma-problem" target-matching bisection modes are not ported here
-  (same scope decision as <code>risk_budgeting.risk_budgeting_frontier</code> --
-  see that module's docstring); build target-matching on top of
-  <code>mvo_frontier</code> with <code>quanttoolbox.optim.bisection</code> if needed.</li>
+  covering the original's "gamma-problem" mode (<code>problem=0</code>).
+  <code>mvo_target_portfolio</code> covers the "mu-problem"/"sigma-problem"
+  target-matching modes (<code>problem=1</code>/<code>problem=2</code>): for each target
+  expected-return or target volatility, it bisects on gamma (via
+  <code>quanttoolbox.optim.bisection.bisection</code>) until <code>mvo_portfolio</code>'s
+  achieved return/volatility hits that target, exactly mirroring
+  <code>compute_mvo_portfolio.m</code>'s three-branch structure (boundary cases at
+  gamma=0/gamma=100, bisection in between over gamma in [0, 10] by
+  default -- both bounds preserved as separate, independently
+  configurable parameters, matching a real quirk in the original: the
+  <em>achievability</em> check against the "infinite risk aversion" case uses
+  gamma=100, but the interior bisection search is only ever bracketed to
+  [0, 10], so a target only reachable at a gamma between 10 and 100 will
+  come back as unreachable (NaN), exactly as the MATLAB source does. See
+  <code>docs/matlab_bugs_found.md</code> for a related, genuine bug this surfaced
+  in one of the original's own example scripts.)</li>
 <li><code>mdp_portfolio</code> (most diversified portfolio) has a genuinely nonlinear
   objective (log(portfolio vol) - log(weighted-avg individual vol)), so it
   uses <code>scipy.optimize.minimize</code> (SLSQP) rather than <code>solve_qp</code> --
@@ -3557,74 +3612,74 @@ minimize log(portfolio vol) - log(weighted-average individual vol).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/quanttoolbox/portfolio/mean_variance.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mdp_portfolio</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mdp_portfolio</span><span class="p">(</span>
     <span class="n">cov_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">a_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">b_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -3715,32 +3770,32 @@ minimize log(portfolio vol) - log(weighted-average individual vol).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/quanttoolbox/portfolio/mean_variance.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">minvar_portfolio</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">minvar_portfolio</span><span class="p">(</span>
     <span class="n">cov_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">a_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">b_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -3785,25 +3840,27 @@ minimize log(portfolio vol) - log(weighted-average individual vol).</p>
 
         <p>Evaluate the mean-variance frontier at each risk-aversion value in
 gamma_values (the "gamma-problem" mode of compute_mvo_portfolio.m).</p>
-<p>See module docstring for target-matching modes not ported here.</p>
+<p>See <code>mvo_target_portfolio</code> for the mu-problem/sigma-problem
+target-matching modes.</p>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/quanttoolbox/portfolio/mean_variance.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mvo_frontier</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mvo_frontier</span><span class="p">(</span>
     <span class="n">mu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">cov_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">gamma_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -3812,7 +3869,8 @@ gamma_values (the "gamma-problem" mode of compute_mvo_portfolio.m).</p>
 <span class="w">    </span><span class="sd">"""Evaluate the mean-variance frontier at each risk-aversion value in</span>
 <span class="sd">    gamma_values (the "gamma-problem" mode of compute_mvo_portfolio.m).</span>
 
-<span class="sd">    See module docstring for target-matching modes not ported here.</span>
+<span class="sd">    See ``mvo_target_portfolio`` for the mu-problem/sigma-problem</span>
+<span class="sd">    target-matching modes.</span>
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="p">[</span>
         <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">g</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">gamma_values</span><span class="p">)</span>
@@ -3844,47 +3902,47 @@ expected return more heavily relative to risk.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/quanttoolbox/portfolio/mean_variance.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mvo_portfolio</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mvo_portfolio</span><span class="p">(</span>
     <span class="n">mu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">cov_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -3925,6 +3983,277 @@ expected return more heavily relative to risk.</p>
     <span class="k">return</span> <span class="n">PortfolioResult</span><span class="p">(</span>
         <span class="n">weights</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">expected_return</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span> <span class="o">@</span> <span class="n">mu</span><span class="p">),</span> <span class="n">volatility</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span> <span class="o">@</span> <span class="n">cov_matrix</span> <span class="o">@</span> <span class="n">x</span><span class="p">))</span>
     <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.portfolio.mean_variance.mvo_target_portfolio" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">mvo_target_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="s1">'sigma'</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_ineq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">d_ineq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gamma_bracket</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="n">gamma_max</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.portfolio.mean_variance.mvo_target_portfolio" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Target-matching mean-variance portfolios: for each value in
+<code>targets</code>, find the risk-aversion gamma whose <code>mvo_portfolio</code>
+solution achieves that target expected return (<code>problem="mu"</code>) or
+that target volatility (<code>problem="sigma"</code>), via bisection on gamma.</p>
+<p>Original: rpb/compute_mvo_portfolio.m (mu-problem/problem=1 and
+sigma-problem/problem=2 branches), via
+compute_mvo_portfolio_return.m/compute_mvo_portfolio_volatility.m as
+the bisection objective.</p>
+<p>For each target, first the gamma=0 and gamma=<code>gamma_max</code> solutions
+are used to bracket what's achievable:</p>
+<ul>
+<li><code>problem="sigma"</code>: a target below the gamma=0 volatility is
+  unreachable (NaN weights); a target at or above the gamma=gamma_max
+  volatility returns that portfolio directly; otherwise gamma is
+  bisected within <code>gamma_bracket</code>.</li>
+<li><code>problem="mu"</code>: a target at or below the gamma=0 return returns
+  that portfolio directly; a target above the gamma=gamma_max return
+  is unreachable (NaN weights); a target exactly at the gamma=gamma_max
+  return returns that portfolio directly; otherwise gamma is bisected
+  within <code>gamma_bracket</code>.</li>
+</ul>
+<p>Note the original's own quirk, preserved here: the boundary checks use
+<code>gamma_max</code> (100 by default) but the bisection search itself is only
+ever bracketed to <code>gamma_bracket</code> ((0, 10) by default) -- so a target
+only reachable at a gamma between the two is misreported as
+unreachable. See the module docstring and
+<code>docs/matlab_bugs_found.md</code> for more.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/portfolio/mean_variance.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mvo_target_portfolio</span><span class="p">(</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">cov_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">targets</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">problem</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"sigma"</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">c_ineq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">d_ineq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">lb</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ub</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">gamma_bracket</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span>
+    <span class="n">gamma_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MVOTargetResult</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Target-matching mean-variance portfolios: for each value in</span>
+<span class="sd">    ``targets``, find the risk-aversion gamma whose ``mvo_portfolio``</span>
+<span class="sd">    solution achieves that target expected return (``problem="mu"``) or</span>
+<span class="sd">    that target volatility (``problem="sigma"``), via bisection on gamma.</span>
+
+<span class="sd">    Original: rpb/compute_mvo_portfolio.m (mu-problem/problem=1 and</span>
+<span class="sd">    sigma-problem/problem=2 branches), via</span>
+<span class="sd">    compute_mvo_portfolio_return.m/compute_mvo_portfolio_volatility.m as</span>
+<span class="sd">    the bisection objective.</span>
+
+<span class="sd">    For each target, first the gamma=0 and gamma=``gamma_max`` solutions</span>
+<span class="sd">    are used to bracket what's achievable:</span>
+
+<span class="sd">    - ``problem="sigma"``: a target below the gamma=0 volatility is</span>
+<span class="sd">      unreachable (NaN weights); a target at or above the gamma=gamma_max</span>
+<span class="sd">      volatility returns that portfolio directly; otherwise gamma is</span>
+<span class="sd">      bisected within ``gamma_bracket``.</span>
+<span class="sd">    - ``problem="mu"``: a target at or below the gamma=0 return returns</span>
+<span class="sd">      that portfolio directly; a target above the gamma=gamma_max return</span>
+<span class="sd">      is unreachable (NaN weights); a target exactly at the gamma=gamma_max</span>
+<span class="sd">      return returns that portfolio directly; otherwise gamma is bisected</span>
+<span class="sd">      within ``gamma_bracket``.</span>
+
+<span class="sd">    Note the original's own quirk, preserved here: the boundary checks use</span>
+<span class="sd">    ``gamma_max`` (100 by default) but the bisection search itself is only</span>
+<span class="sd">    ever bracketed to ``gamma_bracket`` ((0, 10) by default) -- so a target</span>
+<span class="sd">    only reachable at a gamma between the two is misreported as</span>
+<span class="sd">    unreachable. See the module docstring and</span>
+<span class="sd">    ``docs/matlab_bugs_found.md`` for more.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">problem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"mu"</span><span class="p">,</span> <span class="s2">"sigma"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'problem must be "mu" or "sigma"'</span><span class="p">)</span>
+
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">c_ineq</span><span class="o">=</span><span class="n">c_ineq</span><span class="p">,</span> <span class="n">d_ineq</span><span class="o">=</span><span class="n">d_ineq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span><span class="p">)</span>
+
+    <span class="n">r_min</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">r_max</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_max</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">nan_result</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">MVOTargetResult</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">MVOTargetResult</span><span class="p">(</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
+            <span class="n">expected_return</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="n">volatility</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="n">gamma</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_target_result</span><span class="p">(</span><span class="n">r</span><span class="p">:</span> <span class="n">PortfolioResult</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MVOTargetResult</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">MVOTargetResult</span><span class="p">(</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span>
+            <span class="n">expected_return</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="p">,</span>
+            <span class="n">volatility</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="p">,</span>
+            <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">achieved</span><span class="p">(</span><span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">gamma</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">expected_return</span> <span class="k">if</span> <span class="n">problem</span> <span class="o">==</span> <span class="s2">"mu"</span> <span class="k">else</span> <span class="n">r</span><span class="o">.</span><span class="n">volatility</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">problem</span> <span class="o">==</span> <span class="s2">"sigma"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="n">r_min</span><span class="o">.</span><span class="n">volatility</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nan_result</span><span class="p">())</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="n">r_min</span><span class="o">.</span><span class="n">volatility</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_target_result</span><span class="p">(</span><span class="n">r_min</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">&gt;=</span> <span class="n">r_max</span><span class="o">.</span><span class="n">volatility</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_target_result</span><span class="p">(</span><span class="n">r_max</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span>
+                <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># mu-problem</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;=</span> <span class="n">r_min</span><span class="o">.</span><span class="n">expected_return</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_target_result</span><span class="p">(</span><span class="n">r_min</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">&gt;</span> <span class="n">r_max</span><span class="o">.</span><span class="n">expected_return</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nan_result</span><span class="p">())</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="n">r_max</span><span class="o">.</span><span class="n">expected_return</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_target_result</span><span class="p">(</span><span class="n">r_max</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span>
+                <span class="k">continue</span>
+
+        <span class="n">gamma_star</span> <span class="o">=</span> <span class="n">bisection</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">g</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">target</span><span class="p">:</span> <span class="n">achieved</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span><span class="p">,</span> <span class="n">gamma_bracket</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">gamma_bracket</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">gamma_star</span><span class="p">):</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nan_result</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">as_target_result</span><span class="p">(</span>
+                    <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">gamma_star</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">gamma_star</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4268,9 +4597,12 @@ compute_minimum_te_portfolio,compute_te_portfolio_mixed_norm}.m.</p>
 <li><code>minimum_te_portfolio</code> is <code>te_portfolio</code> with gamma=0 (pure
   tracking-error minimization, no return tilt).</li>
 <li><code>te_frontier</code> covers the "gamma-problem" mode (evaluate at a list of
-  gamma values); the "mu-problem"/"sigma-problem" target-matching modes
-  are not ported, matching the same scope decision as
-  <code>risk_budgeting.risk_budgeting_frontier</code> / <code>mean_variance.mvo_frontier</code>.</li>
+  gamma values, <code>problem=0</code>). <code>te_target_portfolio</code> covers the
+  "mu-problem"/"sigma-problem" target-matching modes (<code>problem=1</code>/
+  <code>problem=2</code>), mirroring <code>compute_te_portfolio.m</code> exactly the same
+  way <code>mean_variance.mvo_target_portfolio</code> mirrors
+  <code>compute_mvo_portfolio.m</code> -- see that function's docstring for the
+  bisection-bracket/boundary-check quirk both share.</li>
 </ul>
 
 
@@ -4311,35 +4643,35 @@ return tilt).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/quanttoolbox/portfolio/tracking_error.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">minimum_te_portfolio</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">minimum_te_portfolio</span><span class="p">(</span>
     <span class="n">x_benchmark</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">cov_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">a_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -4391,20 +4723,20 @@ gamma_values (the "gamma-problem" mode of compute_te_portfolio.m).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/quanttoolbox/portfolio/tracking_error.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 97</span>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
-<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">te_frontier</span><span class="p">(</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">te_frontier</span><span class="p">(</span>
     <span class="n">x_benchmark</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">mu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">cov_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -4444,16 +4776,7 @@ covers compute_te_portfolio_mixed_norm.m via ridge_penalty/lasso_penalty.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/quanttoolbox/portfolio/tracking_error.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
 <span class="normal">49</span>
 <span class="normal">50</span>
 <span class="normal">51</span>
@@ -4490,7 +4813,16 @@ covers compute_te_portfolio_mixed_norm.m via ridge_penalty/lasso_penalty.</p>
 <span class="normal">82</span>
 <span class="normal">83</span>
 <span class="normal">84</span>
-<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">te_portfolio</span><span class="p">(</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">te_portfolio</span><span class="p">(</span>
     <span class="n">x_benchmark</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">mu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">cov_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -4537,6 +4869,241 @@ covers compute_te_portfolio_mixed_norm.m via ridge_penalty/lasso_penalty.</p>
         <span class="n">active_return</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">active</span> <span class="o">@</span> <span class="n">mu</span><span class="p">),</span>
         <span class="n">tracking_error</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">active</span> <span class="o">@</span> <span class="n">cov_matrix</span> <span class="o">@</span> <span class="n">active</span><span class="p">)),</span>
     <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.portfolio.tracking_error.te_target_portfolio" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">te_target_portfolio</span><span class="p">(</span><span class="n">x_benchmark</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="s1">'sigma'</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_ineq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">d_ineq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gamma_bracket</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="n">gamma_max</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.portfolio.tracking_error.te_target_portfolio" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Target-matching tracking-error portfolios: for each value in
+<code>targets</code>, find the risk-aversion gamma whose <code>te_portfolio</code>
+solution achieves that target active return (<code>problem="mu"</code>) or
+that target tracking error (<code>problem="sigma"</code>), via bisection on
+gamma.</p>
+<p>Original: rpb/compute_te_portfolio.m (mu-problem/problem=1 and
+sigma-problem/problem=2 branches), via
+compute_te_portfolio_return.m/compute_te_portfolio_volatility.m as the
+bisection objective.</p>
+<p>Same boundary-case and bisection-bracket structure as
+<code>mean_variance.mvo_target_portfolio</code> -- see that function's
+docstring for the full description of the achievability checks and
+the gamma_max/gamma_bracket quirk they share.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/portfolio/tracking_error.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">te_target_portfolio</span><span class="p">(</span>
+    <span class="n">x_benchmark</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">cov_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">targets</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">problem</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"sigma"</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">c_ineq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">d_ineq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">lb</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ub</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">gamma_bracket</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span>
+    <span class="n">gamma_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TETargetResult</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Target-matching tracking-error portfolios: for each value in</span>
+<span class="sd">    ``targets``, find the risk-aversion gamma whose ``te_portfolio``</span>
+<span class="sd">    solution achieves that target active return (``problem="mu"``) or</span>
+<span class="sd">    that target tracking error (``problem="sigma"``), via bisection on</span>
+<span class="sd">    gamma.</span>
+
+<span class="sd">    Original: rpb/compute_te_portfolio.m (mu-problem/problem=1 and</span>
+<span class="sd">    sigma-problem/problem=2 branches), via</span>
+<span class="sd">    compute_te_portfolio_return.m/compute_te_portfolio_volatility.m as the</span>
+<span class="sd">    bisection objective.</span>
+
+<span class="sd">    Same boundary-case and bisection-bracket structure as</span>
+<span class="sd">    ``mean_variance.mvo_target_portfolio`` -- see that function's</span>
+<span class="sd">    docstring for the full description of the achievability checks and</span>
+<span class="sd">    the gamma_max/gamma_bracket quirk they share.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">problem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"mu"</span><span class="p">,</span> <span class="s2">"sigma"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'problem must be "mu" or "sigma"'</span><span class="p">)</span>
+
+    <span class="n">x_benchmark</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x_benchmark</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">c_ineq</span><span class="o">=</span><span class="n">c_ineq</span><span class="p">,</span> <span class="n">d_ineq</span><span class="o">=</span><span class="n">d_ineq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span><span class="p">)</span>
+
+    <span class="n">r_min</span> <span class="o">=</span> <span class="n">te_portfolio</span><span class="p">(</span><span class="n">x_benchmark</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">r_max</span> <span class="o">=</span> <span class="n">te_portfolio</span><span class="p">(</span><span class="n">x_benchmark</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_max</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">nan_result</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TETargetResult</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">TETargetResult</span><span class="p">(</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">x_benchmark</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
+            <span class="n">active_return</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="n">tracking_error</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="n">gamma</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_target_result</span><span class="p">(</span><span class="n">r</span><span class="p">:</span> <span class="n">TrackingErrorResult</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TETargetResult</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">TETargetResult</span><span class="p">(</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span>
+            <span class="n">active_return</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">active_return</span><span class="p">,</span>
+            <span class="n">tracking_error</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">tracking_error</span><span class="p">,</span>
+            <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">achieved</span><span class="p">(</span><span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">te_portfolio</span><span class="p">(</span><span class="n">x_benchmark</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">gamma</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">active_return</span> <span class="k">if</span> <span class="n">problem</span> <span class="o">==</span> <span class="s2">"mu"</span> <span class="k">else</span> <span class="n">r</span><span class="o">.</span><span class="n">tracking_error</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">problem</span> <span class="o">==</span> <span class="s2">"sigma"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="n">r_min</span><span class="o">.</span><span class="n">tracking_error</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nan_result</span><span class="p">())</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="n">r_min</span><span class="o">.</span><span class="n">tracking_error</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_target_result</span><span class="p">(</span><span class="n">r_min</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">&gt;=</span> <span class="n">r_max</span><span class="o">.</span><span class="n">tracking_error</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_target_result</span><span class="p">(</span><span class="n">r_max</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span>
+                <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># mu-problem</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;=</span> <span class="n">r_min</span><span class="o">.</span><span class="n">active_return</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_target_result</span><span class="p">(</span><span class="n">r_min</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">&gt;</span> <span class="n">r_max</span><span class="o">.</span><span class="n">active_return</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nan_result</span><span class="p">())</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="n">r_max</span><span class="o">.</span><span class="n">active_return</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_target_result</span><span class="p">(</span><span class="n">r_max</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span>
+                <span class="k">continue</span>
+
+        <span class="n">gamma_star</span> <span class="o">=</span> <span class="n">bisection</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">g</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">target</span><span class="p">:</span> <span class="n">achieved</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span><span class="p">,</span> <span class="n">gamma_bracket</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">gamma_bracket</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">gamma_star</span><span class="p">):</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nan_result</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">as_target_result</span><span class="p">(</span>
+                    <span class="n">te_portfolio</span><span class="p">(</span><span class="n">x_benchmark</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">gamma_star</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+                    <span class="n">gamma_star</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4625,6 +5192,303 @@ covers compute_te_portfolio_mixed_norm.m via ridge_penalty/lasso_penalty.</p>
 </code></pre></div>
 </details>
 <details class="example">
+<summary>rpb/test_bl3.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl3.m -- Roncalli [2013], "Introduction</span>
+<span class="sd">to Risk Parity and Budgeting", page 24: five Black-Litterman view scenarios</span>
+<span class="sd">(varying the view itself, its confidence Omega, and the scaling tau), each</span>
+<span class="sd">turned into a portfolio matched to the *same* target volatility as the</span>
+<span class="sd">original x0 benchmark -- the sigma-problem branch of</span>
+<span class="sd">`compute_mvo_portfolio.m`, now covered by `mvo_target_portfolio`. For each</span>
+<span class="sd">scenario this reports the resulting weights, expected return, volatility</span>
+<span class="sd">(pinned to sigma0 by construction), active return (alpha) and information</span>
+<span class="sd">ratio relative to x0.</span>
+
+<span class="sd">Note on the displayed IR: the original computes</span>
+<span class="sd">`IR_x(i) = alpha_x(i)/sigma_x(i)` (active return over the portfolio's *own*</span>
+<span class="sd">volatility, not tracking error -- both are dimensionless ratios), and then</span>
+<span class="sd">the whole results matrix is multiplied by 100 for percent-style display</span>
+<span class="sd">before formatting. Since IR_x is already a ratio, that display convention</span>
+<span class="sd">ends up printing 100*IR rather than IR itself; this translation keeps that</span>
+<span class="sd">same convention (labelled `100*IR`) so the printed numbers match the</span>
+<span class="sd">original table (Roncalli page 26) directly."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.black_litterman</span><span class="w"> </span><span class="kn">import</span> <span class="n">black_litterman_moments</span><span class="p">,</span> <span class="n">implied_risk_premia</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_target_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">])</span>
+<span class="n">sigma0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x0</span> <span class="o">@</span> <span class="n">cov_matrix</span> <span class="o">@</span> <span class="n">x0</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mf">0.03</span>
+<span class="n">irp</span> <span class="o">=</span> <span class="n">implied_risk_premia</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+<span class="n">mu_tilde</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">irp</span><span class="o">.</span><span class="n">pi</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"x0=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">  mu0=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">x0</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">mu_tilde</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  sigma0=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sigma0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="c1"># (P, Q, Omega, tau) for the 5 view scenarios</span>
+<span class="n">p_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">scenarios</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.04</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.10</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span> <span class="mf">1.0</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.10</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span> <span class="mf">1.0</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.04</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.20</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.20</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span> <span class="mf">1.0</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.04</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.10</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span> <span class="mf">0.10</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.04</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.10</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span> <span class="mf">0.01</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">tau</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scenarios</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">bl</span> <span class="o">=</span> <span class="n">black_litterman_moments</span><span class="p">(</span><span class="n">mu_tilde</span><span class="p">,</span> <span class="n">tau</span> <span class="o">*</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">p_matrix</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">mvo_target_portfolio</span><span class="p">(</span><span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">sigma0</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="s2">"sigma"</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">weights</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">@</span> <span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span>
+    <span class="n">te</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">res</span><span class="o">.</span><span class="n">weights</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">@</span> <span class="n">cov_matrix</span> <span class="o">@</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">weights</span> <span class="o">-</span> <span class="n">x0</span><span class="p">))</span>
+    <span class="n">ir</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">/</span> <span class="n">res</span><span class="o">.</span><span class="n">volatility</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"scenario </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: gamma=</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">gamma</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">res</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">res</span><span class="o">.</span><span class="n">expected_return</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">res</span><span class="o">.</span><span class="n">volatility</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"alpha=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">alpha</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  te=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">te</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  100*IR=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ir</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_bl4.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl4.m -- Roncalli [2013], "Introduction</span>
+<span class="sd">to Risk Parity and Budgeting", page 24: a single Black-Litterman view</span>
+<span class="sd">(same P/Q/Omega/tau as test_bl3.py's scenario 1) turned into a *tracking-error*</span>
+<span class="sd">frontier against the x0 benchmark -- the sigma-problem branch of</span>
+<span class="sd">`compute_te_portfolio.m`, now covered by `te_target_portfolio`. Six target</span>
+<span class="sd">tracking-error levels (effectively 0% through 5%) show how active return and</span>
+<span class="sd">the information ratio (alpha/te, here genuinely dimensionless -- unlike</span>
+<span class="sd">test_bl3.py's alpha/sigma_x convention) scale with the amount of tracking</span>
+<span class="sd">error taken."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.black_litterman</span><span class="w"> </span><span class="kn">import</span> <span class="n">black_litterman_moments</span><span class="p">,</span> <span class="n">implied_risk_premia</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.tracking_error</span><span class="w"> </span><span class="kn">import</span> <span class="n">te_target_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">])</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mf">0.03</span>
+<span class="n">irp</span> <span class="o">=</span> <span class="n">implied_risk_premia</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+<span class="n">mu_tilde</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">irp</span><span class="o">.</span><span class="n">pi</span>
+
+<span class="n">p_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.04</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">])</span>
+<span class="n">omega</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.10</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">**</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">bl</span> <span class="o">=</span> <span class="n">black_litterman_moments</span><span class="p">(</span><span class="n">mu_tilde</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">p_matrix</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+
+<span class="n">te_targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">])</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">te_target_portfolio</span><span class="p">(</span>
+    <span class="n">x0</span><span class="p">,</span> <span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">te_targets</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="s2">"sigma"</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">te_targets</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">ir</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">active_return</span> <span class="o">/</span> <span class="n">res</span><span class="o">.</span><span class="n">tracking_error</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">tracking_error</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"target_te=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">target</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  gamma=</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">gamma</span><span class="si">:</span><span class="s2">6.3f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">res</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"alpha=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">res</span><span class="o">.</span><span class="n">active_return</span><span class="si">:</span><span class="s2">6.3f</span><span class="si">}</span><span class="s2">  te=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">res</span><span class="o">.</span><span class="n">tracking_error</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  IR=</span><span class="si">{</span><span class="n">ir</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_bl5.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl5.m -- a second, independent 4-asset</span>
+<span class="sd">Black-Litterman + tracking-error worked example (no book page cited in the</span>
+<span class="sd">original). Every asset gets a direct view (`P=I`, `Q=mu`, full confidence</span>
+<span class="sd">`Omega=Sigma_epsilon=covMatrix`) -- an unusually strong-conviction setup</span>
+<span class="sd">that pulls the posterior most of the way from the equilibrium prior toward</span>
+<span class="sd">the raw sample means.</span>
+
+<span class="sd">Four blocks, each comparing the resulting active portfolio (x) against the</span>
+<span class="sd">x0 benchmark:</span>
+
+<span class="sd">1. gamma-problem MVO (mu_BL, Sigma_BL) at the implied risk-aversion gamma0.</span>
+<span class="sd">2. sigma-problem TE-target=1% (mu_BL, Sigma_BL), i.e. `te_target_portfolio`.</span>
+<span class="sd">3. gamma-problem MVO (mu_BL, covMatrix) -- same posterior mean, but</span>
+<span class="sd">   optimized against the *original* (pre-view) covariance rather than the</span>
+<span class="sd">   BL posterior covariance Sigma_BL.</span>
+<span class="sd">4. sigma-problem TE-target=1% (mu_BL, covMatrix).</span>
+
+<span class="sd">The original's final block repeats block 2 verbatim (mu_BL, Sigma_BL again)</span>
+<span class="sd">-- included here too for a faithful translation, and it does reproduce</span>
+<span class="sd">identical numbers, as expected."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.black_litterman</span><span class="w"> </span><span class="kn">import</span> <span class="n">black_litterman_moments</span><span class="p">,</span> <span class="n">implied_risk_premia</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.tracking_error</span><span class="w"> </span><span class="kn">import</span> <span class="n">te_target_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.40</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.40</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sigma_hat =</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">])</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mf">0.02</span>
+<span class="n">irp</span> <span class="o">=</span> <span class="n">implied_risk_premia</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+<span class="n">mu_tilde</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">irp</span><span class="o">.</span><span class="n">pi</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"tilde(pi) ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">irp</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"tilde(mu) ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">mu_tilde</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"gamma0 ="</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">irp</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">p_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">bl</span> <span class="o">=</span> <span class="n">black_litterman_moments</span><span class="p">(</span><span class="n">mu_tilde</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">p_matrix</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"mu(BL) ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sigma(BL) =</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">bl</span><span class="o">.</span><span class="n">sigma_bar</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cov_for_te</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">active</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">-</span> <span class="n">x0</span>
+    <span class="n">te</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">active</span> <span class="o">@</span> <span class="n">cov_for_te</span> <span class="o">@</span> <span class="n">active</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: x0=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">  x=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">  te=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">te</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="n">gamma0</span> <span class="o">=</span> <span class="n">irp</span><span class="o">.</span><span class="n">gamma</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span>
+    <span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span><span class="p">,</span>
+    <span class="n">bl</span><span class="o">.</span><span class="n">sigma_bar</span><span class="p">,</span>
+    <span class="n">gamma</span><span class="o">=</span><span class="n">gamma0</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)),</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">report</span><span class="p">(</span><span class="s2">"1. MVO(mu_BL, Sigma_BL) @ gamma0"</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">bl</span><span class="o">.</span><span class="n">sigma_bar</span><span class="p">)</span>
+
+<span class="n">te_res</span> <span class="o">=</span> <span class="n">te_target_portfolio</span><span class="p">(</span>
+    <span class="n">x0</span><span class="p">,</span>
+    <span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span><span class="p">,</span>
+    <span class="n">bl</span><span class="o">.</span><span class="n">sigma_bar</span><span class="p">,</span>
+    <span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">problem</span><span class="o">=</span><span class="s2">"sigma"</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)),</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">report</span><span class="p">(</span><span class="s2">"2. TE-target 1% (mu_BL, Sigma_BL)"</span><span class="p">,</span> <span class="n">te_res</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">bl</span><span class="o">.</span><span class="n">sigma_bar</span><span class="p">)</span>
+
+<span class="n">res2</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span>
+    <span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma0</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)),</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="p">)</span>
+<span class="n">report</span><span class="p">(</span><span class="s2">"3. MVO(mu_BL, covMatrix) @ gamma0"</span><span class="p">,</span> <span class="n">res2</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
+
+<span class="n">te_res2</span> <span class="o">=</span> <span class="n">te_target_portfolio</span><span class="p">(</span>
+    <span class="n">x0</span><span class="p">,</span>
+    <span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span><span class="p">,</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">problem</span><span class="o">=</span><span class="s2">"sigma"</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)),</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">report</span><span class="p">(</span><span class="s2">"4. TE-target 1% (mu_BL, covMatrix)"</span><span class="p">,</span> <span class="n">te_res2</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
+
+<span class="n">te_res3</span> <span class="o">=</span> <span class="n">te_target_portfolio</span><span class="p">(</span>
+    <span class="n">x0</span><span class="p">,</span>
+    <span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span><span class="p">,</span>
+    <span class="n">bl</span><span class="o">.</span><span class="n">sigma_bar</span><span class="p">,</span>
+    <span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">problem</span><span class="o">=</span><span class="s2">"sigma"</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)),</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">report</span><span class="p">(</span><span class="s2">"5. TE-target 1% (mu_BL, Sigma_BL), repeated"</span><span class="p">,</span> <span class="n">te_res3</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">bl</span><span class="o">.</span><span class="n">sigma_bar</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_bl6.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl6.m -- same 4-asset setup as</span>
+<span class="sd">test_bl5.py, demonstrating that a raw QP call and `te_portfolio` at a fixed</span>
+<span class="sd">gamma agree, then cross-checking that fixed-gamma solution against</span>
+<span class="sd">`te_target_portfolio`'s sigma-problem mode targeting the tracking error that</span>
+<span class="sd">fixed-gamma solution actually achieves.</span>
+
+<span class="sd">The original's raw `quadprog(H, f, ..., A, B, lb, ub, x0, options)` call</span>
+<span class="sd">with `H=covMatrix`, `f=-gamma0*mu - covMatrix*x0` is exactly what</span>
+<span class="sd">`te_portfolio(x0, mu, covMatrix, gamma=gamma0, ...)` computes internally</span>
+<span class="sd">(see tracking_error.py's `r_lin = gamma*mu + cov_matrix @ x_benchmark`) --</span>
+<span class="sd">so it's translated directly as a `te_portfolio` call rather than a raw</span>
+<span class="sd">`solve_qp` call, and the two are verified to agree below."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.tracking_error</span><span class="w"> </span><span class="kn">import</span> <span class="n">te_portfolio</span><span class="p">,</span> <span class="n">te_target_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.40</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.40</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sigma_hat =</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">])</span>
+<span class="n">gamma0</span> <span class="o">=</span> <span class="mf">0.0422</span>
+
+<span class="c1"># Raw quadprog(H, f, [], [], A, B, lb, ub, x0, options) call from the</span>
+<span class="c1"># original, translated literally via solve_qp.</span>
+<span class="n">x_raw</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma0</span> <span class="o">*</span> <span class="n">mu</span> <span class="o">+</span> <span class="n">cov_matrix</span> <span class="o">@</span> <span class="n">x0</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)),</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"x (raw quadprog) ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x_raw</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># Same QP via te_portfolio -- should match x_raw exactly.</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">te_portfolio</span><span class="p">(</span>
+    <span class="n">x0</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma0</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)),</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="p">)</span>
+<span class="n">te_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">res</span><span class="o">.</span><span class="n">weights</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">@</span> <span class="n">cov_matrix</span> <span class="o">@</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">weights</span> <span class="o">-</span> <span class="n">x0</span><span class="p">))</span>
+<span class="n">ir_x</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">active_return</span> <span class="o">/</span> <span class="n">te_x</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"x0 ="</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="s2">" x (te_portfolio) ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"te(x) = </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">te_x</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">   IR = </span><span class="si">{</span><span class="n">ir_x</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="c1"># Cross-check: te_target_portfolio's sigma-problem, targeting the tracking</span>
+<span class="c1"># error the fixed-gamma solution above actually achieves, should recover</span>
+<span class="c1"># gamma0 (and the same portfolio) via bisection.</span>
+<span class="n">target_res</span> <span class="o">=</span> <span class="n">te_target_portfolio</span><span class="p">(</span>
+    <span class="n">x0</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">,</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">te_x</span><span class="p">,</span>
+    <span class="n">problem</span><span class="o">=</span><span class="s2">"sigma"</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)),</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">"cross-check: gamma from te_target_portfolio=</span><span class="si">{</span><span class="n">target_res</span><span class="o">.</span><span class="n">gamma</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> "</span>
+    <span class="sa">f</span><span class="s2">"(vs gamma0=</span><span class="si">{</span><span class="n">gamma0</span><span class="si">}</span><span class="s2">), weights match=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">target_res</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="n">atol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+<span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
 <summary>rpb/test_lasso1.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],</span>
 <span class="sd">"Introduction to Risk Parity and Budgeting", Example 1 (page 53):</span>
@@ -4674,6 +5538,91 @@ covers compute_te_portfolio_mixed_norm.m via ridge_penalty/lasso_penalty.</p>
 <span class="n">results</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">x5</span><span class="p">,</span> <span class="n">x6</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"            x1      x2      x3      x4      x5      x6"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_lasso2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso2.m -- Roncalli [2013],</span>
+<span class="sd">"Introduction to Risk Parity and Budgeting", Example 1 (page 53): the</span>
+<span class="sd">original sweeps 250 ridge/lasso penalty strengths and plots the resulting</span>
+<span class="sd">weight paths (4 subplots: ridge toward zero with a budget constraint,</span>
+<span class="sd">ridge toward equal-weight with no budget constraint, and the same two</span>
+<span class="sd">cases for lasso). This translates the *numeric core* at a handful of</span>
+<span class="sd">representative penalty strengths spanning each sweep's range, rather than</span>
+<span class="sd">the full 250-point plot -- same "numeric core, plot dropped" convention</span>
+<span class="sd">used throughout this port, and the same</span>
+<span class="sd">`solve_qp(..., ridge_penalty=...)`/`solve_qp(..., lasso_penalty=...)`</span>
+<span class="sd">machinery test_lasso1.py/test_lasso3.py already establish for</span>
+<span class="sd">quadprog_ridge/quadprog_lasso (see optim/quadprog.py's docstring for why</span>
+<span class="sd">the variable-splitting original collapses into these two keyword</span>
+<span class="sd">arguments).</span>
+
+<span class="sd">Not cross-verified against Octave: the original's raw</span>
+<span class="sd">`quadprog_ridge`/`quadprog_lasso` variable-splitting formulation turned</span>
+<span class="sd">out to be numerically fragile for the *lasso* branches specifically under</span>
+<span class="sd">Octave's free `quadprog` (returns an infeasible/degenerate all-zero</span>
+<span class="sd">result, retcode=-3, even for the small, well-conditioned inputs used</span>
+<span class="sd">here), which made an apples-to-apples comparison unreliable in this</span>
+<span class="sd">environment; `solve_qp`'s native (variable-splitting-free) L1 handling via</span>
+<span class="sd">cvxpy does not have that problem and returns sensible, well-conditioned</span>
+<span class="sd">weights throughout, consistent with test_lasso1.py's already-established</span>
+<span class="sd">output."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
+
+<span class="n">lambda_ridge_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="n">lambda_lasso_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ridge (Static, toward zero, budget constrained):"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">lambda_ridge_grid</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+        <span class="n">cov_matrix</span><span class="p">,</span>
+        <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+        <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+        <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+        <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lam</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ridge (Dynamic, toward equal-weight, no budget constraint):"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">lambda_ridge_grid</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lam</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">x0</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Lasso (Static, toward zero, budget constrained):"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">lambda_lasso_grid</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+        <span class="n">cov_matrix</span><span class="p">,</span>
+        <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+        <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+        <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+        <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lam</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  lambda=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">lam</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Lasso (Dynamic, toward equal-weight, no budget constraint):"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">lambda_lasso_grid</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+        <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lam</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">x0</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  lambda=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">lam</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
@@ -4864,14 +5813,22 @@ covers compute_te_portfolio_mixed_norm.m via ridge_penalty/lasso_penalty.</p>
 </details>
 <details class="example">
 <summary>rpb/test_mvo2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_mvo2.m -- gamma-problem MVO frontier</span>
-<span class="sd">(the mu-problem/sigma-problem target-matching sections in the original</span>
-<span class="sd">use a mode not currently ported -- see mean_variance.py docstring)."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_mvo2.m -- Roncalli [2013], "Introduction</span>
+<span class="sd">to Risk Parity and Budgeting", Example 1 (pages 7-8): the same 4-asset</span>
+<span class="sd">mean-variance problem evaluated three ways -- the gamma-problem (pick a</span>
+<span class="sd">risk-aversion, solve directly), the mu-problem (pick a target expected</span>
+<span class="sd">return, bisect on gamma to hit it), and the sigma-problem (pick a target</span>
+<span class="sd">volatility, bisect on gamma to hit it). All three route through</span>
+<span class="sd">`compute_mvo_portfolio.m`'s three branches; here that's</span>
+<span class="sd">`mvo_frontier`/`mvo_target_portfolio`.</span>
+
+<span class="sd">The original passes `lb=0, ub=0` (MATLAB's "use the default -100/100 wide</span>
+<span class="sd">bounds" sentinel); passed through explicitly here as `lb=-100, ub=100`."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_frontier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_frontier</span><span class="p">,</span> <span class="n">mvo_target_portfolio</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
 
 <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
@@ -4879,12 +5836,92 @@ covers compute_te_portfolio_mixed_norm.m via ridge_penalty/lasso_penalty.</p>
 <span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="s2">"1. gamma-problem (page 7)"</span><span class="p">)</span>
 <span class="n">gamma_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">2.00</span><span class="p">,</span> <span class="mf">5.00</span><span class="p">])</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">mvo_frontier</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_values</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">mvo_frontier</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_values</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gamma_values</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"gamma=</span><span class="si">{</span><span class="n">g</span><span class="si">}</span><span class="s2">: weights=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> mu=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> sigma=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+        <span class="sa">f</span><span class="s2">"  gamma=</span><span class="si">{</span><span class="n">g</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">2. mu-problem (page 8)"</span><span class="p">)</span>
+<span class="n">mu_targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">5.00</span><span class="p">,</span> <span class="mf">6.00</span><span class="p">,</span> <span class="mf">7.00</span><span class="p">,</span> <span class="mf">8.00</span><span class="p">,</span> <span class="mf">9.00</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+<span class="n">mu_results</span> <span class="o">=</span> <span class="n">mvo_target_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">mu_targets</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="s2">"mu"</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mu_targets</span><span class="p">,</span> <span class="n">mu_results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"  target_mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">target</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  gamma=</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">gamma</span><span class="si">:</span><span class="s2">6.3f</span><span class="si">}</span><span class="s2">  mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">3. sigma-problem (page 8)"</span><span class="p">)</span>
+<span class="n">sigma_targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">15.00</span><span class="p">,</span> <span class="mf">20.00</span><span class="p">,</span> <span class="mf">25.00</span><span class="p">,</span> <span class="mf">30.00</span><span class="p">,</span> <span class="mf">35.00</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+<span class="n">sigma_results</span> <span class="o">=</span> <span class="n">mvo_target_portfolio</span><span class="p">(</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">sigma_targets</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="s2">"sigma"</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sigma_targets</span><span class="p">,</span> <span class="n">sigma_results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"  target_sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">target</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  gamma=</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">gamma</span><span class="si">:</span><span class="s2">6.3f</span><span class="si">}</span><span class="s2">  mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>rpb/test_mvo3.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_mvo3.m -- Roncalli [2013], "Introduction</span>
+<span class="sd">to Risk Parity and Budgeting", Example 1 (page 10): the same sigma-problem</span>
+<span class="sd">target-matching as test_mvo2.py's section 3, now under three different</span>
+<span class="sd">weight-bound configurations (unconstrained-ish, long-only, long-only capped</span>
+<span class="sd">at 40% per asset), showing how the achievable target range narrows as</span>
+<span class="sd">constraints tighten.</span>
+
+<span class="sd">**A genuine bug in the original**, found while cross-checking this example</span>
+<span class="sd">against Octave: `test_mvo3.m` (unlike `test_mvo2.m` and every other example</span>
+<span class="sd">in this cluster) never calls `init_global`, which is what sets the global</span>
+<span class="sd">`BISECTION_Tol` that `bisection.m`'s convergence loop depends on. With</span>
+<span class="sd">`BISECTION_Tol` undefined, `while max(abs(a-b)) &gt; BISECTION_Tol` compares</span>
+<span class="sd">against an empty value, which both MATLAB and Octave treat as false --</span>
+<span class="sd">so the loop runs zero iterations and `bisection` silently returns the raw</span>
+<span class="sd">bracket midpoint `(0+10)/2 = 5.0` for every target, regardless of what the</span>
+<span class="sd">target actually is. `compute_mvo_portfolio` then reports this as a</span>
+<span class="sd">successful solve (retcode=1) even though the resulting portfolio doesn't</span>
+<span class="sd">come close to the requested volatility target. Running `test_mvo3.m`</span>
+<span class="sd">standalone in a fresh MATLAB/Octave session reproduces this; running it</span>
+<span class="sd">right after `test_mvo2.m` in the same session "accidentally" works, because</span>
+<span class="sd">`clear` (unlike `clear all`) doesn't clear globals, so `test_mvo2.m`'s</span>
+<span class="sd">earlier `init_global` call leaves `BISECTION_Tol` set. See</span>
+<span class="sd">`docs/matlab_bugs_found.md` for the full writeup. This translation produces</span>
+<span class="sd">the *correct* target-matching numbers (as `test_mvo3.m` would if it called</span>
+<span class="sd">`init_global` like its neighbors do), since `mvo_target_portfolio`'s Python</span>
+<span class="sd">`bisection` always has a well-defined tolerance."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_target_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+
+<span class="n">sigma_targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">15.00</span><span class="p">,</span> <span class="mf">20.00</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+
+<span class="n">bound_configs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"x1 (lb=-100, ub=100)"</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">),</span>
+    <span class="s2">"x2 (lb=0, ub=100, long-only)"</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">),</span>
+    <span class="s2">"x3 (lb=0, ub=40, long-only, capped)"</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bound_configs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">:"</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">mvo_target_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">sigma_targets</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="s2">"sigma"</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sigma_targets</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"  target_sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">target</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  gamma=</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">gamma</span><span class="si">:</span><span class="s2">6.3f</span><span class="si">}</span><span class="s2">  mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  "</span>
+            <span class="sa">f</span><span class="s2">"sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
 </code></pre></div>
 </details>
 <h2 id="portfolioerc_mdp"><code>portfolio.erc_mdp</code><a class="headerlink" href="#portfolioerc_mdp" title="Permanent link">&para;</a></h2>
@@ -5006,74 +6043,74 @@ minimize log(portfolio vol) - log(weighted-average individual vol).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/quanttoolbox/portfolio/mean_variance.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mdp_portfolio</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mdp_portfolio</span><span class="p">(</span>
     <span class="n">cov_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">a_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">b_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>

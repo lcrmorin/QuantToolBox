@@ -2184,26 +2184,26 @@ byte-for-byte), it's marked 🟡 with a note explaining why.</p>
 <tr>
 <td><code>rpb/</code></td>
 <td><code>test_bl3.m</code></td>
-<td>⬜</td>
-<td>Uses a sigma-target MVO mode not currently ported (documented gap -- see <code>mean_variance.py</code> docstring)</td>
+<td>✅</td>
+<td>Sigma-target MVO mode -- <code>mean_variance.mvo_target_portfolio</code> (previously a documented gap, now implemented); 5 BL view scenarios matched to the x0 benchmark's volatility, output cross-verified against Octave</td>
 </tr>
 <tr>
 <td><code>rpb/</code></td>
 <td><code>test_bl4.m</code></td>
-<td>⬜</td>
-<td>Uses a TE-target-matching mode not currently ported (documented gap -- see <code>tracking_error.py</code>)</td>
+<td>✅</td>
+<td>TE-target-matching mode -- <code>tracking_error.te_target_portfolio</code> (previously a documented gap, now implemented); 6 TE targets, cross-verified against Octave</td>
 </tr>
 <tr>
 <td><code>rpb/</code></td>
 <td><code>test_bl5.m</code></td>
-<td>⬜</td>
-<td>Uses the same TE-target-matching mode as test_bl4.m</td>
+<td>✅</td>
+<td>Same TE-target-matching mode as test_bl4.m, plus a second Black-Litterman worked example (full-view, <code>P=I</code>); 5 blocks, cross-verified against Octave</td>
 </tr>
 <tr>
 <td><code>rpb/</code></td>
 <td><code>test_bl6.m</code></td>
-<td>⬜</td>
-<td>Uses raw <code>quadprog</code> (translatable via <code>solve_qp</code>) plus the same TE-target-matching gap</td>
+<td>✅</td>
+<td>Raw <code>quadprog</code> call translated via <code>te_portfolio</code> (shown to solve the identical QP), plus <code>te_target_portfolio</code>; cross-verified against Octave, including a gamma-recovery self-consistency check</td>
 </tr>
 <tr>
 <td><code>rpb/</code></td>
@@ -2238,8 +2238,8 @@ byte-for-byte), it's marked 🟡 with a note explaining why.</p>
 <tr>
 <td><code>rpb/</code></td>
 <td><code>test_lasso2.m</code></td>
-<td>⬜</td>
-<td>Plotting sweep of the same computation <code>test_lasso3.m</code> demonstrates directly; lower priority</td>
+<td>🟡</td>
+<td>Translated — numeric core (representative points from the 250-point ridge/lasso static/dynamic sweep <code>test_lasso3.m</code> demonstrates directly), plot dropped; not cross-verified -- the original's lasso branch is numerically fragile under Octave's <code>quadprog</code> (see the .py docstring)</td>
 </tr>
 <tr>
 <td><code>rpb/</code></td>
@@ -2280,14 +2280,14 @@ byte-for-byte), it's marked 🟡 with a note explaining why.</p>
 <tr>
 <td><code>rpb/</code></td>
 <td><code>test_mvo2.m</code></td>
-<td>🟡</td>
-<td>Gamma-problem section translated; mu-problem/sigma-problem sections hit the same target-matching gap as test_bl3-6</td>
+<td>✅</td>
+<td>All 3 sections translated -- gamma-problem (<code>mvo_frontier</code>), mu-problem and sigma-problem (<code>mvo_target_portfolio</code>, previously a documented gap, now implemented); cross-verified against Octave</td>
 </tr>
 <tr>
 <td><code>rpb/</code></td>
 <td><code>test_mvo3.m</code></td>
-<td>⬜</td>
-<td>Entirely sigma-problem based — same documented gap</td>
+<td>✅</td>
+<td>Sigma-problem under 3 weight-bound configurations, cross-verified against Octave -- <strong>found and documented a genuine MATLAB bug</strong> in the process: the original script skips <code>init_global</code>, leaving <code>BISECTION_Tol</code> unset and silently breaking every target-matching call it makes; see <code>docs/matlab_bugs_found.md</code> #6. This translation produces the correct numbers.</td>
 </tr>
 <tr>
 <td><code>rpb/</code></td>
@@ -2683,9 +2683,9 @@ byte-for-byte), it's marked 🟡 with a note explaining why.</p>
 <tr>
 <td><code>rpb/</code></td>
 <td>21</td>
-<td>5</td>
+<td>11</td>
 <td>10</td>
-<td>6</td>
+<td>0</td>
 </tr>
 <tr>
 <td><code>stats/</code></td>
@@ -2718,9 +2718,9 @@ byte-for-byte), it's marked 🟡 with a note explaining why.</p>
 <tr>
 <td><strong>Total</strong></td>
 <td><strong>149</strong></td>
-<td><strong>24</strong></td>
+<td><strong>30</strong></td>
 <td><strong>88</strong></td>
-<td><strong>37</strong></td>
+<td><strong>31</strong></td>
 </tr>
 </tbody>
 </table>
