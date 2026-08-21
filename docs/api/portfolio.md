@@ -42,9 +42,34 @@
     --8<-- "examples/rpb/test_bl2.py"
     ```
 
+??? example "rpb/test_bl3.py"
+    ```python
+    --8<-- "examples/rpb/test_bl3.py"
+    ```
+
+??? example "rpb/test_bl4.py"
+    ```python
+    --8<-- "examples/rpb/test_bl4.py"
+    ```
+
+??? example "rpb/test_bl5.py"
+    ```python
+    --8<-- "examples/rpb/test_bl5.py"
+    ```
+
+??? example "rpb/test_bl6.py"
+    ```python
+    --8<-- "examples/rpb/test_bl6.py"
+    ```
+
 ??? example "rpb/test_lasso1.py"
     ```python
     --8<-- "examples/rpb/test_lasso1.py"
+    ```
+
+??? example "rpb/test_lasso2.py"
+    ```python
+    --8<-- "examples/rpb/test_lasso2.py"
     ```
 
 ??? example "rpb/test_lasso3.py"
@@ -65,6 +90,11 @@
 ??? example "rpb/test_mvo2.py"
     ```python
     --8<-- "examples/rpb/test_mvo2.py"
+    ```
+
+??? example "rpb/test_mvo3.py"
+    ```python
+    --8<-- "examples/rpb/test_mvo3.py"
     ```
 
 ## `portfolio.erc_mdp`

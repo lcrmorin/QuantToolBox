@@ -3,11 +3,15 @@
 import numpy as np
 import pytest
 
+from quanttoolbox.linalg.special_matrices import xpnd
+from quanttoolbox.portfolio.black_litterman import black_litterman_moments, implied_risk_premia
 from quanttoolbox.portfolio.tracking_error import (
     minimum_te_portfolio,
     te_frontier,
     te_portfolio,
+    te_target_portfolio,
 )
+from quanttoolbox.stats.moments import corr_to_cov
 
 
 @pytest.fixture
@@ -68,3 +72,43 @@ def test_te_portfolio_respects_box_bounds(sample_data):
     result = te_portfolio(x_b, mu, cov, gamma=2.0, lb=0.1, ub=0.4)
     assert np.all(result.weights >= 0.1 - 1e-4)
     assert np.all(result.weights <= 0.4 + 1e-4)
+
+
+def test_te_target_portfolio_matches_matlab_reference():
+    # Examples/rpb/test_bl4.m: Black-Litterman posterior mean, sigma-problem
+    # target-matching against x0 -- golden values cross-verified against
+    # the original MATLAB source (compute_te_portfolio.m) run via Octave.
+    sigma = np.array([0.15, 0.20, 0.25, 0.30])
+    rho = xpnd(np.array([1.00, 0.10, 1.00, 0.40, 0.70, 1.00, 0.50, 0.40, 0.80, 1.00]), method=1)
+    cov = corr_to_cov(sigma, rho)
+
+    x0 = np.array([0.40, 0.30, 0.20, 0.10])
+    irp = implied_risk_premia(x0, cov, 0.25)
+    mu_tilde = 0.03 + irp.pi
+    p_matrix = np.array([[1, 0, 0, 0], [0, 1, -1, 0]], dtype=float)
+    bl = black_litterman_moments(
+        mu_tilde, cov, p_matrix, np.array([0.04, -0.01]), np.diag([0.10**2, 0.05**2])
+    )
+
+    te_targets = np.array([0.01, 0.02, 0.03])
+    results = te_target_portfolio(x0, bl.mu_bar, cov, te_targets, problem="sigma", lb=0.0, ub=1.0)
+    expected_weights = np.array(
+        [
+            [0.3553, 0.3024, 0.2294, 0.1129],
+            [0.3107, 0.3048, 0.2589, 0.1257],
+            [0.2660, 0.3071, 0.2883, 0.1386],
+        ]
+    )
+    for r, target, expected in zip(results, te_targets, expected_weights, strict=True):
+        assert np.isclose(r.tracking_error, target, atol=1e-4)
+        assert np.allclose(r.weights, expected, atol=2e-3)
+        # every scenario should land on the same information ratio (the
+        # BL posterior mean's implied Sharpe ratio doesn't change with gamma)
+        assert np.isclose(r.active_return / r.tracking_error, 0.143, atol=1e-3)
+
+
+def test_te_target_portfolio_matches_frontier_at_recovered_gamma(sample_data):
+    x_b, mu, cov = sample_data
+    result = te_target_portfolio(x_b, mu, cov, 0.05, problem="sigma")[0]
+    direct = te_portfolio(x_b, mu, cov, gamma=result.gamma)
+    assert np.allclose(result.weights, direct.weights, atol=1e-4)

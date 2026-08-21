@@ -149,24 +149,24 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 |---|---|---|---|
 | `rpb/` | `test_bl1.m` | ✅ | See `examples/black_litterman.md` |
 | `rpb/` | `test_bl2.m` | 🟡 | Translated — sensitivity analysis across 5 view scenarios, fixed risk-aversion MVO |
-| `rpb/` | `test_bl3.m` | ⬜ | Uses a sigma-target MVO mode not currently ported (documented gap -- see `mean_variance.py` docstring) |
-| `rpb/` | `test_bl4.m` | ⬜ | Uses a TE-target-matching mode not currently ported (documented gap -- see `tracking_error.py`) |
-| `rpb/` | `test_bl5.m` | ⬜ | Uses the same TE-target-matching mode as test_bl4.m |
-| `rpb/` | `test_bl6.m` | ⬜ | Uses raw `quadprog` (translatable via `solve_qp`) plus the same TE-target-matching gap |
+| `rpb/` | `test_bl3.m` | ✅ | Sigma-target MVO mode -- `mean_variance.mvo_target_portfolio` (previously a documented gap, now implemented); 5 BL view scenarios matched to the x0 benchmark's volatility, output cross-verified against Octave |
+| `rpb/` | `test_bl4.m` | ✅ | TE-target-matching mode -- `tracking_error.te_target_portfolio` (previously a documented gap, now implemented); 6 TE targets, cross-verified against Octave |
+| `rpb/` | `test_bl5.m` | ✅ | Same TE-target-matching mode as test_bl4.m, plus a second Black-Litterman worked example (full-view, `P=I`); 5 blocks, cross-verified against Octave |
+| `rpb/` | `test_bl6.m` | ✅ | Raw `quadprog` call translated via `te_portfolio` (shown to solve the identical QP), plus `te_target_portfolio`; cross-verified against Octave, including a gamma-recovery self-consistency check |
 | `rpb/` | `test_box1.m` | 🟡 | Translated — ERC + box-constrained RB at progressively wider bounds |
 | `rpb/` | `test_erc1.m` | ✅ | See `examples/risk_budgeting.md` |
 | `rpb/` | `test_erc2.m` | 🟡 | Translated |
 | `rpb/` | `test_erc3.m` | 🟡 | Translated |
 | `rpb/` | `test_lasso1.m` | 🟡 | Translated — unconstrained/budget-constrained MVO (identical, since `mvo_portfolio` auto-applies the budget constraint when `a_eq` is omitted, matching `compute_mvo_portfolio.m`) plus ridge/lasso via `solve_qp` (no auto budget constraint there, matching the raw `quadprog_ridge`/`quadprog_lasso`) |
-| `rpb/` | `test_lasso2.m` | ⬜ | Plotting sweep of the same computation `test_lasso3.m` demonstrates directly; lower priority |
+| `rpb/` | `test_lasso2.m` | 🟡 | Translated — numeric core (representative points from the 250-point ridge/lasso static/dynamic sweep `test_lasso3.m` demonstrates directly), plot dropped; not cross-verified -- the original's lasso branch is numerically fragile under Octave's `quadprog` (see the .py docstring) |
 | `rpb/` | `test_lasso3.m` | 🟡 | Translated via `solve_qp` ridge/lasso penalties (replaces original's `quadprog_ridge`/`quadprog_lasso`/`quadprog_mixed`) |
 | `rpb/` | `test_lasso4.m` | 🟡 | Byte-identical to `test_lasso3.m` -- same translation covers both |
 | `rpb/` | `test_lasso5.m` | 🟡 | Translated — mixed ridge+lasso penalties toward two different target vectors |
 | `rpb/` | `test_minvar1.m` | ✅ | See `examples/mean_variance.md` |
 | `rpb/` | `test_minvar2.m` | 🟡 | Translated — MinVar with general linear equality/inequality constraints |
 | `rpb/` | `test_mvo1.m` | ✅ | See `examples/mean_variance.md` |
-| `rpb/` | `test_mvo2.m` | 🟡 | Gamma-problem section translated; mu-problem/sigma-problem sections hit the same target-matching gap as test_bl3-6 |
-| `rpb/` | `test_mvo3.m` | ⬜ | Entirely sigma-problem based — same documented gap |
+| `rpb/` | `test_mvo2.m` | ✅ | All 3 sections translated -- gamma-problem (`mvo_frontier`), mu-problem and sigma-problem (`mvo_target_portfolio`, previously a documented gap, now implemented); cross-verified against Octave |
+| `rpb/` | `test_mvo3.m` | ✅ | Sigma-problem under 3 weight-bound configurations, cross-verified against Octave -- **found and documented a genuine MATLAB bug** in the process: the original script skips `init_global`, leaving `BISECTION_Tol` unset and silently breaking every target-matching call it makes; see `docs/matlab_bugs_found.md` #6. This translation produces the correct numbers. |
 | `rpb/` | `test_te1.m` | ✅ | See `examples/mean_variance.md` |
 
 ## stats/ (19 files; `ridge.inc` is a shared data snippet, not a standalone example)
@@ -247,12 +247,12 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 | `maths/` | 9 | 2 | 7 | 0 |
 | `matrix/` | 9 | 3 | 3 | 3 |
 | `optim/` | 11 | 6 | 5 | 0 |
-| `rpb/` | 21 | 5 | 10 | 6 |
+| `rpb/` | 21 | 11 | 10 | 0 |
 | `stats/` | 18 | 1 | 12 | 5 |
 | `svm/` | 12 | 3 | 9 | 0 |
 | `tools/` | 5 | 0 | 0 | 5 |
 | `tutorial/` | 11 | 0 | 0 | 11 |
-| **Total** | **149** | **24** | **88** | **37** |
+| **Total** | **149** | **30** | **88** | **31** |
 
 *(`stats/ridge.inc` excluded as a data snippet, not a standalone example
 — 149 actual `.m` example scripts plus that one data-only file.)*

@@ -255,6 +255,69 @@ window doesn't contain a sign change, since that specific failure mode
 
 ---
 
+## 6. `test_mvo3.m` silently returns wrong portfolios by skipping `init_global`
+
+**File:** `Examples/rpb/test_mvo3.m`
+
+**The bug:** every other example in this cluster (`test_mvo2.m`, `test_bl3.m`
+through `test_bl6.m`, ...) starts with `clear; clc; init_global;` before
+calling `compute_mvo_portfolio`'s mu-problem/sigma-problem (target-matching)
+branches. `test_mvo3.m` is the one exception: it has `clear; clc;` but never
+calls `init_global`. `init_global.m` is what sets the global
+`BISECTION_Tol` that `optim/bisection.m`'s convergence loop depends on:
+
+```
+while max(abs(a-b)) > BISECTION_Tol
+    ...
+end
+```
+
+With `BISECTION_Tol` undefined, this comparison evaluates against an empty
+value, and both MATLAB and Octave treat `while <empty>` as false — so the
+loop runs **zero iterations** and `bisection` silently returns the raw
+bracket midpoint `(a+b)/2` (0 and 10 are `compute_mvo_portfolio.m`'s
+hard-coded bisection bounds, so this is always exactly `5.0`) for *every*
+target, regardless of what the target actually is.
+`compute_mvo_portfolio` still reports `retcode=1` (success) for this
+result, since the QP solve at that bogus gamma succeeds fine — only the
+gamma value itself is wrong.
+
+**How it was found:** while translating `test_mvo3.m` and cross-checking it
+against Octave, every one of its six sigma-problem calls (two volatility
+targets × three weight-bound configurations) returned `gamma=5.0` and a
+volatility nowhere near the requested target, even though the identical
+`compute_mvo_portfolio` call with the identical targets and bounds, made
+from `test_mvo2.m`'s sigma-problem section, converges correctly. Manually
+tracing the call showed the underlying objective function
+(`compute_mvo_portfolio_volatility`) was being evaluated correctly at every
+point tried (a real sign change exists between the bracket endpoints), but
+`bisection`'s loop simply never ran. Instrumenting `bisection.m` directly
+isolated it to `BISECTION_Tol` being unset in exactly this one call path.
+
+**Practical impact:** running `test_mvo3.m` by itself in a fresh MATLAB or
+Octave session reproduces this every time and produces a *complete* table
+of wrong numbers — every reported volatility target is silently missed
+across all three weight-bound configurations, with no error or warning of
+any kind. It happens to "accidentally" work if `test_mvo2.m` (or any other
+script that calls `init_global`) was run earlier in the same session,
+because MATLAB's `clear` (unlike `clear all` or `clear -global`) does not
+clear global variables — so whether this script produces correct output
+depends entirely on execution history, not on anything in the script
+itself. This is exactly the kind of bug that's easy to miss in practice: a
+book/course-notes author testing examples interactively, one after another
+in the same session, would very likely never observe it.
+
+**Fix in the Python port:** not applicable to the library itself --
+`quanttoolbox.optim.bisection.bisection` always has a well-defined default
+tolerance (`BisectionConfig.tol`), so this failure mode can't occur in the
+Python port regardless of call order. The example translation,
+`docs/examples/rpb/test_mvo3.py`, produces the *correct* target-matching
+numbers throughout (i.e. what `test_mvo3.m` would produce if it called
+`init_global` like its neighbors do) rather than faithfully reproducing the
+wrong ones, with this bug documented directly in its docstring.
+
+---
+
 ## Summary table
 
 | # | Location | Nature | Fixed in port? |
@@ -264,3 +327,4 @@ window doesn't contain a sign change, since that specific failure mode
 | 3 | `compute_rb_sd_admm_newton.m` / Newton core | No positivity floor, can diverge | ✅ Yes |
 | 4 | `mixture_compute_rb_{var,es}.m` algorithm-2 branch | Dead code (unset global) | ✅ Yes (branch not ported, documented) |
 | 5 | `proximal_linear_constraints.m` | Exact-equality convergence check can false-exit on a plateau | ⚠️ Not fixed — faithfully reproduced and documented |
+| 6 | `Examples/rpb/test_mvo3.m` | Missing `init_global` call leaves `BISECTION_Tol` unset, silently breaking all bisection-based target-matching | N/A (example script, not library code) — translation produces the correct numbers, bug documented |

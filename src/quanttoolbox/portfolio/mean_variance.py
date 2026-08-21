@@ -13,11 +13,22 @@ Consolidation notes:
   variable-splitting machinery); ``minvar_portfolio`` is literally
   ``mvo_portfolio`` with mu=0.
 - ``mvo_frontier`` evaluates at a list of risk-aversion (gamma) values,
-  covering the original's "gamma-problem" mode. The "mu-problem"/
-  "sigma-problem" target-matching bisection modes are not ported here
-  (same scope decision as ``risk_budgeting.risk_budgeting_frontier`` --
-  see that module's docstring); build target-matching on top of
-  ``mvo_frontier`` with ``quanttoolbox.optim.bisection`` if needed.
+  covering the original's "gamma-problem" mode (``problem=0``).
+  ``mvo_target_portfolio`` covers the "mu-problem"/"sigma-problem"
+  target-matching modes (``problem=1``/``problem=2``): for each target
+  expected-return or target volatility, it bisects on gamma (via
+  ``quanttoolbox.optim.bisection.bisection``) until ``mvo_portfolio``'s
+  achieved return/volatility hits that target, exactly mirroring
+  ``compute_mvo_portfolio.m``'s three-branch structure (boundary cases at
+  gamma=0/gamma=100, bisection in between over gamma in [0, 10] by
+  default -- both bounds preserved as separate, independently
+  configurable parameters, matching a real quirk in the original: the
+  *achievability* check against the "infinite risk aversion" case uses
+  gamma=100, but the interior bisection search is only ever bracketed to
+  [0, 10], so a target only reachable at a gamma between 10 and 100 will
+  come back as unreachable (NaN), exactly as the MATLAB source does. See
+  ``docs/matlab_bugs_found.md`` for a related, genuine bug this surfaced
+  in one of the original's own example scripts.)
 - ``mdp_portfolio`` (most diversified portfolio) has a genuinely nonlinear
   objective (log(portfolio vol) - log(weighted-avg individual vol)), so it
   uses ``scipy.optimize.minimize`` (SLSQP) rather than ``solve_qp`` --
@@ -37,6 +48,7 @@ from dataclasses import dataclass
 import numpy as np
 from scipy.optimize import LinearConstraint, minimize
 
+from quanttoolbox.optim.bisection import bisection
 from quanttoolbox.optim.quadprog import solve_qp
 
 
@@ -45,6 +57,11 @@ class PortfolioResult:
     weights: np.ndarray
     expected_return: float
     volatility: float
+
+
+@dataclass
+class MVOTargetResult(PortfolioResult):
+    gamma: float
 
 
 def mvo_portfolio(
@@ -99,11 +116,126 @@ def mvo_frontier(
     """Evaluate the mean-variance frontier at each risk-aversion value in
     gamma_values (the "gamma-problem" mode of compute_mvo_portfolio.m).
 
-    See module docstring for target-matching modes not ported here.
+    See ``mvo_target_portfolio`` for the mu-problem/sigma-problem
+    target-matching modes.
     """
     return [
         mvo_portfolio(mu, cov_matrix, gamma=float(g), **kwargs) for g in np.atleast_1d(gamma_values)
     ]
+
+
+def mvo_target_portfolio(
+    mu: np.ndarray,
+    cov_matrix: np.ndarray,
+    targets: np.ndarray | float,
+    problem: str = "sigma",
+    a_eq: np.ndarray | None = None,
+    b_eq: np.ndarray | None = None,
+    c_ineq: np.ndarray | None = None,
+    d_ineq: np.ndarray | None = None,
+    lb: np.ndarray | float | None = None,
+    ub: np.ndarray | float | None = None,
+    gamma_bracket: tuple[float, float] = (0.0, 10.0),
+    gamma_max: float = 100.0,
+) -> list[MVOTargetResult]:
+    """Target-matching mean-variance portfolios: for each value in
+    ``targets``, find the risk-aversion gamma whose ``mvo_portfolio``
+    solution achieves that target expected return (``problem="mu"``) or
+    that target volatility (``problem="sigma"``), via bisection on gamma.
+
+    Original: rpb/compute_mvo_portfolio.m (mu-problem/problem=1 and
+    sigma-problem/problem=2 branches), via
+    compute_mvo_portfolio_return.m/compute_mvo_portfolio_volatility.m as
+    the bisection objective.
+
+    For each target, first the gamma=0 and gamma=``gamma_max`` solutions
+    are used to bracket what's achievable:
+
+    - ``problem="sigma"``: a target below the gamma=0 volatility is
+      unreachable (NaN weights); a target at or above the gamma=gamma_max
+      volatility returns that portfolio directly; otherwise gamma is
+      bisected within ``gamma_bracket``.
+    - ``problem="mu"``: a target at or below the gamma=0 return returns
+      that portfolio directly; a target above the gamma=gamma_max return
+      is unreachable (NaN weights); a target exactly at the gamma=gamma_max
+      return returns that portfolio directly; otherwise gamma is bisected
+      within ``gamma_bracket``.
+
+    Note the original's own quirk, preserved here: the boundary checks use
+    ``gamma_max`` (100 by default) but the bisection search itself is only
+    ever bracketed to ``gamma_bracket`` ((0, 10) by default) -- so a target
+    only reachable at a gamma between the two is misreported as
+    unreachable. See the module docstring and
+    ``docs/matlab_bugs_found.md`` for more.
+    """
+    if problem not in ("mu", "sigma"):
+        raise ValueError('problem must be "mu" or "sigma"')
+
+    mu = np.asarray(mu, dtype=float).flatten()
+    cov_matrix = np.asarray(cov_matrix, dtype=float)
+    kwargs = dict(a_eq=a_eq, b_eq=b_eq, c_ineq=c_ineq, d_ineq=d_ineq, lb=lb, ub=ub)
+
+    r_min = mvo_portfolio(mu, cov_matrix, gamma=0.0, **kwargs)
+    r_max = mvo_portfolio(mu, cov_matrix, gamma=gamma_max, **kwargs)
+
+    def nan_result() -> MVOTargetResult:
+        return MVOTargetResult(
+            weights=np.full_like(mu, np.nan),
+            expected_return=np.nan,
+            volatility=np.nan,
+            gamma=np.nan,
+        )
+
+    def as_target_result(r: PortfolioResult, gamma: float) -> MVOTargetResult:
+        return MVOTargetResult(
+            weights=r.weights,
+            expected_return=r.expected_return,
+            volatility=r.volatility,
+            gamma=gamma,
+        )
+
+    def achieved(gamma: float) -> float:
+        r = mvo_portfolio(mu, cov_matrix, gamma=float(gamma), **kwargs)
+        return r.expected_return if problem == "mu" else r.volatility
+
+    results = []
+    for target in np.atleast_1d(np.asarray(targets, dtype=float)):
+        target = float(target)
+
+        if problem == "sigma":
+            if target < r_min.volatility:
+                results.append(nan_result())
+                continue
+            if target == r_min.volatility:
+                results.append(as_target_result(r_min, 0.0))
+                continue
+            if target >= r_max.volatility:
+                results.append(as_target_result(r_max, np.inf))
+                continue
+        else:  # mu-problem
+            if target <= r_min.expected_return:
+                results.append(as_target_result(r_min, 0.0))
+                continue
+            if target > r_max.expected_return:
+                results.append(nan_result())
+                continue
+            if target == r_max.expected_return:
+                results.append(as_target_result(r_max, np.inf))
+                continue
+
+        gamma_star = bisection(
+            lambda g, t=target: achieved(g) - t, gamma_bracket[0], gamma_bracket[1]
+        )
+        if np.isnan(gamma_star):
+            results.append(nan_result())
+        else:
+            results.append(
+                as_target_result(
+                    mvo_portfolio(mu, cov_matrix, gamma=float(gamma_star), **kwargs), gamma_star
+                )
+            )
+
+    return results
 
 
 def minvar_portfolio(
