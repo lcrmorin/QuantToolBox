@@ -9,37 +9,37 @@
 
 ### Examples
 
-??? example "svm/svm2.py"
-    ```python
-    --8<-- "examples/svm/svm2.py"
-    ```
-
-??? example "svm/svm3.py"
-    ```python
-    --8<-- "examples/svm/svm3.py"
-    ```
-
-??? example "svm/svm4.py"
-    ```python
-    --8<-- "examples/svm/svm4.py"
-    ```
-
-??? example "svm/svm5.py"
+??? example "Hard- and soft-margin SVM classification, dual formulation — svm/svm5.py"
     ```python
     --8<-- "examples/svm/svm5.py"
     ```
 
-??? example "svm/svm6.py"
+??? example "Hard-margin SVM classification, dual formulation — svm/svm2.py"
+    ```python
+    --8<-- "examples/svm/svm2.py"
+    ```
+
+??? example "OLS, LAD, quantile, and SVM regression compared — svm/svm6.py"
     ```python
     --8<-- "examples/svm/svm6.py"
     ```
 
-??? example "svm/svm7.py"
-    ```python
-    --8<-- "examples/svm/svm7.py"
-    ```
-
-??? example "svm/svm8.py"
+??? example "OLS/SVM-LS and quantile/SVM-epsilon regression on synthetic data — svm/svm8.py"
     ```python
     --8<-- "examples/svm/svm8.py"
+    ```
+
+??? example "Soft-margin SVM classification, dual formulation — svm/svm4.py"
+    ```python
+    --8<-- "examples/svm/svm4.py"
+    ```
+
+??? example "Soft-margin SVM classification, primal formulation — svm/svm3.py"
+    ```python
+    --8<-- "examples/svm/svm3.py"
+    ```
+
+??? example "SVM regression, dual formulation, vs. the primal result — svm/svm7.py"
+    ```python
+    --8<-- "examples/svm/svm7.py"
     ```

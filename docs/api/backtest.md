@@ -9,34 +9,34 @@
 
 ### Examples
 
-??? example "backtest/backtest2.py"
-    ```python
-    --8<-- "examples/backtest/backtest2.py"
-    ```
-
-??? example "backtest/backtest4.py"
-    ```python
-    --8<-- "examples/backtest/backtest4.py"
-    ```
-
-??? example "backtest/backtest5.py"
+??? example "Flat transaction cost under a realistic rebalancing schedule — backtest/backtest5.py"
     ```python
     --8<-- "examples/backtest/backtest5.py"
     ```
 
-??? example "backtest/mdd1.py"
-    ```python
-    --8<-- "examples/backtest/mdd1.py"
-    ```
-
-??? example "backtest/unfunded1.py"
+??? example "Funded vs. unfunded backtest formulations cross-checked — backtest/unfunded1.py"
     ```python
     --8<-- "examples/backtest/unfunded1.py"
     ```
 
-??? example "backtest/unfunded2.py"
+??? example "Maximum drawdown in relative mode — backtest/mdd1.py"
+    ```python
+    --8<-- "examples/backtest/mdd1.py"
+    ```
+
+??? example "Per-asset bid/ask transaction costs vs. turnover — backtest/backtest4.py"
+    ```python
+    --8<-- "examples/backtest/backtest4.py"
+    ```
+
+??? example "Small hand-traceable funded/unfunded round-trip (n=8) — backtest/unfunded2.py"
     ```python
     --8<-- "examples/backtest/unfunded2.py"
+    ```
+
+??? example "Three rebalancing schedules on a small backtest — backtest/backtest2.py"
+    ```python
+    --8<-- "examples/backtest/backtest2.py"
     ```
 
 ## `backtest.stats`
@@ -45,14 +45,14 @@
 
 ### Examples
 
-??? example "backtest/backtest4.py"
-    ```python
-    --8<-- "examples/backtest/backtest4.py"
-    ```
-
-??? example "backtest/mdd1.py"
+??? example "Maximum drawdown in relative mode — backtest/mdd1.py"
     ```python
     --8<-- "examples/backtest/mdd1.py"
+    ```
+
+??? example "Per-asset bid/ask transaction costs vs. turnover — backtest/backtest4.py"
+    ```python
+    --8<-- "examples/backtest/backtest4.py"
     ```
 
 ## `backtest.reporting`
@@ -61,32 +61,32 @@
 
 ### Examples
 
-??? example "backtest/backtest2.py"
-    ```python
-    --8<-- "examples/backtest/backtest2.py"
-    ```
-
-??? example "backtest/backtest3.py"
-    ```python
-    --8<-- "examples/backtest/backtest3.py"
-    ```
-
-??? example "backtest/backtest4.py"
-    ```python
-    --8<-- "examples/backtest/backtest4.py"
-    ```
-
-??? example "backtest/backtest5.py"
+??? example "Flat transaction cost under a realistic rebalancing schedule — backtest/backtest5.py"
     ```python
     --8<-- "examples/backtest/backtest5.py"
     ```
 
-??? example "backtest/unfunded1.py"
+??? example "Funded vs. unfunded backtest formulations cross-checked — backtest/unfunded1.py"
     ```python
     --8<-- "examples/backtest/unfunded1.py"
     ```
 
-??? example "backtest/unfunded2.py"
+??? example "generate_backtest at four rebalancing frequencies — backtest/backtest3.py"
+    ```python
+    --8<-- "examples/backtest/backtest3.py"
+    ```
+
+??? example "Per-asset bid/ask transaction costs vs. turnover — backtest/backtest4.py"
+    ```python
+    --8<-- "examples/backtest/backtest4.py"
+    ```
+
+??? example "Small hand-traceable funded/unfunded round-trip (n=8) — backtest/unfunded2.py"
     ```python
     --8<-- "examples/backtest/unfunded2.py"
+    ```
+
+??? example "Three rebalancing schedules on a small backtest — backtest/backtest2.py"
+    ```python
+    --8<-- "examples/backtest/backtest2.py"
     ```

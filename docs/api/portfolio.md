@@ -9,19 +9,19 @@
 
 ### Examples
 
-??? example "rpb/test_box1.py"
+??? example "Equal risk contribution and box-constrained risk budgeting — rpb/test_box1.py"
     ```python
     --8<-- "examples/rpb/test_box1.py"
     ```
 
-??? example "rpb/test_erc2.py"
-    ```python
-    --8<-- "examples/rpb/test_erc2.py"
-    ```
-
-??? example "rpb/test_erc3.py"
+??? example "Risk budgeting toward unequal target budgets — rpb/test_erc3.py"
     ```python
     --8<-- "examples/rpb/test_erc3.py"
+    ```
+
+??? example "Risk contribution decomposition and equal-budget risk budgeting — rpb/test_erc2.py"
+    ```python
+    --8<-- "examples/rpb/test_erc2.py"
     ```
 
 ## `portfolio.mean_variance`, `portfolio.black_litterman`, `portfolio.tracking_error`
@@ -37,62 +37,62 @@
 
 ### Examples
 
-??? example "rpb/test_bl2.py"
-    ```python
-    --8<-- "examples/rpb/test_bl2.py"
-    ```
-
-??? example "rpb/test_bl3.py"
-    ```python
-    --8<-- "examples/rpb/test_bl3.py"
-    ```
-
-??? example "rpb/test_bl4.py"
+??? example "Black-Litterman view matched to six tracking-error targets — rpb/test_bl4.py"
     ```python
     --8<-- "examples/rpb/test_bl4.py"
     ```
 
-??? example "rpb/test_bl5.py"
+??? example "Black-Litterman view sensitivity across five scenarios — rpb/test_bl2.py"
+    ```python
+    --8<-- "examples/rpb/test_bl2.py"
+    ```
+
+??? example "Black-Litterman views matched to a benchmark's volatility — rpb/test_bl3.py"
+    ```python
+    --8<-- "examples/rpb/test_bl3.py"
+    ```
+
+??? example "Full-view Black-Litterman with tracking-error target-matching — rpb/test_bl5.py"
     ```python
     --8<-- "examples/rpb/test_bl5.py"
     ```
 
-??? example "rpb/test_bl6.py"
-    ```python
-    --8<-- "examples/rpb/test_bl6.py"
-    ```
-
-??? example "rpb/test_lasso1.py"
-    ```python
-    --8<-- "examples/rpb/test_lasso1.py"
-    ```
-
-??? example "rpb/test_lasso2.py"
-    ```python
-    --8<-- "examples/rpb/test_lasso2.py"
-    ```
-
-??? example "rpb/test_lasso3.py"
-    ```python
-    --8<-- "examples/rpb/test_lasso3.py"
-    ```
-
-??? example "rpb/test_lasso5.py"
-    ```python
-    --8<-- "examples/rpb/test_lasso5.py"
-    ```
-
-??? example "rpb/test_minvar2.py"
-    ```python
-    --8<-- "examples/rpb/test_minvar2.py"
-    ```
-
-??? example "rpb/test_mvo2.py"
+??? example "Mean-variance frontier: risk-aversion, return, and volatility targets — rpb/test_mvo2.py"
     ```python
     --8<-- "examples/rpb/test_mvo2.py"
     ```
 
-??? example "rpb/test_mvo3.py"
+??? example "Mean-variance optimization plus ridge/lasso-penalized portfolios — rpb/test_lasso1.py"
+    ```python
+    --8<-- "examples/rpb/test_lasso1.py"
+    ```
+
+??? example "Minimum-variance portfolio under general linear constraints — rpb/test_minvar2.py"
+    ```python
+    --8<-- "examples/rpb/test_minvar2.py"
+    ```
+
+??? example "Mixed ridge+lasso penalties toward two different target vectors — rpb/test_lasso5.py"
+    ```python
+    --8<-- "examples/rpb/test_lasso5.py"
+    ```
+
+??? example "Raw QP solve vs. te_portfolio, plus a gamma-recovery check — rpb/test_bl6.py"
+    ```python
+    --8<-- "examples/rpb/test_bl6.py"
+    ```
+
+??? example "Ridge, lasso, and mixed-norm penalized portfolios — rpb/test_lasso3.py"
+    ```python
+    --8<-- "examples/rpb/test_lasso3.py"
+    ```
+
+??? example "Ridge/lasso penalty sweep, points from a 250-point scan — rpb/test_lasso2.py"
+    ```python
+    --8<-- "examples/rpb/test_lasso2.py"
+    ```
+
+??? example "Volatility-target mean-variance under three weight-bound configurations — rpb/test_mvo3.py"
     ```python
     --8<-- "examples/rpb/test_mvo3.py"
     ```

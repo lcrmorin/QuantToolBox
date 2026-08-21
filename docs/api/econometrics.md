@@ -9,89 +9,89 @@
 
 ### Examples
 
-??? example "ects/gmm1.py"
-    ```python
-    --8<-- "examples/ects/gmm1.py"
-    ```
-
-??? example "ects/kalman1b.py"
-    ```python
-    --8<-- "examples/ects/kalman1b.py"
-    ```
-
-??? example "ects/kalman1c.py"
-    ```python
-    --8<-- "examples/ects/kalman1c.py"
-    ```
-
-??? example "ects/kalman2c.py"
-    ```python
-    --8<-- "examples/ects/kalman2c.py"
-    ```
-
-??? example "ects/kalman3d.py"
-    ```python
-    --8<-- "examples/ects/kalman3d.py"
-    ```
-
-??? example "ects/kalman4b.py"
-    ```python
-    --8<-- "examples/ects/kalman4b.py"
-    ```
-
-??? example "ects/ml2.py"
-    ```python
-    --8<-- "examples/ects/ml2.py"
-    ```
-
-??? example "ects/ml3.py"
+??? example "Beta-distribution MLE for LGD modeling — ects/ml3.py"
     ```python
     --8<-- "examples/ects/ml3.py"
     ```
 
-??? example "ects/ml4.py"
+??? example "Local Linear Trend model fit by time-domain ML, vs. Whittle — ects/kalman2c.py"
+    ```python
+    --8<-- "examples/ects/kalman2c.py"
+    ```
+
+??? example "ML recovery of all free state-space model parameters — ects/kalman3d.py"
+    ```python
+    --8<-- "examples/ects/kalman3d.py"
+    ```
+
+??? example "Numerical vs. analytical Jacobian/Hessian across covariance estimators — ects/ml4.py"
     ```python
     --8<-- "examples/ects/ml4.py"
     ```
 
-??? example "ects/robust2.py"
+??? example "OLS vs. Gaussian-MLE covariance: Hessian, OPG, and HC estimators — ects/ml2.py"
     ```python
-    --8<-- "examples/ects/robust2.py"
+    --8<-- "examples/ects/ml2.py"
     ```
 
-??? example "ects/robust3.py"
-    ```python
-    --8<-- "examples/ects/robust3.py"
-    ```
-
-??? example "ects/varx1b.py"
-    ```python
-    --8<-- "examples/ects/varx1b.py"
-    ```
-
-??? example "ects/varx1c.py"
-    ```python
-    --8<-- "examples/ects/varx1c.py"
-    ```
-
-??? example "ects/varx3.py"
-    ```python
-    --8<-- "examples/ects/varx3.py"
-    ```
-
-??? example "stats/cov1.py"
+??? example "OLS vs. Gaussian-MLE covariance: Hessian, OPG, and HC standard errors — stats/cov1.py"
     ```python
     --8<-- "examples/stats/cov1.py"
     ```
 
-??? example "svm/svm6.py"
+??? example "OLS, LAD, quantile, and SVM regression compared — svm/svm6.py"
     ```python
     --8<-- "examples/svm/svm6.py"
     ```
 
-??? example "svm/svm8.py"
+??? example "OLS, median, LAD, and Huber regression compared — ects/robust2.py"
+    ```python
+    --8<-- "examples/ects/robust2.py"
+    ```
+
+??? example "OLS, MLE, and GMM under an optional linear restriction — ects/gmm1.py"
+    ```python
+    --8<-- "examples/ects/gmm1.py"
+    ```
+
+??? example "OLS/median/LAD plus quantile regression via IRLS and exact LP — ects/robust3.py"
+    ```python
+    --8<-- "examples/ects/robust3.py"
+    ```
+
+??? example "OLS/SVM-LS and quantile/SVM-epsilon regression on synthetic data — svm/svm8.py"
     ```python
     --8<-- "examples/svm/svm8.py"
+    ```
+
+??? example "Time-domain ML of Kalman noise variances, two starting states — ects/kalman1b.py"
+    ```python
+    --8<-- "examples/ects/kalman1b.py"
+    ```
+
+??? example "Time-domain vs. frequency-domain (Whittle) Kalman ML — ects/kalman1c.py"
+    ```python
+    --8<-- "examples/ects/kalman1c.py"
+    ```
+
+??? example "Time-varying-coefficient model with variances estimated by ML — ects/kalman4b.py"
+    ```python
+    --8<-- "examples/ects/kalman4b.py"
+    ```
+
+??? example "VAR(0) equivalence to plain OLS — ects/varx3.py"
+    ```python
+    --8<-- "examples/ects/varx3.py"
+    ```
+
+??? example "Wald test for no Granger-causality between VAR variables — ects/varx1b.py"
+    ```python
+    --8<-- "examples/ects/varx1b.py"
+    ```
+
+??? example "Wald test for no instantaneous causality in a VAR — ects/varx1c.py"
+    ```python
+    --8<-- "examples/ects/varx1c.py"
     ```
 
 ## `econometrics.var`
@@ -103,64 +103,64 @@
 
 ### Examples
 
-??? example "ects/varx1a.py"
-    ```python
-    --8<-- "examples/ects/varx1a.py"
-    ```
-
-??? example "ects/varx1b.py"
-    ```python
-    --8<-- "examples/ects/varx1b.py"
-    ```
-
-??? example "ects/varx1c.py"
-    ```python
-    --8<-- "examples/ects/varx1c.py"
-    ```
-
-??? example "ects/varx1d.py"
-    ```python
-    --8<-- "examples/ects/varx1d.py"
-    ```
-
-??? example "ects/varx1e.py"
-    ```python
-    --8<-- "examples/ects/varx1e.py"
-    ```
-
-??? example "ects/varx2a.py"
-    ```python
-    --8<-- "examples/ects/varx2a.py"
-    ```
-
-??? example "ects/varx2b.py"
-    ```python
-    --8<-- "examples/ects/varx2b.py"
-    ```
-
-??? example "ects/varx2c.py"
-    ```python
-    --8<-- "examples/ects/varx2c.py"
-    ```
-
-??? example "ects/varx3.py"
-    ```python
-    --8<-- "examples/ects/varx3.py"
-    ```
-
-??? example "ects/varx4a.py"
-    ```python
-    --8<-- "examples/ects/varx4a.py"
-    ```
-
-??? example "ects/varx4b.py"
+??? example "Larger restricted SUR system, two covariance variants compared — ects/varx4b.py"
     ```python
     --8<-- "examples/ects/varx4b.py"
     ```
 
-??? example "ects/varx5a.py"
+??? example "Reduced form of a dynamic simultaneous-equations system — ects/varx2a.py"
+    ```python
+    --8<-- "examples/ects/varx2a.py"
+    ```
+
+??? example "Restricted seemingly-unrelated-regressions system, two-step GLS — ects/varx4a.py"
+    ```python
+    --8<-- "examples/ects/varx4a.py"
+    ```
+
+??? example "Restricted VAR via concentrated ML, vs. restricted least squares — ects/varx2c.py"
+    ```python
+    --8<-- "examples/ects/varx2c.py"
+    ```
+
+??? example "Restricted VAR(2) via least squares and concentrated ML — ects/varx1d.py"
+    ```python
+    --8<-- "examples/ects/varx1d.py"
+    ```
+
+??? example "Restricted-coefficient VAR via restricted least squares — ects/varx2b.py"
+    ```python
+    --8<-- "examples/ects/varx2b.py"
+    ```
+
+??? example "Simultaneous-equations system: OLS, GLS, and LIML compared — ects/varx5a.py"
     ```python
     --8<-- "examples/ects/varx5a.py"
+    ```
+
+??? example "VAR lag-order selection — ects/varx1e.py"
+    ```python
+    --8<-- "examples/ects/varx1e.py"
+    ```
+
+??? example "VAR(0) equivalence to plain OLS — ects/varx3.py"
+    ```python
+    --8<-- "examples/ects/varx3.py"
+    ```
+
+??? example "VAR(2) on log-differenced macroeconomic data — ects/varx1a.py"
+    ```python
+    --8<-- "examples/ects/varx1a.py"
+    ```
+
+??? example "Wald test for no Granger-causality between VAR variables — ects/varx1b.py"
+    ```python
+    --8<-- "examples/ects/varx1b.py"
+    ```
+
+??? example "Wald test for no instantaneous causality in a VAR — ects/varx1c.py"
+    ```python
+    --8<-- "examples/ects/varx1c.py"
     ```
 
 ## `econometrics.kalman`
@@ -172,74 +172,74 @@
 
 ### Examples
 
-??? example "ects/kalman1b.py"
-    ```python
-    --8<-- "examples/ects/kalman1b.py"
-    ```
-
-??? example "ects/kalman1c.py"
-    ```python
-    --8<-- "examples/ects/kalman1c.py"
-    ```
-
-??? example "ects/kalman2a.py"
-    ```python
-    --8<-- "examples/ects/kalman2a.py"
-    ```
-
-??? example "ects/kalman2b.py"
-    ```python
-    --8<-- "examples/ects/kalman2b.py"
-    ```
-
-??? example "ects/kalman2c.py"
-    ```python
-    --8<-- "examples/ects/kalman2c.py"
-    ```
-
-??? example "ects/kalman3a.py"
-    ```python
-    --8<-- "examples/ects/kalman3a.py"
-    ```
-
-??? example "ects/kalman3b.py"
-    ```python
-    --8<-- "examples/ects/kalman3b.py"
-    ```
-
-??? example "ects/kalman3c.py"
+??? example "Filtered state with a 95% confidence band — ects/kalman3c.py"
     ```python
     --8<-- "examples/ects/kalman3c.py"
     ```
 
-??? example "ects/kalman3d.py"
+??? example "General state-space filter from a steady-state start — ects/kalman3a.py"
     ```python
-    --8<-- "examples/ects/kalman3d.py"
+    --8<-- "examples/ects/kalman3a.py"
     ```
 
-??? example "ects/kalman4a.py"
+??? example "Local Linear Trend Kalman filter, fixed variance parameters — ects/kalman2a.py"
     ```python
-    --8<-- "examples/ects/kalman4a.py"
+    --8<-- "examples/ects/kalman2a.py"
     ```
 
-??? example "ects/kalman4b.py"
+??? example "Local Linear Trend model fit by time-domain ML, vs. Whittle — ects/kalman2c.py"
     ```python
-    --8<-- "examples/ects/kalman4b.py"
+    --8<-- "examples/ects/kalman2c.py"
     ```
 
-??? example "ects/panel1.py"
+??? example "Local Linear Trend model fit by Whittle (frequency-domain) ML — ects/kalman2b.py"
+    ```python
+    --8<-- "examples/ects/kalman2b.py"
+    ```
+
+??? example "Local-level Kalman filter (Harvey 1990) — ects/panel1.py"
     ```python
     --8<-- "examples/ects/panel1.py"
     ```
 
-??? example "stats/kalman1.py"
+??? example "ML recovery of all free state-space model parameters — ects/kalman3d.py"
+    ```python
+    --8<-- "examples/ects/kalman3d.py"
+    ```
+
+??? example "Same state-space filter via the time-varying code path — ects/kalman3b.py"
+    ```python
+    --8<-- "examples/ects/kalman3b.py"
+    ```
+
+??? example "Time-domain ML of Kalman noise variances, two starting states — ects/kalman1b.py"
+    ```python
+    --8<-- "examples/ects/kalman1b.py"
+    ```
+
+??? example "Time-domain vs. frequency-domain (Whittle) Kalman ML — ects/kalman1c.py"
+    ```python
+    --8<-- "examples/ects/kalman1c.py"
+    ```
+
+??? example "Time-varying-beta model from a deliberately bad starting point — stats/kalman2.py"
+    ```python
+    --8<-- "examples/stats/kalman2.py"
+    ```
+
+??? example "Time-varying-beta regression via bounded maximum likelihood — stats/kalman1.py"
     ```python
     --8<-- "examples/stats/kalman1.py"
     ```
 
-??? example "stats/kalman2.py"
+??? example "Time-varying-coefficient model with variances estimated by ML — ects/kalman4b.py"
     ```python
-    --8<-- "examples/stats/kalman2.py"
+    --8<-- "examples/ects/kalman4b.py"
+    ```
+
+??? example "Time-varying-coefficient regression recovered by a Kalman filter — ects/kalman4a.py"
+    ```python
+    --8<-- "examples/ects/kalman4a.py"
     ```
 
 ## `econometrics.whittle`
@@ -251,34 +251,34 @@
 
 ### Examples
 
-??? example "ects/kalman1c.py"
-    ```python
-    --8<-- "examples/ects/kalman1c.py"
-    ```
-
-??? example "ects/kalman2b.py"
+??? example "Local Linear Trend model fit by Whittle (frequency-domain) ML — ects/kalman2b.py"
     ```python
     --8<-- "examples/ects/kalman2b.py"
     ```
 
-??? example "ects/whittle1.py"
-    ```python
-    --8<-- "examples/ects/whittle1.py"
-    ```
-
-??? example "ects/whittle2.py"
-    ```python
-    --8<-- "examples/ects/whittle2.py"
-    ```
-
-??? example "maths/pdgm1.py"
+??? example "Raw periodogram of a 4-observation series — maths/pdgm1.py"
     ```python
     --8<-- "examples/maths/pdgm1.py"
     ```
 
-??? example "maths/pdgm2.py"
+??? example "Raw periodogram of an 8-observation series — maths/pdgm2.py"
     ```python
     --8<-- "examples/maths/pdgm2.py"
+    ```
+
+??? example "Time-domain vs. frequency-domain (Whittle) Kalman ML — ects/kalman1c.py"
+    ```python
+    --8<-- "examples/ects/kalman1c.py"
+    ```
+
+??? example "Whittle estimation with a custom Bloomfield spectral density — ects/whittle2.py"
+    ```python
+    --8<-- "examples/ects/whittle2.py"
+    ```
+
+??? example "Whittle local-level MLE on real macroeconomic data — ects/whittle1.py"
+    ```python
+    --8<-- "examples/ects/whittle1.py"
     ```
 
 ## `econometrics.tests` (ADF)

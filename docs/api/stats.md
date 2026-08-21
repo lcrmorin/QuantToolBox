@@ -9,7 +9,7 @@
 
 ### Examples
 
-??? example "ects/quantile1.py"
+??? example "Pinball-loss quantile estimation vs. sample and true quantiles — ects/quantile1.py"
     ```python
     --8<-- "examples/ects/quantile1.py"
     ```
@@ -23,49 +23,49 @@
 
 ### Examples
 
-??? example "rpb/test_bl2.py"
+??? example "Black-Litterman view sensitivity across five scenarios — rpb/test_bl2.py"
     ```python
     --8<-- "examples/rpb/test_bl2.py"
     ```
 
-??? example "rpb/test_box1.py"
+??? example "Equal risk contribution and box-constrained risk budgeting — rpb/test_box1.py"
     ```python
     --8<-- "examples/rpb/test_box1.py"
     ```
 
-??? example "rpb/test_erc2.py"
+??? example "Mean-variance frontier: risk-aversion, return, and volatility targets — rpb/test_mvo2.py"
     ```python
-    --8<-- "examples/rpb/test_erc2.py"
+    --8<-- "examples/rpb/test_mvo2.py"
     ```
 
-??? example "rpb/test_erc3.py"
-    ```python
-    --8<-- "examples/rpb/test_erc3.py"
-    ```
-
-??? example "rpb/test_lasso1.py"
+??? example "Mean-variance optimization plus ridge/lasso-penalized portfolios — rpb/test_lasso1.py"
     ```python
     --8<-- "examples/rpb/test_lasso1.py"
     ```
 
-??? example "rpb/test_lasso3.py"
-    ```python
-    --8<-- "examples/rpb/test_lasso3.py"
-    ```
-
-??? example "rpb/test_lasso5.py"
-    ```python
-    --8<-- "examples/rpb/test_lasso5.py"
-    ```
-
-??? example "rpb/test_minvar2.py"
+??? example "Minimum-variance portfolio under general linear constraints — rpb/test_minvar2.py"
     ```python
     --8<-- "examples/rpb/test_minvar2.py"
     ```
 
-??? example "rpb/test_mvo2.py"
+??? example "Mixed ridge+lasso penalties toward two different target vectors — rpb/test_lasso5.py"
     ```python
-    --8<-- "examples/rpb/test_mvo2.py"
+    --8<-- "examples/rpb/test_lasso5.py"
+    ```
+
+??? example "Ridge, lasso, and mixed-norm penalized portfolios — rpb/test_lasso3.py"
+    ```python
+    --8<-- "examples/rpb/test_lasso3.py"
+    ```
+
+??? example "Risk budgeting toward unequal target budgets — rpb/test_erc3.py"
+    ```python
+    --8<-- "examples/rpb/test_erc3.py"
+    ```
+
+??? example "Risk contribution decomposition and equal-budget risk budgeting — rpb/test_erc2.py"
+    ```python
+    --8<-- "examples/rpb/test_erc2.py"
     ```
 
 ## `stats.regression.ols`
@@ -77,29 +77,29 @@
 
 ### Examples
 
-??? example "stats/elasticnet1.py"
+??? example "Elastic-net regression path — stats/elasticnet1.py"
     ```python
     --8<-- "examples/stats/elasticnet1.py"
     ```
 
-??? example "stats/lasso1.py"
+??? example "Lasso path with R-squared, degrees of freedom, and complexity — stats/lasso1.py"
     ```python
     --8<-- "examples/stats/lasso1.py"
     ```
 
-??? example "stats/lasso2.py"
+??? example "Norm-budget (tau-targeted) ridge regression vs. fixed-lambda ridge — stats/ridge2.py"
+    ```python
+    --8<-- "examples/stats/ridge2.py"
+    ```
+
+??? example "Penalized-form lasso path via coordinate descent — stats/lasso2.py"
     ```python
     --8<-- "examples/stats/lasso2.py"
     ```
 
-??? example "stats/pca1.py"
+??? example "Principal component analysis of a 3-asset correlation matrix — stats/pca1.py"
     ```python
     --8<-- "examples/stats/pca1.py"
-    ```
-
-??? example "stats/ridge2.py"
-    ```python
-    --8<-- "examples/stats/ridge2.py"
     ```
 
 ## `stats.regression.ridge`
@@ -111,7 +111,7 @@
 
 ### Examples
 
-??? example "stats/ridge2.py"
+??? example "Norm-budget (tau-targeted) ridge regression vs. fixed-lambda ridge — stats/ridge2.py"
     ```python
     --8<-- "examples/stats/ridge2.py"
     ```
@@ -125,17 +125,17 @@
 
 ### Examples
 
-??? example "stats/elasticnet1.py"
+??? example "Elastic-net regression path — stats/elasticnet1.py"
     ```python
     --8<-- "examples/stats/elasticnet1.py"
     ```
 
-??? example "stats/lasso1.py"
+??? example "Lasso path with R-squared, degrees of freedom, and complexity — stats/lasso1.py"
     ```python
     --8<-- "examples/stats/lasso1.py"
     ```
 
-??? example "stats/lasso2.py"
+??? example "Penalized-form lasso path via coordinate descent — stats/lasso2.py"
     ```python
     --8<-- "examples/stats/lasso2.py"
     ```
@@ -149,12 +149,12 @@
 
 ### Examples
 
-??? example "stats/kernel1.py"
+??? example "Gaussian kernel density of two correlated series — stats/kernel1.py"
     ```python
     --8<-- "examples/stats/kernel1.py"
     ```
 
-??? example "stats/qreg2.py"
+??? example "Kernel mean and quantile regression vs. true population curves — stats/qreg2.py"
     ```python
     --8<-- "examples/stats/qreg2.py"
     ```
@@ -168,32 +168,32 @@
 
 ### Examples
 
-??? example "ects/quantile2.py"
-    ```python
-    --8<-- "examples/ects/quantile2.py"
-    ```
-
-??? example "ects/robust2.py"
-    ```python
-    --8<-- "examples/ects/robust2.py"
-    ```
-
-??? example "ects/robust3.py"
-    ```python
-    --8<-- "examples/ects/robust3.py"
-    ```
-
-??? example "stats/qreg1.py"
+??? example "Linear quantile regression at nine quantile levels — stats/qreg1.py"
     ```python
     --8<-- "examples/stats/qreg1.py"
     ```
 
-??? example "svm/svm6.py"
+??? example "Monte Carlo OLS vs. LAD regression under heteroskedastic noise — ects/quantile2.py"
+    ```python
+    --8<-- "examples/ects/quantile2.py"
+    ```
+
+??? example "OLS, LAD, quantile, and SVM regression compared — svm/svm6.py"
     ```python
     --8<-- "examples/svm/svm6.py"
     ```
 
-??? example "svm/svm8.py"
+??? example "OLS, median, LAD, and Huber regression compared — ects/robust2.py"
+    ```python
+    --8<-- "examples/ects/robust2.py"
+    ```
+
+??? example "OLS/median/LAD plus quantile regression via IRLS and exact LP — ects/robust3.py"
+    ```python
+    --8<-- "examples/ects/robust3.py"
+    ```
+
+??? example "OLS/SVM-LS and quantile/SVM-epsilon regression on synthetic data — svm/svm8.py"
     ```python
     --8<-- "examples/svm/svm8.py"
     ```
@@ -207,22 +207,22 @@
 
 ### Examples
 
-??? example "ects/robust2.py"
-    ```python
-    --8<-- "examples/ects/robust2.py"
-    ```
-
-??? example "ects/robust3.py"
-    ```python
-    --8<-- "examples/ects/robust3.py"
-    ```
-
-??? example "svm/svm6.py"
+??? example "OLS, LAD, quantile, and SVM regression compared — svm/svm6.py"
     ```python
     --8<-- "examples/svm/svm6.py"
     ```
 
-??? example "svm/svm8.py"
+??? example "OLS, median, LAD, and Huber regression compared — ects/robust2.py"
+    ```python
+    --8<-- "examples/ects/robust2.py"
+    ```
+
+??? example "OLS/median/LAD plus quantile regression via IRLS and exact LP — ects/robust3.py"
+    ```python
+    --8<-- "examples/ects/robust3.py"
+    ```
+
+??? example "OLS/SVM-LS and quantile/SVM-epsilon regression on synthetic data — svm/svm8.py"
     ```python
     --8<-- "examples/svm/svm8.py"
     ```

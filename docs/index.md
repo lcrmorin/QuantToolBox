@@ -15,11 +15,12 @@ pip install quanttoolbox
   Budgeting*).
 - **[API Reference](api/index.md)** — auto-generated from the docstrings
   throughout the package.
-- **[Notes for translators](matlab_bugs_found.md)** — the file-by-file
-  mapping back to the original MATLAB source, genuine bugs found in that
-  source during porting, and an assessment of which modules should be
-  replaced with mature Python libraries versus which justify staying
-  custom.
+- **[Notes for translators](migration_map.md)** — the file-by-file
+  mapping back to the original MATLAB source (including a per-example
+  translation tracker), genuine bugs found in that source during
+  porting, and an assessment of which modules should be replaced with
+  mature Python libraries versus which justify staying custom — and, for
+  those, whether the gap is worth contributing back upstream.
 
 ## Quick example
 

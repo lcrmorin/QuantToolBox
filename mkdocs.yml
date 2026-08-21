@@ -74,7 +74,6 @@ nav:
       - linalg: api/linalg.md
       - viz: api/viz.md
   - Notes for translators:
-      - Translation tracker (all 149 examples): examples/examples_tracking.md
+      - Migration map (incl. example translation tracker): migration_map.md
       - MATLAB bugs found: matlab_bugs_found.md
-      - Library alternatives: library_alternatives.md
-      - Migration map: migration_map.md
+      - Library alternatives (incl. upstreaming candidates): library_alternatives.md

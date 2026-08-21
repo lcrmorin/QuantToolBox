@@ -12,8 +12,8 @@ Two things live under "Examples" here:
   it directly on its reference page, live-synced from the same `.py`
   files so it can't drift. That's the exhaustive set: essentially all
   ~150 scripts from the original MATLAB `Examples/` folder (see the
-  [translation tracker](examples_tracking.md) for file-by-file status),
-  filed under whichever module they exercise.
+  [example translation tracker](../migration_map.md#example-translation-tracker)
+  for file-by-file status), filed under whichever module they exercise.
 
 In short: come here for the guided tour, go to the API Reference for the
 exhaustive catalog.
@@ -39,6 +39,7 @@ exhaustive catalog.
 The full set of original MATLAB scripts these examples translate from
 is organized by module: `rpb/`, `optim/`, `stats/`, `svm/`, `ects/`,
 `matrix/`, `dates/`, `tools/`, `backtest/`, `maths/` — see the
-[translation tracker](examples_tracking.md) for exactly which files are
-done, and the [`hfs-archive`](https://github.com/lcrmorin/hfs-archive)
-repo for the original source material.
+[example translation tracker](../migration_map.md#example-translation-tracker)
+for exactly which files are done, and the
+[`hfs-archive`](https://github.com/lcrmorin/hfs-archive) repo for the
+original source material.

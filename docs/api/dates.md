@@ -10,24 +10,24 @@
 
 ### Examples
 
-??? example "backtest/backtest2.py"
-    ```python
-    --8<-- "examples/backtest/backtest2.py"
-    ```
-
-??? example "backtest/backtest4.py"
-    ```python
-    --8<-- "examples/backtest/backtest4.py"
-    ```
-
-??? example "backtest/backtest5.py"
+??? example "Flat transaction cost under a realistic rebalancing schedule — backtest/backtest5.py"
     ```python
     --8<-- "examples/backtest/backtest5.py"
     ```
 
-??? example "backtest/mdd1.py"
+??? example "Maximum drawdown in relative mode — backtest/mdd1.py"
     ```python
     --8<-- "examples/backtest/mdd1.py"
+    ```
+
+??? example "Per-asset bid/ask transaction costs vs. turnover — backtest/backtest4.py"
+    ```python
+    --8<-- "examples/backtest/backtest4.py"
+    ```
+
+??? example "Three rebalancing schedules on a small backtest — backtest/backtest2.py"
+    ```python
+    --8<-- "examples/backtest/backtest2.py"
     ```
 
 ## `dates.rebalancing`
@@ -36,22 +36,22 @@
 
 ### Examples
 
-??? example "backtest/backtest2.py"
-    ```python
-    --8<-- "examples/backtest/backtest2.py"
-    ```
-
-??? example "backtest/backtest4.py"
-    ```python
-    --8<-- "examples/backtest/backtest4.py"
-    ```
-
-??? example "backtest/backtest5.py"
+??? example "Flat transaction cost under a realistic rebalancing schedule — backtest/backtest5.py"
     ```python
     --8<-- "examples/backtest/backtest5.py"
     ```
 
-??? example "backtest/mdd1.py"
+??? example "Maximum drawdown in relative mode — backtest/mdd1.py"
     ```python
     --8<-- "examples/backtest/mdd1.py"
+    ```
+
+??? example "Per-asset bid/ask transaction costs vs. turnover — backtest/backtest4.py"
+    ```python
+    --8<-- "examples/backtest/backtest4.py"
+    ```
+
+??? example "Three rebalancing schedules on a small backtest — backtest/backtest2.py"
+    ```python
+    --8<-- "examples/backtest/backtest2.py"
     ```

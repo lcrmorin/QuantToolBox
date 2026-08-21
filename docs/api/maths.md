@@ -9,29 +9,29 @@
 
 ### Examples
 
-??? example "maths/grad2.py"
+??? example "Numerical gradient and Hessian vs. analytical, near a small coordinate — maths/hess2.py"
+    ```python
+    --8<-- "examples/maths/hess2.py"
+    ```
+
+??? example "Numerical gradient of a two-variable scalar function — maths/grad2.py"
     ```python
     --8<-- "examples/maths/grad2.py"
     ```
 
-??? example "maths/grad3.py"
+??? example "Numerical gradient of an elementwise function via a sum trick — maths/grad3.py"
     ```python
     --8<-- "examples/maths/grad3.py"
     ```
 
-??? example "maths/grad4.py"
+??? example "Numerical gradient, same elementwise-sum trick as grad3 — maths/grad4.py"
     ```python
     --8<-- "examples/maths/grad4.py"
     ```
 
-??? example "maths/grad5.py"
+??? example "Numerical gradient, scalar vs. explicit-sum function forms — maths/grad5.py"
     ```python
     --8<-- "examples/maths/grad5.py"
-    ```
-
-??? example "maths/hess2.py"
-    ```python
-    --8<-- "examples/maths/hess2.py"
     ```
 
 ## `maths.simulation`
