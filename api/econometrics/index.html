@@ -2086,7 +2086,7 @@
 
         <p>Constrained OLS, GMM, and Maximum Likelihood estimation with linear
 parameter restrictions.</p>
-<p>Ported from QuantToolbox/ects/{ols_estimation,ols_constrained_estimation,
+<p>Ported from QuantToolBox/ects/{ols_estimation,ols_constrained_estimation,
 gmm_estimation,gmm_constrained_estimation,ml_estimation,
 ml_constrained_estimation}.m</p>
 <p>Translation notes:</p>
@@ -4481,7 +4481,7 @@ the free parameter gamma by weighted least squares.</p>
 
         <p>VAR/VARX estimation (with exogenous regressors and linear parameter
 restrictions) and lag-order selection.</p>
-<p>Ported from QuantToolbox/ects/{varx_cls,varx_cml,varx_ls,varx_ml,
+<p>Ported from QuantToolBox/ects/{varx_cls,varx_cml,varx_ls,varx_ml,
 varx_order,var_constrained_estimation_onestep,
 varx_constrained_estimation_onestep}.m</p>
 <p>Translation notes:</p>
@@ -6424,7 +6424,7 @@ explicit lag values in p_max, if given as an array).</p>
     <div class="doc doc-contents first">
 
         <p>Linear-Gaussian state-space models and the Kalman filter.</p>
-<p>Ported from QuantToolbox/ects/{state_space_model,ssm_set,ssm_steady_state,
+<p>Ported from QuantToolBox/ects/{state_space_model,ssm_set,ssm_steady_state,
 Kalman_filtering}.m</p>
 <p>Model convention (matching the original):</p>
 <div class="highlight"><pre><span></span><code>measurement:  y_t = Z_t @ a_t + d_t + eps_t,   eps_t ~ N(0, H_t)
@@ -8504,9 +8504,9 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
     <div class="doc doc-contents first">
 
         <p>Whittle (frequency-domain) maximum likelihood estimation.</p>
-<p>Ported from QuantToolbox/ects/{whittle_estimation,
+<p>Ported from QuantToolBox/ects/{whittle_estimation,
 whittle_constrained_estimation,whittle_local_level,
-whittle_local_linear_trend}.m and QuantToolbox/maths/{periodogram,pdgm}.m
+whittle_local_linear_trend}.m and QuantToolBox/maths/{periodogram,pdgm}.m
 (identical duplicates, both covered by <code>periodogram</code> here rather than
 in <code>maths.py</code>).</p>
 <p>Translation notes:</p>
@@ -9521,7 +9521,7 @@ y_t = mu_t + eps_t, mu_t = mu_{t-1} + eta_t via Whittle estimation of
     <div class="doc doc-contents first">
 
         <p>Unit-root testing (Augmented Dickey-Fuller).</p>
-<p>Ported from QuantToolbox/ects/adf_test.m</p>
+<p>Ported from QuantToolBox/ects/adf_test.m</p>
 <p>Translation notes:</p>
 <ul>
 <li>The original hand-rolls the ADF regression and hardcodes ~15x50 tables

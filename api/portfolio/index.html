@@ -2217,11 +2217,11 @@
     <div class="doc doc-contents first">
 
         <p>Risk budgeting / risk parity portfolio construction.</p>
-<p>Ported from QuantToolbox/rpb/{compute_risk_contribution,compute_rc_sd,
+<p>Ported from QuantToolBox/rpb/{compute_risk_contribution,compute_rc_sd,
 compute_rc_vol,compute_rb_sd,compute_rb_sd_ccd,compute_rb_sd_newton,
 lagrange_rb_sd,compute_erc_portfolio}.m and
-QuantToolbox/crb/compute_rb_sd_bc_admm1*.m (+ ~40 near-duplicate ADMM
-variants), and QuantToolbox/mloapa/compute_ERC_{ADMM,CCD}.m.</p>
+QuantToolBox/crb/compute_rb_sd_bc_admm1*.m (+ ~40 near-duplicate ADMM
+variants), and QuantToolBox/mloapa/compute_ERC_{ADMM,CCD}.m.</p>
 <p>Consolidation notes -- this is the single largest simplification in the
 whole port:</p>
 <p>The original has ~75 files across rpb/ and crb/ implementing risk
@@ -3645,9 +3645,9 @@ standard-deviation measure under normality).</p>
     <div class="doc doc-contents first">
 
         <p>Mean-variance, minimum-variance, and most-diversified portfolio construction.</p>
-<p>Ported from QuantToolbox/rpb/{compute_mvo_portfolio,compute_minvar_portfolio,
+<p>Ported from QuantToolBox/rpb/{compute_mvo_portfolio,compute_minvar_portfolio,
 compute_mdp_portfolio,compute_mdp_objective_function}.m and
-QuantToolbox/mloapa/{compute_MDP_ADMM,compute_MinVar_ADMM1,
+QuantToolBox/mloapa/{compute_MDP_ADMM,compute_MinVar_ADMM1,
 compute_MinVar_ADMM2}.m.</p>
 <p>Consolidation notes:</p>
 <ul>
@@ -4395,7 +4395,7 @@ unreachable. See the module docstring and
     <div class="doc doc-contents first">
 
         <p>Black-Litterman implied returns and posterior (view-updated) moments.</p>
-<p>Ported from QuantToolbox/rpb/{implied_risk_premia,
+<p>Ported from QuantToolBox/rpb/{implied_risk_premia,
 compute_Black_Litterman_moments}.m</p>
 
 
@@ -4697,7 +4697,7 @@ Black-Litterman framework's equilibrium prior.</p>
     <div class="doc doc-contents first">
 
         <p>Tracking-error-optimized portfolio construction relative to a benchmark.</p>
-<p>Ported from QuantToolbox/rpb/{compute_te_portfolio,
+<p>Ported from QuantToolBox/rpb/{compute_te_portfolio,
 compute_minimum_te_portfolio,compute_te_portfolio_mixed_norm}.m.</p>
 <p>Consolidation notes:</p>
 <ul>
@@ -6060,8 +6060,8 @@ discussion.</p>
 
         <p>Convenience re-exports for Equal Risk Contribution and Most Diversified
 Portfolio construction.</p>
-<p>Ported from QuantToolbox/rpb/compute_erc_portfolio.m,
-QuantToolbox/mloapa/compute_{ERC_ADMM,ERC_CCD,MDP_ADMM}.m.</p>
+<p>Ported from QuantToolBox/rpb/compute_erc_portfolio.m,
+QuantToolBox/mloapa/compute_{ERC_ADMM,ERC_CCD,MDP_ADMM}.m.</p>
 <p>These are both already implemented in full elsewhere in this package --
 ERC in <code>portfolio.risk_budgeting</code> (it's the b=1/n special case of risk
 budgeting) and MDP in <code>portfolio.mean_variance</code> (it needs its own
