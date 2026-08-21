@@ -1,31 +1,49 @@
 # Examples
 
-The original MATLAB toolbox ships an `Examples/` folder with ~150
-scripts, one or a few per function, many referencing published textbook
-results (mostly Roncalli, T. (2013), *Introduction to Risk Parity and
-Budgeting*). This section translates a curated set of them into Python,
-each reproducing the same published/computed numbers as a built-in
-sanity check.
+Two different things live under "Examples" in this documentation, and
+it's worth being clear about which is which:
 
-Available so far:
+- **This section** — a small set of hand-curated, narrated deep dives.
+  Each one picks a specific result (often a published textbook table),
+  walks through the code, shows the actual output, and explains what it
+  means. They're a good starting point for understanding *why* a module
+  exists, especially the ones flagged in [Library
+  alternatives](../library_alternatives.md) as doing something no other
+  Python library does.
+- **The API Reference** — every quanttoolbox function that has a
+  translated example gets it shown directly on its own reference page,
+  under a collapsible "Examples" heading. That covers the full breadth:
+  essentially every translated script from the original MATLAB
+  `Examples/` folder (~150 scripts total; see the [translation
+  tracker](examples_tracking.md) for the file-by-file status), filed
+  under whichever module it actually exercises. Source is pulled in
+  live from the same `.py` files in the repo, so it can't drift out of
+  sync — go there for the complete, exhaustive set.
+
+In short: come here for a guided tour of the interesting parts, go to
+the API Reference for the exhaustive, per-function catalog.
+
+## Available deep dives
 
 - [Risk budgeting (ERC / VaR / ES)](risk_budgeting.md) — reproduces
-  Roncalli (2013), Tables 2.2–2.4.
+  Roncalli (2013), Tables 2.2–2.4. `portfolio.risk_budgeting` is the
+  single largest "no real alternative" case in the whole port.
 - [Black-Litterman](black_litterman.md) — reproduces Roncalli (2013),
   page 24.
 - [Mean-variance, minimum-variance, tracking error](mean_variance.md)
+- [Whittle (frequency-domain) estimation](whittle.md) —
+  `econometrics.whittle` is the other clean "nothing else does this"
+  case: no `statsmodels`/`arch` equivalent exists.
 - [Ridge, OLS, and robust regression](regression.md)
 - [SVM classification](svm.md)
-- [Building blocks: bisection, linear algebra, numerical differentiation](building_blocks.md)
+- [Building blocks: bisection, linear algebra, numerical
+  differentiation](building_blocks.md) — `linalg.special_matrices` is
+  a third "fills a real gap" case (vec/vech/duplication/elimination
+  matrices have no clean public equivalent elsewhere).
 
-**Not yet translated** (real-data examples from the `ects/` folder —
-VARX, Kalman filtering, and Whittle estimation on classic time-series
-datasets like the Lynx/Sunspots/GNP series — plus the `tutorial/` lesson
-series, which is more of a general walkthrough than per-function
-examples): see `Examples/ects/*.asc` and `Examples/tutorial/` in the
-original [`hfs-archive`](https://github.com/lcrmorin/hfs-archive) repo
-for the source material if you'd like to contribute a translation.
-
-The full set of MATLAB scripts these are translated from is organized by
-module: `rpb/`, `optim/`, `stats/`, `svm/`, `ects/`, `matrix/`, `dates/`,
-`tools/`, `backtest/`, `maths/`.
+The full set of original MATLAB scripts these examples translate from
+is organized by module: `rpb/`, `optim/`, `stats/`, `svm/`, `ects/`,
+`matrix/`, `dates/`, `tools/`, `backtest/`, `maths/` — see the
+[translation tracker](examples_tracking.md) for exactly which files are
+done, and the [`hfs-archive`](https://github.com/lcrmorin/hfs-archive)
+repo for the original source material.
