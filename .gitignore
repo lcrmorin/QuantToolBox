@@ -26,3 +26,4 @@ htmlcov/
 # Data (raw MATLAB .mat / .xlsx inputs kept out of the Python package)
 *.mat
 data/raw/
+site/

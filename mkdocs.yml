@@ -1,0 +1,64 @@
+site_name: QuantToolbox
+site_description: Python port of the MATLAB QuantToolbox — econometrics, portfolio optimization, and risk analytics.
+repo_url: https://github.com/lcrmorin/QuantToolBox
+repo_name: lcrmorin/QuantToolBox
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - content.code.copy
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_root_heading: true
+            docstring_style: numpy
+            merge_init_into_class: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Examples:
+      - Overview: examples/index.md
+      - Risk budgeting (ERC / VaR / ES): examples/risk_budgeting.md
+      - Black-Litterman: examples/black_litterman.md
+  - API Reference:
+      - Overview: api/index.md
+      - portfolio.risk_budgeting: api/portfolio_risk_budgeting.md
+      - portfolio.black_litterman: api/portfolio_black_litterman.md
+      - portfolio.mean_variance: api/portfolio_mean_variance.md
+      - stats.regression: api/stats_regression.md
+      - econometrics: api/econometrics.md
+  - Notes for translators:
+      - MATLAB bugs found: matlab_bugs_found.md
+      - Library alternatives: library_alternatives.md
+      - Migration map: migration_map.md
