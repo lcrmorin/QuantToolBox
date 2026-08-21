@@ -1450,14 +1450,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/examples_tracking/" class="md-nav__link">
+      <a href="../../migration_map/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Translation tracker (all 149 examples)
+    Migration map (incl. example translation tracker)
   
 
     
@@ -1513,35 +1513,7 @@
   <span class="md-ellipsis">
     
   
-    Library alternatives
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../migration_map/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migration map
+    Library alternatives (incl. upstreaming candidates)
   
 
     
@@ -3043,54 +3015,7 @@ method=2: equivalent computation via proximal_max.</p>
 
 </div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>optim/prox_turnover1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/prox_turnover1.m -- compares the L1</span>
-<span class="sd">proximal (soft-thresholding) operator against the L1-ball projection (both</span>
-<span class="sd">its default sorted-cumsum algorithm and its `proximal_max`-based</span>
-<span class="sd">alternative) at two different starting points and lambda values.</span>
-
-<span class="sd">The original draws `v` from MATLAB's unseeded `rand`; a fixed seed</span>
-<span class="sd">(`np.random.default_rng(0)`) is substituted here for reproducibility, same</span>
-<span class="sd">convention used elsewhere in this port (see matrix1.py, building_blocks.md)."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.projection</span><span class="w"> </span><span class="kn">import</span> <span class="n">projection_l1</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.proximal</span><span class="w"> </span><span class="kn">import</span> <span class="n">soft_thresholding</span>
-
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">v</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
-
-<span class="n">lambda_</span> <span class="o">=</span> <span class="mf">1.20</span>
-<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-
-<span class="n">x1</span> <span class="o">=</span> <span class="n">soft_thresholding</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
-<span class="n">x2</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
-<span class="n">x3</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
-
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">v</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"lambda ="</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="s2">" x0 = 0"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"columns: v, proximal_L1, projection_L1 (method 1), projection_L1 (method 0)"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"column sums of |x - x0|:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-
-<span class="n">lambda_</span> <span class="o">=</span> <span class="mf">2.00</span>
-<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">x0</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
-
-<span class="n">x1</span> <span class="o">=</span> <span class="n">soft_thresholding</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
-<span class="n">x2</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
-<span class="n">x3</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
-
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">v</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">lambda ="</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="s2">" x0 = equal-weight (sums to 1)"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"columns: v, proximal_L1, projection_L1 (method 1), projection_L1 (method 0)"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"column sums of |x - x0|:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>optim/proximal1.py</summary>
+<summary>Proximal projection under bounds, (in)equalities, and combined constraints — optim/proximal1.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/proximal1.m -- proximal projections onto</span>
 <span class="sd">boxes, single/multiple inequality constraints, single/multiple equality</span>
 <span class="sd">constraints, and combined linear-constraint sets, on a fixed random</span>
@@ -3204,6 +3129,53 @@ method=2: equivalent computation via proximal_max.</p>
     <span class="n">x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">c_ineq</span><span class="o">=</span><span class="n">c_ineq</span><span class="p">,</span> <span class="n">d_ineq</span><span class="o">=</span><span class="n">d_ineq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Linear constraints (2 eq, 2 ineq, bounds):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"retcode:"</span><span class="p">,</span> <span class="n">rc</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Proximal-L1 vs. two L1-ball-projection turnover algorithms — optim/prox_turnover1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/prox_turnover1.m -- compares the L1</span>
+<span class="sd">proximal (soft-thresholding) operator against the L1-ball projection (both</span>
+<span class="sd">its default sorted-cumsum algorithm and its `proximal_max`-based</span>
+<span class="sd">alternative) at two different starting points and lambda values.</span>
+
+<span class="sd">The original draws `v` from MATLAB's unseeded `rand`; a fixed seed</span>
+<span class="sd">(`np.random.default_rng(0)`) is substituted here for reproducibility, same</span>
+<span class="sd">convention used elsewhere in this port (see matrix1.py, building_blocks.md)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.projection</span><span class="w"> </span><span class="kn">import</span> <span class="n">projection_l1</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.proximal</span><span class="w"> </span><span class="kn">import</span> <span class="n">soft_thresholding</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">lambda_</span> <span class="o">=</span> <span class="mf">1.20</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">soft_thresholding</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+<span class="n">x3</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">v</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"lambda ="</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="s2">" x0 = 0"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"columns: v, proximal_L1, projection_L1 (method 1), projection_L1 (method 0)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"column sums of |x - x0|:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="n">lambda_</span> <span class="o">=</span> <span class="mf">2.00</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">soft_thresholding</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+<span class="n">x3</span> <span class="o">=</span> <span class="n">projection_l1</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">v</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">lambda ="</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="s2">" x0 = equal-weight (sums to 1)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"columns: v, proximal_L1, projection_L1 (method 1), projection_L1 (method 0)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"column sums of |x - x0|:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
 </code></pre></div>
 </details>
 <h2 id="optimquadprog-solve_qp"><code>optim.quadprog</code> (<code>solve_qp</code>)<a class="headerlink" href="#optimquadprog-solve_qp" title="Permanent link">&para;</a></h2>
@@ -3909,7 +3881,7 @@ full matrix.</p>
 
 </div><h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>rpb/test_lasso1.py</summary>
+<summary>Mean-variance optimization plus ridge/lasso-penalized portfolios — rpb/test_lasso1.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],</span>
 <span class="sd">"Introduction to Risk Parity and Budgeting", Example 1 (page 53):</span>
 <span class="sd">compares an unconstrained gamma-problem MVO portfolio against the same</span>
@@ -3961,7 +3933,72 @@ full matrix.</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>rpb/test_lasso3.py</summary>
+<summary>Mixed ridge+lasso penalties toward two different target vectors — rpb/test_lasso5.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
+<span class="sd">portfolios with two different ridge/lasso target vectors (equal-weight</span>
+<span class="sd">and a custom 20/20/30/30 target)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">S_ridge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">))</span>
+<span class="n">lambda_lasso</span> <span class="o">=</span> <span class="mf">0.005</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">x6</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="c1"># mixed with DIFFERENT targets for ridge (toward y1) vs lasso (toward y2)</span>
+<span class="n">x8</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">"MVO"</span><span class="p">,</span> <span class="n">x1</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Ridge-&gt;y1"</span><span class="p">,</span> <span class="n">x2</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Lasso-&gt;y1"</span><span class="p">,</span> <span class="n">x4</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y1)"</span><span class="p">,</span> <span class="n">x6</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y2)"</span><span class="p">,</span> <span class="n">x8</span><span class="p">),</span>
+<span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Ridge, lasso, and mixed-norm penalized portfolios — rpb/test_lasso3.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso3.m (byte-identical to</span>
 <span class="sd">test_lasso4.m) -- MVO/ridge/lasso/mixed-penalty portfolios via the</span>
 <span class="sd">consolidated solve_qp (replacing the original's separate quadprog_ridge/</span>
@@ -4049,71 +4086,6 @@ full matrix.</p>
     <span class="p">(</span><span class="s2">"Mixed(EW,0)"</span><span class="p">,</span> <span class="n">x5</span><span class="p">),</span>
     <span class="p">(</span><span class="s2">"Mixed(0,EW)"</span><span class="p">,</span> <span class="n">x6</span><span class="p">),</span>
     <span class="p">(</span><span class="s2">"Mixed(EW,EW)"</span><span class="p">,</span> <span class="n">x7</span><span class="p">),</span>
-<span class="p">]:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>rpb/test_lasso5.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
-<span class="sd">portfolios with two different ridge/lasso target vectors (equal-weight</span>
-<span class="sd">and a custom 20/20/30/30 target)."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
-
-<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
-<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
-<span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
-
-<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
-<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
-<span class="n">S_ridge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">))</span>
-<span class="n">lambda_lasso</span> <span class="o">=</span> <span class="mf">0.005</span>
-
-<span class="n">x1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span>
-<span class="n">x2</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
-    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="n">x4</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
-    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="n">x6</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
-    <span class="n">cov_matrix</span><span class="p">,</span>
-    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
-    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
-    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
-    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
-    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
-<span class="p">)</span>
-<span class="c1"># mixed with DIFFERENT targets for ridge (toward y1) vs lasso (toward y2)</span>
-<span class="n">x8</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
-    <span class="n">cov_matrix</span><span class="p">,</span>
-    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
-    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
-    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
-    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
-    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span>
-<span class="p">)</span>
-
-<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s2">"MVO"</span><span class="p">,</span> <span class="n">x1</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"Ridge-&gt;y1"</span><span class="p">,</span> <span class="n">x2</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"Lasso-&gt;y1"</span><span class="p">,</span> <span class="n">x4</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y1)"</span><span class="p">,</span> <span class="n">x6</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y2)"</span><span class="p">,</span> <span class="n">x8</span><span class="p">),</span>
 <span class="p">]:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
@@ -4537,7 +4509,31 @@ an explicit linear-constraint system (CC @ x = c).</p>
 
 </div><h3 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>optim/explicit2.py</summary>
+<summary>Explicit-to-implicit conversion for three simultaneous restrictions — optim/explicit3.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/explicit3.m -- explicit-to-implicit</span>
+<span class="sd">conversion for three simultaneous zero-restrictions on an 8-parameter</span>
+<span class="sd">vector (as would arise e.g. from AR1_12=0, MA1_11=0, MA1_21=0 in a VAR</span>
+<span class="sd">specification)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.bisection</span><span class="w"> </span><span class="kn">import</span> <span class="n">explicit_to_implicit</span>
+
+<span class="n">CC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">CC</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># beta[2] = 0  (AR1_12)</span>
+<span class="n">CC</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># beta[4] = 0  (MA1_11)</span>
+<span class="n">CC</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># beta[5] = 0  (MA1_21)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">RR</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">explicit_to_implicit</span><span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"R:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">RR</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">r:"</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Explicit/implicit constraint round-trip, plus a design() demo — optim/explicit2.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/explicit2.m -- explicit&lt;-&gt;implicit</span>
 <span class="sd">constraint conversion for a single equality constraint (x[0] = x[1]), plus</span>
 <span class="sd">a `design` matrix built from a category-index vector."""</span>
@@ -4567,30 +4563,6 @@ an explicit linear-constraint system (CC @ x = c).</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">R (design(w)):"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">RR2</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">r:"</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>optim/explicit3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/explicit3.m -- explicit-to-implicit</span>
-<span class="sd">conversion for three simultaneous zero-restrictions on an 8-parameter</span>
-<span class="sd">vector (as would arise e.g. from AR1_12=0, MA1_11=0, MA1_21=0 in a VAR</span>
-<span class="sd">specification)."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.bisection</span><span class="w"> </span><span class="kn">import</span> <span class="n">explicit_to_implicit</span>
-
-<span class="n">CC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">CC</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># beta[2] = 0  (AR1_12)</span>
-<span class="n">CC</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># beta[4] = 0  (MA1_11)</span>
-<span class="n">CC</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># beta[5] = 0  (MA1_21)</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-
-<span class="n">RR</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">explicit_to_implicit</span><span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"R:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">RR</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">r:"</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
 </code></pre></div>
 </details>
 

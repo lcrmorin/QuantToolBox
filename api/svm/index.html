@@ -1179,14 +1179,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/examples_tracking/" class="md-nav__link">
+      <a href="../../migration_map/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Translation tracker (all 149 examples)
+    Migration map (incl. example translation tracker)
   
 
     
@@ -1242,35 +1242,7 @@
   <span class="md-ellipsis">
     
   
-    Library alternatives
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../migration_map/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migration map
+    Library alternatives (incl. upstreaming candidates)
   
 
     
@@ -2135,122 +2107,7 @@ epsilon&lt;0 case and the epsilon&gt;0 case are formulated directly).</p>
 
 </div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>svm/svm2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm2.m -- hard margin SVM classification,</span>
-<span class="sd">dual formulation (same 15-point dataset as svm1.m)."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.svm.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">svm_classification_dual</span>
-
-<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">2.3</span><span class="p">,</span> <span class="mf">5.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">7.7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">8.8</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">7.4</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.5</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">8.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-<span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-
-<span class="n">r</span> <span class="o">=</span> <span class="n">svm_classification_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"beta0:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"margin:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"support vectors (0-indexed):"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">support_vectors</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"alpha at support vectors:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">alpha</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">support_vectors</span><span class="p">],</span> <span class="mi">8</span><span class="p">))</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>svm/svm3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm3.m -- soft margin SVM classification</span>
-<span class="sd">(binary hinge loss), primal formulation, at 4 different C values. 17-point</span>
-<span class="sd">dataset (2 extra, harder-to-separate points added vs. svm1/svm2)."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.svm.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">svm_classification_primal</span>
-
-<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">2.3</span><span class="p">,</span> <span class="mf">5.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">7.7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">8.8</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">7.4</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.5</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">8.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-<span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-
-<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">]:</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">svm_classification_primal</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">"hinge"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"C=</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">: beta0=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2"> beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2"> margin=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>svm/svm4.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm4.m -- soft margin SVM classification</span>
-<span class="sd">(binary hinge loss), dual formulation, at 4 different C values. Same</span>
-<span class="sd">17-point dataset as svm3.m."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.svm.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">svm_classification_dual</span>
-
-<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">2.3</span><span class="p">,</span> <span class="mf">5.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">7.7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">8.8</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">7.4</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.5</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">8.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-<span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-
-<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">]:</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">svm_classification_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">"hinge"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"C=</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">: beta0=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2"> beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2"> margin=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  support vectors: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">support_vectors</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>svm/svm5.py</summary>
+<summary>Hard- and soft-margin SVM classification, dual formulation — svm/svm5.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm5.m -- hard margin dual on the first</span>
 <span class="sd">15 points, and soft margin dual (C=0.05) on the full 17-point dataset.</span>
 <span class="sd">(The original's parameter sweep over C=0..0.4 for plotting purposes is</span>
@@ -2291,7 +2148,45 @@ epsilon&lt;0 case and the epsilon&gt;0 case are formulated directly).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>svm/svm6.py</summary>
+<summary>Hard-margin SVM classification, dual formulation — svm/svm2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm2.m -- hard margin SVM classification,</span>
+<span class="sd">dual formulation (same 15-point dataset as svm1.m)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.svm.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">svm_classification_dual</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">2.3</span><span class="p">,</span> <span class="mf">5.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">8.8</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.4</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.5</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">8.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">svm_classification_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"beta0:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"margin:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"support vectors (0-indexed):"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">support_vectors</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"alpha at support vectors:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">alpha</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">support_vectors</span><span class="p">],</span> <span class="mi">8</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>OLS, LAD, quantile, and SVM regression compared — svm/svm6.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm6.m -- comparison of OLS, LAD, and</span>
 <span class="sd">SVM-regression (LS-SVM and epsilon-SVM, at two different C values)</span>
 <span class="sd">estimates on the same 10-obs dataset used in ols1.m/robust1.m."""</span>
@@ -2341,47 +2236,7 @@ epsilon&lt;0 case and the epsilon&gt;0 case are formulated directly).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>svm/svm7.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm7.m -- same comparison as svm6.m</span>
-<span class="sd">(OLS/LAD/quantile vs SVM regression), but using the dual formulation</span>
-<span class="sd">(svm_regression_dual) instead of primal."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.svm.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">svm_regression_dual</span>
-
-<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">20.4</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">17.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.1</span><span class="p">,</span> <span class="mf">6.3</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">30.9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">22.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">9.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">,</span> <span class="mf">4.9</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">39.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">,</span> <span class="mf">8.1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">3.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.9</span><span class="p">,</span> <span class="mf">4.4</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">7.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">27.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">8.1</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">],</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
-<span class="n">x_full</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">x_full</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
-
-<span class="n">r_ls1</span> <span class="o">=</span> <span class="n">svm_regression_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">r_eps1</span> <span class="o">=</span> <span class="n">svm_regression_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">r_ls2</span> <span class="o">=</span> <span class="n">svm_regression_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">100000</span><span class="p">)</span>
-<span class="n">r_eps2</span> <span class="o">=</span> <span class="n">svm_regression_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"SVM dual LS (C=1):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r_ls1</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ls1</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"SVM dual eps (C=1, eps=1):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r_eps1</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_eps1</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"SVM dual LS (C=1e5):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r_ls2</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ls2</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"SVM dual eps (C=1e5, eps=0):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r_eps2</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_eps2</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="c1"># expect these to match svm6.py's primal results exactly (strong duality)</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>svm/svm8.py</summary>
+<summary>OLS/SVM-LS and quantile/SVM-epsilon regression on synthetic data — svm/svm8.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm8.m -- OLS, LAD, quantile, and SVM</span>
 <span class="sd">regression (primal, at two very different C values, LS- and</span>
 <span class="sd">epsilon-insensitive) compared on a larger (n=1000) simulated dataset.</span>
@@ -2440,6 +2295,123 @@ epsilon&lt;0 case and the epsilon&gt;0 case are formulated directly).</p>
     <span class="s2">"</span><span class="se">\n</span><span class="s2">Quantile(0.5) vs. SVM-eps at large C, epsilon=0 (expect near-identical -- both approach LAD):"</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">beta_lad2</span><span class="p">,</span> <span class="n">beta_svm_epsilon2</span><span class="p">]),</span> <span class="mi">3</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Soft-margin SVM classification, dual formulation — svm/svm4.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm4.m -- soft margin SVM classification</span>
+<span class="sd">(binary hinge loss), dual formulation, at 4 different C values. Same</span>
+<span class="sd">17-point dataset as svm3.m."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.svm.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">svm_classification_dual</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">2.3</span><span class="p">,</span> <span class="mf">5.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">8.8</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.4</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.5</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">8.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">]:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">svm_classification_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">"hinge"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"C=</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">: beta0=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2"> beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2"> margin=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  support vectors: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">support_vectors</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Soft-margin SVM classification, primal formulation — svm/svm3.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm3.m -- soft margin SVM classification</span>
+<span class="sd">(binary hinge loss), primal formulation, at 4 different C values. 17-point</span>
+<span class="sd">dataset (2 extra, harder-to-separate points added vs. svm1/svm2)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.svm.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">svm_classification_primal</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">2.3</span><span class="p">,</span> <span class="mf">5.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">8.8</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.4</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.5</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">8.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">]:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">svm_classification_primal</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">"hinge"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"C=</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">: beta0=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2"> beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2"> margin=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>SVM regression, dual formulation, vs. the primal result — svm/svm7.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm7.m -- same comparison as svm6.m</span>
+<span class="sd">(OLS/LAD/quantile vs SVM regression), but using the dual formulation</span>
+<span class="sd">(svm_regression_dual) instead of primal."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.svm.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">svm_regression_dual</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">20.4</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">17.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.1</span><span class="p">,</span> <span class="mf">6.3</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">30.9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">22.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">9.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">,</span> <span class="mf">4.9</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">39.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">,</span> <span class="mf">8.1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">3.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.9</span><span class="p">,</span> <span class="mf">4.4</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">7.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">27.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">8.1</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">x_full</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x_full</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+
+<span class="n">r_ls1</span> <span class="o">=</span> <span class="n">svm_regression_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">r_eps1</span> <span class="o">=</span> <span class="n">svm_regression_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">r_ls2</span> <span class="o">=</span> <span class="n">svm_regression_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">100000</span><span class="p">)</span>
+<span class="n">r_eps2</span> <span class="o">=</span> <span class="n">svm_regression_dual</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"SVM dual LS (C=1):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r_ls1</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ls1</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"SVM dual eps (C=1, eps=1):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r_eps1</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_eps1</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"SVM dual LS (C=1e5):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r_ls2</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ls2</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"SVM dual eps (C=1e5, eps=0):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r_eps2</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_eps2</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="c1"># expect these to match svm6.py's primal results exactly (strong duality)</span>
 </code></pre></div>
 </details>
 

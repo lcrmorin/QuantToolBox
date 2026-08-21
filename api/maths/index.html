@@ -1295,14 +1295,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/examples_tracking/" class="md-nav__link">
+      <a href="../../migration_map/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Translation tracker (all 149 examples)
+    Migration map (incl. example translation tracker)
   
 
     
@@ -1358,35 +1358,7 @@
   <span class="md-ellipsis">
     
   
-    Library alternatives
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../migration_map/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migration map
+    Library alternatives (incl. upstreaming candidates)
   
 
     
@@ -2018,7 +1990,54 @@ original).</p>
 
 </div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>maths/grad2.py</summary>
+<summary>Numerical gradient and Hessian vs. analytical, near a small coordinate — maths/hess2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/hess2.m -- numerical gradient and Hessian</span>
+<span class="sd">of the same function as grad2.m, at a point with a very small second</span>
+<span class="sd">coordinate (x2=1e-5), compared against their known analytical forms."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.maths.numerical_diff</span><span class="w"> </span><span class="kn">import</span> <span class="n">numerical_gradient</span><span class="p">,</span> <span class="n">numerical_hessian</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fun</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="o">+</span> <span class="n">x1</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">x2</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">grad_analytical</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">6</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x2</span><span class="p">)])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">hess_analytical</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">x1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">h</span>
+
+
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">])</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">grad_analytical</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">hess_analytical</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+
+<span class="n">g1</span> <span class="o">=</span> <span class="n">numerical_gradient</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Gradient, forward difference (numerical, analytical, |diff|):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">g1</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">g</span> <span class="o">-</span> <span class="n">g1</span><span class="p">)]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"d ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">g</span> <span class="o">-</span> <span class="n">g1</span><span class="p">)))</span>
+
+<span class="n">h1</span> <span class="o">=</span> <span class="n">numerical_hessian</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">dh</span><span class="o">=</span><span class="mf">6e-5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Numerical Hessian:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Analytical Hessian:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Numerical gradient of a two-variable scalar function — maths/grad2.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/grad2.m -- numerical vs. analytical</span>
 <span class="sd">gradient of a scalar function of two variables that mixes polynomial,</span>
 <span class="sd">log, and exponential terms."""</span>
@@ -2053,7 +2072,7 @@ original).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>maths/grad3.py</summary>
+<summary>Numerical gradient of an elementwise function via a sum trick — maths/grad3.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/grad3.m -- numerical vs. analytical</span>
 <span class="sd">gradient of the separable, elementwise function f(x) = x^2 * exp(x^2/3).</span>
 
@@ -2097,7 +2116,7 @@ original).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>maths/grad4.py</summary>
+<summary>Numerical gradient, same elementwise-sum trick as grad3 — maths/grad4.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/grad4.m -- numerical vs. analytical</span>
 <span class="sd">gradient of the separable, elementwise function f(x) = 2*x * exp(x^2/3).</span>
 
@@ -2136,7 +2155,7 @@ original).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>maths/grad5.py</summary>
+<summary>Numerical gradient, scalar vs. explicit-sum function forms — maths/grad5.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/grad5.m -- two equivalent formulations of</span>
 <span class="sd">the same gradient: fun(x) = 0.5*x'x + exp(x)'*(1/x) (already scalar-valued,</span>
 <span class="sd">so it needs no summing trick), and fun2(x) = sum(0.5*x_i^2 + exp(x_i)/x_i)</span>
@@ -2185,53 +2204,6 @@ original).</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Central difference (numerical, analytical, |diff|):"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">g1</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">g</span> <span class="o">-</span> <span class="n">g1</span><span class="p">)]))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"d ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">g</span> <span class="o">-</span> <span class="n">g1</span><span class="p">)))</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>maths/hess2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/hess2.m -- numerical gradient and Hessian</span>
-<span class="sd">of the same function as grad2.m, at a point with a very small second</span>
-<span class="sd">coordinate (x2=1e-5), compared against their known analytical forms."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.maths.numerical_diff</span><span class="w"> </span><span class="kn">import</span> <span class="n">numerical_gradient</span><span class="p">,</span> <span class="n">numerical_hessian</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">fun</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="o">+</span> <span class="n">x1</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">x2</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">grad_analytical</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">6</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x2</span><span class="p">)])</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">hess_analytical</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-    <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">x1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-    <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">h</span>
-
-
-<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">])</span>
-<span class="n">g</span> <span class="o">=</span> <span class="n">grad_analytical</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
-<span class="n">h</span> <span class="o">=</span> <span class="n">hess_analytical</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
-
-<span class="n">g1</span> <span class="o">=</span> <span class="n">numerical_gradient</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Gradient, forward difference (numerical, analytical, |diff|):"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">g1</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">g</span> <span class="o">-</span> <span class="n">g1</span><span class="p">)]))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"d ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">g</span> <span class="o">-</span> <span class="n">g1</span><span class="p">)))</span>
-
-<span class="n">h1</span> <span class="o">=</span> <span class="n">numerical_hessian</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">dh</span><span class="o">=</span><span class="mf">6e-5</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Numerical Hessian:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Analytical Hessian:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <h2 id="mathssimulation"><code>maths.simulation</code><a class="headerlink" href="#mathssimulation" title="Permanent link">&para;</a></h2>

@@ -2079,14 +2079,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/examples_tracking/" class="md-nav__link">
+      <a href="../../migration_map/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Translation tracker (all 149 examples)
+    Migration map (incl. example translation tracker)
   
 
     
@@ -2142,35 +2142,7 @@
   <span class="md-ellipsis">
     
   
-    Library alternatives
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../migration_map/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migration map
+    Library alternatives (incl. upstreaming candidates)
   
 
     
@@ -4201,7 +4173,7 @@ distribution regardless of order.</p>
 
 </div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>ects/quantile1.py</summary>
+<summary>Pinball-loss quantile estimation vs. sample and true quantiles — ects/quantile1.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/quantile1.m -- illustrates that</span>
 <span class="sd">minimizing the pinball (check) loss recovers the same quantile as the</span>
 <span class="sd">standard sorted-sample quantile estimator, compared against the true</span>
@@ -5351,7 +5323,7 @@ weekly correlations are less affected by asynchronous trading).</p>
 
 </div><h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>rpb/test_bl2.py</summary>
+<summary>Black-Litterman view sensitivity across five scenarios — rpb/test_bl2.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl2.m -- Black-Litterman sensitivity</span>
 <span class="sd">analysis across 6 scenarios (base case + 5 view/uncertainty/tau variants),</span>
 <span class="sd">each solved as a fixed-risk-aversion MVO portfolio."""</span>
@@ -5425,7 +5397,7 @@ weekly correlations are less affected by asynchronous trading).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>rpb/test_box1.py</summary>
+<summary>Equal risk contribution and box-constrained risk budgeting — rpb/test_box1.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_box1.m -- ERC and box-constrained</span>
 <span class="sd">("C-ERC") risk budgeting portfolios at progressively wider bounds around</span>
 <span class="sd">a starting position."""</span>
@@ -5456,59 +5428,62 @@ weekly correlations are less affected by asynchronous trading).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>rpb/test_erc2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc2.m -- Example 7 (page 80),</span>
-<span class="sd">Roncalli (2013). Risk contribution decomposition + risk budgeting at</span>
-<span class="sd">various target budgets."""</span>
+<summary>Mean-variance frontier: risk-aversion, return, and volatility targets — rpb/test_mvo2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_mvo2.m -- Roncalli [2013], "Introduction</span>
+<span class="sd">to Risk Parity and Budgeting", Example 1 (pages 7-8): the same 4-asset</span>
+<span class="sd">mean-variance problem evaluated three ways -- the gamma-problem (pick a</span>
+<span class="sd">risk-aversion, solve directly), the mu-problem (pick a target expected</span>
+<span class="sd">return, bisect on gamma to hit it), and the sigma-problem (pick a target</span>
+<span class="sd">volatility, bisect on gamma to hit it). All three route through</span>
+<span class="sd">`compute_mvo_portfolio.m`'s three branches; here that's</span>
+<span class="sd">`mvo_frontier`/`mvo_target_portfolio`.</span>
+
+<span class="sd">The original passes `lb=0, ub=0` (MATLAB's "use the default -100/100 wide</span>
+<span class="sd">bounds" sentinel); passed through explicitly here as `lb=-100, ub=100`."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.risk_budgeting</span><span class="w"> </span><span class="kn">import</span> <span class="n">risk_contribution</span><span class="p">,</span> <span class="n">solve_unconstrained</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_frontier</span><span class="p">,</span> <span class="n">mvo_target_portfolio</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
 
-<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">])</span>
-<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
 
-<span class="n">rc</span> <span class="o">=</span> <span class="n">risk_contribution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"fixed-x risk contribution:"</span><span class="p">,</span> <span class="n">rc</span><span class="o">.</span><span class="n">risk</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rc</span><span class="o">.</span><span class="n">pct_risk_contribution</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"1. gamma-problem (page 7)"</span><span class="p">)</span>
+<span class="n">gamma_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">2.00</span><span class="p">,</span> <span class="mf">5.00</span><span class="p">])</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">mvo_frontier</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_values</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gamma_values</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"  gamma=</span><span class="si">{</span><span class="n">g</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
 
-<span class="n">r_equal</span> <span class="o">=</span> <span class="n">solve_unconstrained</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ccd"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"equal-budget RB weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_equal</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">2. mu-problem (page 8)"</span><span class="p">)</span>
+<span class="n">mu_targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">5.00</span><span class="p">,</span> <span class="mf">6.00</span><span class="p">,</span> <span class="mf">7.00</span><span class="p">,</span> <span class="mf">8.00</span><span class="p">,</span> <span class="mf">9.00</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+<span class="n">mu_results</span> <span class="o">=</span> <span class="n">mvo_target_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">mu_targets</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="s2">"mu"</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mu_targets</span><span class="p">,</span> <span class="n">mu_results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"  target_mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">target</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  gamma=</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">gamma</span><span class="si">:</span><span class="s2">6.3f</span><span class="si">}</span><span class="s2">  mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
 
-<span class="n">r_custom</span> <span class="o">=</span> <span class="n">solve_unconstrained</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ccd"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"target-x-as-budget RB weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_custom</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">3. sigma-problem (page 8)"</span><span class="p">)</span>
+<span class="n">sigma_targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">15.00</span><span class="p">,</span> <span class="mf">20.00</span><span class="p">,</span> <span class="mf">25.00</span><span class="p">,</span> <span class="mf">30.00</span><span class="p">,</span> <span class="mf">35.00</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+<span class="n">sigma_results</span> <span class="o">=</span> <span class="n">mvo_target_portfolio</span><span class="p">(</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">sigma_targets</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="s2">"sigma"</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sigma_targets</span><span class="p">,</span> <span class="n">sigma_results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"  target_sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">target</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  gamma=</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">gamma</span><span class="si">:</span><span class="s2">6.3f</span><span class="si">}</span><span class="s2">  mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>rpb/test_erc3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc3.m -- Example 17 (page 123),</span>
-<span class="sd">Roncalli (2013). RB portfolio with unequal target budgets."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.risk_budgeting</span><span class="w"> </span><span class="kn">import</span> <span class="n">risk_contribution</span><span class="p">,</span> <span class="n">solve_unconstrained</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
-
-<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">])</span>
-<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
-
-<span class="n">rc</span> <span class="o">=</span> <span class="n">risk_contribution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"equal-weight risk contribution:"</span><span class="p">,</span> <span class="n">rc</span><span class="o">.</span><span class="n">risk</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rc</span><span class="o">.</span><span class="n">pct_risk_contribution</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-
-<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">solve_unconstrained</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ccd"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"RB weights (target budgets 20/20/30/30):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span> <span class="s2">"n_iters:"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">n_iters</span><span class="p">)</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>rpb/test_lasso1.py</summary>
+<summary>Mean-variance optimization plus ridge/lasso-penalized portfolios — rpb/test_lasso1.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],</span>
 <span class="sd">"Introduction to Risk Parity and Budgeting", Example 1 (page 53):</span>
 <span class="sd">compares an unconstrained gamma-problem MVO portfolio against the same</span>
@@ -5560,7 +5535,100 @@ weekly correlations are less affected by asynchronous trading).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>rpb/test_lasso3.py</summary>
+<summary>Minimum-variance portfolio under general linear constraints — rpb/test_minvar2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_minvar2.m -- minimum-variance</span>
+<span class="sd">portfolio with general linear equality/inequality constraints and box</span>
+<span class="sd">bounds."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">minvar_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+
+<span class="n">a_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+<span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">c_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]])</span>
+<span class="n">d_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.90</span><span class="p">])</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">minvar_portfolio</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">c_ineq</span><span class="o">=</span><span class="n">c_ineq</span><span class="p">,</span> <span class="n">d_ineq</span><span class="o">=</span><span class="n">d_ineq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">1.50</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">2.00</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"volatility:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Mixed ridge+lasso penalties toward two different target vectors — rpb/test_lasso5.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
+<span class="sd">portfolios with two different ridge/lasso target vectors (equal-weight</span>
+<span class="sd">and a custom 20/20/30/30 target)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">S_ridge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">))</span>
+<span class="n">lambda_lasso</span> <span class="o">=</span> <span class="mf">0.005</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">x6</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="c1"># mixed with DIFFERENT targets for ridge (toward y1) vs lasso (toward y2)</span>
+<span class="n">x8</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
+    <span class="n">cov_matrix</span><span class="p">,</span>
+    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
+    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">"MVO"</span><span class="p">,</span> <span class="n">x1</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Ridge-&gt;y1"</span><span class="p">,</span> <span class="n">x2</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Lasso-&gt;y1"</span><span class="p">,</span> <span class="n">x4</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y1)"</span><span class="p">,</span> <span class="n">x6</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y2)"</span><span class="p">,</span> <span class="n">x8</span><span class="p">),</span>
+<span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Ridge, lasso, and mixed-norm penalized portfolios — rpb/test_lasso3.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso3.m (byte-identical to</span>
 <span class="sd">test_lasso4.m) -- MVO/ridge/lasso/mixed-penalty portfolios via the</span>
 <span class="sd">consolidated solve_qp (replacing the original's separate quadprog_ridge/</span>
@@ -5653,151 +5721,55 @@ weekly correlations are less affected by asynchronous trading).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>rpb/test_lasso5.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
-<span class="sd">portfolios with two different ridge/lasso target vectors (equal-weight</span>
-<span class="sd">and a custom 20/20/30/30 target)."""</span>
+<summary>Risk budgeting toward unequal target budgets — rpb/test_erc3.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc3.m -- Example 17 (page 123),</span>
+<span class="sd">Roncalli (2013). RB portfolio with unequal target budgets."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.quadprog</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_qp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.risk_budgeting</span><span class="w"> </span><span class="kn">import</span> <span class="n">risk_contribution</span><span class="p">,</span> <span class="n">solve_unconstrained</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
 
-<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
-<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
-<span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
 
-<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
-<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
-<span class="n">S_ridge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">))</span>
-<span class="n">lambda_lasso</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="n">rc</span> <span class="o">=</span> <span class="n">risk_contribution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"equal-weight risk contribution:"</span><span class="p">,</span> <span class="n">rc</span><span class="o">.</span><span class="n">risk</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rc</span><span class="o">.</span><span class="n">pct_risk_contribution</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 
-<span class="n">x1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span>
-<span class="n">x2</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
-    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="n">x4</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
-    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="n">x6</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
-    <span class="n">cov_matrix</span><span class="p">,</span>
-    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
-    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
-    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
-    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
-    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
-<span class="p">)</span>
-<span class="c1"># mixed with DIFFERENT targets for ridge (toward y1) vs lasso (toward y2)</span>
-<span class="n">x8</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span>
-    <span class="n">cov_matrix</span><span class="p">,</span>
-    <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span>
-    <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
-    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
-    <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-    <span class="n">ridge_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">S_ridge</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
-    <span class="n">lasso_penalty</span><span class="o">=</span><span class="p">(</span><span class="n">lambda_lasso</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span>
-<span class="p">)</span>
-
-<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s2">"MVO"</span><span class="p">,</span> <span class="n">x1</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"Ridge-&gt;y1"</span><span class="p">,</span> <span class="n">x2</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"Lasso-&gt;y1"</span><span class="p">,</span> <span class="n">x4</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y1)"</span><span class="p">,</span> <span class="n">x6</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"Mixed(ridge-&gt;y1,lasso-&gt;y2)"</span><span class="p">,</span> <span class="n">x8</span><span class="p">),</span>
-<span class="p">]:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">solve_unconstrained</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ccd"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"RB weights (target budgets 20/20/30/30):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span> <span class="s2">"n_iters:"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">n_iters</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>rpb/test_minvar2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_minvar2.m -- minimum-variance</span>
-<span class="sd">portfolio with general linear equality/inequality constraints and box</span>
-<span class="sd">bounds."""</span>
+<summary>Risk contribution decomposition and equal-budget risk budgeting — rpb/test_erc2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc2.m -- Example 7 (page 80),</span>
+<span class="sd">Roncalli (2013). Risk contribution decomposition + risk budgeting at</span>
+<span class="sd">various target budgets."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">minvar_portfolio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.risk_budgeting</span><span class="w"> </span><span class="kn">import</span> <span class="n">risk_contribution</span><span class="p">,</span> <span class="n">solve_unconstrained</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
 
-<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
-<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">])</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
 
-<span class="n">a_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
-<span class="n">b_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
-<span class="n">c_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]])</span>
-<span class="n">d_ineq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.90</span><span class="p">])</span>
+<span class="n">rc</span> <span class="o">=</span> <span class="n">risk_contribution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"fixed-x risk contribution:"</span><span class="p">,</span> <span class="n">rc</span><span class="o">.</span><span class="n">risk</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rc</span><span class="o">.</span><span class="n">pct_risk_contribution</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 
-<span class="n">r</span> <span class="o">=</span> <span class="n">minvar_portfolio</span><span class="p">(</span>
-    <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span> <span class="n">c_ineq</span><span class="o">=</span><span class="n">c_ineq</span><span class="p">,</span> <span class="n">d_ineq</span><span class="o">=</span><span class="n">d_ineq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">1.50</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">2.00</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"volatility:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>rpb/test_mvo2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_mvo2.m -- Roncalli [2013], "Introduction</span>
-<span class="sd">to Risk Parity and Budgeting", Example 1 (pages 7-8): the same 4-asset</span>
-<span class="sd">mean-variance problem evaluated three ways -- the gamma-problem (pick a</span>
-<span class="sd">risk-aversion, solve directly), the mu-problem (pick a target expected</span>
-<span class="sd">return, bisect on gamma to hit it), and the sigma-problem (pick a target</span>
-<span class="sd">volatility, bisect on gamma to hit it). All three route through</span>
-<span class="sd">`compute_mvo_portfolio.m`'s three branches; here that's</span>
-<span class="sd">`mvo_frontier`/`mvo_target_portfolio`.</span>
+<span class="n">r_equal</span> <span class="o">=</span> <span class="n">solve_unconstrained</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ccd"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"equal-budget RB weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_equal</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
-<span class="sd">The original passes `lb=0, ub=0` (MATLAB's "use the default -100/100 wide</span>
-<span class="sd">bounds" sentinel); passed through explicitly here as `lb=-100, ub=100`."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.mean_variance</span><span class="w"> </span><span class="kn">import</span> <span class="n">mvo_frontier</span><span class="p">,</span> <span class="n">mvo_target_portfolio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
-
-<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">])</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
-<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"1. gamma-problem (page 7)"</span><span class="p">)</span>
-<span class="n">gamma_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">2.00</span><span class="p">,</span> <span class="mf">5.00</span><span class="p">])</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">mvo_frontier</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_values</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gamma_values</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"  gamma=</span><span class="si">{</span><span class="n">g</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  "</span>
-        <span class="sa">f</span><span class="s2">"w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-    <span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">2. mu-problem (page 8)"</span><span class="p">)</span>
-<span class="n">mu_targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">5.00</span><span class="p">,</span> <span class="mf">6.00</span><span class="p">,</span> <span class="mf">7.00</span><span class="p">,</span> <span class="mf">8.00</span><span class="p">,</span> <span class="mf">9.00</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
-<span class="n">mu_results</span> <span class="o">=</span> <span class="n">mvo_target_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">mu_targets</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="s2">"mu"</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mu_targets</span><span class="p">,</span> <span class="n">mu_results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"  target_mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">target</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  gamma=</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">gamma</span><span class="si">:</span><span class="s2">6.3f</span><span class="si">}</span><span class="s2">  mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  "</span>
-        <span class="sa">f</span><span class="s2">"sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-    <span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">3. sigma-problem (page 8)"</span><span class="p">)</span>
-<span class="n">sigma_targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">15.00</span><span class="p">,</span> <span class="mf">20.00</span><span class="p">,</span> <span class="mf">25.00</span><span class="p">,</span> <span class="mf">30.00</span><span class="p">,</span> <span class="mf">35.00</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
-<span class="n">sigma_results</span> <span class="o">=</span> <span class="n">mvo_target_portfolio</span><span class="p">(</span>
-    <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">sigma_targets</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="s2">"sigma"</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">100.0</span>
-<span class="p">)</span>
-<span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sigma_targets</span><span class="p">,</span> <span class="n">sigma_results</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"  target_sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">target</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">  gamma=</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">gamma</span><span class="si">:</span><span class="s2">6.3f</span><span class="si">}</span><span class="s2">  mu=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">expected_return</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  "</span>
-        <span class="sa">f</span><span class="s2">"sigma=</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">volatility</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  w=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-    <span class="p">)</span>
+<span class="n">r_custom</span> <span class="o">=</span> <span class="n">solve_unconstrained</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"ccd"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"target-x-as-budget RB weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_custom</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 </code></pre></div>
 </details>
 <h2 id="statsregressionols"><code>stats.regression.ols</code><a class="headerlink" href="#statsregressionols" title="Permanent link">&para;</a></h2>
@@ -6246,7 +6218,7 @@ NaN-dropped mean/std).</p>
 
 </div><h3 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>stats/elasticnet1.py</summary>
+<summary>Elastic-net regression path — stats/elasticnet1.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/elasticnet1.m and elasticnet2.m --</span>
 <span class="sd">elastic net regression path at two different alpha (L1/L2 mix) values,</span>
 <span class="sd">on the same 15-observation dataset used in ridge1.m/lasso1.m."""</span>
@@ -6284,7 +6256,7 @@ NaN-dropped mean/std).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>stats/lasso1.py</summary>
+<summary>Lasso path with R-squared, degrees of freedom, and complexity — stats/lasso1.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/lasso1.m -- penalized-form lasso path at</span>
 <span class="sd">5 lambda values (numeric core only; the original's 501-point tau-sweep and</span>
 <span class="sd">its multi-line coefficient-path plot are dropped -- the same lambda</span>
@@ -6338,63 +6310,7 @@ NaN-dropped mean/std).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>stats/lasso2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/lasso2.m -- penalized-form lasso</span>
-<span class="sd">(regLasso2) at several lambda values, on the same 15-obs dataset."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.lasso</span><span class="w"> </span><span class="kn">import</span> <span class="n">lasso_ccd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.ols</span><span class="w"> </span><span class="kn">import</span> <span class="n">standardize</span>
-
-<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="p">[</span><span class="mf">3.1</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">,</span> <span class="mf">4.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">24.9</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">27.3</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">7.6</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">25.4</span><span class="p">,</span> <span class="mf">8.4</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">7.1</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">46.1</span><span class="p">,</span> <span class="mf">5.2</span><span class="p">,</span> <span class="mf">7.6</span><span class="p">,</span> <span class="mf">8.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">45.7</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">47.4</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">8.6</span><span class="p">],</span>
-        <span class="p">[</span><span class="o">-</span><span class="mf">1.8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">,</span> <span class="mf">5.8</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">20.8</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">6.8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">9.2</span><span class="p">,</span> <span class="mf">6.9</span><span class="p">,</span> <span class="mf">9.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">12.9</span><span class="p">,</span> <span class="mf">7.9</span><span class="p">,</span> <span class="mf">9.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">37.0</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">9.2</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">,</span> <span class="mf">8.3</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">14.7</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span> <span class="mf">3.9</span><span class="p">],</span>
-        <span class="p">[</span><span class="o">-</span><span class="mf">3.2</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mf">6.6</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">],</span>
-        <span class="p">[</span><span class="mf">44.3</span><span class="p">,</span> <span class="mf">7.7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
-<span class="n">beta_ols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span> <span class="o">@</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">y</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">]:</span>
-    <span class="n">beta</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lasso_ccd</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-    <span class="n">rss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">: beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> rss=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rss</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>stats/pca1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/pca1.m -- PCA on a 3-asset correlation</span>
-<span class="sd">matrix."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.ols</span><span class="w"> </span><span class="kn">import</span> <span class="n">pca</span>
-
-<span class="n">C</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"eigenvalues:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"quality (variance share):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">quality</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"loadings:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">loadings</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>stats/ridge2.py</summary>
+<summary>Norm-budget (tau-targeted) ridge regression vs. fixed-lambda ridge — stats/ridge2.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/ridge2.m -- tau-targeted ridge regression</span>
 <span class="sd">(`ridge_tau_targeted`) cross-checked against fixed-lambda ridge (`ridge`),</span>
 <span class="sd">in both absolute and OLS-relative tau modes, on the same 15-observation</span>
@@ -6469,6 +6385,62 @@ NaN-dropped mean/std).</p>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Relative-tau analysis, finer lambda grid: tau target, tau achieved / tau_ols, lambda"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">tau</span><span class="p">,</span> <span class="n">tau_ridge_rel</span><span class="p">,</span> <span class="n">lambda_out</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Penalized-form lasso path via coordinate descent — stats/lasso2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/lasso2.m -- penalized-form lasso</span>
+<span class="sd">(regLasso2) at several lambda values, on the same 15-obs dataset."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.lasso</span><span class="w"> </span><span class="kn">import</span> <span class="n">lasso_ccd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.ols</span><span class="w"> </span><span class="kn">import</span> <span class="n">standardize</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mf">3.1</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">,</span> <span class="mf">4.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">24.9</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">27.3</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">7.6</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">25.4</span><span class="p">,</span> <span class="mf">8.4</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">7.1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">46.1</span><span class="p">,</span> <span class="mf">5.2</span><span class="p">,</span> <span class="mf">7.6</span><span class="p">,</span> <span class="mf">8.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">45.7</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">47.4</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">8.6</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">1.8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">,</span> <span class="mf">5.8</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">20.8</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">6.8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">9.2</span><span class="p">,</span> <span class="mf">6.9</span><span class="p">,</span> <span class="mf">9.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">12.9</span><span class="p">,</span> <span class="mf">7.9</span><span class="p">,</span> <span class="mf">9.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">37.0</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">9.2</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">,</span> <span class="mf">8.3</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">14.7</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span> <span class="mf">3.9</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">3.2</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mf">6.6</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">44.3</span><span class="p">,</span> <span class="mf">7.7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
+<span class="n">beta_ols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span> <span class="o">@</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">]:</span>
+    <span class="n">beta</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lasso_ccd</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">rss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">: beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> rss=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rss</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Principal component analysis of a 3-asset correlation matrix — stats/pca1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/pca1.m -- PCA on a 3-asset correlation</span>
+<span class="sd">matrix."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.ols</span><span class="w"> </span><span class="kn">import</span> <span class="n">pca</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"eigenvalues:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"quality (variance share):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">quality</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"loadings:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">loadings</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 </code></pre></div>
 </details>
 <h2 id="statsregressionridge"><code>stats.regression.ridge</code><a class="headerlink" href="#statsregressionridge" title="Permanent link">&para;</a></h2>
@@ -6860,7 +6832,7 @@ budget tau, found by grid search over a candidate lambda range.</p>
 
 </div><h3 id="examples_3">Examples<a class="headerlink" href="#examples_3" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>stats/ridge2.py</summary>
+<summary>Norm-budget (tau-targeted) ridge regression vs. fixed-lambda ridge — stats/ridge2.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/ridge2.m -- tau-targeted ridge regression</span>
 <span class="sd">(`ridge_tau_targeted`) cross-checked against fixed-lambda ridge (`ridge`),</span>
 <span class="sd">in both absolute and OLS-relative tau modes, on the same 15-observation</span>
@@ -7634,7 +7606,7 @@ stats/selectLasso.m without needing a QP solver.</p>
 
 </div><h3 id="examples_4">Examples<a class="headerlink" href="#examples_4" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>stats/elasticnet1.py</summary>
+<summary>Elastic-net regression path — stats/elasticnet1.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/elasticnet1.m and elasticnet2.m --</span>
 <span class="sd">elastic net regression path at two different alpha (L1/L2 mix) values,</span>
 <span class="sd">on the same 15-observation dataset used in ridge1.m/lasso1.m."""</span>
@@ -7672,7 +7644,7 @@ stats/selectLasso.m without needing a QP solver.</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>stats/lasso1.py</summary>
+<summary>Lasso path with R-squared, degrees of freedom, and complexity — stats/lasso1.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/lasso1.m -- penalized-form lasso path at</span>
 <span class="sd">5 lambda values (numeric core only; the original's 501-point tau-sweep and</span>
 <span class="sd">its multi-line coefficient-path plot are dropped -- the same lambda</span>
@@ -7726,7 +7698,7 @@ stats/selectLasso.m without needing a QP solver.</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>stats/lasso2.py</summary>
+<summary>Penalized-form lasso path via coordinate descent — stats/lasso2.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/lasso2.m -- penalized-form lasso</span>
 <span class="sd">(regLasso2) at several lambda values, on the same 15-obs dataset."""</span>
 
@@ -8255,7 +8227,7 @@ evaluated at points z.</p>
 
 </div><h3 id="examples_5">Examples<a class="headerlink" href="#examples_5" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>stats/kernel1.py</summary>
+<summary>Gaussian kernel density of two correlated series — stats/kernel1.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/kernel1.m -- Gaussian-kernel density</span>
 <span class="sd">estimate of two correlated series (numeric core only; the original's plot</span>
 <span class="sd">of both density curves is dropped).</span>
@@ -8283,7 +8255,7 @@ evaluated at points z.</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>stats/qreg2.py</summary>
+<summary>Kernel mean and quantile regression vs. true population curves — stats/qreg2.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/qreg2.m -- local-polynomial kernel mean</span>
 <span class="sd">and quantile regression (orders 1 and 2) of a nonlinear y=f(x)+noise</span>
 <span class="sd">relationship, compared against the known population mean/quantile curves</span>
@@ -8620,7 +8592,37 @@ via linear programming (Koenker &amp; Bassett's LP formulation).</p>
 
 </div><h3 id="examples_6">Examples<a class="headerlink" href="#examples_6" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>ects/quantile2.py</summary>
+<summary>Linear quantile regression at nine quantile levels — stats/qreg1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/qreg1.m -- linear quantile regression at</span>
+<span class="sd">9 quantile levels (tau=0.1..0.9) on a simulated 3-predictor dataset.</span>
+
+<span class="sd">The original draws x/b/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.quantile</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantile_regression</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span>
+<span class="n">tau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.91</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">5.20</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">b</span> <span class="o">+</span> <span class="n">u</span>
+
+<span class="n">beta</span><span class="p">,</span> <span class="n">u_pos</span><span class="p">,</span> <span class="n">v_neg</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">tau</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"tau:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">tau</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"beta (rows=predictors, cols=tau):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">residual std by tau:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Monte Carlo OLS vs. LAD regression under heteroskedastic noise — ects/quantile2.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/quantile2.m -- Monte Carlo comparison of</span>
 <span class="sd">OLS vs. LAD (median quantile regression) under heteroskedastic noise:</span>
 <span class="sd">mean and standard error of each estimator's slope coefficient across many</span>
@@ -8664,124 +8666,7 @@ via linear programming (Koenker &amp; Bassett's LP formulation).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>ects/robust2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust2.m -- OLS vs. median (quantile,</span>
-<span class="sd">alpha=0.5) regression, LAD regression, and Huber regression, on a</span>
-<span class="sd">simulated 3-predictor dataset.</span>
-
-<span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ols_estimation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.quantile</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantile_regression</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.robust</span><span class="w"> </span><span class="kn">import</span> <span class="n">huber_regression</span><span class="p">,</span> <span class="n">lad_regression</span>
-
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span>
-<span class="n">beta_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span>
-
-<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_true</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="n">r_ols</span> <span class="o">=</span> <span class="n">ols_estimation</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="n">u_ols</span> <span class="o">=</span> <span class="n">r_ols</span><span class="o">.</span><span class="n">residuals</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"OLS beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ols</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.50</span>
-<span class="n">beta_med</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-
-<span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
-
-<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_ols</span><span class="p">),</span> <span class="mf">0.90</span><span class="p">)</span>
-<span class="n">r_huber</span> <span class="o">=</span> <span class="n">huber_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Huber regression (c=</span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">) beta:"</span><span class="p">,</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_huber</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-    <span class="s2">"converged:"</span><span class="p">,</span>
-    <span class="n">r_huber</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>ects/robust3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust3.m -- OLS vs. median regression,</span>
-<span class="sd">LAD regression, and quantile regression at alpha=0.90, both via the IRLS</span>
-<span class="sd">M-estimator (`quantile_m_regression`) and the exact LP formulation</span>
-<span class="sd">(`quantile_regression`), on a simulated 3-predictor dataset.</span>
-
-<span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ols_estimation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.quantile</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantile_regression</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.robust</span><span class="w"> </span><span class="kn">import</span> <span class="n">lad_regression</span><span class="p">,</span> <span class="n">quantile_m_regression</span>
-
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span>
-<span class="n">beta_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span>
-
-<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_true</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="n">r_ols</span> <span class="o">=</span> <span class="n">ols_estimation</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="n">u_ols</span> <span class="o">=</span> <span class="n">r_ols</span><span class="o">.</span><span class="n">residuals</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"OLS beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ols</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.50</span>
-<span class="n">beta_med</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-
-<span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
-
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.90</span>
-<span class="n">r_qm</span> <span class="o">=</span> <span class="n">quantile_m_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Quantile (alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">) regression via IRLS M-estimator, beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_qm</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-
-<span class="n">beta_q</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Quantile (alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">) regression via exact LP, beta:        "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_q</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>stats/qreg1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/qreg1.m -- linear quantile regression at</span>
-<span class="sd">9 quantile levels (tau=0.1..0.9) on a simulated 3-predictor dataset.</span>
-
-<span class="sd">The original draws x/b/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.quantile</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantile_regression</span>
-
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span>
-<span class="n">tau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.91</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">))</span>
-<span class="n">b</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mf">5.20</span>
-<span class="n">u</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">b</span> <span class="o">+</span> <span class="n">u</span>
-
-<span class="n">beta</span><span class="p">,</span> <span class="n">u_pos</span><span class="p">,</span> <span class="n">v_neg</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">tau</span><span class="p">)</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"tau:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">tau</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"beta (rows=predictors, cols=tau):"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">residual std by tau:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>svm/svm6.py</summary>
+<summary>OLS, LAD, quantile, and SVM regression compared — svm/svm6.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm6.m -- comparison of OLS, LAD, and</span>
 <span class="sd">SVM-regression (LS-SVM and epsilon-SVM, at two different C values)</span>
 <span class="sd">estimates on the same 10-obs dataset used in ols1.m/robust1.m."""</span>
@@ -8831,7 +8716,94 @@ via linear programming (Koenker &amp; Bassett's LP formulation).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>svm/svm8.py</summary>
+<summary>OLS, median, LAD, and Huber regression compared — ects/robust2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust2.m -- OLS vs. median (quantile,</span>
+<span class="sd">alpha=0.5) regression, LAD regression, and Huber regression, on a</span>
+<span class="sd">simulated 3-predictor dataset.</span>
+
+<span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ols_estimation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.quantile</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantile_regression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.robust</span><span class="w"> </span><span class="kn">import</span> <span class="n">huber_regression</span><span class="p">,</span> <span class="n">lad_regression</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span>
+<span class="n">beta_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_true</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">r_ols</span> <span class="o">=</span> <span class="n">ols_estimation</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">u_ols</span> <span class="o">=</span> <span class="n">r_ols</span><span class="o">.</span><span class="n">residuals</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"OLS beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ols</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.50</span>
+<span class="n">beta_med</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_ols</span><span class="p">),</span> <span class="mf">0.90</span><span class="p">)</span>
+<span class="n">r_huber</span> <span class="o">=</span> <span class="n">huber_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Huber regression (c=</span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">) beta:"</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_huber</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="s2">"converged:"</span><span class="p">,</span>
+    <span class="n">r_huber</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>OLS/median/LAD plus quantile regression via IRLS and exact LP — ects/robust3.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust3.m -- OLS vs. median regression,</span>
+<span class="sd">LAD regression, and quantile regression at alpha=0.90, both via the IRLS</span>
+<span class="sd">M-estimator (`quantile_m_regression`) and the exact LP formulation</span>
+<span class="sd">(`quantile_regression`), on a simulated 3-predictor dataset.</span>
+
+<span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ols_estimation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.quantile</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantile_regression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.robust</span><span class="w"> </span><span class="kn">import</span> <span class="n">lad_regression</span><span class="p">,</span> <span class="n">quantile_m_regression</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span>
+<span class="n">beta_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_true</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">r_ols</span> <span class="o">=</span> <span class="n">ols_estimation</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">u_ols</span> <span class="o">=</span> <span class="n">r_ols</span><span class="o">.</span><span class="n">residuals</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"OLS beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ols</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.50</span>
+<span class="n">beta_med</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.90</span>
+<span class="n">r_qm</span> <span class="o">=</span> <span class="n">quantile_m_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Quantile (alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">) regression via IRLS M-estimator, beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_qm</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">beta_q</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Quantile (alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">) regression via exact LP, beta:        "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_q</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>OLS/SVM-LS and quantile/SVM-epsilon regression on synthetic data — svm/svm8.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm8.m -- OLS, LAD, quantile, and SVM</span>
 <span class="sd">regression (primal, at two very different C values, LS- and</span>
 <span class="sd">epsilon-insensitive) compared on a larger (n=1000) simulated dataset.</span>
@@ -9556,94 +9528,7 @@ not supplied).</p>
 
 </div><h3 id="examples_7">Examples<a class="headerlink" href="#examples_7" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>ects/robust2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust2.m -- OLS vs. median (quantile,</span>
-<span class="sd">alpha=0.5) regression, LAD regression, and Huber regression, on a</span>
-<span class="sd">simulated 3-predictor dataset.</span>
-
-<span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ols_estimation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.quantile</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantile_regression</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.robust</span><span class="w"> </span><span class="kn">import</span> <span class="n">huber_regression</span><span class="p">,</span> <span class="n">lad_regression</span>
-
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span>
-<span class="n">beta_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span>
-
-<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_true</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="n">r_ols</span> <span class="o">=</span> <span class="n">ols_estimation</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="n">u_ols</span> <span class="o">=</span> <span class="n">r_ols</span><span class="o">.</span><span class="n">residuals</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"OLS beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ols</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.50</span>
-<span class="n">beta_med</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-
-<span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
-
-<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_ols</span><span class="p">),</span> <span class="mf">0.90</span><span class="p">)</span>
-<span class="n">r_huber</span> <span class="o">=</span> <span class="n">huber_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Huber regression (c=</span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">) beta:"</span><span class="p">,</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_huber</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-    <span class="s2">"converged:"</span><span class="p">,</span>
-    <span class="n">r_huber</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>ects/robust3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust3.m -- OLS vs. median regression,</span>
-<span class="sd">LAD regression, and quantile regression at alpha=0.90, both via the IRLS</span>
-<span class="sd">M-estimator (`quantile_m_regression`) and the exact LP formulation</span>
-<span class="sd">(`quantile_regression`), on a simulated 3-predictor dataset.</span>
-
-<span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ols_estimation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.quantile</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantile_regression</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.robust</span><span class="w"> </span><span class="kn">import</span> <span class="n">lad_regression</span><span class="p">,</span> <span class="n">quantile_m_regression</span>
-
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span>
-<span class="n">beta_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span>
-
-<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_true</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="n">r_ols</span> <span class="o">=</span> <span class="n">ols_estimation</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="n">u_ols</span> <span class="o">=</span> <span class="n">r_ols</span><span class="o">.</span><span class="n">residuals</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"OLS beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ols</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.50</span>
-<span class="n">beta_med</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-
-<span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
-
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.90</span>
-<span class="n">r_qm</span> <span class="o">=</span> <span class="n">quantile_m_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Quantile (alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">) regression via IRLS M-estimator, beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_qm</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-
-<span class="n">beta_q</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Quantile (alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">) regression via exact LP, beta:        "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_q</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>svm/svm6.py</summary>
+<summary>OLS, LAD, quantile, and SVM regression compared — svm/svm6.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm6.m -- comparison of OLS, LAD, and</span>
 <span class="sd">SVM-regression (LS-SVM and epsilon-SVM, at two different C values)</span>
 <span class="sd">estimates on the same 10-obs dataset used in ols1.m/robust1.m."""</span>
@@ -9693,7 +9578,94 @@ not supplied).</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>svm/svm8.py</summary>
+<summary>OLS, median, LAD, and Huber regression compared — ects/robust2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust2.m -- OLS vs. median (quantile,</span>
+<span class="sd">alpha=0.5) regression, LAD regression, and Huber regression, on a</span>
+<span class="sd">simulated 3-predictor dataset.</span>
+
+<span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ols_estimation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.quantile</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantile_regression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.robust</span><span class="w"> </span><span class="kn">import</span> <span class="n">huber_regression</span><span class="p">,</span> <span class="n">lad_regression</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span>
+<span class="n">beta_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_true</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">r_ols</span> <span class="o">=</span> <span class="n">ols_estimation</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">u_ols</span> <span class="o">=</span> <span class="n">r_ols</span><span class="o">.</span><span class="n">residuals</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"OLS beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ols</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.50</span>
+<span class="n">beta_med</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_ols</span><span class="p">),</span> <span class="mf">0.90</span><span class="p">)</span>
+<span class="n">r_huber</span> <span class="o">=</span> <span class="n">huber_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Huber regression (c=</span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">) beta:"</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_huber</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="s2">"converged:"</span><span class="p">,</span>
+    <span class="n">r_huber</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>OLS/median/LAD plus quantile regression via IRLS and exact LP — ects/robust3.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust3.m -- OLS vs. median regression,</span>
+<span class="sd">LAD regression, and quantile regression at alpha=0.90, both via the IRLS</span>
+<span class="sd">M-estimator (`quantile_m_regression`) and the exact LP formulation</span>
+<span class="sd">(`quantile_regression`), on a simulated 3-predictor dataset.</span>
+
+<span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ols_estimation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.quantile</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantile_regression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.robust</span><span class="w"> </span><span class="kn">import</span> <span class="n">lad_regression</span><span class="p">,</span> <span class="n">quantile_m_regression</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span>
+<span class="n">beta_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_true</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">r_ols</span> <span class="o">=</span> <span class="n">ols_estimation</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">u_ols</span> <span class="o">=</span> <span class="n">r_ols</span><span class="o">.</span><span class="n">residuals</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"OLS beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_ols</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.50</span>
+<span class="n">beta_med</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.90</span>
+<span class="n">r_qm</span> <span class="o">=</span> <span class="n">quantile_m_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Quantile (alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">) regression via IRLS M-estimator, beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_qm</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">beta_q</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Quantile (alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">) regression via exact LP, beta:        "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_q</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>OLS/SVM-LS and quantile/SVM-epsilon regression on synthetic data — svm/svm8.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm8.m -- OLS, LAD, quantile, and SVM</span>
 <span class="sd">regression (primal, at two very different C values, LS- and</span>
 <span class="sd">epsilon-insensitive) compared on a larger (n=1000) simulated dataset.</span>

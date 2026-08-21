@@ -14,8 +14,6 @@
         <link rel="prev" href="../matlab_bugs_found/">
       
       
-        <link rel="next" href="../migration_map/">
-      
       
         
       
@@ -25,7 +23,7 @@
     
     
       
-        <title>Library alternatives - QuantToolBox</title>
+        <title>Library alternatives (incl. upstreaming candidates) - QuantToolBox</title>
       
     
     
@@ -114,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Library alternatives
+              Library alternatives (incl. upstreaming candidates)
             
           </span>
         </div>
@@ -1049,14 +1047,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/examples_tracking/" class="md-nav__link">
+      <a href="../migration_map/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Translation tracker (all 149 examples)
+    Migration map (incl. example translation tracker)
   
 
     
@@ -1121,7 +1119,7 @@
   <span class="md-ellipsis">
     
   
-    Library alternatives
+    Library alternatives (incl. upstreaming candidates)
   
 
     
@@ -1139,7 +1137,7 @@
   <span class="md-ellipsis">
     
   
-    Library alternatives
+    Library alternatives (incl. upstreaming candidates)
   
 
     
@@ -1296,38 +1294,21 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#summary-where-the-strongest-upstreaming-candidates-are" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: where the strongest upstreaming candidates are
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migration_map/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migration map
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1498,6 +1479,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#summary-where-the-strongest-upstreaming-candidates-are" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: where the strongest upstreaming candidates are
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1520,12 +1512,19 @@
 
 <h1 id="python-library-alternatives-what-to-keep-what-to-switch">Python library alternatives: what to keep, what to switch<a class="headerlink" href="#python-library-alternatives-what-to-keep-what-to-switch" title="Permanent link">&para;</a></h1>
 <p>For every ported module, this document names the closest existing Python
-library alternative (if one exists) and makes an honest call on whether
-to keep the ported implementation, switch to the library, or use both
-for different purposes. The guiding question throughout is: <strong>does the
-ported code do something the alternative genuinely can't, or is it mostly
-duplicating well-trodden ground?</strong></p>
-<p>Three verdicts are used:</p>
+library alternative (if one exists), makes an honest call on whether to
+keep the ported code, switch to the library, or use both for different
+purposes, and — for anything worth keeping — asks a further question:
+could the gap it fills be contributed back upstream, so the alternative
+library covers it too, instead of it staying locked inside this port?
+The guiding question throughout the first three columns is: <strong>does the
+ported code do something the alternative genuinely can't, or is it
+mostly duplicating well-trodden ground?</strong> The <strong>Upstream potential</strong>
+column then asks, for whatever survives that question: is this a clean
+enough, generalizable enough gap that a maintainer would plausibly
+accept it, or is it too tied to this port's specific conventions to be
+worth proposing?</p>
+<p>Three verdicts are used in the <strong>Verdict</strong> column:</p>
 <ul>
 <li><strong>KEEP</strong> — the ported code does something the alternative doesn't
   (a specific parameterization, a quant-specific measure, a missing
@@ -1536,6 +1535,11 @@ duplicating well-trodden ground?</strong></p>
 <li><strong>HYBRID</strong> — use the library for the common case, keep the ported code
   for a specific capability it has that the library lacks.</li>
 </ul>
+<p>A <strong>SWITCH</strong> verdict almost always means <strong>N/A</strong> in the Upstream
+potential column: if the alternative library already does the job
+better, there's nothing this port has to offer it back. Upstream
+potential mostly applies to <strong>KEEP</strong> and <strong>HYBRID</strong> cases, where this
+port has a capability the alternative lacks.</p>
 <hr />
 <h2 id="dates-dates">Dates (<code>dates/</code>)<a class="headerlink" href="#dates-dates" title="Permanent link">&para;</a></h2>
 <table>
@@ -1545,6 +1549,7 @@ duplicating well-trodden ground?</strong></p>
 <th>Alternative</th>
 <th>Verdict</th>
 <th>Why</th>
+<th>Upstream potential</th>
 </tr>
 </thead>
 <tbody>
@@ -1553,12 +1558,14 @@ duplicating well-trodden ground?</strong></p>
 <td><code>pandas</code> (already the base)</td>
 <td><strong>KEEP</strong></td>
 <td>Pandas has no built-in Excel-serial-date conversion; this is a thin, genuinely useful wrapper.</td>
+<td>Thin enough (one conversion function) to read as a personal utility rather than a generalizable pandas capability — not a strong candidate on its own.</td>
 </tr>
 <tr>
 <td><code>rebalancing.py</code></td>
 <td><a href="https://github.com/rsheftel/pandas_market_calendars"><code>pandas_market_calendars</code></a></td>
 <td><strong>HYBRID</strong></td>
 <td>Our rebalancing dates are weekday-only (no exchange holiday calendar) — that's a real gap versus the original MATLAB behavior too. <code>pandas_market_calendars</code> gives real NYSE/LSE/etc. holiday calendars; worth wiring in as an optional calendar source for production backtests, while keeping our nearest-available-date snapping logic (which the library doesn't replicate exactly).</td>
+<td>The nearest-available-date snapping logic has no direct equivalent in <code>pandas_market_calendars</code> either — worth raising as a feature request there once the HYBRID switch is done, rather than upstreaming preemptively.</td>
 </tr>
 </tbody>
 </table>
@@ -1571,6 +1578,7 @@ duplicating well-trodden ground?</strong></p>
 <th>Alternative</th>
 <th>Verdict</th>
 <th>Why</th>
+<th>Upstream potential</th>
 </tr>
 </thead>
 <tbody>
@@ -1579,60 +1587,70 @@ duplicating well-trodden ground?</strong></p>
 <td><code>scipy.stats</code> (already the backend)</td>
 <td><strong>KEEP</strong></td>
 <td>These are one-line wrappers around scipy; no separate module needed downstream, but no reason to remove them either — call-site compatibility with the original toolbox.</td>
+<td>Not worth upstreaming — kept only for call-site compatibility, not a capability gap in scipy.</td>
 </tr>
 <tr>
 <td><code>distributions.py</code> — GQF1/GQF2</td>
 <td><em>(none)</em></td>
 <td><strong>KEEP</strong></td>
 <td>Genuinely niche (generalized quadratic-form distributions for Delta-Gamma VaR). Nothing in scipy, statsmodels, or elsewhere in the ecosystem does this.</td>
+<td>No clean existing home found. <code>scipy.stats</code> is conservative about adding new distribution families, and no general econometrics/risk package is a natural fit either — more realistic as its own small standalone release than a PR into an existing library.</td>
 </tr>
 <tr>
 <td><code>moments.py</code> — <code>rolling_correlation</code>/<code>rolling_volatility</code></td>
 <td><code>pandas.DataFrame.rolling().corr()</code>/<code>.std()</code></td>
 <td><strong>SWITCH</strong></td>
 <td>Pandas' rolling ops are implemented in Cython and are meaningfully faster than our Python-loop version for anything beyond toy sizes. The only reason to keep ours is the specific <code>method=2</code> "compute returns within each window" variant for illiquid series, which pandas doesn't offer directly.</td>
+<td>N/A for the switched core. The <code>method=2</code> variant is real but narrow enough (illiquid-series-specific) that it's not obviously worth a pandas PR — a documented recipe is more realistic than a new <code>.rolling()</code> option.</td>
 </tr>
 <tr>
 <td><code>moments.py</code> — <code>active_share</code>, <code>herfindahl_index</code>, <code>asynchronous_cov</code>, <code>weekly_cov</code></td>
 <td><em>(none)</em></td>
 <td><strong>KEEP</strong></td>
 <td>Portfolio-construction-specific measures with no general-purpose library equivalent.</td>
+<td>Narrow enough that no single library is a natural home; if pursued, <code>active_share</code> specifically fits performance-analytics packages like <code>empyrical</code>/<code>pyfolio-reloaded</code> better than a general stats library.</td>
 </tr>
 <tr>
 <td><code>regression/ols.py</code></td>
 <td><code>statsmodels.OLS</code>/<code>WLS</code></td>
 <td><strong>HYBRID</strong></td>
 <td>For plain (unrestricted) OLS, statsmodels is more complete (more diagnostics, better-tested edge cases). Ours is worth keeping specifically for the <code>restriction=(RR, r)</code> linear-restriction parameterization, which statsmodels doesn't support as directly.</td>
+<td>statsmodels' API design opinions run strong; worth raising as an issue before assuming a PR would land.</td>
 </tr>
 <tr>
 <td><code>regression/ridge.py</code></td>
 <td><code>sklearn.linear_model.Ridge</code>/<code>RidgeCV</code></td>
 <td><strong>HYBRID</strong></td>
 <td>sklearn's solver is more optimized for large/sparse problems. Keep ours for the <code>ridge_tau_targeted</code> (L2-norm-budget, not penalty) parameterization — sklearn has no equivalent for that.</td>
+<td><code>ridge_tau_targeted</code> is an L2-<em>budget</em> parameterization; sklearn core is conservative about scope creep, so a scikit-learn-contrib package is the more realistic landing spot than sklearn itself.</td>
 </tr>
 <tr>
 <td><code>regression/lasso.py</code></td>
 <td><code>sklearn.linear_model.Lasso</code>/<code>ElasticNet</code>/<code>LassoCV</code></td>
 <td><strong>SWITCH</strong> (for the penalized-form solvers)</td>
 <td>sklearn's coordinate descent is Cython-compiled and extensively battle-tested; there's no good reason to keep hand-rolled <code>lasso_ccd</code>/<code>lasso_admm</code> for the standard penalized case — recommend routing those through sklearn directly. <strong>KEEP</strong> <code>lasso_tau_constrained</code> specifically, since sklearn has no L1-<em>budget</em> (as opposed to L1-<em>penalty</em>) interface.</td>
+<td>N/A for the switched solvers. <code>lasso_tau_constrained</code> (L1-budget) is the one piece worth offering — again more realistic via scikit-learn-contrib than sklearn core.</td>
 </tr>
 <tr>
 <td><code>regression/kernel.py</code></td>
 <td><code>statsmodels.nonparametric.KernelReg</code></td>
 <td><strong>HYBRID</strong></td>
 <td>statsmodels' version supports automatic bandwidth selection via cross-validation and both local-constant/local-linear estimators — more complete than our fixed-bandwidth port. Worth switching to for general use; keep ours only where the exact original bandwidth formula needs to be reproduced for parity with existing MATLAB-based results.</td>
+<td>Our fixed-bandwidth formula is a strict subset of what <code>KernelReg</code> already does — nothing to contribute back.</td>
 </tr>
 <tr>
 <td><code>regression/quantile.py</code></td>
 <td><code>statsmodels.regression.quantile_regression.QuantReg</code>, or <code>sklearn.linear_model.QuantileRegressor</code> (newer sklearn)</td>
 <td><strong>SWITCH</strong></td>
 <td>Both are more battle-tested than our <code>scipy.optimize.linprog</code>-based implementation, handle edge cases (rank-deficient design matrices, ties) more robustly, and QuantReg in particular has been used in production statsmodels code for years. Keep ours only if the exact slack-variable (<code>u</code>, <code>v</code>) outputs are needed downstream.</td>
+<td>N/A — both alternatives already cover this more robustly; the slack-variable output convention is too implementation-specific to propose upstream.</td>
 </tr>
 <tr>
 <td><code>regression/robust.py</code></td>
 <td><code>statsmodels.robust.robust_linear_model.RLM</code></td>
 <td><strong>HYBRID</strong></td>
 <td>RLM covers Huber, Tukey biweight, Andrew's wave, Hampel, and trimmed-mean M-estimators via IRLS — a superset of our Huber implementation, and more robustly tested. It does <em>not</em> cover LAD or quantile M-estimation directly (though <code>QuantReg(q=0.5)</code> is exactly LAD). Recommend: <code>RLM</code> for Huber/general M-estimation, keep our <code>lad_regression</code>/<code>quantile_m_regression</code>/<code>inverse_quantile_m_regression</code> for those specific losses.</td>
+<td>LAD/quantile M-estimation aren't in <code>RLM</code> today — worth raising as a statsmodels issue, though its estimator set is deliberately curated around IRLS M-estimators, so acceptance isn't a given.</td>
 </tr>
 </tbody>
 </table>
@@ -1645,6 +1663,7 @@ duplicating well-trodden ground?</strong></p>
 <th>Alternative</th>
 <th>Verdict</th>
 <th>Why</th>
+<th>Upstream potential</th>
 </tr>
 </thead>
 <tbody>
@@ -1653,30 +1672,35 @@ duplicating well-trodden ground?</strong></p>
 <td><code>statsmodels.sandbox.regression.gmm.GMM</code>, <code>statsmodels.base.model.GenericLikelihoodModel</code>, or the <a href="https://github.com/bashtage/linearmodels"><code>linearmodels</code></a> package (more modern GMM/IV support)</td>
 <td><strong>HYBRID</strong></td>
 <td>These libraries are more mature for standard GMM/MLE use cases. Keep ours specifically for the explicit <code>theta = RR @ gamma + r</code> linear-restriction interface, which none of the alternatives expose as directly — that parameterization is the main reason this module exists as custom code at all.</td>
+<td>Same restriction interface as <code>regression/ols.py</code> above; worth a combined issue/PR rather than two separate proposals, but statsmodels' opinionated API design means this is a discussion, not a quick patch.</td>
 </tr>
 <tr>
 <td><code>var.py</code></td>
 <td><code>statsmodels.tsa.api.VAR</code></td>
 <td><strong>SWITCH</strong> for the unrestricted case</td>
 <td>statsmodels' VAR is comprehensive: automatic lag-order selection, impulse response functions, forecast error variance decomposition, forecasting — well beyond what we ported, and it's the standard tool the econometrics community actually uses. <strong>KEEP</strong> <code>varx_estimate</code>'s linear-restriction support (<code>a_eq</code>/<code>b_eq</code> on the stacked coefficient vector) — statsmodels' VAR doesn't support arbitrary parameter restrictions.</td>
+<td>A genuinely useful gap for applied macro/finance users — <code>VAR</code> has no arbitrary-restriction support today — but <code>VAR</code> is mature and stable, so this is a bigger API-design conversation than a quick patch, best opened as an issue first.</td>
 </tr>
 <tr>
 <td><code>kalman.py</code></td>
 <td><code>statsmodels.tsa.statespace.MLEModel</code>/<code>kalman_filter</code></td>
 <td><strong>SWITCH</strong> for anything beyond simple filtering</td>
 <td>statsmodels' state-space framework is dramatically more capable: smoothing (not just filtering), MLE parameter fitting built in, diffuse initialization, a compiled Cython backend for real performance on long series. Our <code>kalman_filter</code> is fine for simple, transparent filtering tasks or minimal-dependency use, but statsmodels is the better choice for anything production-scale.</td>
+<td>N/A — statsmodels' framework is already strictly more capable; there's nothing here to contribute back.</td>
 </tr>
 <tr>
 <td><code>whittle.py</code></td>
 <td><em>(none found)</em></td>
 <td><strong>KEEP</strong></td>
 <td>Whittle (frequency-domain) estimation isn't implemented in statsmodels, <code>arch</code>, or other common packages. Genuinely fills a gap.</td>
+<td>Strongest candidate in this file. Either a new estimator class following statsmodels' <code>Model</code>/<code>Results</code> convention, or a standalone function in <code>arch</code>. Would need generalizing from this port's specific local-level/local-linear-trend/custom-<code>sdf_fn</code> interface to whatever calling convention the host library expects — substantial enough to warrant a scoping conversation with a maintainer before an unsolicited PR.</td>
 </tr>
 <tr>
 <td><code>tests.py</code> (ADF)</td>
 <td><code>statsmodels.tsa.stattools.adfuller</code> (already used)</td>
 <td><strong>SWITCH</strong> (already done)</td>
 <td>Also worth knowing: the <a href="https://github.com/bashtage/arch"><code>arch</code></a> package's <code>arch.unitroot</code> module has a wider family of unit-root tests (ADF, Phillips-Perron, DFGLS, KPSS, Zivot-Andrews) if more than ADF is ever needed — not currently ported, but worth knowing about.</td>
+<td>N/A — already routes through statsmodels; nothing custom left to offer back.</td>
 </tr>
 </tbody>
 </table>
@@ -1689,6 +1713,7 @@ duplicating well-trodden ground?</strong></p>
 <th>Alternative</th>
 <th>Verdict</th>
 <th>Why</th>
+<th>Upstream potential</th>
 </tr>
 </thead>
 <tbody>
@@ -1697,18 +1722,21 @@ duplicating well-trodden ground?</strong></p>
 <td><a href="https://github.com/PyLops/pyproximal"><code>pyproximal</code></a> covers some overlapping norm/constraint proximal operators</td>
 <td><strong>KEEP</strong></td>
 <td>Low-level building blocks with no strong off-the-shelf equivalent covering our exact operator set (turnover constraints, combined Dykstra-projected linear+box systems for portfolio construction specifically). <code>pyproximal</code> is oriented toward signal-processing/inverse-problems use cases, not portfolio constraints.</td>
+<td><code>pyproximal</code>'s API is built around signal-processing/inverse-problems operators, so our portfolio-specific set (turnover, Dykstra-projected linear+box systems) doesn't map cleanly onto it — a targeted PR isn't obviously easy. More realistic as a standalone niche package if this is ever generalized beyond this port.</td>
 </tr>
 <tr>
 <td><code>quadprog.py</code> (<code>solve_qp</code>)</td>
 <td><code>qpsolvers.solve_qp</code> directly (already a declared dependency, currently used <em>underneath</em> cvxpy)</td>
 <td><strong>HYBRID</strong></td>
 <td>For hot loops that call <code>solve_qp</code> many times (e.g. risk-budgeting's inner ADMM loop), calling <code>qpsolvers.solve_qp</code> directly — bypassing cvxpy's DSL-parsing overhead — would likely be measurably faster. Worth profiling if performance in tight loops becomes a concern; keep the cvxpy-based version for its more expressive constraint-building (ridge/lasso penalty terms, arbitrary constraint composition), which raw <code>qpsolvers</code> doesn't offer.</td>
+<td>N/A — this module is built on top of <code>qpsolvers</code>/<code>cvxpy</code> rather than replacing anything either one does; there's no independent capability to contribute back.</td>
 </tr>
 <tr>
 <td><code>bisection.py</code></td>
 <td><code>scipy.optimize.brentq</code>/<code>bisect</code></td>
 <td><strong>HYBRID</strong></td>
 <td>scipy's <code>brentq</code> converges faster (superlinear, not just bisection) for scalar root-finding, and is compiled. <strong>KEEP</strong> our vectorized (array-broadcast, many-roots-at-once) version — scipy's root finders are scalar-only, and vectorizing over many independent brackets is exactly what our version adds.</td>
+<td>The easiest "quick win" of this whole document: small, self-contained, dependency-free. Array-broadcast bisection (many independent brackets solved at once) has come up as a recurring, low-priority SciPy feature request, and this module already does it cleanly.</td>
 </tr>
 </tbody>
 </table>
@@ -1721,6 +1749,7 @@ duplicating well-trodden ground?</strong></p>
 <th>Alternative</th>
 <th>Verdict</th>
 <th>Why</th>
+<th>Upstream potential</th>
 </tr>
 </thead>
 <tbody>
@@ -1728,13 +1757,15 @@ duplicating well-trodden ground?</strong></p>
 <td><code>mean_variance.py</code>, <code>black_litterman.py</code>, <code>tracking_error.py</code></td>
 <td><a href="https://github.com/robertmartin8/PyPortfolioOpt"><code>PyPortfolioOpt</code></a></td>
 <td><strong>HYBRID</strong></td>
-<td>PyPortfolioOpt is a mature, actively maintained library covering mean-variance optimization, Black-Litterman, CVaR, discrete allocation, and more — genuinely worth using directly for standard portfolio construction tasks. Keep ours for tighter integration with the rest of this codebase (shared <code>solve_qp</code>, direct ridge/lasso penalty composability) and where the exact original parameterization needs to match existing analysis.</td>
+<td>PyPortfolioOpt is a mature, actively maintained library covering mean-variance optimization, Black-Litterman, CVaR, discrete allocation, and more — genuinely worth using directly for standard portfolio construction. Keep ours for tighter integration with the rest of this codebase (shared <code>solve_qp</code>, direct ridge/lasso penalty composability) and where the exact original parameterization needs to match existing analysis.</td>
+<td><code>mvo_target_portfolio</code>/<code>te_target_portfolio</code> (bisection-based mu-problem/sigma-problem target-matching, added this cycle) are the candidate. PyPortfolioOpt already has <code>efficient_risk</code>/<code>efficient_return</code> covering similar ground for plain MVO — compare directly before assuming this is additive. The tracking-error-<em>relative</em> version (<code>te_target_portfolio</code>) is the more likely genuine gap, since PyPortfolioOpt's target-matching isn't benchmark-relative in most places.</td>
 </tr>
 <tr>
 <td><code>risk_budgeting.py</code></td>
 <td><a href="https://github.com/mirca/riskparityportfolio"><code>riskparityportfolio</code></a> (PyPI, narrower scope)</td>
 <td><strong>KEEP</strong></td>
 <td><code>riskparityportfolio</code> covers basic risk parity but not the box-constrained/general-linear-constrained/VaR-ES/target-matching breadth this module has. This is the single largest and most-tested piece of custom work in the whole port (75+ original files consolidated) — genuinely the strongest "keep" case in this document.</td>
+<td>Propose the constrained solvers as additional solver options on <code>riskparityportfolio</code> rather than pitching a from-scratch new library — same problem domain, narrower existing scope. This is the single largest, most-tested "keep" case in the whole port, substantial enough that it deserves a scoping conversation with the maintainer before any PR, not a quick drive-by.</td>
 </tr>
 </tbody>
 </table>
@@ -1747,6 +1778,7 @@ duplicating well-trodden ground?</strong></p>
 <th>Alternative</th>
 <th>Verdict</th>
 <th>Why</th>
+<th>Upstream potential</th>
 </tr>
 </thead>
 <tbody>
@@ -1755,12 +1787,14 @@ duplicating well-trodden ground?</strong></p>
 <td><code>sklearn.mixture.GaussianMixture</code></td>
 <td><strong>HYBRID</strong></td>
 <td>sklearn's EM implementation is more numerically robust (covariance regularization, multiple initializations, convergence diagnostics) and well-tested for the <em>general</em> n-component case. Worth switching to for the pure model-fitting step. <strong>KEEP</strong> everything downstream of fitting — VaR/ES, risk contribution, risk budgeting, PDF/skewness under the mixture — since sklearn's <code>GaussianMixture</code> has none of that; it only fits parameters.</td>
+<td>N/A for the fitting step (switching to sklearn). The downstream risk layer (VaR/ES, risk contribution, PDF/skewness under a mixture) is mixture-specific enough that no active general-purpose project is an obvious target — see <code>jump_diffusion.py</code> below for the same conclusion in a related module.</td>
 </tr>
 <tr>
 <td><code>jump_diffusion.py</code></td>
 <td><em>(none)</em></td>
 <td><strong>KEEP</strong></td>
 <td>Jump-diffusion-specific risk measures; no general-purpose equivalent exists.</td>
+<td>Niche enough that no actively-maintained project in this exact space is an obvious target — probably not worth pursuing as a standalone contribution right now.</td>
 </tr>
 </tbody>
 </table>
@@ -1773,6 +1807,7 @@ duplicating well-trodden ground?</strong></p>
 <th>Alternative</th>
 <th>Verdict</th>
 <th>Why</th>
+<th>Upstream potential</th>
 </tr>
 </thead>
 <tbody>
@@ -1781,6 +1816,7 @@ duplicating well-trodden ground?</strong></p>
 <td><code>sklearn.svm.SVC</code>/<code>SVR</code></td>
 <td><strong>SWITCH</strong> for standalone use</td>
 <td>sklearn's SVM is backed by <code>libsvm</code>/<code>liblinear</code> (compiled C, extremely well optimized and battle-tested) — already verified to match our implementation to 3+ decimal places. For any standalone classification/regression task, use sklearn directly; it will be faster and more robust to edge cases (kernel tricks, class imbalance handling, probability calibration — none of which we ported). <strong>KEEP</strong> ours only if the SVM needs to be composed with other constraints inside the same <code>solve_qp</code>/cvxpy optimization (e.g. embedding an SVM-like margin constraint inside a larger portfolio problem) — that composability is the one thing sklearn's opaque solver can't offer.</td>
+<td>N/A — sklearn's SVM is already the better standalone tool. The one thing ours offers (composing an SVM-like margin constraint inside a larger cvxpy/<code>solve_qp</code> problem) doesn't fit sklearn's opaque-solver API at all, so there's no narrow feature to propose there.</td>
 </tr>
 </tbody>
 </table>
@@ -1793,6 +1829,7 @@ duplicating well-trodden ground?</strong></p>
 <th>Alternative</th>
 <th>Verdict</th>
 <th>Why</th>
+<th>Upstream potential</th>
 </tr>
 </thead>
 <tbody>
@@ -1801,6 +1838,7 @@ duplicating well-trodden ground?</strong></p>
 <td><code>scipy.interpolate.CubicSpline</code> (pure interpolation), <code>scipy.interpolate.UnivariateSpline</code>/<code>make_smoothing_spline</code> (smoothing)</td>
 <td><strong>SWITCH</strong> for general use</td>
 <td>Already verified our <code>p=1</code> case matches <code>CubicSpline</code> to machine precision — scipy's tools are more mature, better-tested, and actively maintained. The one real friction point: our <code>p</code> parameter (a <code>[0,1]</code> interpolation/smoothing blend) and scipy's <code>s</code> parameter (a target sum-of-squared-residuals) are <em>different parameterizations</em> of smoothness, not directly interchangeable. <strong>KEEP</strong> ours only where exact <code>p</code>-parameterized behavior needs to match existing MATLAB-based configs or analysis.</td>
+<td>N/A — scipy already covers general use well; the <code>p</code>-parameterization is a different (not clearly superior) smoothness convention, not an obvious missing option in scipy's API.</td>
 </tr>
 </tbody>
 </table>
@@ -1813,6 +1851,7 @@ duplicating well-trodden ground?</strong></p>
 <th>Alternative</th>
 <th>Verdict</th>
 <th>Why</th>
+<th>Upstream potential</th>
 </tr>
 </thead>
 <tbody>
@@ -1821,18 +1860,21 @@ duplicating well-trodden ground?</strong></p>
 <td><a href="https://github.com/pbrod/numdifftools"><code>numdifftools</code></a></td>
 <td><strong>HYBRID</strong></td>
 <td><code>numdifftools</code> uses adaptive step sizing and Richardson extrapolation — meaningfully more accurate than our fixed-step-size approach, especially for ill-conditioned functions. Worth using where precision matters (e.g. as an alternative Hessian source for MLE standard errors). Keep ours for the specific magnitude-scaled step convention already wired into <code>econometrics.estimation</code>/<code>whittle</code>, to avoid adding a dependency for something already working correctly.</td>
+<td>N/A — <code>numdifftools</code>' adaptive approach is already the more general, more accurate one; our fixed convention is specific to this port's estimation code, not a missing capability worth proposing there.</td>
 </tr>
 <tr>
 <td><code>simulation.py</code> — <code>compute_ewma</code></td>
 <td><code>pandas.DataFrame.ewm()</code></td>
 <td><strong>HYBRID</strong></td>
 <td>Pandas' <code>.ewm()</code> is a highly optimized, feature-complete exponentially-weighted accessor. The friction: pandas parameterizes by <code>alpha</code>/<code>span</code>/<code>halflife</code> (smoothing factor), while our <code>compute_ewma</code> uses <code>lambda_</code> as a mean-reversion <em>rate</em> with explicit <code>dt</code> scaling — a different but related convention requiring a small translation layer (<code>alpha = lambda_ * dt</code>, roughly) to switch cleanly. Worth doing if performance on very long series matters; keep ours as-is for now given the interface is already wired into <code>volatility_target</code>/<code>momentum_ewma</code>.</td>
+<td>N/A — <code>.ewm()</code> is already more complete; the <code>lambda_</code>/<code>dt</code> convention is just a different parameterization, not a missing pandas capability.</td>
 </tr>
 <tr>
 <td><code>simulation.py</code> — GBM simulators, Riccati/Lyapunov</td>
 <td><code>scipy.linalg</code> (already the backend for Riccati/Lyapunov)</td>
 <td><strong>KEEP</strong></td>
 <td>Riccati/Lyapunov already route through <code>scipy.linalg.solve_continuous_are</code>/<code>solve_lyapunov</code> — this <em>is</em> the "switch" already done. GBM simulation has no strong standard-library equivalent at this level of simplicity (QuantLib-Python exists but is a much heavier dependency for far more sophisticated PDE/Monte Carlo needs than this module targets).</td>
+<td>Too simple (a few lines of Cholesky decomposition + <code>cumsum</code>) to need a dependency; most users would rather inline it than take one. <code>QuantLib-Python</code> already covers this need at a much higher sophistication level for anyone who actually needs that — probably not worth pursuing.</td>
 </tr>
 </tbody>
 </table>
@@ -1845,6 +1887,7 @@ duplicating well-trodden ground?</strong></p>
 <th>Alternative</th>
 <th>Verdict</th>
 <th>Why</th>
+<th>Upstream potential</th>
 </tr>
 </thead>
 <tbody>
@@ -1853,6 +1896,7 @@ duplicating well-trodden ground?</strong></p>
 <td><a href="https://github.com/polakowo/vectorbt"><code>vectorbt</code></a>, <code>bt</code>, <code>backtrader</code>, <code>zipline</code></td>
 <td><strong>KEEP</strong></td>
 <td>These are full backtesting <em>frameworks</em> — heavier dependencies, different paradigms (event-driven for backtrader/zipline vs. vectorized), and a much bigger surface area than this module's lightweight, transparent, vectorized style suits. <code>vectorbt</code> specifically is worth knowing about if backtest performance on very large universes/long histories becomes a bottleneck (it's Numba-accelerated), but it's a genuinely different tool, not a drop-in replacement for this module's scope.</td>
+<td><code>vectorbt</code>/<code>backtrader</code>/<code>zipline</code> are deliberately different tools (event-driven or heavier-dependency, vs. this module's lightweight vectorized style); contributing into one of them would fight its design philosophy rather than fill a gap in it — probably not worth pursuing.</td>
 </tr>
 </tbody>
 </table>
@@ -1865,6 +1909,7 @@ duplicating well-trodden ground?</strong></p>
 <th>Alternative</th>
 <th>Verdict</th>
 <th>Why</th>
+<th>Upstream potential</th>
 </tr>
 </thead>
 <tbody>
@@ -1873,6 +1918,7 @@ duplicating well-trodden ground?</strong></p>
 <td><em>(none found as a standalone public utility)</em></td>
 <td><strong>KEEP</strong></td>
 <td><code>vec</code>/<code>vech</code>/<code>xpnd</code>/commutation/duplication/elimination matrices show up as private internals scattered inside packages like <code>linearmodels</code>, but there's no clean, importable public utility module for these. Genuinely fills a gap other libraries solve ad hoc internally rather than exposing.</td>
+<td>The cleanest PR candidate in this whole document: pure, dependency-free NumPy functions, no state. <a href="https://github.com/bashtage/linearmodels"><code>linearmodels</code></a> is the more directly relevant target (already has near-equivalents to consolidate against); <code>scipy.linalg</code> is the higher-visibility one. Small enough for a maintainer to review in one sitting.</td>
 </tr>
 </tbody>
 </table>
@@ -1902,6 +1948,55 @@ distributions.py</code>'s GQF family, <code>portfolio/risk_budgeting.py</code>,
 the places where the port is providing something genuinely absent
 elsewhere in the Python ecosystem, not just re-deriving what a
 well-known library already does.</p>
+<h2 id="summary-where-the-strongest-upstreaming-candidates-are">Summary: where the strongest upstreaming candidates are<a class="headerlink" href="#summary-where-the-strongest-upstreaming-candidates-are" title="Permanent link">&para;</a></h2>
+<p>These are the same "keep, no serious alternative" cases, now looked at
+from the other direction: which of them are worth actually proposing to
+an upstream project, rather than staying locked inside this port?</p>
+<ol>
+<li><strong><code>linalg/special_matrices.py</code></strong> → <a href="https://github.com/bashtage/linearmodels"><code>linearmodels</code></a>
+   or <code>scipy.linalg</code>. Pure, dependency-free NumPy functions with no
+   state — the cleanest PR of this whole document.</li>
+<li><strong><code>optim/bisection.py</code></strong> (the vectorized version) → <code>scipy.optimize</code>.
+   Small, self-contained, and array-broadcast bisection has come up as a
+   recurring (if low-priority) SciPy feature request already.</li>
+<li><strong><code>econometrics/whittle.py</code></strong> → <code>statsmodels.tsa</code> or <a href="https://github.com/bashtage/arch"><code>arch</code></a>.
+   Frequency-domain estimation isn't implemented in either — genuinely
+   fills a gap, but needs generalizing beyond this port's specific
+   interface, so this is a scoping conversation, not a drive-by PR.</li>
+<li><strong><code>portfolio/risk_budgeting.py</code></strong> → <a href="https://github.com/mirca/riskparityportfolio"><code>riskparityportfolio</code></a>.
+   The single largest, most-tested piece of custom work in the whole
+   port (75+ original MATLAB files consolidated) — substantial enough
+   that it deserves its own scoping conversation with the maintainer.</li>
+<li><strong><code>stats/distributions.py</code></strong>'s GQF1/GQF2 family — no clean existing
+   home found anywhere in the ecosystem; more realistic as a small
+   standalone release than a PR into an existing library.</li>
+</ol>
+<p>A few narrower gaps are real but smaller, and land better as an
+scikit-learn-contrib package or a statsmodels issue than a from-scratch
+library: the <code>restriction=(RR, r)</code> linear-restriction interface shared
+by <code>stats/regression/ols.py</code> and <code>econometrics/estimation.py</code>; the
+<code>a_eq</code>/<code>b_eq</code> restriction support in <code>econometrics/var.py</code>; the
+tau-<em>budget</em> parameterizations in <code>stats/regression/ridge.py</code>/<code>lasso.py</code>;
+and <code>portfolio/mean_variance.py</code>/<code>tracking_error.py</code>'s new
+<code>mvo_target_portfolio</code>/<code>te_target_portfolio</code> functions, worth comparing
+directly against PyPortfolioOpt's <code>efficient_risk</code>/<code>efficient_return</code>
+before assuming they're additive (the tracking-error-relative version is
+the more likely genuine gap). See each module's row above for the
+specific target and caveat.</p>
+<p><strong>Probably not worth pursuing right now:</strong> <code>backtest/</code> (fights the
+design philosophy of the event-driven/heavier frameworks it would land
+in), <code>maths/simulation.py</code>'s GBM simulators (too simple to need a
+dependency), and <code>mixtures/jump_diffusion.py</code> (niche enough that no
+actively-maintained project in this exact space is an obvious target).</p>
+<p>None of this is a promise any of these would be accepted — each library
+has its own contribution norms (issue-first discussion, its own
+test/type conventions, maintainer bandwidth), and "no existing
+alternative" doesn't automatically mean "wanted upstream." Start with
+the clean, dependency-free entries (<code>special_matrices.py</code>,
+<code>bisection.py</code>) — small enough for a maintainer to review in one
+sitting — before attempting the larger modules (<code>risk_budgeting.py</code>,
+<code>whittle.py</code>), which are substantial enough to warrant a scoping
+conversation with maintainers first, rather than an unsolicited PR.</p>
 
 
 

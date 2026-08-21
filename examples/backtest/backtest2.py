@@ -7,7 +7,8 @@ portfolio, with one price set to NaN in the third test.
 The original draws R from MATLAB's unseeded `randn`; a fixed seed
 (`np.random.default_rng(0)`) is substituted here for reproducibility,
 same convention used elsewhere in this port. Plotting is dropped (see
-`examples_tracking.md`'s Notes column convention)."""
+`docs/migration_map.md`'s example translation tracker Notes column
+convention)."""
 
 import numpy as np
 

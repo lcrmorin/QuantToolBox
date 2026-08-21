@@ -1317,14 +1317,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/examples_tracking/" class="md-nav__link">
+      <a href="../../migration_map/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Translation tracker (all 149 examples)
+    Migration map (incl. example translation tracker)
   
 
     
@@ -1380,35 +1380,7 @@
   <span class="md-ellipsis">
     
   
-    Library alternatives
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../migration_map/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migration map
+    Library alternatives (incl. upstreaming candidates)
   
 
     
@@ -2098,17 +2070,12 @@ or a plain serial day count, returning pandas Timestamps.</p>
 
 </div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>backtest/backtest2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest2.m -- generate_backtest at</span>
-<span class="sd">three rebalancing schedules (single rebalance at t0, four fixed</span>
-<span class="sd">positional rebalances, and a schedule mixing an actual date subset with</span>
-<span class="sd">two out-of-range placeholder dates) on a simulated 3-asset equal-weight</span>
-<span class="sd">portfolio, with one price set to NaN in the third test.</span>
-
-<span class="sd">The original draws R from MATLAB's unseeded `randn`; a fixed seed</span>
-<span class="sd">(`np.random.default_rng(0)`) is substituted here for reproducibility,</span>
-<span class="sd">same convention used elsewhere in this port. Plotting is dropped (see</span>
-<span class="sd">`examples_tracking.md`'s Notes column convention)."""</span>
+<summary>Flat transaction cost under a realistic rebalancing schedule — backtest/backtest5.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest5.m -- generate_backtest with</span>
+<span class="sd">a flat transaction cost (0.01) under monthly rebalancing (the original</span>
+<span class="sd">builds weekly and daily rebalancing schedules too, but overwrites both</span>
+<span class="sd">before use, so only the monthly one -- `RB_Dates = ones(nDates,1)`, i.e.</span>
+<span class="sd">every date is a rebalance -- is actually exercised; reproduced as-is)."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2117,10 +2084,8 @@ or a plain serial day count, returning pandas Timestamps.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_date_serial</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.rebalancing</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_trading_dates</span>
 
-<span class="c1"># generate_trading_dates takes pd.Timestamp (or a bare int, which it feeds</span>
-<span class="c1"># straight to pd.Timestamp(int) -- interpreted as a nanosecond epoch, NOT</span>
-<span class="c1"># a YYYYMMDD date). parse_date_serial(...) is used here to get an actual</span>
-<span class="c1"># 2016-01-01/2016-12-31 pair instead.</span>
+<span class="c1"># See backtest2.py's translation note: generate_trading_dates needs an</span>
+<span class="c1"># actual pd.Timestamp, not a bare YYYYMMDD int, hence parse_date_serial.</span>
 <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20160101</span><span class="p">,</span> <span class="mi">20161231</span><span class="p">])</span>
 <span class="n">_</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">generate_trading_dates</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">business_days_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">n_dates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
@@ -2128,49 +2093,79 @@ or a plain serial day count, returning pandas Timestamps.</p>
 <span class="n">n_assets</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">260</span><span class="p">)</span>
 
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">123456789</span><span class="p">)</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
 <span class="n">indices</span> <span class="o">=</span> <span class="n">return_to_price</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 
-<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">),</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">n_assets</span><span class="p">)</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Test 1: single rebalance at t0</span>
-<span class="n">rb_dates1</span> <span class="o">=</span> <span class="n">dates</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">result1</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates1</span><span class="p">)</span>
-<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">y1</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">/</span> <span class="n">y1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Test 1 (single rebalance): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y1</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y1</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
+<span class="n">rb_dates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+    <span class="n">n_dates</span>
+<span class="p">)</span>  <span class="c1"># "monthly rebalancing" per the original's final overwrite -&gt; every date</span>
 
-<span class="c1"># Test 2: four fixed positional rebalances (MATLAB 1-indexed [1,50,150,200])</span>
-<span class="n">rb_dates2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="n">result2</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates2</span><span class="p">)</span>
-<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">y2</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">/</span> <span class="n">y2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Test 2 (4 fixed rebalances): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y2</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y2</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates</span><span class="p">)</span>
+<span class="n">tc</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates</span><span class="p">,</span> <span class="n">tc_bid_ask</span><span class="o">=</span><span class="n">tc</span><span class="p">)</span>
 
-<span class="c1"># Test 3: an actual date subset plus two out-of-range placeholder dates</span>
-<span class="c1"># (20150101/20170101, both before/after the calendar -- they simply won't</span>
-<span class="c1"># match anything in `dates`), and a NaN price injected on day 3.</span>
-<span class="n">rb_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="n">placeholder_before</span><span class="p">,</span> <span class="n">placeholder_after</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20150101</span><span class="p">,</span> <span class="mi">20170101</span><span class="p">])</span>
-<span class="n">rb_dates3</span> <span class="o">=</span> <span class="n">dates</span><span class="p">[</span><span class="n">rb_idx</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">placeholder_before</span><span class="p">)</span>
-<span class="n">rb_dates3</span> <span class="o">=</span> <span class="n">rb_dates3</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rb_dates3</span><span class="p">),</span> <span class="n">placeholder_after</span><span class="p">)</span>
-<span class="n">indices3</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">indices3</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-<span class="n">result3</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices3</span><span class="p">,</span> <span class="n">rb_dates3</span><span class="p">)</span>
-<span class="n">y3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices3</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">y3</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y3</span> <span class="o">/</span> <span class="n">y3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Test 3 (date subset + NaN price): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result3</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y3</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result3</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y3</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"backtest without / with transaction costs, turnover, TC (first 5 rows):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">turnover</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">transaction_costs</span><span class="p">]</span>
+        <span class="p">)[:</span><span class="mi">5</span><span class="p">],</span>
+        <span class="mi">4</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">to_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">result2</span><span class="o">.</span><span class="n">turnover</span><span class="p">)</span>
+<span class="n">cost1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">cost2</span> <span class="o">=</span> <span class="n">to_total</span> <span class="o">*</span> <span class="n">tc</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Total turnover:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">to_total</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Cost1 (1 - final wealth ratio):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">cost1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Cost2 (total turnover * tc):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">cost2</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>backtest/backtest4.py</summary>
+<summary>Maximum drawdown in relative mode — backtest/mdd1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/mdd1.m -- maximum_drawdown on 3</span>
+<span class="sd">simulated price indices (numeric core only; the original's plot marking</span>
+<span class="sd">the drawdown peak/trough on each series is dropped).</span>
+
+<span class="sd">The original explicitly seeds MATLAB's RNG (`rng(1234567)`); NumPy's</span>
+<span class="sd">generator is seeded the same way for a comparable (not bit-identical)</span>
+<span class="sd">run."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.backtest.returns</span><span class="w"> </span><span class="kn">import</span> <span class="n">return_to_price</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.backtest.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">maximum_drawdown</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_date_serial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.rebalancing</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_trading_dates</span>
+
+<span class="c1"># See backtest2.py's translation note: generate_trading_dates needs an</span>
+<span class="c1"># actual pd.Timestamp, not a bare YYYYMMDD int, hence parse_date_serial.</span>
+<span class="n">d1</span><span class="p">,</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20160101</span><span class="p">,</span> <span class="mi">20161231</span><span class="p">])</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">generate_trading_dates</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">business_days_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">n_dates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
+
+<span class="n">n_assets</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">260</span><span class="p">)</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1234567</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="n">return_to_price</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="n">max_dd</span><span class="p">,</span> <span class="n">start_dd</span><span class="p">,</span> <span class="n">end_dd</span><span class="p">,</span> <span class="n">tau_dd</span> <span class="o">=</span> <span class="n">maximum_drawdown</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Maximum drawdown per asset:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">max_dd</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Start date (peak):"</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">date</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">start_dd</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"End date (trough):"</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">date</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">end_dd</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Duration (trading days):"</span><span class="p">,</span> <span class="n">tau_dd</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Per-asset bid/ask transaction costs vs. turnover — backtest/backtest4.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest4.m -- generate_backtest with</span>
 <span class="sd">per-asset bid/ask transaction costs, comparing turnover computed inside</span>
 <span class="sd">the backtest against `static_turnover` computed independently from the</span>
@@ -2237,12 +2232,18 @@ or a plain serial day count, returning pandas Timestamps.</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>backtest/backtest5.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest5.m -- generate_backtest with</span>
-<span class="sd">a flat transaction cost (0.01) under monthly rebalancing (the original</span>
-<span class="sd">builds weekly and daily rebalancing schedules too, but overwrites both</span>
-<span class="sd">before use, so only the monthly one -- `RB_Dates = ones(nDates,1)`, i.e.</span>
-<span class="sd">every date is a rebalance -- is actually exercised; reproduced as-is)."""</span>
+<summary>Three rebalancing schedules on a small backtest — backtest/backtest2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest2.m -- generate_backtest at</span>
+<span class="sd">three rebalancing schedules (single rebalance at t0, four fixed</span>
+<span class="sd">positional rebalances, and a schedule mixing an actual date subset with</span>
+<span class="sd">two out-of-range placeholder dates) on a simulated 3-asset equal-weight</span>
+<span class="sd">portfolio, with one price set to NaN in the third test.</span>
+
+<span class="sd">The original draws R from MATLAB's unseeded `randn`; a fixed seed</span>
+<span class="sd">(`np.random.default_rng(0)`) is substituted here for reproducibility,</span>
+<span class="sd">same convention used elsewhere in this port. Plotting is dropped (see</span>
+<span class="sd">`docs/migration_map.md`'s example translation tracker Notes column</span>
+<span class="sd">convention)."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2251,8 +2252,10 @@ or a plain serial day count, returning pandas Timestamps.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_date_serial</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.rebalancing</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_trading_dates</span>
 
-<span class="c1"># See backtest2.py's translation note: generate_trading_dates needs an</span>
-<span class="c1"># actual pd.Timestamp, not a bare YYYYMMDD int, hence parse_date_serial.</span>
+<span class="c1"># generate_trading_dates takes pd.Timestamp (or a bare int, which it feeds</span>
+<span class="c1"># straight to pd.Timestamp(int) -- interpreted as a nanosecond epoch, NOT</span>
+<span class="c1"># a YYYYMMDD date). parse_date_serial(...) is used here to get an actual</span>
+<span class="c1"># 2016-01-01/2016-12-31 pair instead.</span>
 <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20160101</span><span class="p">,</span> <span class="mi">20161231</span><span class="p">])</span>
 <span class="n">_</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">generate_trading_dates</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">business_days_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">n_dates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
@@ -2260,75 +2263,45 @@ or a plain serial day count, returning pandas Timestamps.</p>
 <span class="n">n_assets</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">260</span><span class="p">)</span>
 
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">123456789</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
 <span class="n">indices</span> <span class="o">=</span> <span class="n">return_to_price</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 
-<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
-<span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">),</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">n_assets</span><span class="p">)</span>
 
-<span class="n">rb_dates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
-    <span class="n">n_dates</span>
-<span class="p">)</span>  <span class="c1"># "monthly rebalancing" per the original's final overwrite -&gt; every date</span>
+<span class="c1"># Test 1: single rebalance at t0</span>
+<span class="n">rb_dates1</span> <span class="o">=</span> <span class="n">dates</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates1</span><span class="p">)</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">/</span> <span class="n">y1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Test 1 (single rebalance): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y1</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y1</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
 
-<span class="n">result1</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates</span><span class="p">)</span>
-<span class="n">tc</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="n">result2</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates</span><span class="p">,</span> <span class="n">tc_bid_ask</span><span class="o">=</span><span class="n">tc</span><span class="p">)</span>
+<span class="c1"># Test 2: four fixed positional rebalances (MATLAB 1-indexed [1,50,150,200])</span>
+<span class="n">rb_dates2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates2</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">/</span> <span class="n">y2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Test 2 (4 fixed rebalances): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y2</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y2</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"backtest without / with transaction costs, turnover, TC (first 5 rows):"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">turnover</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">transaction_costs</span><span class="p">]</span>
-        <span class="p">)[:</span><span class="mi">5</span><span class="p">],</span>
-        <span class="mi">4</span><span class="p">,</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-
-<span class="n">to_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">result2</span><span class="o">.</span><span class="n">turnover</span><span class="p">)</span>
-<span class="n">cost1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">cost2</span> <span class="o">=</span> <span class="n">to_total</span> <span class="o">*</span> <span class="n">tc</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Total turnover:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">to_total</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Cost1 (1 - final wealth ratio):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">cost1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Cost2 (total turnover * tc):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">cost2</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>backtest/mdd1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/mdd1.m -- maximum_drawdown on 3</span>
-<span class="sd">simulated price indices (numeric core only; the original's plot marking</span>
-<span class="sd">the drawdown peak/trough on each series is dropped).</span>
-
-<span class="sd">The original explicitly seeds MATLAB's RNG (`rng(1234567)`); NumPy's</span>
-<span class="sd">generator is seeded the same way for a comparable (not bit-identical)</span>
-<span class="sd">run."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.backtest.returns</span><span class="w"> </span><span class="kn">import</span> <span class="n">return_to_price</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.backtest.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">maximum_drawdown</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_date_serial</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.rebalancing</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_trading_dates</span>
-
-<span class="c1"># See backtest2.py's translation note: generate_trading_dates needs an</span>
-<span class="c1"># actual pd.Timestamp, not a bare YYYYMMDD int, hence parse_date_serial.</span>
-<span class="n">d1</span><span class="p">,</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20160101</span><span class="p">,</span> <span class="mi">20161231</span><span class="p">])</span>
-<span class="n">_</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">generate_trading_dates</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">business_days_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">n_dates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
-
-<span class="n">n_assets</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">260</span><span class="p">)</span>
-
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1234567</span><span class="p">)</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
-<span class="n">indices</span> <span class="o">=</span> <span class="n">return_to_price</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-
-<span class="n">max_dd</span><span class="p">,</span> <span class="n">start_dd</span><span class="p">,</span> <span class="n">end_dd</span><span class="p">,</span> <span class="n">tau_dd</span> <span class="o">=</span> <span class="n">maximum_drawdown</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Maximum drawdown per asset:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">max_dd</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Start date (peak):"</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">date</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">start_dd</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"End date (trough):"</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">date</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">end_dd</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Duration (trading days):"</span><span class="p">,</span> <span class="n">tau_dd</span><span class="p">)</span>
+<span class="c1"># Test 3: an actual date subset plus two out-of-range placeholder dates</span>
+<span class="c1"># (20150101/20170101, both before/after the calendar -- they simply won't</span>
+<span class="c1"># match anything in `dates`), and a NaN price injected on day 3.</span>
+<span class="n">rb_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">placeholder_before</span><span class="p">,</span> <span class="n">placeholder_after</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20150101</span><span class="p">,</span> <span class="mi">20170101</span><span class="p">])</span>
+<span class="n">rb_dates3</span> <span class="o">=</span> <span class="n">dates</span><span class="p">[</span><span class="n">rb_idx</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">placeholder_before</span><span class="p">)</span>
+<span class="n">rb_dates3</span> <span class="o">=</span> <span class="n">rb_dates3</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rb_dates3</span><span class="p">),</span> <span class="n">placeholder_after</span><span class="p">)</span>
+<span class="n">indices3</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">indices3</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">result3</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices3</span><span class="p">,</span> <span class="n">rb_dates3</span><span class="p">)</span>
+<span class="n">y3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices3</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y3</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y3</span> <span class="o">/</span> <span class="n">y3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Test 3 (date subset + NaN price): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result3</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y3</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result3</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y3</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
 </code></pre></div>
 </details>
 <h2 id="datesrebalancing"><code>dates.rebalancing</code><a class="headerlink" href="#datesrebalancing" title="Permanent link">&para;</a></h2>
@@ -2796,17 +2769,12 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 
 </div><h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
 <details class="example">
-<summary>backtest/backtest2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest2.m -- generate_backtest at</span>
-<span class="sd">three rebalancing schedules (single rebalance at t0, four fixed</span>
-<span class="sd">positional rebalances, and a schedule mixing an actual date subset with</span>
-<span class="sd">two out-of-range placeholder dates) on a simulated 3-asset equal-weight</span>
-<span class="sd">portfolio, with one price set to NaN in the third test.</span>
-
-<span class="sd">The original draws R from MATLAB's unseeded `randn`; a fixed seed</span>
-<span class="sd">(`np.random.default_rng(0)`) is substituted here for reproducibility,</span>
-<span class="sd">same convention used elsewhere in this port. Plotting is dropped (see</span>
-<span class="sd">`examples_tracking.md`'s Notes column convention)."""</span>
+<summary>Flat transaction cost under a realistic rebalancing schedule — backtest/backtest5.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest5.m -- generate_backtest with</span>
+<span class="sd">a flat transaction cost (0.01) under monthly rebalancing (the original</span>
+<span class="sd">builds weekly and daily rebalancing schedules too, but overwrites both</span>
+<span class="sd">before use, so only the monthly one -- `RB_Dates = ones(nDates,1)`, i.e.</span>
+<span class="sd">every date is a rebalance -- is actually exercised; reproduced as-is)."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2815,10 +2783,8 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_date_serial</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.rebalancing</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_trading_dates</span>
 
-<span class="c1"># generate_trading_dates takes pd.Timestamp (or a bare int, which it feeds</span>
-<span class="c1"># straight to pd.Timestamp(int) -- interpreted as a nanosecond epoch, NOT</span>
-<span class="c1"># a YYYYMMDD date). parse_date_serial(...) is used here to get an actual</span>
-<span class="c1"># 2016-01-01/2016-12-31 pair instead.</span>
+<span class="c1"># See backtest2.py's translation note: generate_trading_dates needs an</span>
+<span class="c1"># actual pd.Timestamp, not a bare YYYYMMDD int, hence parse_date_serial.</span>
 <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20160101</span><span class="p">,</span> <span class="mi">20161231</span><span class="p">])</span>
 <span class="n">_</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">generate_trading_dates</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">business_days_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">n_dates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
@@ -2826,49 +2792,79 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 <span class="n">n_assets</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">260</span><span class="p">)</span>
 
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">123456789</span><span class="p">)</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
 <span class="n">indices</span> <span class="o">=</span> <span class="n">return_to_price</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 
-<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">),</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">n_assets</span><span class="p">)</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Test 1: single rebalance at t0</span>
-<span class="n">rb_dates1</span> <span class="o">=</span> <span class="n">dates</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">result1</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates1</span><span class="p">)</span>
-<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">y1</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">/</span> <span class="n">y1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Test 1 (single rebalance): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y1</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y1</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
+<span class="n">rb_dates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+    <span class="n">n_dates</span>
+<span class="p">)</span>  <span class="c1"># "monthly rebalancing" per the original's final overwrite -&gt; every date</span>
 
-<span class="c1"># Test 2: four fixed positional rebalances (MATLAB 1-indexed [1,50,150,200])</span>
-<span class="n">rb_dates2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="n">result2</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates2</span><span class="p">)</span>
-<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">y2</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">/</span> <span class="n">y2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Test 2 (4 fixed rebalances): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y2</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y2</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates</span><span class="p">)</span>
+<span class="n">tc</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates</span><span class="p">,</span> <span class="n">tc_bid_ask</span><span class="o">=</span><span class="n">tc</span><span class="p">)</span>
 
-<span class="c1"># Test 3: an actual date subset plus two out-of-range placeholder dates</span>
-<span class="c1"># (20150101/20170101, both before/after the calendar -- they simply won't</span>
-<span class="c1"># match anything in `dates`), and a NaN price injected on day 3.</span>
-<span class="n">rb_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="n">placeholder_before</span><span class="p">,</span> <span class="n">placeholder_after</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20150101</span><span class="p">,</span> <span class="mi">20170101</span><span class="p">])</span>
-<span class="n">rb_dates3</span> <span class="o">=</span> <span class="n">dates</span><span class="p">[</span><span class="n">rb_idx</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">placeholder_before</span><span class="p">)</span>
-<span class="n">rb_dates3</span> <span class="o">=</span> <span class="n">rb_dates3</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rb_dates3</span><span class="p">),</span> <span class="n">placeholder_after</span><span class="p">)</span>
-<span class="n">indices3</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">indices3</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-<span class="n">result3</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices3</span><span class="p">,</span> <span class="n">rb_dates3</span><span class="p">)</span>
-<span class="n">y3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices3</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">y3</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y3</span> <span class="o">/</span> <span class="n">y3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Test 3 (date subset + NaN price): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result3</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y3</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result3</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y3</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"backtest without / with transaction costs, turnover, TC (first 5 rows):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">turnover</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">transaction_costs</span><span class="p">]</span>
+        <span class="p">)[:</span><span class="mi">5</span><span class="p">],</span>
+        <span class="mi">4</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">to_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">result2</span><span class="o">.</span><span class="n">turnover</span><span class="p">)</span>
+<span class="n">cost1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">cost2</span> <span class="o">=</span> <span class="n">to_total</span> <span class="o">*</span> <span class="n">tc</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Total turnover:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">to_total</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Cost1 (1 - final wealth ratio):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">cost1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Cost2 (total turnover * tc):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">cost2</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>backtest/backtest4.py</summary>
+<summary>Maximum drawdown in relative mode — backtest/mdd1.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/mdd1.m -- maximum_drawdown on 3</span>
+<span class="sd">simulated price indices (numeric core only; the original's plot marking</span>
+<span class="sd">the drawdown peak/trough on each series is dropped).</span>
+
+<span class="sd">The original explicitly seeds MATLAB's RNG (`rng(1234567)`); NumPy's</span>
+<span class="sd">generator is seeded the same way for a comparable (not bit-identical)</span>
+<span class="sd">run."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.backtest.returns</span><span class="w"> </span><span class="kn">import</span> <span class="n">return_to_price</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.backtest.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">maximum_drawdown</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_date_serial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.rebalancing</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_trading_dates</span>
+
+<span class="c1"># See backtest2.py's translation note: generate_trading_dates needs an</span>
+<span class="c1"># actual pd.Timestamp, not a bare YYYYMMDD int, hence parse_date_serial.</span>
+<span class="n">d1</span><span class="p">,</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20160101</span><span class="p">,</span> <span class="mi">20161231</span><span class="p">])</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">generate_trading_dates</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">business_days_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">n_dates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
+
+<span class="n">n_assets</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">260</span><span class="p">)</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1234567</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="n">return_to_price</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="n">max_dd</span><span class="p">,</span> <span class="n">start_dd</span><span class="p">,</span> <span class="n">end_dd</span><span class="p">,</span> <span class="n">tau_dd</span> <span class="o">=</span> <span class="n">maximum_drawdown</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Maximum drawdown per asset:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">max_dd</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Start date (peak):"</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">date</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">start_dd</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"End date (trough):"</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">date</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">end_dd</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Duration (trading days):"</span><span class="p">,</span> <span class="n">tau_dd</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Per-asset bid/ask transaction costs vs. turnover — backtest/backtest4.py</summary>
 <div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest4.m -- generate_backtest with</span>
 <span class="sd">per-asset bid/ask transaction costs, comparing turnover computed inside</span>
 <span class="sd">the backtest against `static_turnover` computed independently from the</span>
@@ -2935,12 +2931,18 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 </code></pre></div>
 </details>
 <details class="example">
-<summary>backtest/backtest5.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest5.m -- generate_backtest with</span>
-<span class="sd">a flat transaction cost (0.01) under monthly rebalancing (the original</span>
-<span class="sd">builds weekly and daily rebalancing schedules too, but overwrites both</span>
-<span class="sd">before use, so only the monthly one -- `RB_Dates = ones(nDates,1)`, i.e.</span>
-<span class="sd">every date is a rebalance -- is actually exercised; reproduced as-is)."""</span>
+<summary>Three rebalancing schedules on a small backtest — backtest/backtest2.py</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest2.m -- generate_backtest at</span>
+<span class="sd">three rebalancing schedules (single rebalance at t0, four fixed</span>
+<span class="sd">positional rebalances, and a schedule mixing an actual date subset with</span>
+<span class="sd">two out-of-range placeholder dates) on a simulated 3-asset equal-weight</span>
+<span class="sd">portfolio, with one price set to NaN in the third test.</span>
+
+<span class="sd">The original draws R from MATLAB's unseeded `randn`; a fixed seed</span>
+<span class="sd">(`np.random.default_rng(0)`) is substituted here for reproducibility,</span>
+<span class="sd">same convention used elsewhere in this port. Plotting is dropped (see</span>
+<span class="sd">`docs/migration_map.md`'s example translation tracker Notes column</span>
+<span class="sd">convention)."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2949,8 +2951,10 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_date_serial</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.rebalancing</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_trading_dates</span>
 
-<span class="c1"># See backtest2.py's translation note: generate_trading_dates needs an</span>
-<span class="c1"># actual pd.Timestamp, not a bare YYYYMMDD int, hence parse_date_serial.</span>
+<span class="c1"># generate_trading_dates takes pd.Timestamp (or a bare int, which it feeds</span>
+<span class="c1"># straight to pd.Timestamp(int) -- interpreted as a nanosecond epoch, NOT</span>
+<span class="c1"># a YYYYMMDD date). parse_date_serial(...) is used here to get an actual</span>
+<span class="c1"># 2016-01-01/2016-12-31 pair instead.</span>
 <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20160101</span><span class="p">,</span> <span class="mi">20161231</span><span class="p">])</span>
 <span class="n">_</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">generate_trading_dates</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">business_days_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">n_dates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
@@ -2958,75 +2962,45 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 <span class="n">n_assets</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">260</span><span class="p">)</span>
 
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">123456789</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
 <span class="n">indices</span> <span class="o">=</span> <span class="n">return_to_price</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 
-<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
-<span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">),</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">n_assets</span><span class="p">)</span>
 
-<span class="n">rb_dates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
-    <span class="n">n_dates</span>
-<span class="p">)</span>  <span class="c1"># "monthly rebalancing" per the original's final overwrite -&gt; every date</span>
+<span class="c1"># Test 1: single rebalance at t0</span>
+<span class="n">rb_dates1</span> <span class="o">=</span> <span class="n">dates</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates1</span><span class="p">)</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">/</span> <span class="n">y1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Test 1 (single rebalance): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y1</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y1</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
 
-<span class="n">result1</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates</span><span class="p">)</span>
-<span class="n">tc</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="n">result2</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates</span><span class="p">,</span> <span class="n">tc_bid_ask</span><span class="o">=</span><span class="n">tc</span><span class="p">)</span>
+<span class="c1"># Test 2: four fixed positional rebalances (MATLAB 1-indexed [1,50,150,200])</span>
+<span class="n">rb_dates2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates2</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">/</span> <span class="n">y2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Test 2 (4 fixed rebalances): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y2</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y2</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"backtest without / with transaction costs, turnover, TC (first 5 rows):"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">turnover</span><span class="p">,</span> <span class="n">result2</span><span class="o">.</span><span class="n">transaction_costs</span><span class="p">]</span>
-        <span class="p">)[:</span><span class="mi">5</span><span class="p">],</span>
-        <span class="mi">4</span><span class="p">,</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-
-<span class="n">to_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">result2</span><span class="o">.</span><span class="n">turnover</span><span class="p">)</span>
-<span class="n">cost1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">result2</span><span class="o">.</span><span class="n">backtest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">result1</span><span class="o">.</span><span class="n">backtest</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">cost2</span> <span class="o">=</span> <span class="n">to_total</span> <span class="o">*</span> <span class="n">tc</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Total turnover:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">to_total</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Cost1 (1 - final wealth ratio):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">cost1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Cost2 (total turnover * tc):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">cost2</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>backtest/mdd1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/mdd1.m -- maximum_drawdown on 3</span>
-<span class="sd">simulated price indices (numeric core only; the original's plot marking</span>
-<span class="sd">the drawdown peak/trough on each series is dropped).</span>
-
-<span class="sd">The original explicitly seeds MATLAB's RNG (`rng(1234567)`); NumPy's</span>
-<span class="sd">generator is seeded the same way for a comparable (not bit-identical)</span>
-<span class="sd">run."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.backtest.returns</span><span class="w"> </span><span class="kn">import</span> <span class="n">return_to_price</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.backtest.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">maximum_drawdown</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.convert</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_date_serial</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.dates.rebalancing</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_trading_dates</span>
-
-<span class="c1"># See backtest2.py's translation note: generate_trading_dates needs an</span>
-<span class="c1"># actual pd.Timestamp, not a bare YYYYMMDD int, hence parse_date_serial.</span>
-<span class="n">d1</span><span class="p">,</span> <span class="n">d2</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20160101</span><span class="p">,</span> <span class="mi">20161231</span><span class="p">])</span>
-<span class="n">_</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">generate_trading_dates</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">business_days_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">n_dates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
-
-<span class="n">n_assets</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.20</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">260</span><span class="p">)</span>
-
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1234567</span><span class="p">)</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
-<span class="n">indices</span> <span class="o">=</span> <span class="n">return_to_price</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-
-<span class="n">max_dd</span><span class="p">,</span> <span class="n">start_dd</span><span class="p">,</span> <span class="n">end_dd</span><span class="p">,</span> <span class="n">tau_dd</span> <span class="o">=</span> <span class="n">maximum_drawdown</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Maximum drawdown per asset:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">max_dd</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Start date (peak):"</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">date</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">start_dd</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"End date (trough):"</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">date</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">end_dd</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Duration (trading days):"</span><span class="p">,</span> <span class="n">tau_dd</span><span class="p">)</span>
+<span class="c1"># Test 3: an actual date subset plus two out-of-range placeholder dates</span>
+<span class="c1"># (20150101/20170101, both before/after the calendar -- they simply won't</span>
+<span class="c1"># match anything in `dates`), and a NaN price injected on day 3.</span>
+<span class="n">rb_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">placeholder_before</span><span class="p">,</span> <span class="n">placeholder_after</span> <span class="o">=</span> <span class="n">parse_date_serial</span><span class="p">([</span><span class="mi">20150101</span><span class="p">,</span> <span class="mi">20170101</span><span class="p">])</span>
+<span class="n">rb_dates3</span> <span class="o">=</span> <span class="n">dates</span><span class="p">[</span><span class="n">rb_idx</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">placeholder_before</span><span class="p">)</span>
+<span class="n">rb_dates3</span> <span class="o">=</span> <span class="n">rb_dates3</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rb_dates3</span><span class="p">),</span> <span class="n">placeholder_after</span><span class="p">)</span>
+<span class="n">indices3</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">indices3</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">result3</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices3</span><span class="p">,</span> <span class="n">rb_dates3</span><span class="p">)</span>
+<span class="n">y3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indices3</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y3</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">y3</span> <span class="o">/</span> <span class="n">y3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Test 3 (date subset + NaN price): backtest vs. buy&amp;hold, first/last 3 rows"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result3</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y3</span><span class="p">])[:</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">result3</span><span class="o">.</span><span class="n">backtest</span><span class="p">,</span> <span class="n">y3</span><span class="p">])[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
 </code></pre></div>
 </details>
 
