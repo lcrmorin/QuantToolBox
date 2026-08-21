@@ -55,7 +55,7 @@ nav:
       - Ridge, OLS, robust regression: examples/regression.md
       - SVM classification: examples/svm.md
       - Building blocks (bisection, linalg, numerical diff, proximal): examples/building_blocks.md
-      - Translation tracker (all 150 examples): examples_tracking.md
+      - Translation tracker (all 149 examples): examples/examples_tracking.md
   - API Reference:
       - Overview: api/index.md
       - dates: api/dates.md

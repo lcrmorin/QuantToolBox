@@ -64,7 +64,7 @@ General guidance for anyone extending or re-verifying this port (see
 already-resolved bugs found in the original source along the way):
 
 - **Gaps found while translating example scripts** (see
-  [`examples_tracking.md`](./examples_tracking.md) for the full
+  [`examples_tracking.md`](./examples/examples_tracking.md) for the full
   file-by-file status): `portfolio/mean_variance.py` and
   `portfolio/tracking_error.py` are marked 🟨 because they only implement
   the "gamma-problem" frontier mode (evaluate at a given risk-aversion
