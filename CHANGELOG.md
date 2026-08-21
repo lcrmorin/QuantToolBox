@@ -3,6 +3,22 @@
 All notable changes to this project are documented here. Versions follow
 [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`.
 
+## [Unreleased]
+
+### Added
+
+- Python 3.13 support — full test suite, mypy, and ruff verified clean;
+  added to `classifiers` in `pyproject.toml`.
+
+### Docs
+
+- Consistent "QuantToolBox" (3 capitals) capitalization across all docs
+  and source docstrings; replaced the placeholder README; merged the
+  migration map's two source-repo tables into one and added a `Port?`
+  column so remaining work is a precise, checkable count; reordered the
+  featured examples into a simplest-first narrative (bond pricing →
+  portfolio construction → risk budgeting → ...).
+
 ## [0.2.0] - Target-matching portfolios, wider example coverage
 
 ### Added
