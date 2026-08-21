@@ -52,28 +52,28 @@ nav:
   - Home: index.md
   - Featured examples:
       - Overview: examples/index.md
-      - Risk budgeting (ERC / VaR / ES): examples/risk_budgeting.md
-      - Black-Litterman: examples/black_litterman.md
-      - Mean-variance / MinVar / Tracking error: examples/mean_variance.md
-      - Whittle (frequency-domain) estimation: examples/whittle.md
-      - Ridge, OLS, robust regression: examples/regression.md
-      - SVM classification: examples/svm.md
-      - Building blocks (bisection, linalg, numerical diff, proximal): examples/building_blocks.md
+      - Budget risk: examples/risk_budgeting.md
+      - Blend market views: examples/black_litterman.md
+      - Optimize portfolios: examples/mean_variance.md
+      - Fit spectral models: examples/whittle.md
+      - Fit regressions: examples/regression.md
+      - Classify data: examples/svm.md
+      - Combine core tools: examples/building_blocks.md
   - API Reference:
       - Overview: api/index.md
-      - dates: api/dates.md
       - backtest: api/backtest.md
-      - stats: api/stats.md
+      - dates: api/dates.md
       - econometrics: api/econometrics.md
+      - linalg: api/linalg.md
+      - maths: api/maths.md
+      - mixtures: api/mixtures.md
       - optim: api/optim.md
       - portfolio: api/portfolio.md
-      - mixtures: api/mixtures.md
-      - svm: api/svm.md
       - spline: api/spline.md
-      - maths: api/maths.md
-      - linalg: api/linalg.md
+      - stats: api/stats.md
+      - svm: api/svm.md
       - viz: api/viz.md
   - Notes for translators:
-      - Migration map (incl. example translation tracker): migration_map.md
+      - Migration map: migration_map.md
       - MATLAB bugs found: matlab_bugs_found.md
-      - Library alternatives (incl. upstreaming candidates): library_alternatives.md
+      - Library alternatives: library_alternatives.md
