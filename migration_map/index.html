@@ -514,7 +514,35 @@
   <span class="md-ellipsis">
     
   
-    Building blocks (bisection, linalg, numerical diff)
+    Building blocks (bisection, linalg, numerical diff, proximal)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/examples_tracking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Translation tracker (all 149 examples)
   
 
     
@@ -1304,7 +1332,7 @@ versus which genuinely justify staying custom.</p>
 <tr>
 <td><code>stats/regression/lasso.py</code></td>
 <td><code>stats/regLassoCCD.m</code>, <code>regLassoADMM.m</code>, <code>regLasso.m</code>, <code>selectLasso.m</code>, <code>regElasticNet.m</code> (+ <code>theo/</code> duplicates)</td>
-<td>✅</td>
+<td>🟨</td>
 </tr>
 <tr>
 <td><code>stats/regression/kernel.py</code></td>
@@ -1374,12 +1402,12 @@ versus which genuinely justify staying custom.</p>
 <tr>
 <td><code>portfolio/mean_variance.py</code></td>
 <td><code>rpb/compute_mvo_portfolio*.m</code>, <code>compute_minvar_portfolio.m</code>, <code>mloapa/compute_MinVar_ADMM*.m</code>, <code>compute_MDP_ADMM.m</code>, <code>compute_mdp_*.m</code></td>
-<td>✅</td>
+<td>🟨</td>
 </tr>
 <tr>
 <td><code>portfolio/tracking_error.py</code></td>
 <td><code>rpb/compute_te_portfolio*.m</code>, <code>compute_minimum_te_portfolio.m</code>, <code>compute_te_portfolio_mixed_norm.m</code></td>
-<td>✅</td>
+<td>🟨</td>
 </tr>
 <tr>
 <td><code>portfolio/black_litterman.py</code></td>
@@ -1473,10 +1501,31 @@ versus which genuinely justify staying custom.</p>
 <a href="../matlab_bugs_found/"><code>matlab_bugs_found.md</code></a> for the specific,
 already-resolved bugs found in the original source along the way):</p>
 <ul>
-<li>Every module still using MATLAB <code>global</code> state (ADMM/CCD tolerances, MVO
+<li>
+<p><strong>Gaps found while translating example scripts</strong> (see
+  <a href="../examples/examples_tracking/"><code>examples_tracking.md</code></a> for the full
+  file-by-file status): <code>portfolio/mean_variance.py</code> and
+  <code>portfolio/tracking_error.py</code> are marked 🟨 because they only implement
+  the "gamma-problem" frontier mode (evaluate at a given risk-aversion
+  value). Several original examples (<code>test_bl3.m</code> through <code>test_bl6.m</code>,
+  <code>test_mvo3.m</code>, part of <code>test_mvo2.m</code>) use a "sigma-problem"/TE-target
+  mode instead -- bisecting an internal risk-aversion parameter to hit a
+  target portfolio volatility or tracking error directly, the same
+  pattern <code>portfolio.risk_budgeting.risk_budgeting_target</code> already
+  implements for risk budgeting. Extending <code>mean_variance.py</code>/
+  <code>tracking_error.py</code> with an equivalent <code>mvo_target</code>/<code>te_target</code>
+  function (bisecting <code>gamma</code> against <code>mvo_frontier</code>/<code>te_frontier</code>,
+  mirroring <code>risk_budgeting_target</code>'s implementation) would close this
+  gap. <code>stats/regression/lasso.py</code> is marked 🟨 for a smaller, unrelated
+  reason: <code>selectLasso.m</code> (lasso-path variable-<em>selection-ordering</em>, not
+  the coefficient path itself) isn't ported as a standalone function.</p>
+</li>
+<li>
+<p>Every module still using MATLAB <code>global</code> state (ADMM/CCD tolerances, MVO
   problem context, Proximal_Algorithm, GMM/ML/Whittle settings) should take
   the corresponding dataclass from <code>quanttoolbox.config</code> as an explicit
-  argument with a default instance.</li>
+  argument with a default instance.</p>
+</li>
 <li><code>crb/</code> and <code>rpb/</code> together account for ~95 MATLAB files, many of them
   near-identical solver variants (ADMM/CCD/Newton/fmincon × unconstrained/
   box/linear constraints). These collapse into <code>portfolio/risk_budgeting.py</code>
