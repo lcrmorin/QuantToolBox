@@ -1,0 +1,3 @@
+function C = cdfCopulaLogisticGumbel(u1,u2)
+    C = u1 .* u2 ./ (u1 + u2 - u1 .* u2);
+end

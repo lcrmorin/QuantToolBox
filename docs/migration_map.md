@@ -59,11 +59,72 @@ worth keeping, whether the gap is worth contributing back upstream).
 | `latex/*.m`, `tools/latex_sa.m`, `latex_tabular.m` | Use `pandas.DataFrame.to_latex()` / Jinja2 templates instead. |
 | `init_color.m` | MATLAB plot-color globals; not needed with matplotlib style sheets. |
 | `init_global.m` | Superseded by `config.py` dataclasses (defaults live with each config class instead of one monolithic init script). |
+| `maths/arccosh.m`, `arcsinh.m` (HSF toolbox, see below) | Directly superseded by `numpy.arccosh`/`numpy.arcsinh`. |
+
+## HSF toolbox port (planned)
+
+A second MATLAB library -- the function library behind Roncalli's
+*Handbook of Sustainable Finance*, from
+[`hfs-archive`](https://github.com/lcrmorin/hfs-archive) -- is being
+ported into `quanttoolbox` directly as new modules, rather than
+maintained as a separate package. Its source (167 files) lives at
+[`reference/hsf_toolbox_matlab/`](../reference/hsf_toolbox_matlab) as
+reference material for the port; that folder is excluded from the
+installable package (not listed in `pyproject.toml`'s package scoping).
+
+None of this is started yet -- the table below is the planned module
+breakdown, not a status report. See
+[HSF-Notebooks](https://github.com/lcrmorin/HSF-Notebooks)'s
+`CHAPTERS.md` (chapter 0) for the matching entry and the per-chapter
+notebooks that will exercise these modules once ported.
+
+| Python module (planned) | Original MATLAB files (`0. Toolbox/`) | Status |
+|---|---|---|
+| `bond/pricing.py` (new module) | `bond/compute_bond_price.m`, `compute_bond_ytm.m`, `compute_coupon_yield.m`, `quadratic_form_bond_portfolio1.m`, `quadratic_form_bond_portfolio2.m` | ⬜ |
+| `copula/families.py` (new module) | `copula/cdfCopula*.m`, `pdfCopula*.m` (23 families: Normal, Student, Clayton, Frank, Gumbel (+2 variants), Plackett, FGM, AMH, Galambos, Husler-Reiss, Marshall-Olkin, Gumbel-Barnett, logistic-Gumbel, Sloane, cubic, upper/lower Fréchet, product) | ⬜ |
+| `copula/dependence.py` | `copula/KendallCopula*.m`, `SpearmanCopula*.m` (5 families each), `dependogram.m`, `DebyeFunction.m`, `diLogFunction.m` | ⬜ |
+| `copula/simulate.py` | `copula/rndCopula*.m`, `rndnCopula.m` (8 families) | ⬜ |
+| `credit/structural.py` (new module) | `credit/Black_Scholes_Model.m`, `PD_Merton_Model.m`, `B0_Extended_Merton_Model.m`, `E0_Extended_Merton_Model.m`, `PD_Extended_Merton_Model.m`, `PD_Black_Cox_Model.m`, `Merton_Jump_Model.m`, `Merton_Jump_Climate_Model.m`, `Reinders_Credit_Model.m` | ⬜ |
+| `credit/reduced_form.py` | `credit/Density_Markov_Generator.m`, `Hazard_Markov_Generator.m`, `Survival_Markov_Generator.m`, `cdfExponential.m`, `pdfExponential.m`, `invExponential.m`, `rndExponential.m`, `survivalExponential.m` | ⬜ |
+| `stats/multivariate.py` (new module) | `genz/*.m` (10 files, Genz-Bretz quadrature for MVN/MVT CDFs) + `stats/cdfbvn.m`, `pdfbvn.m`, `cdfbvt.m` (bivariate normal/Student) | ⬜ |
+| `stats/distributions.py` (extend existing) | `stats/cdfSN*.m`/`pdfSN.m`/`momSN.m`/`rndSN.m` (skew-normal), `cdfST*.m`/`pdfST.m`/`momST.m`/`rndST.m` (skew-t), `cdfBates.m`/`pdfBates.m`, `cdfbeta.m`/`pdfbeta.m`, `cdfig.m`/`pdfig.m` (inverse Gaussian), `cdfln.m`/`pdfln.m` (lognormal), `cdfNormalRatio.m`/`pdfNormalRatio.m`, `pdfPoissonBinomial.m`, `cdfchi2i.m`, `pdft.m`, `compute_cdf_order_statistics.m`, `compute_inv_cdf_order_statistics.m`, `constant_correlation_matrix.m`, `max_size.m` | ⬜ |
+| `stats/dose_response.py` (new module) | `stats/drcHormetic1.m`, `drcHormetic2.m`, `drcLogLogistic.m`, `drcLogNormal.m`, `drcWeibull1.m`, `drcWeibull2.m` | ⬜ |
+| `sustainable_finance/carbon.py` (new module) | `hsf/carbon_budget_linear.m`, `carbon_budget_linear_reduction.m`, `carbon_budget_linear_trend.m`, `carbon_budget_piecewise.m`, `carbon_budget_compound_reduction.m`, `carbon_budget_Reduction.m` | ⬜ |
+| `sustainable_finance/esg.py` | `hsf/compute_esg_beta_star.m`, `compute_esg_minimum_variance.m`, `compute_pedersen_portfolio.m`, `cdp_filter.m` | ⬜ |
+| `sustainable_finance/climate.py` | `hsf/dice_temperature_matrix.m`, `dice_temperature_simulation.m` | ⬜ |
+| `sustainable_finance/ecology.py` | `hsf/species_area_relationship.m`, `endemics_area_relationship.m`, `species_abundance_distribution.m`, `hurlbert.m` | ⬜ |
+| `sustainable_finance/entropy.py` | `hsf/shannon_entropy.m`, `shannon_entropy_markov_chain.m`, `estimate_markov_generator.m` | ⬜ |
+| `sustainable_finance/risk.py` | `hsf/quadratic_form.m`, `quadratic_form_risk.m`, `bond_portfolio_metrics.m` | ⬜ |
+
+Notes on the table above:
+
+- `copula1.m`-`copula4.m` sit loose at the toolbox root (not inside
+  `copula/`) -- worked examples simulating correlated Poisson/
+  exponential/log-normal marginals through a Gaussian copula, in
+  French. Not a module to port; more likely future material for a
+  `copula` notebook in HSF-Notebooks once `copula/simulate.py` exists.
+- `quadratic_form_bond_portfolio1.m`/`2.m` exist identically in both
+  `bond/` and `hsf/` -- ported once, under `bond/pricing.py`.
+- `genz/qsimvn*.m`/`qsilatmvnv.m`/`bvn.m`/`bvnu.m` and `copula/cdfmvn.m`,
+  `stats/cdfmvn.m`, `stats/pdfmvn.m` all look like variants of the same
+  multivariate-normal CDF/quadrature machinery already ported once as
+  `stats/distributions.py`'s `cdfmvn`/`pdfmvn` (see the module table
+  above) -- reconcile these against each other before porting rather
+  than assuming each is a distinct algorithm.
+- `copula/` (67 files) is the largest single block and the most likely
+  to want splitting further once work starts (e.g. one file per family
+  instead of the 3-file grouping above); treat the module names here as
+  a starting proposal, not a commitment.
 
 ## Example translation tracker
 
 Tracks every script in the original MATLAB toolbox's `Examples/` folder
-(149 files across 11 subfolders) against its Python translation status.
+(138 files across 10 subfolders) against its Python translation status.
+The `tutorial/` folder (11 generic MATLAB-101 lessons, unrelated to any
+quanttoolbox function) is out of scope for this tracker -- see
+[HSF-Notebooks](https://github.com/lcrmorin/HSF-Notebooks)'s
+`notebooks/tutorials/` for the quanttoolbox-specific walkthroughs that
+replace it.
 
 Status legend: ⬜ not translated · ✅ translated
 
@@ -264,22 +325,6 @@ literal port of MATLAB's plotting calls.
 | `tools/` | `recode1.m` | ⬜ | `recode` not ported (superseded by `numpy.where`/`pandas` idioms) |
 | `tools/` | `retcode1.m` | ⬜ | return-code display helper, not a standalone function |
 
-### tutorial/ (11 files)
-
-| Folder | MATLAB file | Status | Notes |
-|---|---|---|---|
-| `tutorial/` | `gblank.m` | ⬜ | helper, not a lesson |
-| `tutorial/` | `lesson1.m` | ⬜ | general walkthrough, not per-function |
-| `tutorial/` | `lesson2.m` | ⬜ | |
-| `tutorial/` | `lesson3.m` | ⬜ | |
-| `tutorial/` | `lesson4.m` | ⬜ | |
-| `tutorial/` | `lesson5.m` | ⬜ | |
-| `tutorial/` | `lesson6.m` | ⬜ | |
-| `tutorial/` | `lesson7.m` | ⬜ | |
-| `tutorial/` | `lesson8.m` | ⬜ | |
-| `tutorial/` | `lesson9.m` | ⬜ | |
-| `tutorial/` | `lesson10.m` | ⬜ | |
-
 ---
 
 ### Summary
@@ -296,11 +341,11 @@ literal port of MATLAB's plotting calls.
 | `stats/` | 18 | 13 | 5 |
 | `svm/` | 12 | 12 | 0 |
 | `tools/` | 5 | 0 | 5 |
-| `tutorial/` | 11 | 0 | 11 |
-| **Total** | **149** | **117** | **32** |
+| **Total** | **138** | **117** | **21** |
 
 *(`stats/ridge.inc` excluded as a data snippet, not a standalone example
-— 149 actual `.m` example scripts plus that one data-only file.)*
+— 138 actual `.m` example scripts plus that one data-only file. The
+`tutorial/` folder is tracked separately, see above.)*
 
 ## Notes for translators
 
