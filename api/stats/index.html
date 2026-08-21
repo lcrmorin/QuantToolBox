@@ -1303,6 +1303,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#statsmultivariate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stats.multivariate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quanttoolbox.stats.multivariate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        multivariate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="multivariate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.stats.multivariate.bvn_cdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bvn_cdf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.stats.multivariate.bvn_pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bvn_pdf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.stats.multivariate.bvt_cdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bvt_cdf
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#statsmoments" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2543,6 +2604,67 @@
     <span class="md-ellipsis">
       
         Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#statsmultivariate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stats.multivariate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quanttoolbox.stats.multivariate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        multivariate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="multivariate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.stats.multivariate.bvn_cdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bvn_cdf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.stats.multivariate.bvn_pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bvn_pdf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quanttoolbox.stats.multivariate.bvt_cdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bvt_cdf
       
     </span>
   </a>
@@ -4302,7 +4424,289 @@ distribution regardless of order.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">alpha</span><span class="p">,</span> <span class="n">q1</span><span class="p">,</span> <span class="n">q3</span><span class="p">,</span> <span class="n">q4_true</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
 </code></pre></div>
 </details>
-<h2 id="statsmoments"><code>stats.moments</code><a class="headerlink" href="#statsmoments" title="Permanent link">&para;</a></h2>
+<h2 id="statsmultivariate"><code>stats.multivariate</code><a class="headerlink" href="#statsmultivariate" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">Python alternatives</p>
+<p><strong>Switch</strong>: <code>bvn_cdf</code>/<code>bvt_cdf</code> are thin <code>scipy.stats.multivariate_normal</code>/<code>multivariate_t</code>-backed wrappers with the original's bivariate <code>(x, y, rho[, nu])</code> call signature — kept for that call-site convenience, not because <code>scipy</code> lacks the capability. The 8 low-level Genz quasi-Monte-Carlo integrators in <code>genz/</code> (<code>qsimvn</code>, <code>qsimvt</code>, <code>qsilatmvnv</code>, <code>qsimvnauto</code>, ...) are not hand-ported at all: they solve exactly the arbitrary-dimension MVN/MVT probability problem <code>scipy.stats.multivariate_normal.cdf</code>/<code>multivariate_t.cdf</code> already solve, via the same Genz algorithm family (same author). See the module docstring and <a href="../../library_alternatives/">Library alternatives</a> for the full reasoning.</p>
+</div>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="quanttoolbox.stats.multivariate" class="doc doc-heading">
+            <code>quanttoolbox.stats.multivariate</code>
+
+
+<a href="#quanttoolbox.stats.multivariate" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Bivariate normal/Student-t CDF and PDF wrappers, matching the original
+toolbox's call signature (explicit <code>x</code>, <code>y</code>, <code>rho</code>, <code>nu</code> arguments,
+broadcast element-wise) rather than requiring the caller to assemble a full
+covariance matrix.</p>
+<p>Ported from HSF toolbox <code>stats/{cdfbvn,pdfbvn,cdfbvt}.m</code>.</p>
+<p>Translation notes:</p>
+<ul>
+<li><code>genz/{bvn,bvnu}.m</code> are Alan Genz's Drezner-Wesolowsky quadrature for the
+  bivariate normal CDF; <code>stats/cdfbvn.m</code> is a thin wrapper around <code>bvnu.m</code>.
+  <code>scipy.stats.multivariate_normal.cdf</code> already computes this (for any
+  dimension, not just 2) via <code>scipy.stats._mvn</code>, which is itself built on
+  Alan Genz's own Fortran <code>mvndst</code> routine -- the same author, the same
+  underlying algorithm. <code>bvn_cdf</code> here is therefore a thin <code>scipy</code>-backed
+  convenience wrapper with the original's <code>(x, y, rho)</code> call signature, not
+  a hand-rolled reimplementation of <code>bvnu.m</code>'s quadrature.</li>
+<li><code>stats/cdfbvt.m</code> wraps MATLAB's Statistics Toolbox <code>mvtcdf</code>; ported the
+  same way, via <code>scipy.stats.multivariate_t.cdf</code> (arbitrary dimension,
+  available since SciPy 1.9).</li>
+<li><code>genz/{qsimvn,qsimvnv,qsimvt,qsimvtv,qsilatmvnv,qsilatmvtv,qsimvnauto,
+  mvnrcnv}.m</code> (8 of the 10 files in <code>genz/</code>) are randomized quasi-Monte-Carlo
+  integrators solving exactly the same problem as
+  <code>scipy.stats.multivariate_normal.cdf</code>/<code>multivariate_t.cdf</code> -- arbitrary-
+  dimension MVN/MVT orthant probabilities -- via the same Genz (1992)
+  algorithm family (Niederreiter/Cranley-Patterson randomized lattice
+  rules); <code>mvnrcnv.m</code> is a constant-correlation special case of the same
+  problem. None of these are hand-ported: doing so would duplicate
+  already-available, better-tested <code>scipy</code> functionality (the same author's
+  own algorithm, reimplemented) with no functional gain. See
+  <code>stats.distributions.mvn_cdf</code>/<code>mvn_pdf</code> for the general n-dimensional
+  case (already ported); <code>bvn_cdf</code>/<code>bvt_cdf</code> below just add the bivariate-
+  specific call signature (<code>x</code>, <code>y</code>, <code>rho</code> rather than a point + covariance
+  matrix) for parity with how the original toolbox's other modules call
+  these.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.stats.multivariate.bvn_cdf" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">bvn_cdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.stats.multivariate.bvn_cdf" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Bivariate standard normal CDF P(X &lt;= x, Y &lt;= y), for (X, Y) with unit
+variances and correlation <code>rho</code>. Broadcasts element-wise over
+<code>x</code>/<code>y</code>/<code>rho</code>.</p>
+<p>Original: stats/cdfbvn.m (via genz/bvnu.m)</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/stats/multivariate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">bvn_cdf</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rho</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Bivariate standard normal CDF P(X &lt;= x, Y &lt;= y), for (X, Y) with unit</span>
+<span class="sd">    variances and correlation `rho`. Broadcasts element-wise over</span>
+<span class="sd">    `x`/`y`/`rho`.</span>
+
+<span class="sd">    Original: stats/cdfbvn.m (via genz/bvnu.m)</span>
+<span class="sd">    """</span>
+    <span class="n">x_arr</span><span class="p">,</span> <span class="n">y_arr</span><span class="p">,</span> <span class="n">rho_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">x_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">x_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+        <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">rho_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">]],</span> <span class="p">[</span><span class="n">rho_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="mf">1.0</span><span class="p">]])</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">multivariate_normal</span><span class="o">.</span><span class="n">cdf</span><span class="p">([</span><span class="n">x_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">y_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">]],</span> <span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="n">cov</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">[()]</span> <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">()</span> <span class="k">else</span> <span class="n">out</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.stats.multivariate.bvn_pdf" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">bvn_pdf</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">mu1</span><span class="p">,</span> <span class="n">mu2</span><span class="p">,</span> <span class="n">sigma1</span><span class="p">,</span> <span class="n">sigma2</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.stats.multivariate.bvn_pdf" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Bivariate normal PDF at (x1, x2), for (X1, X2) ~ N((mu1, mu2), Sigma)
+with std devs (sigma1, sigma2) and correlation rho. Closed-form, so
+(unlike <code>bvn_cdf</code>) evaluated directly rather than via <code>scipy</code>.</p>
+<p>Original: stats/pdfbvn.m</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/stats/multivariate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">bvn_pdf</span><span class="p">(</span>
+    <span class="n">x1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">x2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mu2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rho</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Bivariate normal PDF at (x1, x2), for (X1, X2) ~ N((mu1, mu2), Sigma)</span>
+<span class="sd">    with std devs (sigma1, sigma2) and correlation rho. Closed-form, so</span>
+<span class="sd">    (unlike `bvn_cdf`) evaluated directly rather than via `scipy`.</span>
+
+<span class="sd">    Original: stats/pdfbvn.m</span>
+<span class="sd">    """</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">mu1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mu1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">mu2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mu2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">sigma1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sigma1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">sigma2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sigma2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">rho</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">z1</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">mu1</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma1</span>
+    <span class="n">z2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">mu2</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma2</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">z1</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">z2</span> <span class="o">+</span> <span class="n">z2</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">q</span> <span class="o">/</span> <span class="n">w</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">sigma1</span> <span class="o">*</span> <span class="n">sigma2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="quanttoolbox.stats.multivariate.bvt_cdf" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">bvt_cdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span></code>
+
+<a href="#quanttoolbox.stats.multivariate.bvt_cdf" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Bivariate Student-t CDF P(X &lt;= x, Y &lt;= y), for (X, Y) with unit scale,
+correlation <code>rho</code>, and <code>nu</code> degrees of freedom. Broadcasts element-wise
+over <code>x</code>/<code>y</code>/<code>rho</code>/<code>nu</code>.</p>
+<p>Original: stats/cdfbvt.m (via MATLAB's mvtcdf)</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/quanttoolbox/stats/multivariate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">bvt_cdf</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rho</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Bivariate Student-t CDF P(X &lt;= x, Y &lt;= y), for (X, Y) with unit scale,</span>
+<span class="sd">    correlation `rho`, and `nu` degrees of freedom. Broadcasts element-wise</span>
+<span class="sd">    over `x`/`y`/`rho`/`nu`.</span>
+
+<span class="sd">    Original: stats/cdfbvt.m (via MATLAB's mvtcdf)</span>
+<span class="sd">    """</span>
+    <span class="n">x_arr</span><span class="p">,</span> <span class="n">y_arr</span><span class="p">,</span> <span class="n">rho_arr</span><span class="p">,</span> <span class="n">nu_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">nu</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">x_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">x_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">rho_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">]],</span> <span class="p">[</span><span class="n">rho_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="mf">1.0</span><span class="p">]])</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">multivariate_t</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">x_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">y_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">]],</span> <span class="n">loc</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">nu_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">[()]</span> <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">()</span> <span class="k">else</span> <span class="n">out</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="statsmoments"><code>stats.moments</code><a class="headerlink" href="#statsmoments" title="Permanent link">&para;</a></h2>
 <div class="admonition info">
 <p class="admonition-title">Python alternatives</p>
 <p><code>rolling_correlation</code>/<code>rolling_volatility</code>: <strong>switch</strong> to <code>pandas.DataFrame.rolling().corr()</code>/<code>.std()</code> for the standard case — Cython-backed, meaningfully faster. Keep ours only for the <code>method=2</code> "returns computed within each window" variant pandas doesn't offer. <code>active_share</code>, <code>herfindahl_index</code>, <code>asynchronous_cov</code>, <code>weekly_cov</code>: <strong>keep</strong> — no general-purpose equivalent exists.</p>

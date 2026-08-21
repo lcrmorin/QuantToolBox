@@ -1997,8 +1997,8 @@ modules once ported.</p>
 </tr>
 <tr>
 <td><code>stats/multivariate.py</code> (new module)</td>
-<td><code>genz/*.m</code> (10 files, Genz-Bretz quadrature for MVN/MVT CDFs) + <code>stats/cdfbvn.m</code>, <code>pdfbvn.m</code>, <code>cdfbvt.m</code> (bivariate normal/Student)</td>
-<td>⬜</td>
+<td><code>stats/cdfbvn.m</code>, <code>pdfbvn.m</code>, <code>cdfbvt.m</code> ported as thin <code>scipy</code>-backed bivariate wrappers; <code>genz/*.m</code> (10 files, Genz-Bretz MVN/MVT quadrature) intentionally <em>not</em> hand-ported -- superseded by <code>scipy.stats.multivariate_normal.cdf</code>/<code>multivariate_t.cdf</code> (same Genz algorithm, same author) -- see module docstring and <code>library_alternatives.md</code></td>
+<td>✅</td>
 </tr>
 <tr>
 <td><code>stats/distributions.py</code> (extend existing)</td>
@@ -2051,12 +2051,16 @@ modules once ported.</p>
   <code>copula</code> notebook in HSF-Notebooks once <code>copula/simulate.py</code> exists.</li>
 <li><code>quadratic_form_bond_portfolio1.m</code>/<code>2.m</code> exist identically in both
   <code>bond/</code> and <code>hsf/</code> -- ported once, under <code>bond/pricing.py</code>.</li>
-<li><code>genz/qsimvn*.m</code>/<code>qsilatmvnv.m</code>/<code>bvn.m</code>/<code>bvnu.m</code> and <code>copula/cdfmvn.m</code>,
-  <code>stats/cdfmvn.m</code>, <code>stats/pdfmvn.m</code> all look like variants of the same
-  multivariate-normal CDF/quadrature machinery already ported once as
-  <code>stats/distributions.py</code>'s <code>cdfmvn</code>/<code>pdfmvn</code> (see the module table
-  above) -- reconcile these against each other before porting rather
-  than assuming each is a distinct algorithm.</li>
+<li><code>genz/*.m</code> (all 10 files) and <code>stats/cdfmvn.m</code>/<code>pdfmvn.m</code> are reconciled:
+  all of it is the same underlying Genz multivariate-normal/-t
+  CDF/quadrature machinery, already covered generically (any dimension)
+  by <code>stats/distributions.py</code>'s <code>mvn_cdf</code>/<code>mvn_pdf</code> (via
+  <code>scipy.stats.multivariate_normal</code>, itself Genz's own algorithm) --
+  see <code>stats/multivariate.py</code>'s module docstring for the file-by-file
+  breakdown. <code>copula/cdfmvn.m</code> (a separate file, inside <code>copula/</code>, not
+  yet read) is likely another variant of the same thing -- worth
+  checking against <code>mvn_cdf</code> before assuming it needs its own port,
+  once <code>copula/</code> work starts.</li>
 <li><code>copula/</code> (67 files) is the largest single block and the most likely
   to want splitting further once work starts (e.g. one file per family
   instead of the 3-file grouping above); treat the module names here as

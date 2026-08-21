@@ -1703,6 +1703,20 @@ port has a capability the alternative lacks.</p>
 <td>No clean existing home found. <code>scipy.stats</code> is conservative about adding new distribution families, and no general econometrics/risk package is a natural fit either — more realistic as its own small standalone release than a PR into an existing library.</td>
 </tr>
 <tr>
+<td><code>multivariate.py</code> — <code>bvn_cdf</code>/<code>bvn_pdf</code>/<code>bvt_cdf</code></td>
+<td><code>scipy.stats.multivariate_normal</code>/<code>multivariate_t</code> (already the backend)</td>
+<td><strong>KEEP</strong> (as a call-site convenience)</td>
+<td>Thin wrappers matching the original's bivariate <code>(x, y, rho[, nu])</code> signature; genuinely one-line passthroughs, same reasoning as the simple <code>distributions.py</code> wrappers above.</td>
+<td>Not worth upstreaming — no capability gap, just a narrower call signature.</td>
+</tr>
+<tr>
+<td><code>multivariate.py</code> — the 8 low-level <code>genz/</code> quasi-Monte-Carlo integrators (<code>qsimvn</code>, <code>qsimvt</code>, <code>qsilatmvnv</code>, <code>qsimvnauto</code>, <code>mvnrcnv</code>, ...)</td>
+<td><code>scipy.stats.multivariate_normal.cdf</code>/<code>multivariate_t.cdf</code></td>
+<td><strong>SWITCH</strong></td>
+<td>These hand-roll exactly the arbitrary-dimension MVN/MVT orthant-probability problem <code>scipy</code> already solves, via the <em>same</em> Genz (1992) algorithm family — <code>scipy</code>'s <code>multivariate_normal.cdf</code> is itself built on Alan Genz's own Fortran <code>mvndst</code> routine. Confirmed empirically too: <code>multivariate_t.cdf</code> shows the same call-to-call randomized-QMC noise (~1e-4) the original's <code>[p, e]</code> error-estimate return signature implies. Reimplementing these would duplicate already-available, better-tested code with zero functional gain — not hand-ported at all (see <code>multivariate.py</code>'s module docstring).</td>
+<td>N/A — <code>scipy</code> already covers this via the same author's own algorithm.</td>
+</tr>
+<tr>
 <td><code>moments.py</code> — <code>rolling_correlation</code>/<code>rolling_volatility</code></td>
 <td><code>pandas.DataFrame.rolling().corr()</code>/<code>.std()</code></td>
 <td><strong>SWITCH</strong></td>
