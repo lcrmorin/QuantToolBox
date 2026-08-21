@@ -1120,6 +1120,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hsf-toolbox-port-planned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HSF toolbox port (planned)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#example-translation-tracker" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1235,17 +1246,6 @@
     <span class="md-ellipsis">
       
         tools/ (6 files)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tutorial-11-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        tutorial/ (11 files)
       
     </span>
   </a>
@@ -1389,6 +1389,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hsf-toolbox-port-planned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HSF toolbox port (planned)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#example-translation-tracker" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1504,17 +1515,6 @@
     <span class="md-ellipsis">
       
         tools/ (6 files)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tutorial-11-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        tutorial/ (11 files)
       
     </span>
   </a>
@@ -1797,11 +1797,140 @@ worth keeping, whether the gap is worth contributing back upstream).</p>
 <td><code>init_global.m</code></td>
 <td>Superseded by <code>config.py</code> dataclasses (defaults live with each config class instead of one monolithic init script).</td>
 </tr>
+<tr>
+<td><code>maths/arccosh.m</code>, <code>arcsinh.m</code> (HSF toolbox, see below)</td>
+<td>Directly superseded by <code>numpy.arccosh</code>/<code>numpy.arcsinh</code>.</td>
+</tr>
 </tbody>
 </table>
+<h2 id="hsf-toolbox-port-planned">HSF toolbox port (planned)<a class="headerlink" href="#hsf-toolbox-port-planned" title="Permanent link">&para;</a></h2>
+<p>A second MATLAB library -- the function library behind Roncalli's
+<em>Handbook of Sustainable Finance</em>, from
+<a href="https://github.com/lcrmorin/hfs-archive"><code>hfs-archive</code></a> -- is being
+ported into <code>quanttoolbox</code> directly as new modules, rather than
+maintained as a separate package. Its source (167 files) lives at
+<a href="../reference/hsf_toolbox_matlab"><code>reference/hsf_toolbox_matlab/</code></a> as
+reference material for the port; that folder is excluded from the
+installable package (not listed in <code>pyproject.toml</code>'s package scoping).</p>
+<p>None of this is started yet -- the table below is the planned module
+breakdown, not a status report. See
+<a href="https://github.com/lcrmorin/HSF-Notebooks">HSF-Notebooks</a>'s
+<code>CHAPTERS.md</code> (chapter 0) for the matching entry and the per-chapter
+notebooks that will exercise these modules once ported.</p>
+<table>
+<thead>
+<tr>
+<th>Python module (planned)</th>
+<th>Original MATLAB files (<code>0. Toolbox/</code>)</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bond/pricing.py</code> (new module)</td>
+<td><code>bond/compute_bond_price.m</code>, <code>compute_bond_ytm.m</code>, <code>compute_coupon_yield.m</code>, <code>quadratic_form_bond_portfolio1.m</code>, <code>quadratic_form_bond_portfolio2.m</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>copula/families.py</code> (new module)</td>
+<td><code>copula/cdfCopula*.m</code>, <code>pdfCopula*.m</code> (23 families: Normal, Student, Clayton, Frank, Gumbel (+2 variants), Plackett, FGM, AMH, Galambos, Husler-Reiss, Marshall-Olkin, Gumbel-Barnett, logistic-Gumbel, Sloane, cubic, upper/lower Fréchet, product)</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>copula/dependence.py</code></td>
+<td><code>copula/KendallCopula*.m</code>, <code>SpearmanCopula*.m</code> (5 families each), <code>dependogram.m</code>, <code>DebyeFunction.m</code>, <code>diLogFunction.m</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>copula/simulate.py</code></td>
+<td><code>copula/rndCopula*.m</code>, <code>rndnCopula.m</code> (8 families)</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>credit/structural.py</code> (new module)</td>
+<td><code>credit/Black_Scholes_Model.m</code>, <code>PD_Merton_Model.m</code>, <code>B0_Extended_Merton_Model.m</code>, <code>E0_Extended_Merton_Model.m</code>, <code>PD_Extended_Merton_Model.m</code>, <code>PD_Black_Cox_Model.m</code>, <code>Merton_Jump_Model.m</code>, <code>Merton_Jump_Climate_Model.m</code>, <code>Reinders_Credit_Model.m</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>credit/reduced_form.py</code></td>
+<td><code>credit/Density_Markov_Generator.m</code>, <code>Hazard_Markov_Generator.m</code>, <code>Survival_Markov_Generator.m</code>, <code>cdfExponential.m</code>, <code>pdfExponential.m</code>, <code>invExponential.m</code>, <code>rndExponential.m</code>, <code>survivalExponential.m</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>stats/multivariate.py</code> (new module)</td>
+<td><code>genz/*.m</code> (10 files, Genz-Bretz quadrature for MVN/MVT CDFs) + <code>stats/cdfbvn.m</code>, <code>pdfbvn.m</code>, <code>cdfbvt.m</code> (bivariate normal/Student)</td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>stats/distributions.py</code> (extend existing)</td>
+<td><code>stats/cdfSN*.m</code>/<code>pdfSN.m</code>/<code>momSN.m</code>/<code>rndSN.m</code> (skew-normal), <code>cdfST*.m</code>/<code>pdfST.m</code>/<code>momST.m</code>/<code>rndST.m</code> (skew-t), <code>cdfBates.m</code>/<code>pdfBates.m</code>, <code>cdfbeta.m</code>/<code>pdfbeta.m</code>, <code>cdfig.m</code>/<code>pdfig.m</code> (inverse Gaussian), <code>cdfln.m</code>/<code>pdfln.m</code> (lognormal), <code>cdfNormalRatio.m</code>/<code>pdfNormalRatio.m</code>, <code>pdfPoissonBinomial.m</code>, <code>cdfchi2i.m</code>, <code>pdft.m</code>, <code>compute_cdf_order_statistics.m</code>, <code>compute_inv_cdf_order_statistics.m</code>, <code>constant_correlation_matrix.m</code>, <code>max_size.m</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>stats/dose_response.py</code> (new module)</td>
+<td><code>stats/drcHormetic1.m</code>, <code>drcHormetic2.m</code>, <code>drcLogLogistic.m</code>, <code>drcLogNormal.m</code>, <code>drcWeibull1.m</code>, <code>drcWeibull2.m</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>sustainable_finance/carbon.py</code> (new module)</td>
+<td><code>hsf/carbon_budget_linear.m</code>, <code>carbon_budget_linear_reduction.m</code>, <code>carbon_budget_linear_trend.m</code>, <code>carbon_budget_piecewise.m</code>, <code>carbon_budget_compound_reduction.m</code>, <code>carbon_budget_Reduction.m</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>sustainable_finance/esg.py</code></td>
+<td><code>hsf/compute_esg_beta_star.m</code>, <code>compute_esg_minimum_variance.m</code>, <code>compute_pedersen_portfolio.m</code>, <code>cdp_filter.m</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>sustainable_finance/climate.py</code></td>
+<td><code>hsf/dice_temperature_matrix.m</code>, <code>dice_temperature_simulation.m</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>sustainable_finance/ecology.py</code></td>
+<td><code>hsf/species_area_relationship.m</code>, <code>endemics_area_relationship.m</code>, <code>species_abundance_distribution.m</code>, <code>hurlbert.m</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>sustainable_finance/entropy.py</code></td>
+<td><code>hsf/shannon_entropy.m</code>, <code>shannon_entropy_markov_chain.m</code>, <code>estimate_markov_generator.m</code></td>
+<td>⬜</td>
+</tr>
+<tr>
+<td><code>sustainable_finance/risk.py</code></td>
+<td><code>hsf/quadratic_form.m</code>, <code>quadratic_form_risk.m</code>, <code>bond_portfolio_metrics.m</code></td>
+<td>⬜</td>
+</tr>
+</tbody>
+</table>
+<p>Notes on the table above:</p>
+<ul>
+<li><code>copula1.m</code>-<code>copula4.m</code> sit loose at the toolbox root (not inside
+  <code>copula/</code>) -- worked examples simulating correlated Poisson/
+  exponential/log-normal marginals through a Gaussian copula, in
+  French. Not a module to port; more likely future material for a
+  <code>copula</code> notebook in HSF-Notebooks once <code>copula/simulate.py</code> exists.</li>
+<li><code>quadratic_form_bond_portfolio1.m</code>/<code>2.m</code> exist identically in both
+  <code>bond/</code> and <code>hsf/</code> -- ported once, under <code>bond/pricing.py</code>.</li>
+<li><code>genz/qsimvn*.m</code>/<code>qsilatmvnv.m</code>/<code>bvn.m</code>/<code>bvnu.m</code> and <code>copula/cdfmvn.m</code>,
+  <code>stats/cdfmvn.m</code>, <code>stats/pdfmvn.m</code> all look like variants of the same
+  multivariate-normal CDF/quadrature machinery already ported once as
+  <code>stats/distributions.py</code>'s <code>cdfmvn</code>/<code>pdfmvn</code> (see the module table
+  above) -- reconcile these against each other before porting rather
+  than assuming each is a distinct algorithm.</li>
+<li><code>copula/</code> (67 files) is the largest single block and the most likely
+  to want splitting further once work starts (e.g. one file per family
+  instead of the 3-file grouping above); treat the module names here as
+  a starting proposal, not a commitment.</li>
+</ul>
 <h2 id="example-translation-tracker">Example translation tracker<a class="headerlink" href="#example-translation-tracker" title="Permanent link">&para;</a></h2>
 <p>Tracks every script in the original MATLAB toolbox's <code>Examples/</code> folder
-(149 files across 11 subfolders) against its Python translation status.</p>
+(138 files across 10 subfolders) against its Python translation status.
+The <code>tutorial/</code> folder (11 generic MATLAB-101 lessons, unrelated to any
+quanttoolbox function) is out of scope for this tracker -- see
+<a href="https://github.com/lcrmorin/HSF-Notebooks">HSF-Notebooks</a>'s
+<code>notebooks/tutorials/</code> for the quanttoolbox-specific walkthroughs that
+replace it.</p>
 <p>Status legend: ⬜ not translated · ✅ translated</p>
 <p>The <strong>Notes</strong> column flags examples that call <code>plot</code>/<code>figure</code> or
 <code>xlsread</code>/<code>xlswrite</code>/<code>readtable</code>/<code>writetable</code>. These are translated for
@@ -2768,85 +2897,6 @@ literal port of MATLAB's plotting calls.</p>
 </tr>
 </tbody>
 </table>
-<h3 id="tutorial-11-files">tutorial/ (11 files)<a class="headerlink" href="#tutorial-11-files" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Folder</th>
-<th>MATLAB file</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>tutorial/</code></td>
-<td><code>gblank.m</code></td>
-<td>⬜</td>
-<td>helper, not a lesson</td>
-</tr>
-<tr>
-<td><code>tutorial/</code></td>
-<td><code>lesson1.m</code></td>
-<td>⬜</td>
-<td>general walkthrough, not per-function</td>
-</tr>
-<tr>
-<td><code>tutorial/</code></td>
-<td><code>lesson2.m</code></td>
-<td>⬜</td>
-<td></td>
-</tr>
-<tr>
-<td><code>tutorial/</code></td>
-<td><code>lesson3.m</code></td>
-<td>⬜</td>
-<td></td>
-</tr>
-<tr>
-<td><code>tutorial/</code></td>
-<td><code>lesson4.m</code></td>
-<td>⬜</td>
-<td></td>
-</tr>
-<tr>
-<td><code>tutorial/</code></td>
-<td><code>lesson5.m</code></td>
-<td>⬜</td>
-<td></td>
-</tr>
-<tr>
-<td><code>tutorial/</code></td>
-<td><code>lesson6.m</code></td>
-<td>⬜</td>
-<td></td>
-</tr>
-<tr>
-<td><code>tutorial/</code></td>
-<td><code>lesson7.m</code></td>
-<td>⬜</td>
-<td></td>
-</tr>
-<tr>
-<td><code>tutorial/</code></td>
-<td><code>lesson8.m</code></td>
-<td>⬜</td>
-<td></td>
-</tr>
-<tr>
-<td><code>tutorial/</code></td>
-<td><code>lesson9.m</code></td>
-<td>⬜</td>
-<td></td>
-</tr>
-<tr>
-<td><code>tutorial/</code></td>
-<td><code>lesson10.m</code></td>
-<td>⬜</td>
-<td></td>
-</tr>
-</tbody>
-</table>
 <hr />
 <h3 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h3>
 <table>
@@ -2920,21 +2970,16 @@ literal port of MATLAB's plotting calls.</p>
 <td>5</td>
 </tr>
 <tr>
-<td><code>tutorial/</code></td>
-<td>11</td>
-<td>0</td>
-<td>11</td>
-</tr>
-<tr>
 <td><strong>Total</strong></td>
-<td><strong>149</strong></td>
+<td><strong>138</strong></td>
 <td><strong>117</strong></td>
-<td><strong>32</strong></td>
+<td><strong>21</strong></td>
 </tr>
 </tbody>
 </table>
 <p><em>(<code>stats/ridge.inc</code> excluded as a data snippet, not a standalone example
-— 149 actual <code>.m</code> example scripts plus that one data-only file.)</em></p>
+— 138 actual <code>.m</code> example scripts plus that one data-only file. The
+<code>tutorial/</code> folder is tracked separately, see above.)</em></p>
 <h2 id="notes-for-translators">Notes for translators<a class="headerlink" href="#notes-for-translators" title="Permanent link">&para;</a></h2>
 <p>General guidance for anyone extending or re-verifying this port:</p>
 <ul>
