@@ -1,0 +1,1603 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Python port of the MATLAB QuantToolbox — econometrics, portfolio optimization, and risk analytics.">
+      
+      
+      
+      
+        <link rel="prev" href="../matlab_bugs_found/">
+      
+      
+        <link rel="next" href="../migration_map/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Library alternatives - QuantToolbox</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#python-library-alternatives-what-to-keep-what-to-switch" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="QuantToolbox" class="md-header__button md-logo" aria-label="QuantToolbox" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            QuantToolbox
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Library alternatives
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/lcrmorin/QuantToolBox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lcrmorin/QuantToolBox
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="QuantToolbox" class="md-nav__button md-logo" aria-label="QuantToolbox" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    QuantToolbox
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/lcrmorin/QuantToolBox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lcrmorin/QuantToolBox
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/risk_budgeting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Risk budgeting (ERC / VaR / ES)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/black_litterman/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Black-Litterman
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/portfolio_risk_budgeting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    portfolio.risk_budgeting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/portfolio_black_litterman/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    portfolio.black_litterman
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/portfolio_mean_variance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    portfolio.mean_variance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/stats_regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stats.regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/econometrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    econometrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notes for translators
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes for translators
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../matlab_bugs_found/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MATLAB bugs found
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library alternatives
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library alternatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dates-dates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dates (dates/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stats-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stats (stats/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#econometrics-econometrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Econometrics (econometrics/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimization-optim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optimization (optim/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#portfolio-portfolio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Portfolio (portfolio/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mixtures-mixtures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mixtures (mixtures/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#svm-svm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SVM (svm/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spline-spline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spline (spline/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maths-maths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maths (maths/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backtest-backtest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backtest (backtest/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-algebra-linalg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linear algebra (linalg/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-where-the-strongest-switch-cases-are" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: where the strongest "switch" cases are
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration_map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dates-dates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dates (dates/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stats-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stats (stats/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#econometrics-econometrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Econometrics (econometrics/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimization-optim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optimization (optim/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#portfolio-portfolio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Portfolio (portfolio/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mixtures-mixtures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mixtures (mixtures/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#svm-svm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SVM (svm/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spline-spline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spline (spline/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maths-maths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maths (maths/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backtest-backtest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backtest (backtest/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-algebra-linalg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linear algebra (linalg/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-where-the-strongest-switch-cases-are" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: where the strongest "switch" cases are
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="python-library-alternatives-what-to-keep-what-to-switch">Python library alternatives: what to keep, what to switch<a class="headerlink" href="#python-library-alternatives-what-to-keep-what-to-switch" title="Permanent link">&para;</a></h1>
+<p>For every ported module, this document names the closest existing Python
+library alternative (if one exists) and makes an honest call on whether
+to keep the ported implementation, switch to the library, or use both
+for different purposes. The guiding question throughout is: <strong>does the
+ported code do something the alternative genuinely can't, or is it mostly
+duplicating well-trodden ground?</strong></p>
+<p>Three verdicts are used:</p>
+<ul>
+<li><strong>KEEP</strong> — the ported code does something the alternative doesn't
+  (a specific parameterization, a quant-specific measure, a missing
+  feature), so there's a real reason to maintain it.</li>
+<li><strong>SWITCH</strong> — a mature, well-tested library already does this better;
+  the ported code is mostly worth keeping as a reference/fallback, not
+  as the primary path.</li>
+<li><strong>HYBRID</strong> — use the library for the common case, keep the ported code
+  for a specific capability it has that the library lacks.</li>
+</ul>
+<hr />
+<h2 id="dates-dates">Dates (<code>dates/</code>)<a class="headerlink" href="#dates-dates" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>convert.py</code></td>
+<td><code>pandas</code> (already the base)</td>
+<td><strong>KEEP</strong></td>
+<td>Pandas has no built-in Excel-serial-date conversion; this is a thin, genuinely useful wrapper.</td>
+</tr>
+<tr>
+<td><code>rebalancing.py</code></td>
+<td><a href="https://github.com/rsheftel/pandas_market_calendars"><code>pandas_market_calendars</code></a></td>
+<td><strong>HYBRID</strong></td>
+<td>Our rebalancing dates are weekday-only (no exchange holiday calendar) — that's a real gap versus the original MATLAB behavior too. <code>pandas_market_calendars</code> gives real NYSE/LSE/etc. holiday calendars; worth wiring in as an optional calendar source for production backtests, while keeping our nearest-available-date snapping logic (which the library doesn't replicate exactly).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="stats-stats">Stats (<code>stats/</code>)<a class="headerlink" href="#stats-stats" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>distributions.py</code> — simple wrappers (normal/t/chi2/F/MVN)</td>
+<td><code>scipy.stats</code> (already the backend)</td>
+<td><strong>KEEP</strong></td>
+<td>These are one-line wrappers around scipy; no separate module needed downstream, but no reason to remove them either — call-site compatibility with the original toolbox.</td>
+</tr>
+<tr>
+<td><code>distributions.py</code> — GQF1/GQF2</td>
+<td><em>(none)</em></td>
+<td><strong>KEEP</strong></td>
+<td>Genuinely niche (generalized quadratic-form distributions for Delta-Gamma VaR). Nothing in scipy, statsmodels, or elsewhere in the ecosystem does this.</td>
+</tr>
+<tr>
+<td><code>moments.py</code> — <code>rolling_correlation</code>/<code>rolling_volatility</code></td>
+<td><code>pandas.DataFrame.rolling().corr()</code>/<code>.std()</code></td>
+<td><strong>SWITCH</strong></td>
+<td>Pandas' rolling ops are implemented in Cython and are meaningfully faster than our Python-loop version for anything beyond toy sizes. The only reason to keep ours is the specific <code>method=2</code> "compute returns within each window" variant for illiquid series, which pandas doesn't offer directly.</td>
+</tr>
+<tr>
+<td><code>moments.py</code> — <code>active_share</code>, <code>herfindahl_index</code>, <code>asynchronous_cov</code>, <code>weekly_cov</code></td>
+<td><em>(none)</em></td>
+<td><strong>KEEP</strong></td>
+<td>Portfolio-construction-specific measures with no general-purpose library equivalent.</td>
+</tr>
+<tr>
+<td><code>regression/ols.py</code></td>
+<td><code>statsmodels.OLS</code>/<code>WLS</code></td>
+<td><strong>HYBRID</strong></td>
+<td>For plain (unrestricted) OLS, statsmodels is more complete (more diagnostics, better-tested edge cases). Ours is worth keeping specifically for the <code>restriction=(RR, r)</code> linear-restriction parameterization, which statsmodels doesn't support as directly.</td>
+</tr>
+<tr>
+<td><code>regression/ridge.py</code></td>
+<td><code>sklearn.linear_model.Ridge</code>/<code>RidgeCV</code></td>
+<td><strong>HYBRID</strong></td>
+<td>sklearn's solver is more optimized for large/sparse problems. Keep ours for the <code>ridge_tau_targeted</code> (L2-norm-budget, not penalty) parameterization — sklearn has no equivalent for that.</td>
+</tr>
+<tr>
+<td><code>regression/lasso.py</code></td>
+<td><code>sklearn.linear_model.Lasso</code>/<code>ElasticNet</code>/<code>LassoCV</code></td>
+<td><strong>SWITCH</strong> (for the penalized-form solvers)</td>
+<td>sklearn's coordinate descent is Cython-compiled and extensively battle-tested; there's no good reason to keep hand-rolled <code>lasso_ccd</code>/<code>lasso_admm</code> for the standard penalized case — recommend routing those through sklearn directly. <strong>KEEP</strong> <code>lasso_tau_constrained</code> specifically, since sklearn has no L1-<em>budget</em> (as opposed to L1-<em>penalty</em>) interface.</td>
+</tr>
+<tr>
+<td><code>regression/kernel.py</code></td>
+<td><code>statsmodels.nonparametric.KernelReg</code></td>
+<td><strong>HYBRID</strong></td>
+<td>statsmodels' version supports automatic bandwidth selection via cross-validation and both local-constant/local-linear estimators — more complete than our fixed-bandwidth port. Worth switching to for general use; keep ours only where the exact original bandwidth formula needs to be reproduced for parity with existing MATLAB-based results.</td>
+</tr>
+<tr>
+<td><code>regression/quantile.py</code></td>
+<td><code>statsmodels.regression.quantile_regression.QuantReg</code>, or <code>sklearn.linear_model.QuantileRegressor</code> (newer sklearn)</td>
+<td><strong>SWITCH</strong></td>
+<td>Both are more battle-tested than our <code>scipy.optimize.linprog</code>-based implementation, handle edge cases (rank-deficient design matrices, ties) more robustly, and QuantReg in particular has been used in production statsmodels code for years. Keep ours only if the exact slack-variable (<code>u</code>, <code>v</code>) outputs are needed downstream.</td>
+</tr>
+<tr>
+<td><code>regression/robust.py</code></td>
+<td><code>statsmodels.robust.robust_linear_model.RLM</code></td>
+<td><strong>HYBRID</strong></td>
+<td>RLM covers Huber, Tukey biweight, Andrew's wave, Hampel, and trimmed-mean M-estimators via IRLS — a superset of our Huber implementation, and more robustly tested. It does <em>not</em> cover LAD or quantile M-estimation directly (though <code>QuantReg(q=0.5)</code> is exactly LAD). Recommend: <code>RLM</code> for Huber/general M-estimation, keep our <code>lad_regression</code>/<code>quantile_m_regression</code>/<code>inverse_quantile_m_regression</code> for those specific losses.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="econometrics-econometrics">Econometrics (<code>econometrics/</code>)<a class="headerlink" href="#econometrics-econometrics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>estimation.py</code> (GMM/ML)</td>
+<td><code>statsmodels.sandbox.regression.gmm.GMM</code>, <code>statsmodels.base.model.GenericLikelihoodModel</code>, or the <a href="https://github.com/bashtage/linearmodels"><code>linearmodels</code></a> package (more modern GMM/IV support)</td>
+<td><strong>HYBRID</strong></td>
+<td>These libraries are more mature for standard GMM/MLE use cases. Keep ours specifically for the explicit <code>theta = RR @ gamma + r</code> linear-restriction interface, which none of the alternatives expose as directly — that parameterization is the main reason this module exists as custom code at all.</td>
+</tr>
+<tr>
+<td><code>var.py</code></td>
+<td><code>statsmodels.tsa.api.VAR</code></td>
+<td><strong>SWITCH</strong> for the unrestricted case</td>
+<td>statsmodels' VAR is comprehensive: automatic lag-order selection, impulse response functions, forecast error variance decomposition, forecasting — well beyond what we ported, and it's the standard tool the econometrics community actually uses. <strong>KEEP</strong> <code>varx_estimate</code>'s linear-restriction support (<code>a_eq</code>/<code>b_eq</code> on the stacked coefficient vector) — statsmodels' VAR doesn't support arbitrary parameter restrictions.</td>
+</tr>
+<tr>
+<td><code>kalman.py</code></td>
+<td><code>statsmodels.tsa.statespace.MLEModel</code>/<code>kalman_filter</code></td>
+<td><strong>SWITCH</strong> for anything beyond simple filtering</td>
+<td>statsmodels' state-space framework is dramatically more capable: smoothing (not just filtering), MLE parameter fitting built in, diffuse initialization, a compiled Cython backend for real performance on long series. Our <code>kalman_filter</code> is fine for simple, transparent filtering tasks or minimal-dependency use, but statsmodels is the better choice for anything production-scale.</td>
+</tr>
+<tr>
+<td><code>whittle.py</code></td>
+<td><em>(none found)</em></td>
+<td><strong>KEEP</strong></td>
+<td>Whittle (frequency-domain) estimation isn't implemented in statsmodels, <code>arch</code>, or other common packages. Genuinely fills a gap.</td>
+</tr>
+<tr>
+<td><code>tests.py</code> (ADF)</td>
+<td><code>statsmodels.tsa.stattools.adfuller</code> (already used)</td>
+<td><strong>SWITCH</strong> (already done)</td>
+<td>Also worth knowing: the <a href="https://github.com/bashtage/arch"><code>arch</code></a> package's <code>arch.unitroot</code> module has a wider family of unit-root tests (ADF, Phillips-Perron, DFGLS, KPSS, Zivot-Andrews) if more than ADF is ever needed — not currently ported, but worth knowing about.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="optimization-optim">Optimization (<code>optim/</code>)<a class="headerlink" href="#optimization-optim" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>proximal.py</code>, <code>projection.py</code></td>
+<td><a href="https://github.com/PyLops/pyproximal"><code>pyproximal</code></a> covers some overlapping norm/constraint proximal operators</td>
+<td><strong>KEEP</strong></td>
+<td>Low-level building blocks with no strong off-the-shelf equivalent covering our exact operator set (turnover constraints, combined Dykstra-projected linear+box systems for portfolio construction specifically). <code>pyproximal</code> is oriented toward signal-processing/inverse-problems use cases, not portfolio constraints.</td>
+</tr>
+<tr>
+<td><code>quadprog.py</code> (<code>solve_qp</code>)</td>
+<td><code>qpsolvers.solve_qp</code> directly (already a declared dependency, currently used <em>underneath</em> cvxpy)</td>
+<td><strong>HYBRID</strong></td>
+<td>For hot loops that call <code>solve_qp</code> many times (e.g. risk-budgeting's inner ADMM loop), calling <code>qpsolvers.solve_qp</code> directly — bypassing cvxpy's DSL-parsing overhead — would likely be measurably faster. Worth profiling if performance in tight loops becomes a concern; keep the cvxpy-based version for its more expressive constraint-building (ridge/lasso penalty terms, arbitrary constraint composition), which raw <code>qpsolvers</code> doesn't offer.</td>
+</tr>
+<tr>
+<td><code>bisection.py</code></td>
+<td><code>scipy.optimize.brentq</code>/<code>bisect</code></td>
+<td><strong>HYBRID</strong></td>
+<td>scipy's <code>brentq</code> converges faster (superlinear, not just bisection) for scalar root-finding, and is compiled. <strong>KEEP</strong> our vectorized (array-broadcast, many-roots-at-once) version — scipy's root finders are scalar-only, and vectorizing over many independent brackets is exactly what our version adds.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="portfolio-portfolio">Portfolio (<code>portfolio/</code>)<a class="headerlink" href="#portfolio-portfolio" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mean_variance.py</code>, <code>black_litterman.py</code>, <code>tracking_error.py</code></td>
+<td><a href="https://github.com/robertmartin8/PyPortfolioOpt"><code>PyPortfolioOpt</code></a></td>
+<td><strong>HYBRID</strong></td>
+<td>PyPortfolioOpt is a mature, actively maintained library covering mean-variance optimization, Black-Litterman, CVaR, discrete allocation, and more — genuinely worth using directly for standard portfolio construction tasks. Keep ours for tighter integration with the rest of this codebase (shared <code>solve_qp</code>, direct ridge/lasso penalty composability) and where the exact original parameterization needs to match existing analysis.</td>
+</tr>
+<tr>
+<td><code>risk_budgeting.py</code></td>
+<td><a href="https://github.com/mirca/riskparityportfolio"><code>riskparityportfolio</code></a> (PyPI, narrower scope)</td>
+<td><strong>KEEP</strong></td>
+<td><code>riskparityportfolio</code> covers basic risk parity but not the box-constrained/general-linear-constrained/VaR-ES/target-matching breadth this module has. This is the single largest and most-tested piece of custom work in the whole port (75+ original files consolidated) — genuinely the strongest "keep" case in this document.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="mixtures-mixtures">Mixtures (<code>mixtures/</code>)<a class="headerlink" href="#mixtures-mixtures" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gaussian_mixture.py</code> — <code>estimate_em_mixture</code></td>
+<td><code>sklearn.mixture.GaussianMixture</code></td>
+<td><strong>HYBRID</strong></td>
+<td>sklearn's EM implementation is more numerically robust (covariance regularization, multiple initializations, convergence diagnostics) and well-tested for the <em>general</em> n-component case. Worth switching to for the pure model-fitting step. <strong>KEEP</strong> everything downstream of fitting — VaR/ES, risk contribution, risk budgeting, PDF/skewness under the mixture — since sklearn's <code>GaussianMixture</code> has none of that; it only fits parameters.</td>
+</tr>
+<tr>
+<td><code>jump_diffusion.py</code></td>
+<td><em>(none)</em></td>
+<td><strong>KEEP</strong></td>
+<td>Jump-diffusion-specific risk measures; no general-purpose equivalent exists.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="svm-svm">SVM (<code>svm/</code>)<a class="headerlink" href="#svm-svm" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>svm.py</code></td>
+<td><code>sklearn.svm.SVC</code>/<code>SVR</code></td>
+<td><strong>SWITCH</strong> for standalone use</td>
+<td>sklearn's SVM is backed by <code>libsvm</code>/<code>liblinear</code> (compiled C, extremely well optimized and battle-tested) — already verified to match our implementation to 3+ decimal places. For any standalone classification/regression task, use sklearn directly; it will be faster and more robust to edge cases (kernel tricks, class imbalance handling, probability calibration — none of which we ported). <strong>KEEP</strong> ours only if the SVM needs to be composed with other constraints inside the same <code>solve_qp</code>/cvxpy optimization (e.g. embedding an SVM-like margin constraint inside a larger portfolio problem) — that composability is the one thing sklearn's opaque solver can't offer.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="spline-spline">Spline (<code>spline/</code>)<a class="headerlink" href="#spline-spline" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spline.py</code></td>
+<td><code>scipy.interpolate.CubicSpline</code> (pure interpolation), <code>scipy.interpolate.UnivariateSpline</code>/<code>make_smoothing_spline</code> (smoothing)</td>
+<td><strong>SWITCH</strong> for general use</td>
+<td>Already verified our <code>p=1</code> case matches <code>CubicSpline</code> to machine precision — scipy's tools are more mature, better-tested, and actively maintained. The one real friction point: our <code>p</code> parameter (a <code>[0,1]</code> interpolation/smoothing blend) and scipy's <code>s</code> parameter (a target sum-of-squared-residuals) are <em>different parameterizations</em> of smoothness, not directly interchangeable. <strong>KEEP</strong> ours only where exact <code>p</code>-parameterized behavior needs to match existing MATLAB-based configs or analysis.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="maths-maths">Maths (<code>maths/</code>)<a class="headerlink" href="#maths-maths" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>numerical_diff.py</code></td>
+<td><a href="https://github.com/pbrod/numdifftools"><code>numdifftools</code></a></td>
+<td><strong>HYBRID</strong></td>
+<td><code>numdifftools</code> uses adaptive step sizing and Richardson extrapolation — meaningfully more accurate than our fixed-step-size approach, especially for ill-conditioned functions. Worth using where precision matters (e.g. as an alternative Hessian source for MLE standard errors). Keep ours for the specific magnitude-scaled step convention already wired into <code>econometrics.estimation</code>/<code>whittle</code>, to avoid adding a dependency for something already working correctly.</td>
+</tr>
+<tr>
+<td><code>simulation.py</code> — <code>compute_ewma</code></td>
+<td><code>pandas.DataFrame.ewm()</code></td>
+<td><strong>HYBRID</strong></td>
+<td>Pandas' <code>.ewm()</code> is a highly optimized, feature-complete exponentially-weighted accessor. The friction: pandas parameterizes by <code>alpha</code>/<code>span</code>/<code>halflife</code> (smoothing factor), while our <code>compute_ewma</code> uses <code>lambda_</code> as a mean-reversion <em>rate</em> with explicit <code>dt</code> scaling — a different but related convention requiring a small translation layer (<code>alpha = lambda_ * dt</code>, roughly) to switch cleanly. Worth doing if performance on very long series matters; keep ours as-is for now given the interface is already wired into <code>volatility_target</code>/<code>momentum_ewma</code>.</td>
+</tr>
+<tr>
+<td><code>simulation.py</code> — GBM simulators, Riccati/Lyapunov</td>
+<td><code>scipy.linalg</code> (already the backend for Riccati/Lyapunov)</td>
+<td><strong>KEEP</strong></td>
+<td>Riccati/Lyapunov already route through <code>scipy.linalg.solve_continuous_are</code>/<code>solve_lyapunov</code> — this <em>is</em> the "switch" already done. GBM simulation has no strong standard-library equivalent at this level of simplicity (QuantLib-Python exists but is a much heavier dependency for far more sophisticated PDE/Monte Carlo needs than this module targets).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="backtest-backtest">Backtest (<code>backtest/</code>)<a class="headerlink" href="#backtest-backtest" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>returns.py</code>, <code>stats.py</code>, <code>reporting.py</code></td>
+<td><a href="https://github.com/polakowo/vectorbt"><code>vectorbt</code></a>, <code>bt</code>, <code>backtrader</code>, <code>zipline</code></td>
+<td><strong>KEEP</strong></td>
+<td>These are full backtesting <em>frameworks</em> — heavier dependencies, different paradigms (event-driven for backtrader/zipline vs. vectorized), and a much bigger surface area than this module's lightweight, transparent, vectorized style suits. <code>vectorbt</code> specifically is worth knowing about if backtest performance on very large universes/long histories becomes a bottleneck (it's Numba-accelerated), but it's a genuinely different tool, not a drop-in replacement for this module's scope.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="linear-algebra-linalg">Linear algebra (<code>linalg/</code>)<a class="headerlink" href="#linear-algebra-linalg" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>special_matrices.py</code></td>
+<td><em>(none found as a standalone public utility)</em></td>
+<td><strong>KEEP</strong></td>
+<td><code>vec</code>/<code>vech</code>/<code>xpnd</code>/commutation/duplication/elimination matrices show up as private internals scattered inside packages like <code>linearmodels</code>, but there's no clean, importable public utility module for these. Genuinely fills a gap other libraries solve ad hoc internally rather than exposing.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="summary-where-the-strongest-switch-cases-are">Summary: where the strongest "switch" cases are<a class="headerlink" href="#summary-where-the-strongest-switch-cases-are" title="Permanent link">&para;</a></h2>
+<p>If prioritizing effort, these five would give the most practical benefit
+for the least risk, roughly in order of impact:</p>
+<ol>
+<li><strong><code>stats/regression/lasso.py</code></strong> → route the penalized-form solvers
+   through <code>sklearn.linear_model.Lasso</code>/<code>ElasticNet</code> (keep
+   <code>lasso_tau_constrained</code> as-is).</li>
+<li><strong><code>econometrics/var.py</code></strong> → use <code>statsmodels.tsa.api.VAR</code> for anything
+   unrestricted (keep <code>varx_estimate</code> for the restricted case).</li>
+<li><strong><code>econometrics/kalman.py</code></strong> → use
+   <code>statsmodels.tsa.statespace.MLEModel</code> for anything beyond simple
+   filtering.</li>
+<li><strong><code>svm/svm.py</code></strong> → recommend <code>sklearn.svm.SVC</code>/<code>SVR</code> directly to users
+   for standalone SVM tasks; keep the module for QP-composability use
+   cases only.</li>
+<li><strong><code>spline/spline.py</code></strong> → recommend <code>scipy.interpolate.CubicSpline</code> for
+   pure interpolation; keep the smoothing-spline path only where the
+   <code>p</code>-parameterization specifically matters.</li>
+</ol>
+<p>The strongest "keep, no serious alternative" cases are <code>stats/
+distributions.py</code>'s GQF family, <code>portfolio/risk_budgeting.py</code>,
+<code>linalg/special_matrices.py</code>, and <code>econometrics/whittle.py</code> — these are
+the places where the port is providing something genuinely absent
+elsewhere in the Python ecosystem, not just re-deriving what a
+well-known library already does.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

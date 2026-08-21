@@ -1,0 +1,1342 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Python port of the MATLAB QuantToolbox — econometrics, portfolio optimization, and risk analytics.">
+      
+      
+      
+      
+        <link rel="prev" href="../api/econometrics/">
+      
+      
+        <link rel="next" href="../library_alternatives/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>MATLAB bugs found - QuantToolbox</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bugs-found-in-the-original-matlab-source" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="QuantToolbox" class="md-header__button md-logo" aria-label="QuantToolbox" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            QuantToolbox
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              MATLAB bugs found
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/lcrmorin/QuantToolBox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lcrmorin/QuantToolBox
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="QuantToolbox" class="md-nav__button md-logo" aria-label="QuantToolbox" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    QuantToolbox
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/lcrmorin/QuantToolBox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lcrmorin/QuantToolBox
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/risk_budgeting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Risk budgeting (ERC / VaR / ES)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/black_litterman/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Black-Litterman
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/portfolio_risk_budgeting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    portfolio.risk_budgeting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/portfolio_black_litterman/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    portfolio.black_litterman
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/portfolio_mean_variance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    portfolio.mean_variance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/stats_regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stats.regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/econometrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    econometrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notes for translators
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes for translators
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MATLAB bugs found
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MATLAB bugs found
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-whittle-estimation-analytical-jacobian-is-missing-a-12-factor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Whittle estimation: analytical Jacobian is missing a 1/(2π) factor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-simulate_multi_gbmm-ignores-its-own-correlation-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. simulate_multi_gbm.m ignores its own correlation parameter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-newtons-method-has-no-positivity-floor-and-can-diverge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Newton's method has no positivity floor, and can diverge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-dead-code-path-rb_lagrangian-global-is-never-assigned-before-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Dead code path: RB_lagrangian global is never assigned before use
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-corner-case-false-early-termination-in-the-dykstra-projection-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Corner-case false-early-termination in the Dykstra projection loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary table
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../library_alternatives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library alternatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration_map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-whittle-estimation-analytical-jacobian-is-missing-a-12-factor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Whittle estimation: analytical Jacobian is missing a 1/(2π) factor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-simulate_multi_gbmm-ignores-its-own-correlation-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. simulate_multi_gbm.m ignores its own correlation parameter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-newtons-method-has-no-positivity-floor-and-can-diverge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Newton's method has no positivity floor, and can diverge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-dead-code-path-rb_lagrangian-global-is-never-assigned-before-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Dead code path: RB_lagrangian global is never assigned before use
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-corner-case-false-early-termination-in-the-dykstra-projection-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Corner-case false-early-termination in the Dykstra projection loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary table
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="bugs-found-in-the-original-matlab-source">Bugs found in the original MATLAB source<a class="headerlink" href="#bugs-found-in-the-original-matlab-source" title="Permanent link">&para;</a></h1>
+<p>While porting QuantToolbox to Python, every numeric routine was tested
+against an independent source of truth where one was available: known
+analytical solutions, Monte Carlo simulation, algebraic identities that
+must hold exactly, or agreement with established libraries (scipy,
+statsmodels, scikit-learn). That process surfaced several genuine defects
+in the <strong>original MATLAB code</strong> — not porting mistakes, but bugs that
+were already present in the source being translated. This document
+records each one: what it is, how it was found, what its practical impact
+would have been, and how the Python port handles it.</p>
+<p>A separate, much longer list of <em>porting</em> bugs (mistakes introduced while
+translating and then caught by testing) is not reproduced here — see the
+"Notes for translators" section of <code>docs/migration_map.md</code> for those.
+This file is specifically about defects that predate the port.</p>
+<hr />
+<h2 id="1-whittle-estimation-analytical-jacobian-is-missing-a-12-factor">1. Whittle estimation: analytical Jacobian is missing a <code>1/(2π)</code> factor<a class="headerlink" href="#1-whittle-estimation-analytical-jacobian-is-missing-a-12-factor" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong> <code>ects/whittle_local_level.m</code> (<code>local_level_sdf_jacobian</code>),
+<code>ects/whittle_local_linear_trend.m</code> (<code>local_linear_trend_sdf_jacobian</code>)</p>
+<p><strong>The bug:</strong> <code>local_level_sdf.m</code> defines the spectral density as</p>
+<div class="highlight"><pre><span></span><code>sdf = (2*(1-cos(lambda))*sigma1^2 + sigma2^2) / (2*pi)
+</code></pre></div>
+<p>i.e. the raw quadratic form scaled by <code>1/(2π)</code>. But its companion
+Jacobian function differentiates the <em>unscaled</em> quadratic form only:</p>
+<div class="highlight"><pre><span></span><code>J1 = 4*(1-cos(lambda))*sigma1
+J2 = 2*sigma2
+</code></pre></div>
+<p>The true derivative of <code>sdf</code> with respect to <code>sigma1</code>/<code>sigma2</code> is <code>J1/(2π)</code>
+and <code>J2/(2π)</code> — the Jacobian function silently omits the <code>1/(2π)</code> factor
+that the function it's supposed to be differentiating actually has. The
+same inconsistency is repeated in the local-linear-trend variant.</p>
+<p><strong>How it was found:</strong> the Python port's Whittle MLE, using the analytical
+gradient exactly as translated from MATLAB, converged to noticeably
+worse-fitting parameter estimates than the same optimization using a
+plain numerical (finite-difference) gradient — a strong signal that the
+analytical gradient was wrong. Directly comparing the two gradients at
+the same point confirmed it: they differed by a factor of almost exactly
+<code>2π</code> (6.283...) at every point checked, which is exactly what an omitted
+<code>1/(2π)</code> scaling factor would produce.</p>
+<p><strong>Practical impact:</strong> any code path in the original MATLAB toolbox that
+supplied the analytical Jacobian to <code>fminunc</code>/<code>fmincon</code> for these two
+models (the <code>nb_functions == 2</code> branch in
+<code>whittle_constrained_estimation.m</code>) would converge to the correct
+optimum eventually regardless, since a Newton-type optimizer will still
+find the same stationary point as long as the gradient's zero-crossing is
+correct — but convergence would be slower and less numerically stable
+than intended, since the reported gradient magnitude is off by a factor
+of ~6.28, which throws off step-size heuristics and convergence-tolerance
+checks. It would also make the "method of scoring" branch (which uses
+the gradient directly in a Newton step, not just its sign) converge to a
+step of the wrong size on each iteration.</p>
+<p><strong>Fix in the Python port:</strong> <code>quanttoolbox.econometrics.whittle</code>'s
+<code>_local_level_sdf_jacobian</code> and <code>_local_linear_trend_sdf_jacobian</code>
+include the missing <code>1/(2*pi)</code> factor, with the derivation documented
+inline. Verified with a regression test
+(<code>test_whittle_local_level_analytical_gradient_matches_numerical</code>) that
+directly asserts the analytical and numerical gradients agree to within
+<code>1e-4</code>, so this can't silently regress.</p>
+<hr />
+<h2 id="2-simulate_multi_gbmm-ignores-its-own-correlation-parameter">2. <code>simulate_multi_gbm.m</code> ignores its own correlation parameter<a class="headerlink" href="#2-simulate_multi_gbmm-ignores-its-own-correlation-parameter" title="Permanent link">&para;</a></h2>
+<p><strong>File:</strong> <code>maths/simulate_multi_gbm.m</code></p>
+<p><strong>The bug:</strong> the function signature is
+<code>simulate_multi_gbm(x0, mu, sigma, rho, t, nS)</code>, explicitly taking a
+correlation parameter <code>rho</code> — but the function body is byte-identical to
+<code>simulate_gbm.m</code> (the <em>single-asset</em>, uncorrelated simulator). <code>rho</code> is
+accepted as an argument and then never referenced anywhere in the
+function body.</p>
+<p><strong>How it was found:</strong> while reading the source ahead of porting, simply
+diffing <code>simulate_multi_gbm.m</code> against <code>simulate_gbm.m</code> showed they were
+character-for-character identical apart from the function name — an
+unusual thing to happen by coincidence, and a giveaway that this was an
+abandoned or unfinished implementation rather than an intentional
+simplification.</p>
+<p><strong>Practical impact:</strong> any caller of <code>simulate_multi_gbm</code> in the original
+codebase expecting correlated multi-asset paths would silently get
+<strong>independent</strong> single-asset-style paths instead (broadcast across
+whatever the actual multi-dimensional inputs were, ignoring cross-asset
+correlation entirely). This is the kind of bug that's easy to miss
+downstream, since the output still "looks like" a plausible simulation —
+it just has the wrong joint distribution.</p>
+<p><strong>Fix in the Python port:</strong>
+<code>quanttoolbox.maths.simulation.simulate_multi_gbm</code> is a genuine
+N-asset correlated simulator, implemented via Cholesky decomposition of
+the correlation matrix (the mathematically standard approach, and what
+the original's signature/docstring evidently intended). This is a
+deliberate <em>departure</em> from faithfully reproducing the original's
+behavior, documented explicitly in the module docstring, since faithfully
+reproducing a bug that discards the function's one documented purpose
+would be pointless. Verified with a test that simulates a 3-asset system
+and checks the empirical correlation matrix of the simulated returns
+matches the target correlation matrix to within Monte Carlo sampling
+error.</p>
+<hr />
+<h2 id="3-newtons-method-has-no-positivity-floor-and-can-diverge">3. Newton's method has no positivity floor, and can diverge<a class="headerlink" href="#3-newtons-method-has-no-positivity-floor-and-can-diverge" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong> <code>crb/compute_rb_sd_admm_newton.m</code>,
+<code>rpb/compute_rb_sd_newton.m</code> (the same Newton core is used, with minor
+variations, in both the unconstrained and ADMM-embedded risk-budgeting
+solvers)</p>
+<p><strong>The bug:</strong> the risk-budgeting Lagrangian's gradient and Hessian both
+contain a <code>b ./ x</code> term (and <code>b ./ (x.*x)</code> in the Hessian), which is only
+mathematically valid for <code>x &gt; 0</code> — weights are supposed to stay strictly
+positive near the solution. The only safeguard the original code has is
+<code>RB_Newton_Correction</code>, which — when enabled — does
+<code>x = min(x, RB_Newton_xMax)</code>, an <strong>upper</strong> cap only. Nothing in the
+original prevents a Newton step from driving <code>x</code> negative, at which point
+<code>b ./ x</code> and <code>b ./ (x.*x)</code> become numerically unstable (large, sign-flipped,
+or in degenerate cases divide-by-zero), and the iteration can diverge
+rather than converge.</p>
+<p><strong>How it was found:</strong> while testing the Python port's risk-budgeting
+target-matching frontier (which evaluates the box-constrained solver at
+extreme risk-aversion values as part of finding the achievable target
+range), a call with a high risk-aversion parameter hung for minutes
+instead of returning. Tracing it down: Newton's method was diverging to
+large negative weight values, and since nothing detected the divergence,
+both the inner ADMM loop and the outer bisection search kept running to
+their full iteration budgets on a broken, non-converging state — up to
+tens of millions of wasted Newton steps in the worst case.</p>
+<p><strong>Practical impact:</strong> in the original MATLAB toolbox, this would manifest
+as the risk-budgeting solver silently failing to converge (or converging
+to a nonsensical negative-weight "solution") for sufficiently extreme
+risk-aversion parameters or unusual covariance structures, rather than
+detecting the problem and reporting it. Since the failure mode is
+divergence rather than an outright crash, it's the kind of thing that
+could produce a bad optimization result without an obvious error message
+— particularly risky in a portfolio-construction context.</p>
+<p><strong>Fix in the Python port:</strong> every Newton iteration in
+<code>quanttoolbox.portfolio.risk_budgeting._solve_newton</code> clips <code>x</code> to a
+small positive floor (<code>x = max(x, 1e-8)</code>) before evaluating the gradient
+and Hessian, which is a minimal, standard safeguard for exactly this kind
+of update rule. Verified directly: the specific input that previously
+hung now completes in about a second and converges to a sensible,
+strictly positive solution; a full run of the existing test suite (244
+tests at the time) showed zero regressions from adding the floor.</p>
+<hr />
+<h2 id="4-dead-code-path-rb_lagrangian-global-is-never-assigned-before-use">4. Dead code path: <code>RB_lagrangian</code> global is never assigned before use<a class="headerlink" href="#4-dead-code-path-rb_lagrangian-global-is-never-assigned-before-use" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong> <code>mixture/mixture_compute_rb_var.m</code>,
+<code>mixture/mixture_compute_rb_es.m</code> (the <code>RB_algorithm != 1</code> / "algorithm
+2" branch in each)</p>
+<p><strong>The bug:</strong> both functions offer two solver algorithms, selected by the
+<code>RB_algorithm</code> global: algorithm 1 uses <code>fmincon</code> to directly minimize
+risk-contribution deviations, while algorithm 2 uses <code>fminunc</code> on a
+log-barrier-penalized objective that references <code>global RB_lagrangian</code>
+inside its objective/gradient function
+(<code>local_mixture_compute_rb_var2</code>/<code>local_mixture_compute_rb_es2</code>).
+Searching the entire codebase, <code>RB_lagrangian</code> is declared as a global in
+several places but <strong>never assigned a value anywhere</strong> before algorithm 2
+would use it. Calling algorithm 2 would use whatever stale or default
+value MATLAB gives an unset global (typically empty), which would error
+or silently produce nonsense inside the log-barrier term
+<code>lagrangian * sum(b .* log(x))</code>.</p>
+<p><strong>How it was found:</strong> while reading through the mixture risk-budgeting
+code to plan the Python port, tracing every assignment site of
+<code>RB_lagrangian</code> across the codebase turned up none — a <code>grep</code>-style
+search for <code>RB_lagrangian =</code> (as opposed to <code>global RB_lagrangian</code> or
+uses of the variable) returns no results anywhere in the source tree.</p>
+<p><strong>Practical impact:</strong> the <code>RB_algorithm == 1</code> branch (the default) works
+fine and is presumably what the original toolbox's users actually
+exercised; the <code>RB_algorithm != 1</code> branch appears to be genuinely
+unreachable/broken code that was never completed or never tested.</p>
+<p><strong>Fix in the Python port:</strong>
+<code>quanttoolbox.mixtures.gaussian_mixture.mixture_compute_rb_var</code>/
+<code>mixture_compute_rb_es</code> implement only the working algorithm (the
+<code>fmincon</code>-equivalent minimization via <code>scipy.optimize.minimize</code> with
+SLSQP), matching the original's functional default. The broken algorithm-2
+branch is not ported, and this is called out explicitly in the module
+docstring so it's clear the omission is intentional rather than an
+oversight.</p>
+<hr />
+<h2 id="5-corner-case-false-early-termination-in-the-dykstra-projection-loop">5. Corner-case false-early-termination in the Dykstra projection loop<a class="headerlink" href="#5-corner-case-false-early-termination-in-the-dykstra-projection-loop" title="Permanent link">&para;</a></h2>
+<p><strong>File:</strong> <code>optim/proximal_linear_constraints.m</code> (and the equivalent
+pattern in <code>proximal_inequality.m</code>, <code>proximal_turnover.m</code>)</p>
+<p><strong>The bug:</strong> the loop's convergence check is exact floating-point
+equality: <code>if x1 == x4 break end</code>. Dykstra's alternating-projection
+algorithm can, for constraint sets that meet at a sharp corner (e.g. a
+budget constraint intersecting a box constraint at a vertex), pass
+through a <strong>temporary plateau</strong> — several consecutive iterations where
+the iterate doesn't move at all in floating-point terms — before
+continuing to converge toward the true intersection point. An exact
+equality check can't distinguish "converged" from "stuck on a plateau
+that will resume moving a few iterations later," and will exit at the
+first plateau it hits.</p>
+<p><strong>How it was found:</strong> while testing the general linear-constrained
+risk-budgeting solver (which uses this same Dykstra pattern) against a
+symmetric two-asset equality constraint, the solver returned an
+infeasible result — the equality constraint was violated. Manually
+tracing the iteration sequence by hand showed the true fixed point was
+still 15–20 iterations away, but the loop had exited early because the
+iterate happened to repeat bit-for-bit for two consecutive steps before
+resuming its (very slow, corner-geometry-driven) convergence.</p>
+<p><strong>Practical impact:</strong> for symmetric/corner-case inputs, the original
+MATLAB's proximal-projection-based constrained solvers could return an
+answer that looks converged (no error raised) but doesn't actually
+satisfy the constraints it was supposed to enforce — a silent
+correctness bug rather than a crash, which is the more dangerous kind.</p>
+<p><strong>Fix in the Python port:</strong> this one is <strong>not fixed</strong> — the same exact
+floating-point equality check (via <code>np.allclose</code>, which has the same
+plateau-blindness) is used in
+<code>quanttoolbox.optim.proximal.proximal_linear_constraints</code>, to stay
+faithful to the original's iteration structure. Instead, the limitation
+is documented explicitly in the function's docstring, with a concrete
+recommendation (increase <code>max_iters</code>, perturb the starting point, or
+verify constraint satisfaction directly) for anyone who hits it. This was
+a deliberate choice: silently "fixing" convergence-detection logic can
+change <em>which</em> fixed point a general iterative algorithm reports for
+other, non-corner-case inputs too, and doing that safely would need much
+more careful analysis than local pattern-matching. Flagging the known
+failure mode clearly seemed like the more honest and lower-risk option
+than a quick patch. A related, deliberate robustness improvement was
+made one level up: <code>portfolio.risk_budgeting.solve_constrained</code>'s outer
+lambda-bisection now auto-expands its search bracket if the default
+window doesn't contain a sign change, since that specific failure mode
+(as opposed to this one) was straightforward to detect and fix safely.</p>
+<hr />
+<h2 id="summary-table">Summary table<a class="headerlink" href="#summary-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Location</th>
+<th>Nature</th>
+<th>Fixed in port?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>whittle_local_level.m</code> / <code>whittle_local_linear_trend.m</code> Jacobians</td>
+<td>Missing <code>1/(2π)</code> scaling factor</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>simulate_multi_gbm.m</code></td>
+<td>Unused parameter / incomplete implementation</td>
+<td>✅ Yes (reimplemented properly)</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>compute_rb_sd_admm_newton.m</code> / Newton core</td>
+<td>No positivity floor, can diverge</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>mixture_compute_rb_{var,es}.m</code> algorithm-2 branch</td>
+<td>Dead code (unset global)</td>
+<td>✅ Yes (branch not ported, documented)</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>proximal_linear_constraints.m</code></td>
+<td>Exact-equality convergence check can false-exit on a plateau</td>
+<td>⚠️ Not fixed — faithfully reproduced and documented</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

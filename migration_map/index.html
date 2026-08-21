@@ -1,0 +1,1250 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Python port of the MATLAB QuantToolbox — econometrics, portfolio optimization, and risk analytics.">
+      
+      
+      
+      
+        <link rel="prev" href="../library_alternatives/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Migration map - QuantToolbox</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#migration-map-matlab-quanttoolbox-python-quanttoolbox" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="QuantToolbox" class="md-header__button md-logo" aria-label="QuantToolbox" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            QuantToolbox
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Migration map
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/lcrmorin/QuantToolBox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lcrmorin/QuantToolBox
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="QuantToolbox" class="md-nav__button md-logo" aria-label="QuantToolbox" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    QuantToolbox
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/lcrmorin/QuantToolBox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lcrmorin/QuantToolBox
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/risk_budgeting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Risk budgeting (ERC / VaR / ES)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/black_litterman/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Black-Litterman
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/portfolio_risk_budgeting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    portfolio.risk_budgeting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/portfolio_black_litterman/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    portfolio.black_litterman
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/portfolio_mean_variance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    portfolio.mean_variance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/stats_regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stats.regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/econometrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    econometrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notes for translators
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes for translators
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../matlab_bugs_found/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MATLAB bugs found
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../library_alternatives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library alternatives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration map
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#not-ported-intentionally-dropped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not ported (intentionally dropped)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes-for-translators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes for translators
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#not-ported-intentionally-dropped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not ported (intentionally dropped)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes-for-translators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes for translators
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="migration-map-matlab-quanttoolbox-python-quanttoolbox">Migration Map: MATLAB QuantToolbox → Python quanttoolbox<a class="headerlink" href="#migration-map-matlab-quanttoolbox-python-quanttoolbox" title="Permanent link">&para;</a></h1>
+<p>Status legend: ⬜ not started · 🟨 in progress · ✅ ported &amp; tested</p>
+<p>See also: <a href="../matlab_bugs_found/"><code>matlab_bugs_found.md</code></a> for genuine
+defects found in the <em>original</em> MATLAB source during porting, and
+<a href="../library_alternatives/"><code>library_alternatives.md</code></a> for an assessment
+of which ported modules should be replaced with mature Python libraries
+versus which genuinely justify staying custom.</p>
+<table>
+<thead>
+<tr>
+<th>Python module</th>
+<th>Original MATLAB files</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dates/convert.py</code></td>
+<td><code>dates/Excel2Matlab_Dates.m</code>, <code>Matlab2Excel_Dates.m</code>, <code>is_yyyymmdd.m</code>, <code>numdate.m</code>, <code>datenum2.m</code>, <code>excel_column.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>dates/rebalancing.py</code></td>
+<td><code>dates/generic_rebalancing.m</code> + <code>annual/monthly/quarterly/semi_annual/weekly_rebalancing.m</code>, <code>generate_trading_dates.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>backtest/returns.py</code></td>
+<td><code>backtest/price2return.m</code>, <code>price2return2.m</code>, <code>return2price.m</code>, <code>price2unfunded.m</code>, <code>unfunded2price.m</code>, <code>capitalized_libor*.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>backtest/stats.py</code></td>
+<td><code>backtest/maximum_drawdown.m</code>, <code>static_turnover.m</code>, <code>annualized_turnover.m</code>, <code>average_return.m</code>, <code>monthly_statistics.m</code>, <code>yearly_statistics.m</code>, <code>index_repeated_data.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>backtest/reporting.py</code></td>
+<td><code>backtest/generate_backtest.m</code>, <code>generate_backtest2.m</code>, <code>backtest_reporting.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>stats/distributions.py</code></td>
+<td><code>stats/cdfn.m</code>, <code>cdfni.m</code>, <code>cdft.m</code>, <code>cdfti.m</code>, <code>cdftc.m</code>, <code>cdfchi2.m</code>, <code>cdfchi2c.m</code>, <code>cdff.m</code>, <code>cdffc.m</code>, <code>cdfmvn.m</code>, <code>pdfmvn.m</code>, <code>pdfn.m</code>, <code>rndmvn.m</code>, <code>gqf1_*.m</code>, <code>gqf2_*.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>stats/moments.py</code></td>
+<td><code>stats/skewness_coefficient.m</code>, <code>kurtosis_coefficient.m</code>, <code>herfindahl_index.m</code>, <code>mean_absolute_difference.m</code>, <code>cov2cor.m</code>, <code>cor2cov.m</code>, <code>corrx.m</code>, <code>pearson_correlation.m</code>, <code>active_share*.m</code>, <code>asynchronous_cov.m</code>, <code>weekly_cov.m</code>, <code>rolling_correlation.m</code>, <code>rolling_volatility.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>stats/regression/ols.py</code></td>
+<td><code>stats/regOLS.m</code>, <code>regCenter.m</code>, <code>regStandardize.m</code>, <code>regCND.m</code>, <code>regPCA.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>stats/regression/ridge.py</code></td>
+<td><code>stats/regRidge.m</code>, <code>regRidge2.m</code> (+ <code>theo/</code> duplicates)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>stats/regression/lasso.py</code></td>
+<td><code>stats/regLassoCCD.m</code>, <code>regLassoADMM.m</code>, <code>regLasso.m</code>, <code>selectLasso.m</code>, <code>regElasticNet.m</code> (+ <code>theo/</code> duplicates)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>stats/regression/kernel.py</code></td>
+<td><code>stats/regKernelDensity.m</code>, <code>regKernelMean.m</code>, <code>regKernelQuantile.m</code>, <code>regKernelPayoff.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>stats/regression/quantile.py</code> (new, not in original module map)</td>
+<td><code>stats/quantile_regression.m</code>, <code>qrCopulaNormal.m</code>, <code>qrCopulaStudent.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>stats/regression/robust.py</code></td>
+<td><code>ects/robust_regression.m</code>, <code>robust_huber_regression.m</code>, <code>robust_lad_regression.m</code>, <code>robust_quantile_regression.m</code>, <code>robust_inverse_quantile_regression.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>econometrics/estimation.py</code></td>
+<td><code>ects/ols_estimation.m</code>, <code>ols_constrained_estimation.m</code>, <code>gmm_estimation.m</code>, <code>gmm_constrained_estimation.m</code>, <code>ml_estimation.m</code>, <code>ml_constrained_estimation.m</code>, <code>wald_test.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>econometrics/var.py</code></td>
+<td><code>ects/varx_cls.m</code>, <code>varx_cml.m</code>, <code>varx_ls.m</code>, <code>varx_ml.m</code>, <code>varx_order.m</code>, <code>varx_constrained_estimation_onestep.m</code>, <code>var_constrained_estimation_onestep.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>econometrics/kalman.py</code></td>
+<td><code>ects/state_space_model.m</code>, <code>ssm_set.m</code>, <code>ssm_steady_state.m</code>, <code>Kalman_filtering.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>econometrics/whittle.py</code></td>
+<td><code>ects/whittle_estimation.m</code>, <code>whittle_constrained_estimation.m</code>, <code>whittle_local_level.m</code>, <code>whittle_local_linear_trend.m</code>, <code>maths/pdgm.m</code>, <code>maths/periodogram.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>econometrics/tests.py</code></td>
+<td><code>ects/adf_test.m</code> (via <code>statsmodels.tsa.stattools.adfuller</code> -- see module docstring)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>optim/proximal.py</code></td>
+<td><code>optim/proximal_L1.m</code>, <code>proximal_L2.m</code>, <code>proximal_Linfinity.m</code>, <code>proximal_bounds.m</code>, <code>proximal_equality.m</code>, <code>proximal_inequality.m</code>, <code>proximal_linear_constraints.m</code>, <code>proximal_max.m</code>, <code>proximal_turnover.m</code>, <code>soft_thresholding.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>optim/projection.py</code></td>
+<td><code>optim/projection_L1.m</code>, <code>projection_L2.m</code>, <code>projection_Linfinity.m</code>, <code>projection_box_L2.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>optim/quadprog.py</code></td>
+<td><code>optim/quadprog_bc_ccd.m</code>, <code>quadprog_lasso.m</code>, <code>quadprog_mixed_norm.m</code>, <code>quadprog_mixed2_norm.m</code>, <code>quadprog_ridge.m</code>, <code>quadprog_turnover.m</code>, <code>qp_hyperplane.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>optim/bisection.py</code></td>
+<td><code>optim/bisection.m</code>, <code>bisection2.m</code>, <code>explicit2implicit.m</code>, <code>implicit2explicit.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>portfolio/risk_budgeting.py</code></td>
+<td><code>rpb/compute_rb_*.m</code>, <code>crb/compute_rb_sd_*.m</code> (~55 files), <code>mloapa/compute_ERC_*.m</code>, <code>lagrange_rb_sd.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>portfolio/mean_variance.py</code></td>
+<td><code>rpb/compute_mvo_portfolio*.m</code>, <code>compute_minvar_portfolio.m</code>, <code>mloapa/compute_MinVar_ADMM*.m</code>, <code>compute_MDP_ADMM.m</code>, <code>compute_mdp_*.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>portfolio/tracking_error.py</code></td>
+<td><code>rpb/compute_te_portfolio*.m</code>, <code>compute_minimum_te_portfolio.m</code>, <code>compute_te_portfolio_mixed_norm.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>portfolio/black_litterman.py</code></td>
+<td><code>rpb/compute_Black_Litterman_moments.m</code>, <code>implied_risk_premia.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>portfolio/erc_mdp.py</code></td>
+<td><code>rpb/compute_erc_portfolio.m</code>, <code>mloapa/compute_ERC_*.m</code>, <code>compute_MDP_ADMM.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>mixtures/gaussian_mixture.py</code></td>
+<td><code>mixture/mixture_*.m</code>, <code>estimate_em_mixture.m</code>, <code>logl_em_mixture.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>mixtures/jump_diffusion.py</code></td>
+<td><code>mixture/jump_*.m</code>, <code>bivariate_lognormal_skewness.m</code>, <code>lognormal_moments.m</code>, <code>lognormal_skewness.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>svm/svm.py</code></td>
+<td><code>svm/svm_classification_dual.m</code>, <code>svm_classification_primal.m</code>, <code>svm_regression_dual.m</code>, <code>svm_regression_primal.m</code> (+ <code>theo/</code> duplicates)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>spline/spline.py</code></td>
+<td><code>spline/csspline.m</code>, <code>dspline.m</code>, <code>fspline.m</code>, <code>intspline.m</code>, <code>invspline.m</code>, <code>band.m</code>, <code>bandrv.m</code>, <code>bandsolpd.m</code>, <code>rotater.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>maths/numerical_diff.py</code></td>
+<td><code>maths/numerical_gradient.m</code>, <code>numerical_hessian.m</code>, <code>numerical_jacobian.m</code>, <code>sign_operator.m</code> (<code>stats/robust_vcv.m</code>/<code>ml_robust_vcv.m</code> are superseded by <code>econometrics.estimation.ml_estimation(..., cov="hc")</code>, not separately ported)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>maths/simulation.py</code></td>
+<td><code>maths/simulate_gbm.m</code>, <code>simulate_gbm2.m</code>, <code>simulate_multi_gbm.m</code>, <code>compute_ewma.m</code>, <code>momentum_ewma.m</code>, <code>volatility_target.m</code>, <code>algebraic_riccati_equation.m</code>, <code>lyapunov_equation.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>linalg/special_matrices.py</code></td>
+<td><code>matrix/vec.m</code>, <code>vech.m</code>, <code>vecr.m</code>, <code>xpnd.m</code>, <code>commutation_matrix.m</code>, <code>duplication_matrix.m</code>, <code>elimination_matrix.m</code>, <code>reshapec.m</code>, <code>reshaper.m</code>, <code>diagrv.m</code>, <code>lowmat.m</code>, <code>upmat.m</code>, <code>design.m</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>viz/export.py</code></td>
+<td><code>tools/save_graphic.m</code>, <code>save_graphic2.m</code></td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h2 id="not-ported-intentionally-dropped">Not ported (intentionally dropped)<a class="headerlink" href="#not-ported-intentionally-dropped" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Original</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>matrix/rows.m</code>, <code>cols.m</code>, <code>sumc.m</code>, <code>meanc.m</code>, <code>stdc.m</code>, <code>maxc.m</code>, <code>minc.m</code>, <code>prodc.m</code></td>
+<td>Replaced by native NumPy (<code>.shape</code>, <code>.sum()</code>, <code>.mean()</code>, <code>.std()</code>, ...) everywhere they're used.</td>
+</tr>
+<tr>
+<td><code>tools/packr.m</code>, <code>selif.m</code>, <code>seqa.m</code>, <code>lag1.m</code>, <code>lagn.m</code>, <code>missrv.m</code>, <code>miss.m</code>, <code>rev.m</code>, <code>trimr.m</code></td>
+<td>Replaced by pandas/NumPy idioms (<code>.dropna()</code>, boolean indexing, <code>np.arange</code>, <code>.shift()</code>, <code>.fillna()</code>, slicing).</td>
+</tr>
+<tr>
+<td><code>export/*.m</code> (16-file third-party <code>export_fig</code> package)</td>
+<td>matplotlib's native <code>savefig(dpi=..., bbox_inches="tight")</code> covers the same need.</td>
+</tr>
+<tr>
+<td><code>latex/*.m</code>, <code>tools/latex_sa.m</code>, <code>latex_tabular.m</code></td>
+<td>Use <code>pandas.DataFrame.to_latex()</code> / Jinja2 templates instead.</td>
+</tr>
+<tr>
+<td><code>init_color.m</code></td>
+<td>MATLAB plot-color globals; not needed with matplotlib style sheets.</td>
+</tr>
+<tr>
+<td><code>init_global.m</code></td>
+<td>Superseded by <code>config.py</code> dataclasses (defaults live with each config class instead of one monolithic init script).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="notes-for-translators">Notes for translators<a class="headerlink" href="#notes-for-translators" title="Permanent link">&para;</a></h2>
+<p>General guidance for anyone extending or re-verifying this port (see
+<a href="../matlab_bugs_found/"><code>matlab_bugs_found.md</code></a> for the specific,
+already-resolved bugs found in the original source along the way):</p>
+<ul>
+<li>Every module still using MATLAB <code>global</code> state (ADMM/CCD tolerances, MVO
+  problem context, Proximal_Algorithm, GMM/ML/Whittle settings) should take
+  the corresponding dataclass from <code>quanttoolbox.config</code> as an explicit
+  argument with a default instance.</li>
+<li><code>crb/</code> and <code>rpb/</code> together account for ~95 MATLAB files, many of them
+  near-identical solver variants (ADMM/CCD/Newton/fmincon × unconstrained/
+  box/linear constraints). These collapse into <code>portfolio/risk_budgeting.py</code>
+  as a single class; check the original file names above only to confirm
+  behavioral parity during testing, not to preserve a 1:1 file structure.</li>
+<li>MATLAB is 1-indexed and column-major; watch for off-by-one loop bounds and
+  <code>reshape</code>/<code>vec</code> ordering differences when porting arithmetic directly.</li>
+<li><code>quadprog(...)</code> calls (MATLAB Optimization Toolbox) map to <code>qpsolvers.solve_qp</code>
+  or <code>cvxpy</code> — solver choice affects numerical tolerance, so regression-test
+  against the MATLAB output where precision matters (e.g. SVM support vectors).</li>
+<li>When translating a formula that depends on a specific scaling/normalization
+  convention (e.g. a <code>2π</code> factor, a <code>1/n</code> normalization), verify it against
+  a known closed-form result or a numerical derivative rather than trusting
+  the transcription — several of the found bugs were exactly this kind of
+  silent scaling-factor mismatch.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
