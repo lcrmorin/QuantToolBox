@@ -104,12 +104,12 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 | Folder | MATLAB file | Status | Notes |
 |---|---|---|---|
 | `maths/` | `grad1.m` | ✅ | See `examples/building_blocks.md` |
-| `maths/` | `grad2.m` | ⬜ | |
-| `maths/` | `grad3.m` | ⬜ | |
-| `maths/` | `grad4.m` | ⬜ | |
-| `maths/` | `grad5.m` | ⬜ | |
+| `maths/` | `grad2.m` | 🟡 | Translated — scalar function of 2 variables (poly + log + exp) |
+| `maths/` | `grad3.m` | 🟡 | Translated — elementwise fun summed first (same trick as grad1.m) so the scalar-valued `numerical_gradient` can be used |
+| `maths/` | `grad4.m` | 🟡 | Translated — same elementwise-via-sum trick as grad3.m |
+| `maths/` | `grad5.m` | 🟡 | Translated — both the already-scalar `fun` and the explicit-sum `fun2` formulations (same gradient either way) |
 | `maths/` | `hess1.m` | ✅ | See `examples/building_blocks.md` |
-| `maths/` | `hess2.m` | ⬜ | |
+| `maths/` | `hess2.m` | 🟡 | Translated — numerical gradient + Hessian vs. analytical, at a point with a very small x2 |
 | `maths/` | `pdgm1.m` | ⬜ | periodogram plot |
 | `maths/` | `pdgm2.m` | ⬜ | periodogram plot |
 
@@ -119,8 +119,8 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 |---|---|---|---|
 | `matrix/` | `design1.m` | 🟡 | Rounding behavior verified independently; Octave hit an unrelated int64-cast environment issue on this run |
 | `matrix/` | `matrix1.m` | ✅ | Cross-verified vs. Octave (elimination/duplication/commutation matrix shapes+sums match exactly) |
-| `matrix/` | `matrix2.m` | ⬜ | |
-| `matrix/` | `reshape1.m` | ⬜ | |
+| `matrix/` | `matrix2.m` | 🟡 | Translated — 7 elimination/duplication/commutation-matrix identities checked for M=1..10; uses `np.isclose`/`allclose` rather than exact `==` since `inv(D'*D)` isn't bit-exact |
+| `matrix/` | `reshape1.m` | 🟡 | Translated — vech/xpnd (both orderings) and reshaper/reshapec; the `shiftr` portion is dropped (not ported, see `shiftr1.m` below) |
 | `matrix/` | `shiftc1.m` | ⬜ | Exercises `shiftc` — not ported (GAUSS shift primitive, superseded by `numpy.roll`/slicing idioms) |
 | `matrix/` | `shiftr1.m` | ⬜ | Exercises `shiftr` — not ported, same reason |
 | `matrix/` | `submat1.m` | ⬜ | Exercises `submat` — not ported (superseded by NumPy fancy indexing) |
@@ -133,12 +133,12 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 |---|---|---|---|
 | `optim/` | `bisection1.m` | ✅ | See `examples/building_blocks.md` |
 | `optim/` | `explicit1.m` | ✅ | See `examples/building_blocks.md` |
-| `optim/` | `explicit2.m` | ⬜ | |
-| `optim/` | `explicit3.m` | ⬜ | |
+| `optim/` | `explicit2.m` | 🟡 | Translated — explicit/implicit round-trip for one constraint, plus a `design()` matrix demo |
+| `optim/` | `explicit3.m` | 🟡 | Translated — explicit-to-implicit for 3 simultaneous zero-restrictions |
 | `optim/` | `prox_L1.m` | ✅ | Cross-verified vs. Octave (fixed input) — see `examples/building_blocks.md` |
 | `optim/` | `prox_L2.m` | ✅ | Cross-verified vs. Octave — see `examples/building_blocks.md` |
 | `optim/` | `prox_Linfinity.m` | ✅ | Cross-verified vs. Octave — see `examples/building_blocks.md` |
-| `optim/` | `prox_turnover1.m` | ⬜ | |
+| `optim/` | `prox_turnover1.m` | 🟡 | Translated — proximal-L1 vs. both projection-L1 algorithms; fixed-seed substitution for unseeded `rand` |
 | `optim/` | `prox_turnover2.m` | 🟡 | Uses `proximal_turnover` → `fminunc`/`optimoptions`; Octave-forge's `optim` package doesn't implement `optimoptions`, so this specific example can't be cross-run in this environment. Function itself already covered by the package's own test suite. |
 | `optim/` | `proximal1.m` | ⬜ | large multi-part script (bounds/equality/inequality/linear-constraints) |
 | `optim/` | `turnover1.m` | ✅ | Cross-verified vs. Octave (fixed input) — see `examples/building_blocks.md` |
@@ -203,7 +203,7 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 | `svm/` | `svm5.m` | 🟡 | Translated (numeric core; original's C-sweep plot not re-translated separately, covered by svm3/svm4 at 4 representative C values) |
 | `svm/` | `svm6.m` | 🟡 | Translated — OLS/LAD/quantile/SVM comparison; SVM-LS matches OLS at high C as expected |
 | `svm/` | `svm7.m` | 🟡 | Translated (dual formulation) — matches svm6.py's primal results exactly |
-| `svm/` | `svm8.m` | ⬜ | Uses `rand()`/`randn()` synthetic data at n=1000 -- needs a fixed-seed substitution, not yet done |
+| `svm/` | `svm8.m` | 🟡 | Translated — fixed-seed substitution (`default_rng(0)`) for the n=1000 synthetic dataset; OLS/SVM-LS and Quantile/SVM-eps pairs agree at large C as expected |
 | `svm/` | `svm_regression_dual_theo.m` | ✅ | Function source file (not an example script) — the `theo/` duplicate already merged into `svm.py`'s `svm_regression_dual` |
 | `svm/` | `svm_regression_primal_theo.m` | ✅ | Function source file (not an example script) — already merged into `svm.py`'s `svm_regression_primal` |
 | `svm/` | `theo6.m` | 🟡 | Duplicate of svm6.m's exact scenario — covered by svm6.py |
@@ -244,15 +244,15 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 | `backtest/` | 9 | 0 | 1 | 8 |
 | `dates/` | 5 | 2 | 1 | 2 |
 | `ects/` | 40 | 2 | 0 | 38 |
-| `maths/` | 9 | 2 | 0 | 7 |
-| `matrix/` | 9 | 3 | 1 | 5 |
-| `optim/` | 11 | 6 | 1 | 4 |
+| `maths/` | 9 | 2 | 5 | 2 |
+| `matrix/` | 9 | 3 | 3 | 3 |
+| `optim/` | 11 | 6 | 4 | 1 |
 | `rpb/` | 21 | 5 | 9 | 7 |
 | `stats/` | 18 | 1 | 4 | 13 |
-| `svm/` | 12 | 3 | 8 | 1 |
+| `svm/` | 12 | 3 | 9 | 0 |
 | `tools/` | 5 | 0 | 0 | 5 |
 | `tutorial/` | 11 | 0 | 0 | 11 |
-| **Total** | **150** | **24** | **25** | **101** |
+| **Total** | **150** | **24** | **36** | **90** |
 
 *(`stats/ridge.inc` excluded as a data snippet, not a standalone example
 — 149 actual `.m` example scripts plus that one data-only file.)*
