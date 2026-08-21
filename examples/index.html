@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Python port of the MATLAB QuantToolbox — econometrics, portfolio optimization, and risk analytics.">
+        <meta name="description" content="Python port of the MATLAB QuantToolBox — econometrics, portfolio optimization, and risk analytics.">
       
       
       
@@ -14,7 +14,7 @@
         <link rel="prev" href="..">
       
       
-        <link rel="next" href="risk_budgeting/">
+        <link rel="next" href="bond/">
       
       
         
@@ -429,6 +429,62 @@
   
   
     <li class="md-nav__item">
+      <a href="bond/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Price bonds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="mean_variance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimize portfolios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="risk_budgeting/" class="md-nav__link">
         
   
@@ -485,42 +541,14 @@
   
   
     <li class="md-nav__item">
-      <a href="mean_variance/" class="md-nav__link">
+      <a href="building_blocks/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Optimize portfolios
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="whittle/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Fit spectral models
+    Combine core tools
   
 
     
@@ -569,6 +597,34 @@
   
   
     <li class="md-nav__item">
+      <a href="whittle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fit spectral models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="svm/" class="md-nav__link">
         
   
@@ -577,62 +633,6 @@
     
   
     Classify data
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="building_blocks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Combine core tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="bond/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Price bonds
   
 
     
@@ -1407,25 +1407,29 @@
 <p>In short: come here for the guided tour, go to the API Reference for the
 exhaustive catalog.</p>
 <h2 id="available-deep-dives">Available deep dives<a class="headerlink" href="#available-deep-dives" title="Permanent link">&para;</a></h2>
+<p>Ordered simplest-first, roughly following how the pieces build on each
+other: price a single instrument, build a portfolio, budget its risk,
+then the more specialized tools underneath.</p>
 <ul>
+<li><a href="bond/">Bond pricing and sector-level risk</a> — the simplest starting
+  point: pricing a single instrument.</li>
+<li><a href="mean_variance/">Mean-variance, minimum-variance, tracking error</a> —
+  building a portfolio from those instruments.</li>
 <li><a href="risk_budgeting/">Risk budgeting (ERC / VaR / ES)</a> — reproduces
   Roncalli (2013), Tables 2.2–2.4. <code>portfolio.risk_budgeting</code> is the
   single largest "no real alternative" case in the whole port.</li>
 <li><a href="black_litterman/">Black-Litterman</a> — reproduces Roncalli (2013),
-  page 24.</li>
-<li><a href="mean_variance/">Mean-variance, minimum-variance, tracking error</a></li>
+  page 24; blending market views into the portfolio.</li>
+<li><a href="building_blocks/">Building blocks: bisection, linear algebra, numerical
+  differentiation</a> — the lower-level tools the
+  above examples build on. <code>linalg.special_matrices</code> is a third
+  "fills a real gap" case (vec/vech/duplication/elimination matrices
+  have no clean public equivalent elsewhere).</li>
+<li><a href="regression/">Ridge, OLS, and robust regression</a></li>
 <li><a href="whittle/">Whittle (frequency-domain) estimation</a> —
   <code>econometrics.whittle</code> is the other clean "nothing else does this"
   case: no <code>statsmodels</code>/<code>arch</code> equivalent exists.</li>
-<li><a href="regression/">Ridge, OLS, and robust regression</a></li>
 <li><a href="svm/">SVM classification</a></li>
-<li><a href="building_blocks/">Building blocks: bisection, linear algebra, numerical
-  differentiation</a> — <code>linalg.special_matrices</code> is
-  a third "fills a real gap" case (vec/vech/duplication/elimination
-  matrices have no clean public equivalent elsewhere).</li>
-<li><a href="bond/">Bond pricing and sector-level risk</a> — the first example
-  from the <a href="../migration_map/">HSF toolbox port</a>, not part of the
-  <code>Examples/</code> translation tracker below.</li>
 </ul>
 <p>The full set of original MATLAB scripts these examples translate from
 is organized by module: <code>rpb/</code>, <code>optim/</code>, <code>stats/</code>, <code>svm/</code>, <code>ects/</code>,
