@@ -1812,11 +1812,65 @@ maintained as a separate package. Its source (167 files) lives at
 <a href="../reference/hsf_toolbox_matlab"><code>reference/hsf_toolbox_matlab/</code></a> as
 reference material for the port; that folder is excluded from the
 installable package (not listed in <code>pyproject.toml</code>'s package scoping).</p>
-<p>None of this is started yet -- the table below is the planned module
+<p>None of this is started yet -- the tables below are the planned module
 breakdown, not a status report. See
 <a href="https://github.com/lcrmorin/HSF-Notebooks">HSF-Notebooks</a>'s
-<code>CHAPTERS.md</code> (chapter 0) for the matching entry and the per-chapter
-notebooks that will exercise these modules once ported.</p>
+<code>CHAPTERS.md</code> for the per-chapter notebooks that will use these
+modules once ported.</p>
+<p>Source folder layout, under <code>reference/hsf_toolbox_matlab/</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Folder</th>
+<th>Files</th>
+<th>Covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bond/</code></td>
+<td>5</td>
+<td>Bond pricing, YTM, coupon yield, quadratic-form bond-portfolio risk</td>
+</tr>
+<tr>
+<td><code>copula/</code></td>
+<td>67</td>
+<td>CDFs/PDFs for ~23 copula families, Kendall's tau / Spearman's rho closed forms, empirical dependograms, copula simulation</td>
+</tr>
+<tr>
+<td><code>credit/</code></td>
+<td>17</td>
+<td>Structural credit models (Merton, Black-Cox, jump-diffusion) and reduced-form/Markov-generator hazard-rate models</td>
+</tr>
+<tr>
+<td><code>genz/</code></td>
+<td>10</td>
+<td>Genz-Bretz quadrature for multivariate normal/Student CDFs</td>
+</tr>
+<tr>
+<td><code>hsf/</code></td>
+<td>24</td>
+<td>Carbon budgets, ESG beta/minimum-variance/Pedersen portfolios, DICE temperature model, species-area/abundance ecology measures, Shannon entropy</td>
+</tr>
+<tr>
+<td><code>maths/</code></td>
+<td>2</td>
+<td><code>arccosh</code>/<code>arcsinh</code> -- see "Not ported" above</td>
+</tr>
+<tr>
+<td><code>stats/</code></td>
+<td>38</td>
+<td>Skew-normal/skew-t, Bates, bivariate normal/t, order statistics, dose-response curves, and other distributions not in the original <code>QuantToolbox</code></td>
+</tr>
+<tr>
+<td><code>copula1.m</code>-<code>copula4.m</code> (loose, at this folder's root)</td>
+<td>4</td>
+<td>Worked copula-simulation examples (French), not a module -- see the note below</td>
+</tr>
+</tbody>
+</table>
+<p>163 module files + these 4 loose examples = 167 total.</p>
+<p>Planned Python module mapping:</p>
 <table>
 <thead>
 <tr>
@@ -1929,8 +1983,7 @@ notebooks that will exercise these modules once ported.</p>
 The <code>tutorial/</code> folder (11 generic MATLAB-101 lessons, unrelated to any
 quanttoolbox function) is out of scope for this tracker -- see
 <a href="https://github.com/lcrmorin/HSF-Notebooks">HSF-Notebooks</a>'s
-<code>notebooks/tutorials/</code> for the quanttoolbox-specific walkthroughs that
-replace it.</p>
+<code>notebooks/hsf/00_tutorial.ipynb</code> for its Python translation.</p>
 <p>Status legend: ⬜ not translated · ✅ translated</p>
 <p>The <strong>Notes</strong> column flags examples that call <code>plot</code>/<code>figure</code> or
 <code>xlsread</code>/<code>xlswrite</code>/<code>readtable</code>/<code>writetable</code>. These are translated for
