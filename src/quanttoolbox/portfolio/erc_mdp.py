@@ -1,8 +1,8 @@
 """Convenience re-exports for Equal Risk Contribution and Most Diversified
 Portfolio construction.
 
-Ported from QuantToolbox/rpb/compute_erc_portfolio.m,
-QuantToolbox/mloapa/compute_{ERC_ADMM,ERC_CCD,MDP_ADMM}.m.
+Ported from QuantToolBox/rpb/compute_erc_portfolio.m,
+QuantToolBox/mloapa/compute_{ERC_ADMM,ERC_CCD,MDP_ADMM}.m.
 
 These are both already implemented in full elsewhere in this package --
 ERC in ``portfolio.risk_budgeting`` (it's the b=1/n special case of risk

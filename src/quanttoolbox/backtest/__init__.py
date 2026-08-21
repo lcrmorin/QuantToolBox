@@ -1,4 +1,4 @@
 """Return/price series conversion, drawdown, turnover, and performance reporting.
 
-Maps from: QuantToolbox/backtest/*.m
+Maps from: QuantToolBox/backtest/*.m
 """

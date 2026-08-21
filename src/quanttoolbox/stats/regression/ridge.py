@@ -1,6 +1,6 @@
 """Ridge regression: fixed-lambda and tau-targeted (L2-budget) variants.
 
-Ported from QuantToolbox/stats/{regRidge,regRidge2}.m
+Ported from QuantToolBox/stats/{regRidge,regRidge2}.m
 
 Translation notes:
 

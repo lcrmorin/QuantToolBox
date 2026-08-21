@@ -1,8 +1,8 @@
 """Whittle (frequency-domain) maximum likelihood estimation.
 
-Ported from QuantToolbox/ects/{whittle_estimation,
+Ported from QuantToolBox/ects/{whittle_estimation,
 whittle_constrained_estimation,whittle_local_level,
-whittle_local_linear_trend}.m and QuantToolbox/maths/{periodogram,pdgm}.m
+whittle_local_linear_trend}.m and QuantToolBox/maths/{periodogram,pdgm}.m
 (identical duplicates, both covered by ``periodogram`` here rather than
 in ``maths.py``).
 

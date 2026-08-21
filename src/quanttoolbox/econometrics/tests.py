@@ -1,6 +1,6 @@
 """Unit-root testing (Augmented Dickey-Fuller).
 
-Ported from QuantToolbox/ects/adf_test.m
+Ported from QuantToolBox/ects/adf_test.m
 
 Translation notes:
 

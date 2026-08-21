@@ -2,7 +2,7 @@
 volatility targeting, and continuous algebraic Riccati / Lyapunov equation
 solvers.
 
-Ported from QuantToolbox/maths/{simulate_gbm,simulate_gbm2,
+Ported from QuantToolBox/maths/{simulate_gbm,simulate_gbm2,
 simulate_multi_gbm,compute_ewma,momentum_ewma,volatility_target,
 algebraic_riccati_equation,lyapunov_equation}.m
 

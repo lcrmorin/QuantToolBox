@@ -1,7 +1,7 @@
 """Scalar (or elementwise-vectorized) bisection root-finding, and linear
 constraint explicit<->implicit (null-space) parametrization conversion.
 
-Ported from QuantToolbox/optim/{bisection,bisection2,explicit2implicit,
+Ported from QuantToolBox/optim/{bisection,bisection2,explicit2implicit,
 implicit2explicit}.m
 
 Translation notes:

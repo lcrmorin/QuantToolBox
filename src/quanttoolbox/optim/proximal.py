@@ -1,7 +1,7 @@
 """Proximal operators for L1/L2/Linf norms, box/equality/inequality
 constraints, and combined ("Dykstra alternating projection") constraint sets.
 
-Ported from QuantToolbox/optim/{proximal_L1,proximal_L2,proximal_Linfinity,
+Ported from QuantToolBox/optim/{proximal_L1,proximal_L2,proximal_Linfinity,
 proximal_max,proximal_bounds,proximal_equality,proximal_inequality,
 proximal_linear_constraints,proximal_turnover,soft_thresholding}.m
 

@@ -1,4 +1,4 @@
 """Support Vector Machines: primal/dual formulations for classification and regression.
 
-Maps from: QuantToolbox/svm/*.m (QuantToolbox/theo/svm_*.m duplicates merged in).
+Maps from: QuantToolBox/svm/*.m (QuantToolBox/theo/svm_*.m duplicates merged in).
 """

@@ -1,7 +1,7 @@
 """Two-component Gaussian mixture models: moments, PDF, simulation, EM
 estimation, VaR/ES risk measures, and risk budgeting.
 
-Ported from QuantToolbox/mixture/{mixture_moments,mixture_pdf_assets,
+Ported from QuantToolBox/mixture/{mixture_moments,mixture_pdf_assets,
 mixture_pdf_portfolio,mixture_simulate,mixture_skewness,
 mixture_skewness_portfolio,mixture_univariate_thresholding,
 mixture_probability_filtering,mixture_compute_var,mixture_compute_es,

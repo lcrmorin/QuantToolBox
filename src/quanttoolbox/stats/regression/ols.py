@@ -1,7 +1,7 @@
 """Ordinary least squares, centering/standardization, conditional-normal
 regression, and principal component analysis.
 
-Ported from QuantToolbox/stats/{regOLS,regCenter,regStandardize,regCND,
+Ported from QuantToolBox/stats/{regOLS,regCenter,regStandardize,regCND,
 regPCA}.m
 
 Translation notes:

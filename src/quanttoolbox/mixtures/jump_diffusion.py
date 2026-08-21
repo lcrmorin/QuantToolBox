@@ -2,7 +2,7 @@
 the Gaussian mixture machinery in ``mixtures.gaussian_mixture``, plus
 lognormal moment/skewness formulas.
 
-Ported from QuantToolbox/mixture/{jump_compute_var,jump_compute_es,
+Ported from QuantToolBox/mixture/{jump_compute_var,jump_compute_es,
 jump_compute_rc_var,jump_compute_rc_es,jump_compute_rb_var,
 jump_compute_rb_es,jump_pdf_assets,jump_pdf_portfolio,jump_simulate,
 jump_skewness,jump_skewness_portfolio,jump_univariate_thresholding,

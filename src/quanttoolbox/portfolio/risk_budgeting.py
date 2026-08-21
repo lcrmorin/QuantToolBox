@@ -1,10 +1,10 @@
 """Risk budgeting / risk parity portfolio construction.
 
-Ported from QuantToolbox/rpb/{compute_risk_contribution,compute_rc_sd,
+Ported from QuantToolBox/rpb/{compute_risk_contribution,compute_rc_sd,
 compute_rc_vol,compute_rb_sd,compute_rb_sd_ccd,compute_rb_sd_newton,
 lagrange_rb_sd,compute_erc_portfolio}.m and
-QuantToolbox/crb/compute_rb_sd_bc_admm1*.m (+ ~40 near-duplicate ADMM
-variants), and QuantToolbox/mloapa/compute_ERC_{ADMM,CCD}.m.
+QuantToolBox/crb/compute_rb_sd_bc_admm1*.m (+ ~40 near-duplicate ADMM
+variants), and QuantToolBox/mloapa/compute_ERC_{ADMM,CCD}.m.
 
 Consolidation notes -- this is the single largest simplification in the
 whole port:

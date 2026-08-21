@@ -1,6 +1,6 @@
 """Quantile regression (via linear programming) and quantile-regression copulas.
 
-Ported from QuantToolbox/stats/{quantile_regression,qrCopulaNormal,
+Ported from QuantToolBox/stats/{quantile_regression,qrCopulaNormal,
 qrCopulaStudent}.m
 
 Translation notes:

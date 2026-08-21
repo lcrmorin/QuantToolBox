@@ -1,6 +1,6 @@
 """Robust M-estimator regression via Iteratively Reweighted Least Squares (IRLS).
 
-Ported from QuantToolbox/ects/{robust_regression,robust_huber_regression,
+Ported from QuantToolBox/ects/{robust_regression,robust_huber_regression,
 robust_lad_regression,robust_quantile_regression,
 robust_inverse_quantile_regression}.m
 

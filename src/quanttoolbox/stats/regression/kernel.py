@@ -1,6 +1,6 @@
 """Nonparametric kernel density estimation and local-polynomial kernel regression.
 
-Ported from QuantToolbox/stats/{regKernelDensity,regKernelMean,
+Ported from QuantToolBox/stats/{regKernelDensity,regKernelMean,
 regKernelQuantile,regKernelPayoff}.m
 
 Translation notes:

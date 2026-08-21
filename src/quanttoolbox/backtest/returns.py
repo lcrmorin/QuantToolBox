@@ -1,7 +1,7 @@
 """Price/return series conversion: simple returns, cumulative price indices,
 funded/unfunded conversions, and capitalized LIBOR indices.
 
-Ported from QuantToolbox/backtest/{price2return,return2price,
+Ported from QuantToolBox/backtest/{price2return,return2price,
 price2unfunded,unfunded2price,capitalized_libor,capitalized_libor_plus}.m
 
 Translation notes:

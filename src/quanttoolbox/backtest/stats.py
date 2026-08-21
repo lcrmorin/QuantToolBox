@@ -1,6 +1,6 @@
 """Drawdown, turnover, average-return, and monthly/yearly performance statistics.
 
-Ported from QuantToolbox/backtest/{maximum_drawdown,static_turnover,
+Ported from QuantToolBox/backtest/{maximum_drawdown,static_turnover,
 annualized_turnover,average_return,index_repeated_data,monthly_statistics,
 yearly_statistics}.m
 

@@ -1,8 +1,8 @@
 """Mean-variance, minimum-variance, and most-diversified portfolio construction.
 
-Ported from QuantToolbox/rpb/{compute_mvo_portfolio,compute_minvar_portfolio,
+Ported from QuantToolBox/rpb/{compute_mvo_portfolio,compute_minvar_portfolio,
 compute_mdp_portfolio,compute_mdp_objective_function}.m and
-QuantToolbox/mloapa/{compute_MDP_ADMM,compute_MinVar_ADMM1,
+QuantToolBox/mloapa/{compute_MDP_ADMM,compute_MinVar_ADMM1,
 compute_MinVar_ADMM2}.m.
 
 Consolidation notes:

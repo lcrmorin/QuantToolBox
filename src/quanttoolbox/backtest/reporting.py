@@ -1,6 +1,6 @@
 """Backtest simulation engines and comprehensive performance reporting.
 
-Ported from QuantToolbox/backtest/{generate_backtest,generate_backtest2,
+Ported from QuantToolBox/backtest/{generate_backtest,generate_backtest2,
 backtest_reporting}.m
 
 Translation notes:

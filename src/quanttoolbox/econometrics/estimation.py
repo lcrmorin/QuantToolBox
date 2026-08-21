@@ -1,7 +1,7 @@
 """Constrained OLS, GMM, and Maximum Likelihood estimation with linear
 parameter restrictions.
 
-Ported from QuantToolbox/ects/{ols_estimation,ols_constrained_estimation,
+Ported from QuantToolBox/ects/{ols_estimation,ols_constrained_estimation,
 gmm_estimation,gmm_constrained_estimation,ml_estimation,
 ml_constrained_estimation}.m
 

@@ -1,6 +1,6 @@
 """Lasso and elastic-net regression via coordinate descent / ADMM.
 
-Ported from QuantToolbox/stats/{regLassoCCD,regLassoADMM,regLassoADMM2,
+Ported from QuantToolBox/stats/{regLassoCCD,regLassoADMM,regLassoADMM2,
 regLasso,regElasticNet,selectLasso}.m
 
 Translation notes:

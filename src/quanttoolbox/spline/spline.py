@@ -1,7 +1,7 @@
 """Cubic smoothing splines: fit, evaluate (value/derivative/integral), and
 invert.
 
-Ported from QuantToolbox/spline/{csspline,dspline,fspline,intspline,
+Ported from QuantToolBox/spline/{csspline,dspline,fspline,intspline,
 invspline}.m (+ band.m/bandrv.m/bandsolpd.m/rotater.m -- see note below).
 
 Consolidation notes:

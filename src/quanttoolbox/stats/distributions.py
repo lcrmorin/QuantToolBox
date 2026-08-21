@@ -1,7 +1,7 @@
 """Probability distribution functions: CDF/PDF/quantile wrappers and the
 GQF (generalized quadratic form) distribution family.
 
-Ported from QuantToolbox/stats/{cdfn,cdfni,cdft,cdfti,cdftc,cdfchi2,
+Ported from QuantToolBox/stats/{cdfn,cdfni,cdft,cdfti,cdftc,cdfchi2,
 cdfchi2c,cdff,cdffc,cdfmvn,pdfmvn,pdfn,rndmvn,gqf1_*,gqf2_*}.m, extended
 with HSF toolbox `stats/{cdfSN,cdfSNi,pdfSN,momSN,rndSN,cdfST,cdfSTi,pdfST,
 momST,rndST,cdfBates,pdfBates,cdfbeta,pdfbeta,cdfig,pdfig,cdfln,pdfln,

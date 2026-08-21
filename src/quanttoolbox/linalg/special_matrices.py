@@ -1,6 +1,6 @@
 """Special matrix operations: vec/vech/xpnd, commutation/duplication/elimination.
 
-Ported from QuantToolbox/matrix/{vec,vech,vecr,xpnd,commutation_matrix,
+Ported from QuantToolBox/matrix/{vec,vech,vecr,xpnd,commutation_matrix,
 duplication_matrix,elimination_matrix,reshapec,reshaper,diagrv,lowmat,
 upmat,design}.m
 

@@ -1,9 +1,9 @@
 """Support Vector Machines: classification and regression, primal and dual
 formulations.
 
-Ported from QuantToolbox/svm/{svm_classification_dual,
+Ported from QuantToolBox/svm/{svm_classification_dual,
 svm_classification_primal,svm_regression_dual,svm_regression_primal}.m
-(QuantToolbox/theo/svm_*.m are byte-identical duplicates, not ported
+(QuantToolBox/theo/svm_*.m are byte-identical duplicates, not ported
 separately).
 
 Consolidation notes:

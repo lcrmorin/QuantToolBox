@@ -1,7 +1,7 @@
 """Numerical gradient, Jacobian, and Hessian, with an adaptive
 magnitude-scaled step size.
 
-Ported from QuantToolbox/maths/{numerical_gradient,numerical_hessian,
+Ported from QuantToolBox/maths/{numerical_gradient,numerical_hessian,
 numerical_jacobian,sign_operator}.m
 
 Translation notes:

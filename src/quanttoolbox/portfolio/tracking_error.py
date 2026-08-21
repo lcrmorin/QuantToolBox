@@ -1,6 +1,6 @@
 """Tracking-error-optimized portfolio construction relative to a benchmark.
 
-Ported from QuantToolbox/rpb/{compute_te_portfolio,
+Ported from QuantToolBox/rpb/{compute_te_portfolio,
 compute_minimum_te_portfolio,compute_te_portfolio_mixed_norm}.m.
 
 Consolidation notes:

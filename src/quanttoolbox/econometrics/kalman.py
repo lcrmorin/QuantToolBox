@@ -1,6 +1,6 @@
 """Linear-Gaussian state-space models and the Kalman filter.
 
-Ported from QuantToolbox/ects/{state_space_model,ssm_set,ssm_steady_state,
+Ported from QuantToolBox/ects/{state_space_model,ssm_set,ssm_steady_state,
 Kalman_filtering}.m
 
 Model convention (matching the original):

@@ -1,6 +1,6 @@
 """Excel <-> Python date conversion and date-format helpers.
 
-Ported from QuantToolbox/dates/{Excel2Matlab_Dates,Matlab2Excel_Dates,
+Ported from QuantToolBox/dates/{Excel2Matlab_Dates,Matlab2Excel_Dates,
 is_yyyymmdd,numdate,datenum2,excel_column}.m
 
 Translation notes:

@@ -1,7 +1,7 @@
 """Figure export convenience wrapper.
 
-Ported from QuantToolbox/tools/save_graphic.m (+ save_graphic2.m).
-QuantToolbox/export/*.m, the third-party MATLAB ``export_fig`` package,
+Ported from QuantToolBox/tools/save_graphic.m (+ save_graphic2.m).
+QuantToolBox/export/*.m, the third-party MATLAB ``export_fig`` package,
 is NOT ported -- matplotlib's native ``savefig`` already handles
 resolution/format/tight-bbox export directly, with no equivalent gap to
 fill.

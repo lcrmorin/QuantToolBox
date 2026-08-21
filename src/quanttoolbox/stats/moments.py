@@ -1,6 +1,6 @@
 """Sample moments, dispersion, covariance/correlation, and portfolio-overlap measures.
 
-Ported from QuantToolbox/stats/{skewness_coefficient,kurtosis_coefficient,
+Ported from QuantToolBox/stats/{skewness_coefficient,kurtosis_coefficient,
 herfindahl_index,mean_absolute_difference,cov2cor,cor2cov,corrx,
 pearson_correlation,active_share,active_share_upper_bound,asynchronous_cov,
 weekly_cov,rolling_correlation,rolling_volatility}.m

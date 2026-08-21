@@ -1,7 +1,7 @@
 """Configuration dataclasses.
 
 Replaces the MATLAB `global` variable blocks used throughout the original
-QuantToolbox (e.g. RB_ADMM_*, RB_CCD_*, MVO_*, Proximal_Algorithm,
+QuantToolBox (e.g. RB_ADMM_*, RB_CCD_*, MVO_*, Proximal_Algorithm,
 SVM_macheps, GMM_*, ML_*, WHITTLE_*). Each solver/estimator takes an
 explicit config object (with sensible defaults) instead of relying on
 module-level state, so calls are thread-safe and results are reproducible.

@@ -1,7 +1,7 @@
 """VAR/VARX estimation (with exogenous regressors and linear parameter
 restrictions) and lag-order selection.
 
-Ported from QuantToolbox/ects/{varx_cls,varx_cml,varx_ls,varx_ml,
+Ported from QuantToolBox/ects/{varx_cls,varx_cml,varx_ls,varx_ml,
 varx_order,var_constrained_estimation_onestep,
 varx_constrained_estimation_onestep}.m
 

@@ -1,6 +1,6 @@
 """Projection operators onto L1/L2/Linf norm balls and a box-intersect-L2-ball set.
 
-Ported from QuantToolbox/optim/{projection_L1,projection_L2,
+Ported from QuantToolBox/optim/{projection_L1,projection_L2,
 projection_Linfinity,projection_box_L2}.m
 
 Translation notes:

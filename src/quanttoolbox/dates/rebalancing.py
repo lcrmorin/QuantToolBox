@@ -1,6 +1,6 @@
 """Rebalancing-date calendar generation.
 
-Ported from QuantToolbox/dates/{generic_rebalancing,annual_rebalancing,
+Ported from QuantToolBox/dates/{generic_rebalancing,annual_rebalancing,
 monthly_rebalancing,quarterly_rebalancing,semi_annual_rebalancing,
 weekly_rebalancing,generate_trading_dates}.m
 

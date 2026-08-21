@@ -1,6 +1,6 @@
 """Black-Litterman implied returns and posterior (view-updated) moments.
 
-Ported from QuantToolbox/rpb/{implied_risk_premia,
+Ported from QuantToolBox/rpb/{implied_risk_premia,
 compute_Black_Litterman_moments}.m
 """
 

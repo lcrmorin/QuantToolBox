@@ -1,7 +1,7 @@
 """Quadratic programming: a general QP solver plus ridge/lasso/turnover
 penalized variants, and the closed-form QP-on-a-hyperplane solution.
 
-Ported from QuantToolbox/optim/{quadprog_bc_ccd,quadprog_lasso,
+Ported from QuantToolBox/optim/{quadprog_bc_ccd,quadprog_lasso,
 quadprog_ridge,quadprog_turnover,quadprog_mixed_norm,
 quadprog_mixed2_norm,qp_hyperplane}.m
 
