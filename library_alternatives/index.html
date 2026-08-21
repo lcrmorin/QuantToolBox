@@ -2125,6 +2125,48 @@ port has a capability the alternative lacks.</p>
 <td>Sector-level modified-duration/DTS-targeting quadratic risk forms (with an optional active-share term against a benchmark) are specific to fixed-income portfolio construction and don't appear as a public utility in any general optimization or fixed-income library surveyed.</td>
 <td>Narrow and tied to this port's (Q, R, c) quadratic-form convention (shared with <code>portfolio/risk_budgeting.py</code>) — more realistic as a documented pattern within this port than a standalone proposal.</td>
 </tr>
+<tr>
+<td><code>sustainable_finance/carbon.py</code> — cumulative-emissions ("carbon budget") integrals</td>
+<td><em>(none found)</em></td>
+<td><strong>KEEP</strong></td>
+<td>Closed-form integrals of assumed emissions trajectories (linear, compound-decline, piecewise-linear, GDP-adjusted) are specific to climate/decarbonization-target analysis; no general-purpose or climate-finance Python library surveyed exposes these as a public utility.</td>
+<td>Small, dependency-free (pure <code>numpy</code>), self-contained formulas — a plausible narrow PR, but tied closely to this book's specific decarbonization-pathway conventions.</td>
+</tr>
+<tr>
+<td><code>sustainable_finance/esg.py</code> — <code>esg_beta_star</code>, <code>esg_minimum_variance</code>, <code>pedersen_portfolio</code></td>
+<td><em>(none found)</em></td>
+<td><strong>KEEP</strong></td>
+<td>Roncalli's implied-ESG-beta tilt and the Pedersen-Fitzgibbons-Pomorski (2021) ESG-efficient-frontier portfolio are specific portfolio-construction techniques from the sustainable-finance literature; no general portfolio-optimization library (<code>PyPortfolioOpt</code>, <code>cvxpy</code>-based tools, etc.) implements either.</td>
+<td>Niche enough (tied to two specific published models) that a standalone PyPortfolioOpt-style package is more plausible than folding into an existing general library.</td>
+</tr>
+<tr>
+<td><code>sustainable_finance/climate.py</code> — DICE carbon-cycle/temperature model</td>
+<td><a href="https://github.com/mattwoodruff/pyDICE"><code>pydice</code></a> and similar community DICE ports</td>
+<td><strong>HYBRID</strong></td>
+<td>Several community Python ports of Nordhaus's DICE model exist, generally more complete (full economic-optimization loop, not just the carbon-cycle/temperature submodule). This module's narrower scope (just the state-transition matrices and a forward simulation given exogenous GDP/mitigation paths) is useful when only the physical climate response is needed, without pulling in a full DICE optimization stack.</td>
+<td>A full DICE port is out of scope for this toolbox; the physical submodule alone is a reasonable standalone utility, but not an obvious upstream contribution target given existing DICE ports already cover more ground.</td>
+</tr>
+<tr>
+<td><code>sustainable_finance/ecology.py</code> — species-area/abundance, Hurlbert's rarefaction</td>
+<td><a href="https://github.com/scikit-bio/scikit-bio"><code>scikit-bio</code></a>, <code>vegan</code> (R, no direct Python port)</td>
+<td><strong>HYBRID</strong></td>
+<td><code>scikit-bio</code> covers alpha/beta diversity metrics broadly (including some rarefaction) but not the specific species-area/endemics-area relationship formulas here. Keep for the species-area/endemics-area functions; <code>scikit-bio</code> is worth checking first for general diversity-index needs.</td>
+<td>Narrow overlap with <code>scikit-bio</code>'s existing rarefaction tools — a documented pattern here is more realistic than a PR, given the differing scope.</td>
+</tr>
+<tr>
+<td><code>sustainable_finance/entropy.py</code> — <code>shannon_entropy</code>, <code>shannon_entropy_markov_chain</code></td>
+<td><code>scipy.stats.entropy</code></td>
+<td><strong>HYBRID</strong></td>
+<td><code>scipy.stats.entropy</code> computes plain (marginal) Shannon/KL entropy of a single distribution — a one-line building block this module's marginal-entropy calculation could call instead of its own <code>xlogy</code>-based sum. Keep the module for the joint/mutual-information decomposition (<code>I_X</code>, <code>I_Y</code>, <code>I_XY</code>, <code>I_X_Y</code>) and the Markov-chain time-horizon sweep, which <code>scipy.stats</code> doesn't provide.</td>
+<td><code>scipy.stats.entropy</code> already covers the marginal case cleanly — no gap to contribute there; the joint/Markov-chain extensions are specific enough to this book's presentation to keep local.</td>
+</tr>
+<tr>
+<td><code>sustainable_finance/entropy.py</code> — <code>estimate_markov_generator</code></td>
+<td><em>(none found)</em></td>
+<td><strong>KEEP</strong></td>
+<td>The Israel-Rosenthal-Wei (2001) generator-repair technique (used here for rating-migration-generator estimation) doesn't appear as a public utility in any credit-risk or Markov-chain library surveyed.</td>
+<td>Small, self-contained, dependency-free (pure <code>numpy</code>) — a plausible narrow PR to a credit-risk-modeling library, if one with an active generator-estimation module exists; none identified during this survey.</td>
+</tr>
 </tbody>
 </table>
 <hr />

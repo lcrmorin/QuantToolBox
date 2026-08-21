@@ -1897,9 +1897,13 @@ maintained as a separate package. Its source (167 files) lives at
 reference material for the port; that folder is excluded from the
 installable package (not listed in <code>pyproject.toml</code>'s package scoping).</p>
 <p>Port status: <code>bond/pricing.py</code>, <code>sustainable_finance/risk.py</code>,
-<code>stats/multivariate.py</code>, <code>stats/distributions.py</code> (extension), and
-<code>stats/dose_response.py</code> are done (ported, tested, lint/type-clean);
-the rest of the tables below are still the planned module breakdown. See
+<code>sustainable_finance/carbon.py</code>, <code>sustainable_finance/esg.py</code>,
+<code>sustainable_finance/climate.py</code>, <code>sustainable_finance/ecology.py</code>,
+<code>sustainable_finance/entropy.py</code>, <code>stats/multivariate.py</code>,
+<code>stats/distributions.py</code> (extension), and <code>stats/dose_response.py</code> are
+done (ported, tested, lint/type-clean) -- all of <code>sustainable_finance/</code>
+is now fully ported; the rest of the tables below are still the planned
+module breakdown. See
 <a href="https://github.com/lcrmorin/HSF-Notebooks">HSF-Notebooks</a>'s
 <code>CHAPTERS.md</code> for the per-chapter notebooks that will use these
 modules once ported.</p>
@@ -2013,28 +2017,28 @@ modules once ported.</p>
 </tr>
 <tr>
 <td><code>sustainable_finance/carbon.py</code> (new module)</td>
-<td><code>hsf/carbon_budget_linear.m</code>, <code>carbon_budget_linear_reduction.m</code>, <code>carbon_budget_linear_trend.m</code>, <code>carbon_budget_piecewise.m</code>, <code>carbon_budget_compound_reduction.m</code>, <code>carbon_budget_Reduction.m</code></td>
-<td>⬜</td>
+<td><code>hsf/carbon_budget_linear.m</code>, <code>carbon_budget_linear_reduction.m</code>, <code>carbon_budget_linear_trend.m</code>, <code>carbon_budget_piecewise.m</code>, <code>carbon_budget_compound_reduction.m</code>, <code>carbon_budget_Reduction.m</code> -- <code>carbon_budget_linear.m</code>/<code>carbon_budget_linear_trend.m</code> merged (identical computation); <code>carbon_budget_linear_reduction.m</code> not ported separately (strict special case of <code>carbon_budget_Reduction.m</code>, see module docstring)</td>
+<td>✅</td>
 </tr>
 <tr>
 <td><code>sustainable_finance/esg.py</code></td>
-<td><code>hsf/compute_esg_beta_star.m</code>, <code>compute_esg_minimum_variance.m</code>, <code>compute_pedersen_portfolio.m</code>, <code>cdp_filter.m</code></td>
-<td>⬜</td>
+<td><code>hsf/compute_esg_beta_star.m</code>, <code>compute_esg_minimum_variance.m</code>, <code>compute_pedersen_portfolio.m</code>; <code>cdp_filter.m</code> intentionally <em>not</em> ported -- tied to an unshipped dataset, see module docstring</td>
+<td>✅</td>
 </tr>
 <tr>
 <td><code>sustainable_finance/climate.py</code></td>
-<td><code>hsf/dice_temperature_matrix.m</code>, <code>dice_temperature_simulation.m</code></td>
-<td>⬜</td>
+<td><code>hsf/dice_temperature_matrix.m</code>, <code>dice_temperature_simulation.m</code> (unused <code>parameters</code> argument dropped)</td>
+<td>✅</td>
 </tr>
 <tr>
 <td><code>sustainable_finance/ecology.py</code></td>
 <td><code>hsf/species_area_relationship.m</code>, <code>endemics_area_relationship.m</code>, <code>species_abundance_distribution.m</code>, <code>hurlbert.m</code></td>
-<td>⬜</td>
+<td>✅</td>
 </tr>
 <tr>
 <td><code>sustainable_finance/entropy.py</code></td>
-<td><code>hsf/shannon_entropy.m</code>, <code>shannon_entropy_markov_chain.m</code>, <code>estimate_markov_generator.m</code></td>
-<td>⬜</td>
+<td><code>hsf/shannon_entropy.m</code>, <code>shannon_entropy_markov_chain.m</code>, <code>estimate_markov_generator.m</code> (Israel-Rosenthal-Wei generator-repair technique)</td>
+<td>✅</td>
 </tr>
 <tr>
 <td><code>sustainable_finance/risk.py</code></td>
