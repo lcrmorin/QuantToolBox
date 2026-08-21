@@ -314,7 +314,7 @@
   <span class="md-ellipsis">
     
   
-    Examples
+    Featured examples
   
 
     
@@ -330,7 +330,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Examples
+    Featured examples
   
 
           </label>
@@ -352,6 +352,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -368,6 +386,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#available-deep-dives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available deep dives
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -445,6 +493,34 @@
     
   
     Mean-variance / MinVar / Tracking error
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="whittle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Whittle (frequency-domain) estimation
   
 
     
@@ -1163,6 +1239,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#available-deep-dives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available deep dives
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1182,33 +1277,52 @@
 
 
 <h1 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h1>
-<p>The original MATLAB toolbox ships an <code>Examples/</code> folder with ~150
-scripts, one or a few per function, many referencing published textbook
-results (mostly Roncalli, T. (2013), <em>Introduction to Risk Parity and
-Budgeting</em>). This section translates a curated set of them into Python,
-each reproducing the same published/computed numbers as a built-in
-sanity check.</p>
-<p>Available so far:</p>
+<p>Two different things live under "Examples" in this documentation, and
+it's worth being clear about which is which:</p>
+<ul>
+<li><strong>This section</strong> — a small set of hand-curated, narrated deep dives.
+  Each one picks a specific result (often a published textbook table),
+  walks through the code, shows the actual output, and explains what it
+  means. They're a good starting point for understanding <em>why</em> a module
+  exists, especially the ones flagged in <a href="../library_alternatives/">Library
+  alternatives</a> as doing something no other
+  Python library does.</li>
+<li><strong>The API Reference</strong> — every quanttoolbox function that has a
+  translated example gets it shown directly on its own reference page,
+  under a collapsible "Examples" heading. That covers the full breadth:
+  essentially every translated script from the original MATLAB
+  <code>Examples/</code> folder (~150 scripts total; see the <a href="examples_tracking/">translation
+  tracker</a> for the file-by-file status), filed
+  under whichever module it actually exercises. Source is pulled in
+  live from the same <code>.py</code> files in the repo, so it can't drift out of
+  sync — go there for the complete, exhaustive set.</li>
+</ul>
+<p>In short: come here for a guided tour of the interesting parts, go to
+the API Reference for the exhaustive, per-function catalog.</p>
+<h2 id="available-deep-dives">Available deep dives<a class="headerlink" href="#available-deep-dives" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="risk_budgeting/">Risk budgeting (ERC / VaR / ES)</a> — reproduces
-  Roncalli (2013), Tables 2.2–2.4.</li>
+  Roncalli (2013), Tables 2.2–2.4. <code>portfolio.risk_budgeting</code> is the
+  single largest "no real alternative" case in the whole port.</li>
 <li><a href="black_litterman/">Black-Litterman</a> — reproduces Roncalli (2013),
   page 24.</li>
 <li><a href="mean_variance/">Mean-variance, minimum-variance, tracking error</a></li>
+<li><a href="whittle/">Whittle (frequency-domain) estimation</a> —
+  <code>econometrics.whittle</code> is the other clean "nothing else does this"
+  case: no <code>statsmodels</code>/<code>arch</code> equivalent exists.</li>
 <li><a href="regression/">Ridge, OLS, and robust regression</a></li>
 <li><a href="svm/">SVM classification</a></li>
-<li><a href="building_blocks/">Building blocks: bisection, linear algebra, numerical differentiation</a></li>
+<li><a href="building_blocks/">Building blocks: bisection, linear algebra, numerical
+  differentiation</a> — <code>linalg.special_matrices</code> is
+  a third "fills a real gap" case (vec/vech/duplication/elimination
+  matrices have no clean public equivalent elsewhere).</li>
 </ul>
-<p><strong>Not yet translated</strong> (real-data examples from the <code>ects/</code> folder —
-VARX, Kalman filtering, and Whittle estimation on classic time-series
-datasets like the Lynx/Sunspots/GNP series — plus the <code>tutorial/</code> lesson
-series, which is more of a general walkthrough than per-function
-examples): see <code>Examples/ects/*.asc</code> and <code>Examples/tutorial/</code> in the
-original <a href="https://github.com/lcrmorin/hfs-archive"><code>hfs-archive</code></a> repo
-for the source material if you'd like to contribute a translation.</p>
-<p>The full set of MATLAB scripts these are translated from is organized by
-module: <code>rpb/</code>, <code>optim/</code>, <code>stats/</code>, <code>svm/</code>, <code>ects/</code>, <code>matrix/</code>, <code>dates/</code>,
-<code>tools/</code>, <code>backtest/</code>, <code>maths/</code>.</p>
+<p>The full set of original MATLAB scripts these examples translate from
+is organized by module: <code>rpb/</code>, <code>optim/</code>, <code>stats/</code>, <code>svm/</code>, <code>ects/</code>,
+<code>matrix/</code>, <code>dates/</code>, <code>tools/</code>, <code>backtest/</code>, <code>maths/</code> — see the
+<a href="examples_tracking/">translation tracker</a> for exactly which files are
+done, and the <a href="https://github.com/lcrmorin/hfs-archive"><code>hfs-archive</code></a>
+repo for the original source material.</p>
 
 
 

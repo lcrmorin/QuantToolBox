@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../whittle/">
+        <link rel="prev" href="../mean_variance/">
       
       
-        <link rel="next" href="../svm/">
+        <link rel="next" href="../regression/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Ridge, OLS, robust regression - QuantToolbox</title>
+        <title>Whittle (frequency-domain) estimation - QuantToolbox</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ridge-regression-path" class="md-skip">
+        <a href="#whittle-frequency-domain-estimation" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Ridge, OLS, robust regression
+              Whittle (frequency-domain) estimation
             
           </span>
         </div>
@@ -452,34 +452,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../whittle/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Whittle (frequency-domain) estimation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -499,7 +471,7 @@
   <span class="md-ellipsis">
     
   
-    Ridge, OLS, robust regression
+    Whittle (frequency-domain) estimation
   
 
     
@@ -517,7 +489,7 @@
   <span class="md-ellipsis">
     
   
-    Ridge, OLS, robust regression
+    Whittle (frequency-domain) estimation
   
 
     
@@ -543,10 +515,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ols-and-robust-regression" class="md-nav__link">
+  <a href="#local-level-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OLS and robust regression
+        Local-level model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-spectral-densities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom spectral densities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-this-comes-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where this comes from
       
     </span>
   </a>
@@ -557,6 +551,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ridge, OLS, robust regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1246,10 +1268,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ols-and-robust-regression" class="md-nav__link">
+  <a href="#local-level-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OLS and robust regression
+        Local-level model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-spectral-densities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom spectral densities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-this-comes-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where this comes from
       
     </span>
   </a>
@@ -1276,86 +1320,63 @@
   
 
 
-<h1 id="ridge-regression-path">Ridge regression path<a class="headerlink" href="#ridge-regression-path" title="Permanent link">&para;</a></h1>
-<p>Translated from <code>Examples/stats/ridge1.m</code>. A small standardized dataset
-(15 observations, 5 predictors); the example shows how ridge coefficients
-shrink toward zero as the penalty <code>lambda</code> increases.</p>
+<h1 id="whittle-frequency-domain-estimation">Whittle (frequency-domain) estimation<a class="headerlink" href="#whittle-frequency-domain-estimation" title="Permanent link">&para;</a></h1>
+<p>Whittle estimation fits a parametric spectral density to a series'
+periodogram by maximum likelihood, in the frequency domain rather than
+the time domain. It's the one module in this port with genuinely no
+equivalent in <code>statsmodels</code>, <code>arch</code>, or elsewhere in the Python
+ecosystem — see <a href="../../library_alternatives/">Library alternatives</a> for
+the full survey. Everything else nearby (Kalman filtering, VAR
+estimation) has a stronger, more complete off-the-shelf Python
+alternative; this is the case where the port is filling a real gap
+rather than re-deriving something a mature library already does better.</p>
+<h2 id="local-level-model">Local-level model<a class="headerlink" href="#local-level-model" title="Permanent link">&para;</a></h2>
+<p>A local-level (random-walk-plus-noise) model, <code>y_t = mu_t + eps_t</code>,
+<code>mu_t = mu_{t-1} + eta_t</code>, is fit by maximizing the Whittle
+approximate log-likelihood of the first-differenced series against the
+model's spectral density — recovering <code>(sigma_epsilon, sigma_eta)</code>
+without ever running a Kalman filter.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.ols</span><span class="w"> </span><span class="kn">import</span> <span class="n">standardize</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.ridge</span><span class="w"> </span><span class="kn">import</span> <span class="n">ridge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.whittle</span><span class="w"> </span><span class="kn">import</span> <span class="n">whittle_local_level</span>
 
-<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-    <span class="p">[</span><span class="mf">3.1</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">,</span> <span class="mf">4.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">24.9</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">27.3</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">7.6</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">25.4</span><span class="p">,</span> <span class="mf">8.4</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">7.1</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">46.1</span><span class="p">,</span> <span class="mf">5.2</span><span class="p">,</span> <span class="mf">7.6</span><span class="p">,</span> <span class="mf">8.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">45.7</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">47.4</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">8.6</span><span class="p">],</span>
-    <span class="p">[</span><span class="o">-</span><span class="mf">1.8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">,</span> <span class="mf">5.8</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">20.8</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">6.8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">9.2</span><span class="p">,</span> <span class="mf">6.9</span><span class="p">,</span> <span class="mf">9.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">12.9</span><span class="p">,</span> <span class="mf">7.9</span><span class="p">,</span> <span class="mf">9.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">37.0</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">9.2</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">,</span> <span class="mf">8.3</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">14.7</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span> <span class="mf">3.9</span><span class="p">],</span>
-    <span class="p">[</span><span class="o">-</span><span class="mf">3.2</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mf">6.6</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">44.3</span><span class="p">,</span> <span class="mf">7.7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
-<span class="p">])</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
+<span class="c1"># Simulate a local-level series with known variances</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">sigma_epsilon_true</span><span class="p">,</span> <span class="n">sigma_eta_true</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">sigma_eta_true</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">+</span> <span class="n">sigma_epsilon_true</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">]:</span>
-    <span class="n">beta</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">complexity</span> <span class="o">=</span> <span class="n">ridge</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lam</span><span class="p">)</span>
-    <span class="n">rss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">: beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">, df=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">, rss=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rss</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">whittle_local_level</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sv</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"estimated (sigma_epsilon, sigma_eta):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"stderr:                             "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"true      (sigma_epsilon, sigma_eta):"</span><span class="p">,</span> <span class="p">[</span><span class="n">sigma_epsilon_true</span><span class="p">,</span> <span class="n">sigma_eta_true</span><span class="p">])</span>
 </code></pre></div>
 <p>Output:</p>
-<div class="highlight"><pre><span></span><code>lambda=0.0: beta=[ 0.459 -0.185  0.834 -0.189  0.093], df=5.0, rss=0.0118
-lambda=1.0: beta=[ 0.426 -0.205  0.762 -0.166  0.063], df=4.59, rss=0.0164
-lambda=10.0: beta=[ 0.267 -0.198  0.454 -0.088 -0.004], df=2.77, rss=0.1648
+<div class="highlight"><pre><span></span><code>estimated (sigma_epsilon, sigma_eta): [0.9144 0.5254]
+stderr:                              [0.0424 0.0495]
+true      (sigma_epsilon, sigma_eta): [1.0, 0.5]
 </code></pre></div>
-<p><code>lambda=0</code> recovers plain OLS exactly (5 effective degrees of freedom,
-one per coefficient); as <code>lambda</code> grows, coefficients shrink toward zero,
-effective degrees of freedom drops, and in-sample fit (RSS) worsens —
-exactly the bias-variance tradeoff ridge regression is designed to
-navigate.</p>
-<h2 id="ols-and-robust-regression">OLS and robust regression<a class="headerlink" href="#ols-and-robust-regression" title="Permanent link">&para;</a></h2>
-<p>Translated from <code>Examples/ects/ols1.m</code> and <code>Examples/ects/robust1.m</code>,
-which share the same small dataset.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.econometrics.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ols_estimation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.robust</span><span class="w"> </span><span class="kn">import</span> <span class="n">huber_regression</span><span class="p">,</span> <span class="n">lad_regression</span>
-
-<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-    <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">20.4</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">17.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.1</span><span class="p">,</span> <span class="mf">6.3</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">30.9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">22.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">9.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">,</span> <span class="mf">4.9</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">39.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">9.6</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">,</span> <span class="mf">8.1</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">3.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.9</span><span class="p">,</span> <span class="mf">4.4</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">7.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">],</span>
-    <span class="p">[</span><span class="mf">27.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">8.1</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">],</span>
-<span class="p">])</span>
-<span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">ols_estimation</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"OLS beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"R2:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">r_squared</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Huber beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">huber_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">1.345</span><span class="p">)</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"LAD beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-</code></pre></div>
-<p>Output:</p>
-<div class="highlight"><pre><span></span><code>OLS beta: [ 3.4461  1.5442 -1.6454  2.8951]
-R2: 0.9913
-Huber beta: [ 3.4144  1.5276 -1.7484  2.8624]
-LAD beta: [ 2.3756  1.8841 -1.7415  2.9071]
-</code></pre></div>
-<p>With a clean, un-contaminated dataset like this, OLS/Huber/LAD all agree
-reasonably closely — the interesting divergence between them only shows
-up with outliers, as demonstrated in the package's own test suite
-(<code>tests/stats/test_regression_robust.py</code>).</p>
+<p>Both variances land within about one standard error of their true
+values from a single 500-observation series — the frequency-domain
+likelihood is a consistent, asymptotically efficient estimator for this
+model, same as the time-domain (Kalman-filter-based) MLE would give, but
+computed entirely differently.</p>
+<h2 id="custom-spectral-densities">Custom spectral densities<a class="headerlink" href="#custom-spectral-densities" title="Permanent link">&para;</a></h2>
+<p><code>whittle_estimation</code> takes an arbitrary <code>sdf_fn(lambda, theta)</code> — the
+built-in <code>whittle_local_level</code>/<code>whittle_local_linear_trend</code> are thin
+wrappers around it. The <a href="../../api/econometrics/"><code>econometrics.whittle</code> API
+reference</a> has a full worked example fitting a
+4th-order Bloomfield exponential spectral density (Dzhaparidze, 1986) to
+a real 500-observation series, with an analytical Jacobian passed
+through for faster convergence — see the <code>whittle2.py</code> example there for
+the complete, live-synced source.</p>
+<h2 id="where-this-comes-from">Where this comes from<a class="headerlink" href="#where-this-comes-from" title="Permanent link">&para;</a></h2>
+<p>Both examples above are simplified/simulated versions of the same
+model the original toolbox's <code>Examples/ects/whittle1.m</code> fits to a real
+71-observation "Purse" series (Harvey, 1990, <em>Forecasting, Structural
+Time Series and the Kalman Filter</em>, pages 89-90) — see the
+<code>econometrics.md</code> API page for that exact translated example, which
+reproduces the textbook numbers directly.</p>
 
 
 
