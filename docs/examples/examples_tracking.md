@@ -35,15 +35,15 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 
 | Folder | MATLAB file | Status | Notes |
 |---|---|---|---|
-| `backtest/` | `backtest1.m` | ⬜ | |
-| `backtest/` | `backtest2.m` | ⬜ | plot/Excel I/O |
+| `backtest/` | `backtest1.m` | ⬜ | Exercises `fillmiss`/`findnomiss`, which became private helpers (`_fill_missing_ffill_bfill`/`_first_last_valid`) rather than public functions during porting -- not translated as a standalone example for now |
+| `backtest/` | `backtest2.m` | 🟡 | Translated (numeric core; plot dropped) — 3 rebalancing schedules (single, 4 fixed positions, date-subset with 2 out-of-range placeholders + a NaN price) |
 | `backtest/` | `backtest3.m` | 🟡 | Translated — generate_backtest at 4 rebalancing frequencies |
-| `backtest/` | `backtest4.m` | ⬜ | |
-| `backtest/` | `backtest5.m` | ⬜ | |
-| `backtest/` | `fillmiss1.m` | ⬜ | |
-| `backtest/` | `mdd1.m` | ⬜ | plot/Excel I/O |
-| `backtest/` | `unfunded1.m` | ⬜ | plot/Excel I/O |
-| `backtest/` | `unfunded2.m` | ⬜ | plot/Excel I/O |
+| `backtest/` | `backtest4.m` | 🟡 | Translated — per-asset bid/ask transaction costs; turnover cross-checked against `static_turnover` |
+| `backtest/` | `backtest5.m` | 🟡 | Translated — flat transaction cost under the original's actually-exercised (monthly/every-date) rebalancing schedule |
+| `backtest/` | `fillmiss1.m` | ⬜ | Same reason as `backtest1.m` -- exercises `fillmiss`/`findnomiss`, now private helpers |
+| `backtest/` | `mdd1.m` | 🟡 | Translated (numeric core; plot dropped) — maximum_drawdown, relative mode |
+| `backtest/` | `unfunded1.m` | 🟡 | Translated (numeric core; plot dropped) — funded vs. two unfunded-formulation backtests, cross-checked against each other |
+| `backtest/` | `unfunded2.m` | 🟡 | Translated (numeric core; plot dropped) — small hand-traceable n=8 version of unfunded1.py's round-trip |
 
 ## dates/ (5 files)
 
@@ -55,49 +55,49 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 | `dates/` | `date4.m` | ✅ | Identical `generate_trading_dates` call already covered by `date3.m` |
 | `dates/` | `rebalancing_dates.m` | 🟡 | Uses a `.mat` file with MATLAB's newer `datetime` object type (MCOS class), which Octave can't fully deserialize — environment limitation, not a translation gap. The underlying `weekly_rebalancing`/`monthly_rebalancing`/`quarterly_rebalancing` functions are already covered by the package's own test suite with synthetic data. |
 
-## ects/ (40 `.m` files; 9 `.asc` data files are not examples)
+## ects/ (39 `.m` files; 9 `.asc` data files are not examples)
 
 | Folder | MATLAB file | Status | Notes |
 |---|---|---|---|
-| `ects/` | `gmm1.m` | ⬜ | |
-| `ects/` | `kalman1a.m` | ⬜ | plot |
-| `ects/` | `kalman1b.m` | ⬜ | plot |
-| `ects/` | `kalman1c.m` | ⬜ | plot |
-| `ects/` | `kalman2a.m` | ⬜ | plot, uses `Kalman3.asc` |
-| `ects/` | `kalman2b.m` | ⬜ | plot, uses `Kalman3.asc` |
-| `ects/` | `kalman2c.m` | ⬜ | plot, uses `Kalman3.asc` |
-| `ects/` | `kalman3a.m` | ⬜ | plot, uses `Reinsel.asc` |
-| `ects/` | `kalman3b.m` | ⬜ | plot, uses `Reinsel.asc` |
-| `ects/` | `kalman3c.m` | ⬜ | plot, uses `Reinsel.asc` |
-| `ects/` | `kalman3d.m` | ⬜ | plot, uses `Reinsel.asc` |
-| `ects/` | `kalman4a.m` | ⬜ | plot |
-| `ects/` | `kalman4b.m` | ⬜ | plot |
-| `ects/` | `ml1.m` | ⬜ | |
+| `ects/` | `gmm1.m` | 🟡 | Translated — OLS/MLE/GMM, unconstrained and beta[3]=1-restricted, on a dataset with one missing y; `theta7` (a second, redundant encoding of the same restriction) not re-translated separately (see gmm1.py docstring) |
+| `ects/` | `kalman1a.m` | 🟡 | Byte-identical to `panel1.m` (verified via diff) -- already translated as `panel1.py`, not duplicated |
+| `ects/` | `kalman1b.m` | 🟡 | Translated (numeric core; plot dropped) — time-domain ML of (sigma_epsilon, sigma_eta) under two Kalman a0 choices during estimation, compared post-hoc |
+| `ects/` | `kalman1c.m` | 🟡 | Translated (numeric core; plot dropped) — time-domain vs. frequency-domain (Whittle) ML compared; Whittle estimate cross-checked against `whittle1.py`'s output |
+| `ects/` | `kalman2a.m` | 🟡 | Translated (numeric core; plot dropped) — Local Linear Trend Kalman filter on Gnp.asc (uses `Gnp.asc`, not `Kalman3.asc` as the tracker previously noted), fixed variance parameters |
+| `ects/` | `kalman2b.m` | 🟡 | Translated (numeric core; plot dropped) — LLT model, Whittle (frequency-domain) ML on Gnp.asc |
+| `ects/` | `kalman2c.m` | 🟡 | Translated (numeric core; plot dropped) — LLT model, time-domain ML on Gnp.asc; cross-checked against kalman2b.py's Whittle estimate |
+| `ects/` | `kalman3a.m` | 🟡 | Translated — general 2-state/2-obs SSM filter on `Kalman3.asc`, from steady-state initial mean/covariance |
+| `ects/` | `kalman3b.m` | 🟡 | Translated — same model/data as kalman3a.py, run through the time-varying (3-D matrix) code path; verified to reproduce kalman3a.py's output exactly |
+| `ects/` | `kalman3c.m` | 🟡 | Translated (numeric core; plot dropped) — filtered state + 95% confidence band |
+| `ects/` | `kalman3d.m` | 🟡 | Translated — ML recovery of all 11 free SSM parameters, starting from and compared against their true values |
+| `ects/` | `kalman4a.m` | 🟡 | Translated (numeric core; plot dropped) — simulated random-walk-coefficient regression, time-varying-Z Kalman filter recovers the beta_t path; seeded RNG |
+| `ects/` | `kalman4b.m` | 🟡 | Translated (numeric core; plot dropped) — same simulation as kalman4a.py, but (sigma_epsilon, sigma_beta1, sigma_beta2) estimated by ML rather than assumed known |
+| `ects/` | `ml1.m` | ⬜ | Near-duplicate of `ml2.m` (same data/model), whose distinctive feature is exercising MATLAB's string-name function dispatch (`ml_estimation('ml1_fn',sv)`) -- not meaningful to translate; lower priority |
 | `ects/` | `ml1_fn.m` | ⬜ | helper function for `ml1.m`, not standalone |
-| `ects/` | `ml2.m` | ⬜ | |
-| `ects/` | `ml3.m` | ⬜ | |
-| `ects/` | `ml4.m` | ⬜ | |
+| `ects/` | `ml2.m` | 🟡 | Translated — OLS vs. Gaussian-MLE covariance matrix, Hessian/OPG/HC estimators |
+| `ects/` | `ml3.m` | 🟡 | Translated — Beta-distribution MLE (LGD modeling), Hessian/OPG/HC covariance |
+| `ects/` | `ml4.m` | 🟡 | Translated — numerical vs. analytical Jacobian/Hessian, all 3 covariance estimators under both |
 | `ects/` | `ols1.m` | ✅ | Self-contained — see `examples/regression.md` |
-| `ects/` | `panel1.m` | ⬜ | panel-data example; no ported panel module yet |
-| `ects/` | `quantile1.m` | ⬜ | |
-| `ects/` | `quantile2.m` | ⬜ | |
+| `ects/` | `panel1.m` | 🟡 | Translated — **note:** despite its filename/old tracker note, this is a local-level Kalman filter example (Harvey 1990), not panel data; corrected and translated using `econometrics.kalman` (numeric core; plot dropped) |
+| `ects/` | `quantile1.m` | 🟡 | Translated (numeric core; plot dropped) — pinball-loss minimization vs. sorted-sample quantile vs. true Normal quantile |
+| `ects/` | `quantile2.m` | 🟡 | Translated (numeric core; plot dropped) — Monte Carlo (nS=2000) OLS vs. LAD under heteroskedastic noise |
 | `ects/` | `robust1.m` | ✅ | Self-contained — see `examples/regression.md` |
-| `ects/` | `robust2.m` | ⬜ | |
-| `ects/` | `robust3.m` | ⬜ | |
-| `ects/` | `varx1a.m` | ⬜ | uses `Gnp.asc` |
-| `ects/` | `varx1b.m` | ⬜ | uses `Gnp.asc` |
-| `ects/` | `varx1c.m` | ⬜ | uses `Gnp.asc` |
-| `ects/` | `varx1d.m` | ⬜ | uses `Gnp.asc` |
-| `ects/` | `varx1e.m` | ⬜ | uses `Gnp.asc` |
-| `ects/` | `varx2a.m` | ⬜ | uses `Lutkepohl.asc` |
-| `ects/` | `varx2b.m` | ⬜ | uses `Lutkepohl.asc` |
-| `ects/` | `varx2c.m` | ⬜ | uses `Lutkepohl.asc` |
-| `ects/` | `varx3.m` | ⬜ | |
-| `ects/` | `varx4a.m` | ⬜ | uses `Purse.asc` |
-| `ects/` | `varx4b.m` | ⬜ | uses `Purse.asc` |
-| `ects/` | `varx5a.m` | ⬜ | uses `Rainfall.asc` |
-| `ects/` | `whittle1.m` | ⬜ | uses `Lynx.asc` |
-| `ects/` | `whittle2.m` | ⬜ | uses `Sunspots.asc`/`Whittle2.asc` |
+| `ects/` | `robust2.m` | 🟡 | Translated — OLS/median/LAD/Huber regression |
+| `ects/` | `robust3.m` | 🟡 | Translated — OLS/median/LAD, plus quantile regression via both IRLS M-estimation and the exact LP formulation (cross-checked against each other) |
+| `ects/` | `varx1a.m` | 🟡 | Translated — VAR(2) on log-differenced Lutkepohl.asc investment/income/consumption (embedded), via `varx_estimate(..., method="ls")` |
+| `ects/` | `varx1b.m` | 🟡 | Translated — Wald test for no Granger-causality (income/consumption -> investment) via `wald_test` |
+| `ects/` | `varx1c.m` | 🟡 | Translated — Wald test for no instantaneous causality, on the ML fit's Cholesky-augmented theta/vcv |
+| `ects/` | `varx1d.m` | 🟡 | Translated — restricted VAR(2) (7 of 21 coefficients free, via `design(w)`) estimated by both LS and concentrated ML |
+| `ects/` | `varx1e.m` | 🟡 | Translated — lag-order selection (`varx_order`, p=1..5) on same data as varx1a.m |
+| `ects/` | `varx2a.m` | 🟡 | Translated — reduced form of a dynamic simultaneous-equations system (Lutkepohl ch.10) via `varx_estimate(..., p=1)` |
+| `ects/` | `varx2b.m` | 🟡 | Translated — varx2a.py's model with 4 coefficients restricted, via restricted LS |
+| `ects/` | `varx2c.m` | 🟡 | Translated — same restricted model as varx2b.py, via concentrated ML; cross-checked against it |
+| `ects/` | `varx3.m` | 🟡 | Translated — trivial 5-obs OLS vs. `varx_estimate(..., p=0)` equivalence check |
+| `ects/` | `varx4a.m` | 🟡 | Translated — JHGLL restricted SUR (2-eq, embedded 20-obs data), two-step GLS |
+| `ects/` | `varx4b.m` | 🟡 | Translated — JHGLL restricted SUR (3-eq, embedded 30-obs data), two Sigma variants compared |
+| `ects/` | `varx5a.m` | 🟡 | Translated — JHGLL simultaneous-equations system, OLS/GLS-2S/GLS-3S/LIML compared (all four converge to consistent Gamma/B/PI) |
+| `ects/` | `whittle1.m` | 🟡 | Translated — Whittle local-level MLE on the same Purse.asc data as panel1.m (single BFGS path; original's 3-optimizer comparison collapses to one) |
+| `ects/` | `whittle2.m` | 🟡 | Translated — Bloomfield exponential spectral density (order 4), custom `sdf_fn` passed to `whittle_estimation` |
 
 ## maths/ (9 files)
 
@@ -110,8 +110,8 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 | `maths/` | `grad5.m` | 🟡 | Translated — both the already-scalar `fun` and the explicit-sum `fun2` formulations (same gradient either way) |
 | `maths/` | `hess1.m` | ✅ | See `examples/building_blocks.md` |
 | `maths/` | `hess2.m` | 🟡 | Translated — numerical gradient + Hessian vs. analytical, at a point with a very small x2 |
-| `maths/` | `pdgm1.m` | ⬜ | periodogram plot |
-| `maths/` | `pdgm2.m` | ⬜ | periodogram plot |
+| `maths/` | `pdgm1.m` | 🟡 | Translated — not actually a plot despite the earlier note; raw periodogram of a 4-obs series via `periodogram`, output verified against the MATLAB source's own comment |
+| `maths/` | `pdgm2.m` | 🟡 | Translated — same as pdgm1.py, 8-obs series, output verified against the MATLAB source's own comment |
 
 ## matrix/ (9 files)
 
@@ -140,7 +140,7 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 | `optim/` | `prox_Linfinity.m` | ✅ | Cross-verified vs. Octave — see `examples/building_blocks.md` |
 | `optim/` | `prox_turnover1.m` | 🟡 | Translated — proximal-L1 vs. both projection-L1 algorithms; fixed-seed substitution for unseeded `rand` |
 | `optim/` | `prox_turnover2.m` | 🟡 | Uses `proximal_turnover` → `fminunc`/`optimoptions`; Octave-forge's `optim` package doesn't implement `optimoptions`, so this specific example can't be cross-run in this environment. Function itself already covered by the package's own test suite. |
-| `optim/` | `proximal1.m` | ⬜ | large multi-part script (bounds/equality/inequality/linear-constraints) |
+| `optim/` | `proximal1.m` | 🟡 | Translated — bounds/1-4 inequalities/1-2 equalities/combined linear constraints; the original's `Proximal_Algorithm` 1-vs-2 comparison is moot post-port (see proximal1.py's docstring — the redundant closed-form-vs-QP branches for bounds/equality weren't kept) |
 | `optim/` | `turnover1.m` | ✅ | Cross-verified vs. Octave (fixed input) — see `examples/building_blocks.md` |
 
 ## rpb/ (21 files)
@@ -157,7 +157,7 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 | `rpb/` | `test_erc1.m` | ✅ | See `examples/risk_budgeting.md` |
 | `rpb/` | `test_erc2.m` | 🟡 | Translated |
 | `rpb/` | `test_erc3.m` | 🟡 | Translated |
-| `rpb/` | `test_lasso1.m` | ⬜ | |
+| `rpb/` | `test_lasso1.m` | 🟡 | Translated — unconstrained/budget-constrained MVO (identical, since `mvo_portfolio` auto-applies the budget constraint when `a_eq` is omitted, matching `compute_mvo_portfolio.m`) plus ridge/lasso via `solve_qp` (no auto budget constraint there, matching the raw `quadprog_ridge`/`quadprog_lasso`) |
 | `rpb/` | `test_lasso2.m` | ⬜ | Plotting sweep of the same computation `test_lasso3.m` demonstrates directly; lower priority |
 | `rpb/` | `test_lasso3.m` | 🟡 | Translated via `solve_qp` ridge/lasso penalties (replaces original's `quadprog_ridge`/`quadprog_lasso`/`quadprog_mixed`) |
 | `rpb/` | `test_lasso4.m` | 🟡 | Byte-identical to `test_lasso3.m` -- same translation covers both |
@@ -173,24 +173,24 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 
 | Folder | MATLAB file | Status | Notes |
 |---|---|---|---|
-| `stats/` | `count1.m` | ⬜ | |
-| `stats/` | `cov1.m` | ⬜ | |
+| `stats/` | `count1.m` | ⬜ | Exercises `counts`/`countmiss` (GAUSS tabulation utilities) — not ported, no quanttoolbox equivalent to demonstrate (superseded by `np.histogram`/`pd.value_counts`) |
+| `stats/` | `cov1.m` | 🟡 | Translated — OLS in closed form vs. Gaussian MLE (`ml_estimation`) comparing Hessian/OPG/HC standard errors; `ml_robust_vcv`'s 5 partially-redundant covariance variants condensed to `ml_estimation`'s 3 `cov=` options |
 | `stats/` | `elasticnet1.m` | 🟡 | Translated — elastic net path (alpha=0.5) via `elastic_net_ccd` |
 | `stats/` | `elasticnet2.m` | 🟡 | Same translation as `elasticnet1.m` (alpha=0.25 case) — covered together |
-| `stats/` | `kalman1.m` | ⬜ | |
-| `stats/` | `kalman2.m` | ⬜ | |
-| `stats/` | `kernel1.m` | ⬜ | plot |
-| `stats/` | `lasso1.m` | ⬜ | plot (numeric core only will be ported) |
+| `stats/` | `kalman1.m` | 🟡 | Translated — time-varying-beta random-walk-coefficient model, bounded MLE via `scipy.optimize.minimize(..., method="L-BFGS-B")` (`ml_estimation` has no box-constraint support) since the `ects/` Kalman pass is now done |
+| `stats/` | `kalman2.m` | 🟡 | Translated — same model as kalman1.py, a0 fixed at [-20,-20] (unrecovered from a deliberately bad start) rather than estimated |
+| `stats/` | `kernel1.m` | 🟡 | Translated (numeric core; plot dropped) — Gaussian kernel density on two correlated series |
+| `stats/` | `lasso1.m` | 🟡 | Translated (numeric core; 501-point plot sweep dropped) — extends lasso2.py's identical 5-lambda/dataset run with R²/df/complexity reporting |
 | `stats/` | `lasso2.m` | 🟡 | Translated (penalized-form lasso path via `lasso_ccd`); the tau-constrained comparison and 501-point plot sweep in the original are not re-translated separately |
 | `stats/` | `lasso3.m` | ⬜ | Uses `selectLasso` (lasso-path variable-selection ordering) — not currently ported as a standalone function |
-| `stats/` | `ml_ols.m` | ⬜ | |
+| `stats/` | `ml_ols.m` | ⬜ | Helper function (per-observation log-density) for `cov1.m`, not a standalone example — inlined directly into `cov1.py` |
 | `stats/` | `pca1.m` | 🟡 | Translated |
-| `stats/` | `qreg1.m` | ⬜ | |
-| `stats/` | `qreg2.m` | ⬜ | |
-| `stats/` | `quantile1.m` | ⬜ | |
-| `stats/` | `quantile2.m` | ⬜ | |
+| `stats/` | `qreg1.m` | 🟡 | Translated — linear quantile regression at 9 tau levels |
+| `stats/` | `qreg2.m` | 🟡 | Translated (numeric core; plot dropped) — local-linear/quadratic kernel mean & quantile regression vs. population curves |
+| `stats/` | `quantile1.m` | ⬜ | Exercises `quantile_classification`/`unique2` — not ported, no quanttoolbox equivalent (superseded by `pd.qcut`/`np.unique`) |
+| `stats/` | `quantile2.m` | ⬜ | Same reason as `quantile1.m` |
 | `stats/` | `ridge1.m` | ✅ | See `examples/regression.md` (numeric core; plot dropped) |
-| `stats/` | `ridge2.m` | ⬜ | |
+| `stats/` | `ridge2.m` | 🟡 | Translated — `ridge_tau_targeted` cross-checked against fixed-lambda `ridge`, absolute and relative tau, two lambda-search grids |
 
 ## svm/ (12 files)
 
@@ -241,18 +241,18 @@ byte-for-byte), it's marked 🟡 with a note explaining why.
 
 | Folder | Total | ✅ Done | 🟡 Translated (not cross-verified) | ⬜ Remaining |
 |---|---|---|---|---|
-| `backtest/` | 9 | 0 | 1 | 8 |
+| `backtest/` | 9 | 0 | 7 | 2 |
 | `dates/` | 5 | 2 | 1 | 2 |
-| `ects/` | 40 | 2 | 0 | 38 |
-| `maths/` | 9 | 2 | 5 | 2 |
+| `ects/` | 39 | 2 | 35 | 2 |
+| `maths/` | 9 | 2 | 7 | 0 |
 | `matrix/` | 9 | 3 | 3 | 3 |
-| `optim/` | 11 | 6 | 4 | 1 |
-| `rpb/` | 21 | 5 | 9 | 7 |
-| `stats/` | 18 | 1 | 4 | 13 |
+| `optim/` | 11 | 6 | 5 | 0 |
+| `rpb/` | 21 | 5 | 10 | 6 |
+| `stats/` | 18 | 1 | 12 | 5 |
 | `svm/` | 12 | 3 | 9 | 0 |
 | `tools/` | 5 | 0 | 0 | 5 |
 | `tutorial/` | 11 | 0 | 0 | 11 |
-| **Total** | **150** | **24** | **36** | **90** |
+| **Total** | **149** | **24** | **88** | **37** |
 
 *(`stats/ridge.inc` excluded as a data snippet, not a standalone example
 — 149 actual `.m` example scripts plus that one data-only file.)*
