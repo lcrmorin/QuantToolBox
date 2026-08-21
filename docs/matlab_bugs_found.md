@@ -318,6 +318,45 @@ wrong ones, with this bug documented directly in its docstring.
 
 ---
 
+## 7. `pdfCopulaGumbel3.m` does not match the derivative of its own CDF
+
+**Files:** `copula/cdfCopulaGumbel3.m`, `copula/pdfCopulaGumbel3.m`
+
+**The bug:** `cdfCopulaGumbel3.m` implements a 3-variable nested
+(hierarchical) Gumbel copula CDF: `(u1, u2)` coupled at strength `theta2`
+first, then combined with `u3` at strength `theta1`. `pdfCopulaGumbel3.m`
+is supposed to be its density, i.e. `d³C / du1 du2 du3` — but evaluating
+both independently at `theta1=1.5, theta2=3.0, u=(0.3, 0.5, 0.7)` gives
+different numbers: the shipped PDF formula evaluates to ≈1.0064, while the
+true third mixed partial derivative of the CDF is ≈1.2096.
+
+**How it was found:** two independent methods to compute the true
+derivative were used and cross-checked against each other before
+concluding the shipped formula was wrong: (1) a 3-D central finite
+difference of `cdfCopulaGumbel3.m`'s own formula (`h=1e-4`), which gave
+≈1.2096330881394832; (2) exact symbolic differentiation via `sympy`
+(`pip install sympy`), which gave ≈1.2096324660456708 — agreeing with the
+finite-difference result to 6 significant figures, and disagreeing with
+the original formula's ≈1.0063584118923428 by roughly 20%.
+
+**Practical impact:** any use of `pdfCopulaGumbel3.m` in the original
+toolbox — likelihood-based estimation of the nested Gumbel copula's
+parameters, or density evaluation for this specific 3-variable family —
+would silently use a wrong density. Since the two disagree by a
+non-trivial relative amount (not a rounding-level discrepancy) and the
+CDF itself is verified correct, this looks like a genuine algebra error
+in deriving the PDF from the CDF, not a translation or transcription slip.
+
+**Fix in the Python port:** `quanttoolbox.copula.families.nested_gumbel_cdf`
+ports the (verified-correct) CDF; no corresponding PDF function is
+provided. Independently re-deriving a replacement PDF by hand would risk
+introducing a *different* subtle error in a rarely-used trivariate
+extension, so the safer choice was to ship the CDF only and document the
+finding, rather than either propagate the original's wrong formula or gamble
+on an unverified from-scratch derivation.
+
+---
+
 ## Summary table
 
 | # | Location | Nature | Fixed in port? |
@@ -328,3 +367,4 @@ wrong ones, with this bug documented directly in its docstring.
 | 4 | `mixture_compute_rb_{var,es}.m` algorithm-2 branch | Dead code (unset global) | ✅ Yes (branch not ported, documented) |
 | 5 | `proximal_linear_constraints.m` | Exact-equality convergence check can false-exit on a plateau | ⚠️ Not fixed — faithfully reproduced and documented |
 | 6 | `Examples/rpb/test_mvo3.m` | Missing `init_global` call leaves `BISECTION_Tol` unset, silently breaking all bisection-based target-matching | N/A (example script, not library code) — translation produces the correct numbers, bug documented |
+| 7 | `pdfCopulaGumbel3.m` | Shipped PDF formula doesn't match `d³C/du1du2du3` of its own CDF (verified via finite difference + `sympy`) | ⚠️ Not fixed — PDF not ported at all, documented |

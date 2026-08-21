@@ -77,10 +77,11 @@ Port status: `bond/pricing.py`, `credit/structural.py`,
 `sustainable_finance/carbon.py`, `sustainable_finance/esg.py`,
 `sustainable_finance/climate.py`, `sustainable_finance/ecology.py`,
 `sustainable_finance/entropy.py`, `stats/multivariate.py`,
-`stats/distributions.py` (extension), and `stats/dose_response.py` are
-done (ported, tested, lint/type-clean) -- all of `sustainable_finance/`
-and `credit/` are now fully ported; the rest of the tables below are
-still the planned module breakdown. See
+`stats/distributions.py` (extension), `stats/dose_response.py`,
+`copula/families.py`, `copula/dependence.py`, and `copula/simulate.py`
+are done (ported, tested, lint/type-clean) -- all of
+`sustainable_finance/`, `credit/`, and `copula/` are now fully ported;
+the rest of the tables below are still the planned module breakdown. See
 [HSF-Notebooks](https://github.com/lcrmorin/HSF-Notebooks)'s
 `CHAPTERS.md` for the per-chapter notebooks that will use these
 modules once ported.
@@ -105,9 +106,9 @@ Planned Python module mapping:
 | Python module (planned) | Original MATLAB files (`0. Toolbox/`) | Status |
 |---|---|---|
 | `bond/pricing.py` (new module) | `bond/compute_bond_price.m`, `compute_bond_ytm.m`, `compute_coupon_yield.m`, `quadratic_form_bond_portfolio1.m`, `quadratic_form_bond_portfolio2.m` | ✅ |
-| `copula/families.py` (new module) | `copula/cdfCopula*.m`, `pdfCopula*.m` (23 families: Normal, Student, Clayton, Frank, Gumbel (+2 variants), Plackett, FGM, AMH, Galambos, Husler-Reiss, Marshall-Olkin, Gumbel-Barnett, logistic-Gumbel, Sloane, cubic, upper/lower Fréchet, product) | ⬜ |
-| `copula/dependence.py` | `copula/KendallCopula*.m`, `SpearmanCopula*.m` (5 families each), `dependogram.m`, `DebyeFunction.m`, `diLogFunction.m` | ⬜ |
-| `copula/simulate.py` | `copula/rndCopula*.m`, `rndnCopula.m` (8 families) | ⬜ |
+| `copula/families.py` (new module) | `copula/cdfCopula*.m`, `pdfCopula*.m`, `cdfConditionalCopula*.m`, `cdfmvn.m`, `cdfSloaneCopula.m`, `contourCopula*.m`, `singularCopula*.m` (23 families: Normal, Student, Clayton, Frank, Gumbel (+nested/hierarchical 3-variable variant), Plackett, FGM, AMH, Galambos, Husler-Reiss, Marshall-Olkin, Gumbel-Barnett, logistic-Gumbel, Sloane, cubic, upper/lower Fréchet, product) -- the n-dim/bivariate MATLAB file pairs (`cdfCopulaUpper.m`+`Upper2.m`, `Lower.m`+`Lower2.m`, `Product.m`+`Product2.m`, `Normal.m`+`Normal2.m`, `Student.m`+`Student2.m`, and their `pdfCopula*`/`rndCopula*` equivalents in the two modules below) are each merged into one function; `pdfCopulaGumbel3.m` is **not** ported -- it doesn't match `d³C/du1du2du3` of its own CDF, a genuine bug in the original, see `matlab_bugs_found.md` #7 | ✅ |
+| `copula/dependence.py` | `copula/KendallCopula*.m`, `SpearmanCopula*.m` (5 families each), `dependogram.m`, `DebyeFunction.m`, `diLogFunction.m` -- `SpearmanCopula.m`'s generic double-integral estimator generalized to `spearman_rho_numeric`, usable for any family in `families.py`, not just the two (Clayton, Gumbel) the original wired it up to | ✅ |
+| `copula/simulate.py` | `copula/rndCopula*.m`, `rndnCopula.m` (8 families) -- `rndCopula2.m`'s generic bisection-based conditional-inversion engine generalized to `simulate_from_conditional_cdf` (built on `optim/bisection.py`'s already-vectorized `bisection`), usable for any family exposing a conditional CDF, not just Gumbel | ✅ |
 | `credit/structural.py` (new module) | `credit/Black_Scholes_Model.m`, `PD_Merton_Model.m`, `B0_Extended_Merton_Model.m`, `E0_Extended_Merton_Model.m`, `PD_Extended_Merton_Model.m`, `PD_Black_Cox_Model.m`, `Merton_Jump_Model.m`, `Merton_Jump_Climate_Model.m`, `Reinders_Credit_Model.m` -- `Reinders_Credit_Model.m`'s unused `mu_A` argument dropped (no cross-function-consistency rationale, unlike the extended-Merton trio's documented one); `pd_merton_model`'s asset-value/volatility calibration uses `scipy.optimize.minimize(method="BFGS")` in place of `fminunc` | ✅ |
 | `credit/reduced_form.py` | `credit/Density_Markov_Generator.m`, `Hazard_Markov_Generator.m`, `Survival_Markov_Generator.m`, `cdfExponential.m`, `pdfExponential.m`, `invExponential.m`, `rndExponential.m`, `survivalExponential.m` -- `Hazard_Markov_Generator.m`'s internal function name (a copy-paste error in the original, silently harmless under MATLAB's filename dispatch) resolved to `hazard_markov_generator`, matching the filename and computation, see module docstring | ✅ |
 | `stats/multivariate.py` (new module) | `stats/cdfbvn.m`, `pdfbvn.m`, `cdfbvt.m` ported as thin `scipy`-backed bivariate wrappers; `genz/*.m` (10 files, Genz-Bretz MVN/MVT quadrature) intentionally *not* hand-ported -- superseded by `scipy.stats.multivariate_normal.cdf`/`multivariate_t.cdf` (same Genz algorithm, same author) -- see module docstring and `library_alternatives.md` | ✅ |
@@ -135,14 +136,24 @@ Notes on the table above:
   by `stats/distributions.py`'s `mvn_cdf`/`mvn_pdf` (via
   `scipy.stats.multivariate_normal`, itself Genz's own algorithm) --
   see `stats/multivariate.py`'s module docstring for the file-by-file
-  breakdown. `copula/cdfmvn.m` (a separate file, inside `copula/`, not
-  yet read) is likely another variant of the same thing -- worth
-  checking against `mvn_cdf` before assuming it needs its own port,
-  once `copula/` work starts.
-- `copula/` (67 files) is the largest single block and the most likely
-  to want splitting further once work starts (e.g. one file per family
-  instead of the 3-file grouping above); treat the module names here as
-  a starting proposal, not a commitment.
+  breakdown. `copula/cdfmvn.m` is confirmed to be a verbatim duplicate of
+  `stats/cdfmvn.m` -- not re-ported, `copula/families.py`'s
+  `gaussian_copula_cdf` calls `stats/distributions.py`'s `mvn_cdf`
+  directly for its n-dimensional path.
+- `copula/` (67 files) is fully ported across the 3-module grouping
+  above -- splitting further (one file per family) turned out to be
+  unnecessary once the n-dim/bivariate file pairs were merged and the
+  Gaussian/Student cases were built as thin wrappers around
+  `stats/multivariate.py`'s `bvn_cdf`/`bvt_cdf` and `stats/
+  distributions.py`'s `mvn_cdf` -- see `copula/families.py`'s module
+  docstring and `library_alternatives.md`'s "Copula" section for the
+  full redundancy-avoidance rationale, including where `statsmodels.
+  distributions.copula` was used to numerically verify formulas (Clayton,
+  Frank, Gumbel, Gaussian, Student) without being wrapped directly.
+  Several families the original only ever shipped a CDF for (AMH,
+  Husler-Reiss, Marshall-Olkin, FGM, Sloane) likewise have no PDF here --
+  no PDF is fabricated for families the original author didn't derive
+  one for. `copula1.m`-`copula4.m` remain unported, per the note above.
 
 ## Example translation tracker
 

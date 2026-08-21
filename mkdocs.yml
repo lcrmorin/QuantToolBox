@@ -64,6 +64,7 @@ nav:
       - Overview: api/index.md
       - backtest: api/backtest.md
       - bond: api/bond.md
+      - copula: api/copula.md
       - credit: api/credit.md
       - dates: api/dates.md
       - econometrics: api/econometrics.md
