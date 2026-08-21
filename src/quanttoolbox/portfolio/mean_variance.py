@@ -223,9 +223,10 @@ def mvo_target_portfolio(
                 results.append(as_target_result(r_max, np.inf))
                 continue
 
-        gamma_star = bisection(
-            lambda g, t=target: achieved(g) - t, gamma_bracket[0], gamma_bracket[1]
-        )
+        def objective(gamma: float, target: float = target) -> float:
+            return achieved(gamma) - target
+
+        gamma_star = bisection(objective, gamma_bracket[0], gamma_bracket[1])
         if np.isnan(gamma_star):
             results.append(nan_result())
         else:
