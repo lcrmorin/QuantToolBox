@@ -7,6 +7,33 @@
 
 ::: quanttoolbox.maths.numerical_diff
 
+### Examples
+
+??? example "maths/grad2.py"
+    ```python
+    --8<-- "examples/maths/grad2.py"
+    ```
+
+??? example "maths/grad3.py"
+    ```python
+    --8<-- "examples/maths/grad3.py"
+    ```
+
+??? example "maths/grad4.py"
+    ```python
+    --8<-- "examples/maths/grad4.py"
+    ```
+
+??? example "maths/grad5.py"
+    ```python
+    --8<-- "examples/maths/grad5.py"
+    ```
+
+??? example "maths/hess2.py"
+    ```python
+    --8<-- "examples/maths/hess2.py"
+    ```
+
 ## `maths.simulation`
 
 !!! info "Python alternatives"

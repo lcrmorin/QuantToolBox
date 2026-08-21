@@ -7,6 +7,23 @@
 
 ::: quanttoolbox.portfolio.risk_budgeting
 
+### Examples
+
+??? example "rpb/test_box1.py"
+    ```python
+    --8<-- "examples/rpb/test_box1.py"
+    ```
+
+??? example "rpb/test_erc2.py"
+    ```python
+    --8<-- "examples/rpb/test_erc2.py"
+    ```
+
+??? example "rpb/test_erc3.py"
+    ```python
+    --8<-- "examples/rpb/test_erc3.py"
+    ```
+
 ## `portfolio.mean_variance`, `portfolio.black_litterman`, `portfolio.tracking_error`
 
 !!! info "Python alternatives"
@@ -17,6 +34,38 @@
 ::: quanttoolbox.portfolio.black_litterman
 
 ::: quanttoolbox.portfolio.tracking_error
+
+### Examples
+
+??? example "rpb/test_bl2.py"
+    ```python
+    --8<-- "examples/rpb/test_bl2.py"
+    ```
+
+??? example "rpb/test_lasso1.py"
+    ```python
+    --8<-- "examples/rpb/test_lasso1.py"
+    ```
+
+??? example "rpb/test_lasso3.py"
+    ```python
+    --8<-- "examples/rpb/test_lasso3.py"
+    ```
+
+??? example "rpb/test_lasso5.py"
+    ```python
+    --8<-- "examples/rpb/test_lasso5.py"
+    ```
+
+??? example "rpb/test_minvar2.py"
+    ```python
+    --8<-- "examples/rpb/test_minvar2.py"
+    ```
+
+??? example "rpb/test_mvo2.py"
+    ```python
+    --8<-- "examples/rpb/test_mvo2.py"
+    ```
 
 ## `portfolio.erc_mdp`
 

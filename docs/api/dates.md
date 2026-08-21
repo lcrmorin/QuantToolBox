@@ -8,6 +8,50 @@
 
 ::: quanttoolbox.dates.convert
 
+### Examples
+
+??? example "backtest/backtest2.py"
+    ```python
+    --8<-- "examples/backtest/backtest2.py"
+    ```
+
+??? example "backtest/backtest4.py"
+    ```python
+    --8<-- "examples/backtest/backtest4.py"
+    ```
+
+??? example "backtest/backtest5.py"
+    ```python
+    --8<-- "examples/backtest/backtest5.py"
+    ```
+
+??? example "backtest/mdd1.py"
+    ```python
+    --8<-- "examples/backtest/mdd1.py"
+    ```
+
 ## `dates.rebalancing`
 
 ::: quanttoolbox.dates.rebalancing
+
+### Examples
+
+??? example "backtest/backtest2.py"
+    ```python
+    --8<-- "examples/backtest/backtest2.py"
+    ```
+
+??? example "backtest/backtest4.py"
+    ```python
+    --8<-- "examples/backtest/backtest4.py"
+    ```
+
+??? example "backtest/backtest5.py"
+    ```python
+    --8<-- "examples/backtest/backtest5.py"
+    ```
+
+??? example "backtest/mdd1.py"
+    ```python
+    --8<-- "examples/backtest/mdd1.py"
+    ```

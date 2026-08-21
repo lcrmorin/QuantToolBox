@@ -7,10 +7,86 @@
 
 ::: quanttoolbox.backtest.returns
 
+### Examples
+
+??? example "backtest/backtest2.py"
+    ```python
+    --8<-- "examples/backtest/backtest2.py"
+    ```
+
+??? example "backtest/backtest4.py"
+    ```python
+    --8<-- "examples/backtest/backtest4.py"
+    ```
+
+??? example "backtest/backtest5.py"
+    ```python
+    --8<-- "examples/backtest/backtest5.py"
+    ```
+
+??? example "backtest/mdd1.py"
+    ```python
+    --8<-- "examples/backtest/mdd1.py"
+    ```
+
+??? example "backtest/unfunded1.py"
+    ```python
+    --8<-- "examples/backtest/unfunded1.py"
+    ```
+
+??? example "backtest/unfunded2.py"
+    ```python
+    --8<-- "examples/backtest/unfunded2.py"
+    ```
+
 ## `backtest.stats`
 
 ::: quanttoolbox.backtest.stats
 
+### Examples
+
+??? example "backtest/backtest4.py"
+    ```python
+    --8<-- "examples/backtest/backtest4.py"
+    ```
+
+??? example "backtest/mdd1.py"
+    ```python
+    --8<-- "examples/backtest/mdd1.py"
+    ```
+
 ## `backtest.reporting`
 
 ::: quanttoolbox.backtest.reporting
+
+### Examples
+
+??? example "backtest/backtest2.py"
+    ```python
+    --8<-- "examples/backtest/backtest2.py"
+    ```
+
+??? example "backtest/backtest3.py"
+    ```python
+    --8<-- "examples/backtest/backtest3.py"
+    ```
+
+??? example "backtest/backtest4.py"
+    ```python
+    --8<-- "examples/backtest/backtest4.py"
+    ```
+
+??? example "backtest/backtest5.py"
+    ```python
+    --8<-- "examples/backtest/backtest5.py"
+    ```
+
+??? example "backtest/unfunded1.py"
+    ```python
+    --8<-- "examples/backtest/unfunded1.py"
+    ```
+
+??? example "backtest/unfunded2.py"
+    ```python
+    --8<-- "examples/backtest/unfunded2.py"
+    ```
