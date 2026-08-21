@@ -104,7 +104,7 @@ Planned Python module mapping:
 | `copula/simulate.py` | `copula/rndCopula*.m`, `rndnCopula.m` (8 families) | ⬜ |
 | `credit/structural.py` (new module) | `credit/Black_Scholes_Model.m`, `PD_Merton_Model.m`, `B0_Extended_Merton_Model.m`, `E0_Extended_Merton_Model.m`, `PD_Extended_Merton_Model.m`, `PD_Black_Cox_Model.m`, `Merton_Jump_Model.m`, `Merton_Jump_Climate_Model.m`, `Reinders_Credit_Model.m` | ⬜ |
 | `credit/reduced_form.py` | `credit/Density_Markov_Generator.m`, `Hazard_Markov_Generator.m`, `Survival_Markov_Generator.m`, `cdfExponential.m`, `pdfExponential.m`, `invExponential.m`, `rndExponential.m`, `survivalExponential.m` | ⬜ |
-| `stats/multivariate.py` (new module) | `genz/*.m` (10 files, Genz-Bretz quadrature for MVN/MVT CDFs) + `stats/cdfbvn.m`, `pdfbvn.m`, `cdfbvt.m` (bivariate normal/Student) | ⬜ |
+| `stats/multivariate.py` (new module) | `stats/cdfbvn.m`, `pdfbvn.m`, `cdfbvt.m` ported as thin `scipy`-backed bivariate wrappers; `genz/*.m` (10 files, Genz-Bretz MVN/MVT quadrature) intentionally *not* hand-ported -- superseded by `scipy.stats.multivariate_normal.cdf`/`multivariate_t.cdf` (same Genz algorithm, same author) -- see module docstring and `library_alternatives.md` | ✅ |
 | `stats/distributions.py` (extend existing) | `stats/cdfSN*.m`/`pdfSN.m`/`momSN.m`/`rndSN.m` (skew-normal), `cdfST*.m`/`pdfST.m`/`momST.m`/`rndST.m` (skew-t), `cdfBates.m`/`pdfBates.m`, `cdfbeta.m`/`pdfbeta.m`, `cdfig.m`/`pdfig.m` (inverse Gaussian), `cdfln.m`/`pdfln.m` (lognormal), `cdfNormalRatio.m`/`pdfNormalRatio.m`, `pdfPoissonBinomial.m`, `cdfchi2i.m`, `pdft.m`, `compute_cdf_order_statistics.m`, `compute_inv_cdf_order_statistics.m`, `constant_correlation_matrix.m`, `max_size.m` | ⬜ |
 | `stats/dose_response.py` (new module) | `stats/drcHormetic1.m`, `drcHormetic2.m`, `drcLogLogistic.m`, `drcLogNormal.m`, `drcWeibull1.m`, `drcWeibull2.m` | ⬜ |
 | `sustainable_finance/carbon.py` (new module) | `hsf/carbon_budget_linear.m`, `carbon_budget_linear_reduction.m`, `carbon_budget_linear_trend.m`, `carbon_budget_piecewise.m`, `carbon_budget_compound_reduction.m`, `carbon_budget_Reduction.m` | ⬜ |
@@ -123,12 +123,16 @@ Notes on the table above:
   `copula` notebook in HSF-Notebooks once `copula/simulate.py` exists.
 - `quadratic_form_bond_portfolio1.m`/`2.m` exist identically in both
   `bond/` and `hsf/` -- ported once, under `bond/pricing.py`.
-- `genz/qsimvn*.m`/`qsilatmvnv.m`/`bvn.m`/`bvnu.m` and `copula/cdfmvn.m`,
-  `stats/cdfmvn.m`, `stats/pdfmvn.m` all look like variants of the same
-  multivariate-normal CDF/quadrature machinery already ported once as
-  `stats/distributions.py`'s `cdfmvn`/`pdfmvn` (see the module table
-  above) -- reconcile these against each other before porting rather
-  than assuming each is a distinct algorithm.
+- `genz/*.m` (all 10 files) and `stats/cdfmvn.m`/`pdfmvn.m` are reconciled:
+  all of it is the same underlying Genz multivariate-normal/-t
+  CDF/quadrature machinery, already covered generically (any dimension)
+  by `stats/distributions.py`'s `mvn_cdf`/`mvn_pdf` (via
+  `scipy.stats.multivariate_normal`, itself Genz's own algorithm) --
+  see `stats/multivariate.py`'s module docstring for the file-by-file
+  breakdown. `copula/cdfmvn.m` (a separate file, inside `copula/`, not
+  yet read) is likely another variant of the same thing -- worth
+  checking against `mvn_cdf` before assuming it needs its own port,
+  once `copula/` work starts.
 - `copula/` (67 files) is the largest single block and the most likely
   to want splitting further once work starts (e.g. one file per family
   instead of the 3-file grouping above); treat the module names here as

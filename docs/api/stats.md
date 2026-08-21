@@ -14,6 +14,13 @@
     --8<-- "examples/ects/quantile1.py"
     ```
 
+## `stats.multivariate`
+
+!!! info "Python alternatives"
+    **Switch**: `bvn_cdf`/`bvt_cdf` are thin `scipy.stats.multivariate_normal`/`multivariate_t`-backed wrappers with the original's bivariate `(x, y, rho[, nu])` call signature — kept for that call-site convenience, not because `scipy` lacks the capability. The 8 low-level Genz quasi-Monte-Carlo integrators in `genz/` (`qsimvn`, `qsimvt`, `qsilatmvnv`, `qsimvnauto`, ...) are not hand-ported at all: they solve exactly the arbitrary-dimension MVN/MVT probability problem `scipy.stats.multivariate_normal.cdf`/`multivariate_t.cdf` already solve, via the same Genz algorithm family (same author). See the module docstring and [Library alternatives](../library_alternatives.md) for the full reasoning.
+
+::: quanttoolbox.stats.multivariate
+
 ## `stats.moments`
 
 !!! info "Python alternatives"
