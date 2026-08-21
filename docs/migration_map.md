@@ -73,9 +73,13 @@ reference material for the port; that folder is excluded from the
 installable package (not listed in `pyproject.toml`'s package scoping).
 
 Port status: `bond/pricing.py`, `sustainable_finance/risk.py`,
-`stats/multivariate.py`, `stats/distributions.py` (extension), and
-`stats/dose_response.py` are done (ported, tested, lint/type-clean);
-the rest of the tables below are still the planned module breakdown. See
+`sustainable_finance/carbon.py`, `sustainable_finance/esg.py`,
+`sustainable_finance/climate.py`, `sustainable_finance/ecology.py`,
+`sustainable_finance/entropy.py`, `stats/multivariate.py`,
+`stats/distributions.py` (extension), and `stats/dose_response.py` are
+done (ported, tested, lint/type-clean) -- all of `sustainable_finance/`
+is now fully ported; the rest of the tables below are still the planned
+module breakdown. See
 [HSF-Notebooks](https://github.com/lcrmorin/HSF-Notebooks)'s
 `CHAPTERS.md` for the per-chapter notebooks that will use these
 modules once ported.
@@ -108,11 +112,11 @@ Planned Python module mapping:
 | `stats/multivariate.py` (new module) | `stats/cdfbvn.m`, `pdfbvn.m`, `cdfbvt.m` ported as thin `scipy`-backed bivariate wrappers; `genz/*.m` (10 files, Genz-Bretz MVN/MVT quadrature) intentionally *not* hand-ported -- superseded by `scipy.stats.multivariate_normal.cdf`/`multivariate_t.cdf` (same Genz algorithm, same author) -- see module docstring and `library_alternatives.md` | ✅ |
 | `stats/distributions.py` (extend existing) | `stats/cdfSN*.m`/`pdfSN.m`/`momSN.m`/`rndSN.m` (skew-normal, switched to `scipy.stats.skewnorm`), `cdfST*.m`/`pdfST.m`/`momST.m`/`rndST.m` (skew-t, hand-ported -- not the same family as `scipy.stats.jf_skew_t`), `cdfBates.m`/`pdfBates.m`, `cdfbeta.m`/`pdfbeta.m`, `cdfig.m`/`pdfig.m` (inverse Gaussian), `cdfln.m`/`pdfln.m` (lognormal), `cdfNormalRatio.m`/`pdfNormalRatio.m`, `pdfPoissonBinomial.m` (switched to `scipy.stats.poisson_binom`), `cdfchi2i.m`, `pdft.m`, `compute_cdf_order_statistics.m`, `compute_inv_cdf_order_statistics.m`, `constant_correlation_matrix.m`; `max_size.m` intentionally *not* ported -- superseded by numpy broadcasting, see module docstring | ✅ |
 | `stats/dose_response.py` (new module) | `stats/drcHormetic1.m`, `drcHormetic2.m`, `drcLogLogistic.m`, `drcLogNormal.m`, `drcWeibull1.m`, `drcWeibull2.m` | ✅ |
-| `sustainable_finance/carbon.py` (new module) | `hsf/carbon_budget_linear.m`, `carbon_budget_linear_reduction.m`, `carbon_budget_linear_trend.m`, `carbon_budget_piecewise.m`, `carbon_budget_compound_reduction.m`, `carbon_budget_Reduction.m` | ⬜ |
-| `sustainable_finance/esg.py` | `hsf/compute_esg_beta_star.m`, `compute_esg_minimum_variance.m`, `compute_pedersen_portfolio.m`, `cdp_filter.m` | ⬜ |
-| `sustainable_finance/climate.py` | `hsf/dice_temperature_matrix.m`, `dice_temperature_simulation.m` | ⬜ |
-| `sustainable_finance/ecology.py` | `hsf/species_area_relationship.m`, `endemics_area_relationship.m`, `species_abundance_distribution.m`, `hurlbert.m` | ⬜ |
-| `sustainable_finance/entropy.py` | `hsf/shannon_entropy.m`, `shannon_entropy_markov_chain.m`, `estimate_markov_generator.m` | ⬜ |
+| `sustainable_finance/carbon.py` (new module) | `hsf/carbon_budget_linear.m`, `carbon_budget_linear_reduction.m`, `carbon_budget_linear_trend.m`, `carbon_budget_piecewise.m`, `carbon_budget_compound_reduction.m`, `carbon_budget_Reduction.m` -- `carbon_budget_linear.m`/`carbon_budget_linear_trend.m` merged (identical computation); `carbon_budget_linear_reduction.m` not ported separately (strict special case of `carbon_budget_Reduction.m`, see module docstring) | ✅ |
+| `sustainable_finance/esg.py` | `hsf/compute_esg_beta_star.m`, `compute_esg_minimum_variance.m`, `compute_pedersen_portfolio.m`; `cdp_filter.m` intentionally *not* ported -- tied to an unshipped dataset, see module docstring | ✅ |
+| `sustainable_finance/climate.py` | `hsf/dice_temperature_matrix.m`, `dice_temperature_simulation.m` (unused `parameters` argument dropped) | ✅ |
+| `sustainable_finance/ecology.py` | `hsf/species_area_relationship.m`, `endemics_area_relationship.m`, `species_abundance_distribution.m`, `hurlbert.m` | ✅ |
+| `sustainable_finance/entropy.py` | `hsf/shannon_entropy.m`, `shannon_entropy_markov_chain.m`, `estimate_markov_generator.m` (Israel-Rosenthal-Wei generator-repair technique) | ✅ |
 | `sustainable_finance/risk.py` | `hsf/quadratic_form.m`, `quadratic_form_risk.m`, `bond_portfolio_metrics.m` | ✅ |
 
 Notes on the table above:
