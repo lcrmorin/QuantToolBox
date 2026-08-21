@@ -166,6 +166,17 @@ port has a capability the alternative lacks.
 
 ---
 
+## Credit models (`credit/`)
+
+| Module | Alternative | Verdict | Why | Upstream potential |
+|---|---|---|---|---|
+| `credit/structural.py` — `black_scholes` | [`py_vollib`](https://github.com/vollib/py_vollib), `mibian` | **HYBRID** | Both are more complete for implied-volatility solving and Greeks. Neither exposes a single generalized cost-of-carry `b` parameter the way this function does (they split by asset class -- equity, futures, FX -- into separate functions instead); keep this one when a single function covering all of those via `b` is convenient, e.g. inside `merton_jump_model`'s per-jump-count loop. | `py_vollib`/`mibian` already cover the general case with a more complete feature set (Greeks, implied vol) — no real gap to contribute into. |
+| `credit/structural.py` — `pd_merton_model`, `b0_extended_merton_model`/`e0_extended_merton_model`/`pd_extended_merton_model`, `pd_black_cox_model`, `merton_jump_model`, `merton_jump_climate_model`, `reinders_credit_model` | *(none found)* | **KEEP** | Each is a specific published structural credit model (Merton 1974/1976, Black-Cox 1976, Blasberg 2024's extended Merton, Reinders et al.'s transition-loss model) — no general credit-risk or derivatives-pricing Python library surveyed (`QuantLib-Python` included) implements this particular family as public utilities; `QuantLib`'s credit machinery targets CDS/bond pricing given a hazard curve, not firm-value calibration from equity data. | Niche enough, and tied to specific named academic models, that a standalone package (or PR into a structural-credit-model-focused project, none identified) is more plausible than folding into a general derivatives library. |
+| `credit/reduced_form.py` — `survival_markov_generator`, `density_markov_generator`, `hazard_markov_generator` | *(none found)* | **KEEP** | Survival/density/hazard functions implied by a continuous-time Markov generator matrix (e.g. a credit-rating transition-intensity matrix) are a `scipy.linalg.expm`-backed niche calculation specific to Markov-chain-based credit/reliability modeling; no general survival-analysis library exposes this generator-to-hazard mapping directly. | Small, `scipy`-backed, dependency-free beyond that — a plausible narrow PR to a credit-risk-modeling library with an active Markov-generator module, none identified during this survey. |
+| `credit/reduced_form.py` — `survival_exponential`, `cdf_exponential`, `pdf_exponential`, `inv_exponential`, `rnd_exponential` | [`lifelines`](https://github.com/CamDavidsonPilon/lifelines), `scikit-survival` | **HYBRID** | Both are full *survival-analysis* libraries: they *estimate* hazard/survival functions from observed (possibly censored) event-time data (Kaplan-Meier, Cox PH, etc.). This module instead *simulates from* and *inverts* an already-specified (piecewise-constant) hazard curve — a different, complementary use case neither library targets directly. Keep for simulation/quantile-inversion given an assumed hazard; reach for `lifelines`/`scikit-survival` when the hazard itself needs to be estimated from data. | Different use case from what these libraries solve — not a natural upstream target. |
+
+---
+
 ## Summary: where the strongest "switch" cases are
 
 If prioritizing effort, these five would give the most practical benefit

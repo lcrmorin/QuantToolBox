@@ -72,14 +72,15 @@ maintained as a separate package. Its source (167 files) lives at
 reference material for the port; that folder is excluded from the
 installable package (not listed in `pyproject.toml`'s package scoping).
 
-Port status: `bond/pricing.py`, `sustainable_finance/risk.py`,
+Port status: `bond/pricing.py`, `credit/structural.py`,
+`credit/reduced_form.py`, `sustainable_finance/risk.py`,
 `sustainable_finance/carbon.py`, `sustainable_finance/esg.py`,
 `sustainable_finance/climate.py`, `sustainable_finance/ecology.py`,
 `sustainable_finance/entropy.py`, `stats/multivariate.py`,
 `stats/distributions.py` (extension), and `stats/dose_response.py` are
 done (ported, tested, lint/type-clean) -- all of `sustainable_finance/`
-is now fully ported; the rest of the tables below are still the planned
-module breakdown. See
+and `credit/` are now fully ported; the rest of the tables below are
+still the planned module breakdown. See
 [HSF-Notebooks](https://github.com/lcrmorin/HSF-Notebooks)'s
 `CHAPTERS.md` for the per-chapter notebooks that will use these
 modules once ported.
@@ -107,8 +108,8 @@ Planned Python module mapping:
 | `copula/families.py` (new module) | `copula/cdfCopula*.m`, `pdfCopula*.m` (23 families: Normal, Student, Clayton, Frank, Gumbel (+2 variants), Plackett, FGM, AMH, Galambos, Husler-Reiss, Marshall-Olkin, Gumbel-Barnett, logistic-Gumbel, Sloane, cubic, upper/lower Fréchet, product) | ⬜ |
 | `copula/dependence.py` | `copula/KendallCopula*.m`, `SpearmanCopula*.m` (5 families each), `dependogram.m`, `DebyeFunction.m`, `diLogFunction.m` | ⬜ |
 | `copula/simulate.py` | `copula/rndCopula*.m`, `rndnCopula.m` (8 families) | ⬜ |
-| `credit/structural.py` (new module) | `credit/Black_Scholes_Model.m`, `PD_Merton_Model.m`, `B0_Extended_Merton_Model.m`, `E0_Extended_Merton_Model.m`, `PD_Extended_Merton_Model.m`, `PD_Black_Cox_Model.m`, `Merton_Jump_Model.m`, `Merton_Jump_Climate_Model.m`, `Reinders_Credit_Model.m` | ⬜ |
-| `credit/reduced_form.py` | `credit/Density_Markov_Generator.m`, `Hazard_Markov_Generator.m`, `Survival_Markov_Generator.m`, `cdfExponential.m`, `pdfExponential.m`, `invExponential.m`, `rndExponential.m`, `survivalExponential.m` | ⬜ |
+| `credit/structural.py` (new module) | `credit/Black_Scholes_Model.m`, `PD_Merton_Model.m`, `B0_Extended_Merton_Model.m`, `E0_Extended_Merton_Model.m`, `PD_Extended_Merton_Model.m`, `PD_Black_Cox_Model.m`, `Merton_Jump_Model.m`, `Merton_Jump_Climate_Model.m`, `Reinders_Credit_Model.m` -- `Reinders_Credit_Model.m`'s unused `mu_A` argument dropped (no cross-function-consistency rationale, unlike the extended-Merton trio's documented one); `pd_merton_model`'s asset-value/volatility calibration uses `scipy.optimize.minimize(method="BFGS")` in place of `fminunc` | ✅ |
+| `credit/reduced_form.py` | `credit/Density_Markov_Generator.m`, `Hazard_Markov_Generator.m`, `Survival_Markov_Generator.m`, `cdfExponential.m`, `pdfExponential.m`, `invExponential.m`, `rndExponential.m`, `survivalExponential.m` -- `Hazard_Markov_Generator.m`'s internal function name (a copy-paste error in the original, silently harmless under MATLAB's filename dispatch) resolved to `hazard_markov_generator`, matching the filename and computation, see module docstring | ✅ |
 | `stats/multivariate.py` (new module) | `stats/cdfbvn.m`, `pdfbvn.m`, `cdfbvt.m` ported as thin `scipy`-backed bivariate wrappers; `genz/*.m` (10 files, Genz-Bretz MVN/MVT quadrature) intentionally *not* hand-ported -- superseded by `scipy.stats.multivariate_normal.cdf`/`multivariate_t.cdf` (same Genz algorithm, same author) -- see module docstring and `library_alternatives.md` | ✅ |
 | `stats/distributions.py` (extend existing) | `stats/cdfSN*.m`/`pdfSN.m`/`momSN.m`/`rndSN.m` (skew-normal, switched to `scipy.stats.skewnorm`), `cdfST*.m`/`pdfST.m`/`momST.m`/`rndST.m` (skew-t, hand-ported -- not the same family as `scipy.stats.jf_skew_t`), `cdfBates.m`/`pdfBates.m`, `cdfbeta.m`/`pdfbeta.m`, `cdfig.m`/`pdfig.m` (inverse Gaussian), `cdfln.m`/`pdfln.m` (lognormal), `cdfNormalRatio.m`/`pdfNormalRatio.m`, `pdfPoissonBinomial.m` (switched to `scipy.stats.poisson_binom`), `cdfchi2i.m`, `pdft.m`, `compute_cdf_order_statistics.m`, `compute_inv_cdf_order_statistics.m`, `constant_correlation_matrix.m`; `max_size.m` intentionally *not* ported -- superseded by numpy broadcasting, see module docstring | ✅ |
 | `stats/dose_response.py` (new module) | `stats/drcHormetic1.m`, `drcHormetic2.m`, `drcLogLogistic.m`, `drcLogNormal.m`, `drcWeibull1.m`, `drcWeibull2.m` | ✅ |
