@@ -76,7 +76,7 @@ def bond_ytm(
     if config is None:
         config = BisectionConfig(tol=1e-5)  # matches the original's (b-a) > 1e-5 stopping test
 
-    def f(rate: np.ndarray) -> np.ndarray:
+    def f(rate: np.ndarray) -> float:
         return bond_price(maturities, cash_flows, float(rate), method=1) - price
 
     return float(bisection(f, 0.0, 1.0, config=config))

@@ -163,6 +163,32 @@ def test_survival_markov_generator_matches_direct_expm_computation():
         assert np.allclose(result[i], expected)
 
 
+def test_density_markov_generator_at_t_zero_matches_continuous_limit():
+    # f(0) has a special-cased branch (returns Lambda[:, -1] directly,
+    # skipping the matrix exponential); it should agree with the general
+    # formula's limit as t -> 0 (expm(0) = I), and with evaluating the
+    # general formula directly at t = 0.
+    lambda_matrix = np.array(
+        [
+            [-0.3, 0.25, 0.05],
+            [0.1, -0.35, 0.25],
+            [0.0, 0.0, 0.0],
+        ]
+    )
+    f_at_zero = density_markov_generator(0.0, lambda_matrix)
+    assert np.allclose(f_at_zero, lambda_matrix[:, -1][None, :])
+
+    general_formula_at_zero = lambda_matrix @ expm(0.0 * lambda_matrix)
+    assert np.allclose(f_at_zero[0], general_formula_at_zero[:, -1])
+
+    # Mixed array of t values including an exact zero exercises both
+    # branches of the per-element loop in a single call.
+    t = np.array([0.0, 1.0])
+    f_mixed = density_markov_generator(t, lambda_matrix)
+    assert np.allclose(f_mixed[0], lambda_matrix[:, -1])
+    assert np.allclose(f_mixed[1], (lambda_matrix @ expm(1.0 * lambda_matrix))[:, -1])
+
+
 def test_hazard_markov_generator_matches_density_over_survival():
     lambda_matrix = np.array(
         [

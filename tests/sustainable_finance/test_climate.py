@@ -82,3 +82,28 @@ def test_dice_temperature_simulation_full_mitigation_only_land_emissions_decay()
     # with full mitigation, industrial emissions are zero and land emissions
     # decay geometrically -- so total emissions should be strictly decreasing
     assert np.all(np.diff(ce_land_only) < 0)
+
+
+def test_dice_temperature_simulation_numeric_flag_gives_finite_sane_results():
+    # numeric=True swaps in the hard-coded 5-year-calibration xi_t/b_t
+    # matrices instead of dice_temperature_matrix's continuous-time
+    # reconstruction -- a different temperature-dynamics path through the
+    # same simulation loop, otherwise untested.
+    t0, t_end, delta_t = 2015.0, 2025.0, 1.0
+
+    def y_fn(t):
+        return 100.0 * (1.02 ** (t - t0))
+
+    def mu_fn(t):
+        return 0.03 * (t - t0)
+
+    results_numeric = dice_temperature_simulation(t0, t_end, delta_t, y_fn, mu_fn, numeric=True)
+    results_default = dice_temperature_simulation(t0, t_end, delta_t, y_fn, mu_fn, numeric=False)
+
+    n_iters = int(round((t_end - t0) / delta_t))
+    assert results_numeric.shape == (n_iters + 1, 10)
+    assert np.all(np.isfinite(results_numeric))
+    # Same time column and same emissions/carbon-cycle path (those don't
+    # depend on xi_t/b_t) -- only the temperature columns (8, 9) can differ.
+    assert np.allclose(results_numeric[:, :8], results_default[:, :8])
+    assert results_numeric[0, 0] == t0

@@ -420,7 +420,7 @@ def lognormal_cdf(x: np.ndarray, mu: float, sigma: float) -> np.ndarray:
     Original: stats/cdfln.m (HSF toolbox)
     """
     x = np.asarray(x, dtype=float)
-    return normal_cdf((np.log(x) - mu) / sigma)
+    return np.asarray(normal_cdf((np.log(x) - mu) / sigma))
 
 
 def lognormal_pdf(x: np.ndarray, mu: float, sigma: float) -> np.ndarray:
@@ -761,10 +761,23 @@ def skew_t_ppf(
     """Quantile function of Azzalini's skew-t distribution, via Newton
     iteration (no closed form / no scipy equivalent).
 
+    The default tolerance is looser than `NewtonConfig`'s own default
+    (`1e-4` rather than `1e-10`): `skew_t_cdf` is itself backed by
+    `bvt_cdf`, whose underlying `scipy.stats.multivariate_t.cdf` uses a
+    randomized quasi-Monte-Carlo integrator with irreducible call-to-call
+    noise on the order of `1e-4` (verified empirically -- repeated calls
+    with identical inputs vary by ~7e-5 to ~1e-4). A tighter tolerance
+    (e.g. the `1e-8` this function used before) can never actually be
+    satisfied, so the loop always burns its full `max_iters` budget
+    without improving on the noise floor -- roughly a 4x slowdown for no
+    accuracy gain, confirmed by direct timing. `1e-4` lets the loop exit
+    as soon as it reaches that floor, matching the precision the
+    underlying CDF can actually deliver.
+
     Original: stats/cdfSTi.m (HSF toolbox)
     """
     if config is None:
-        config = NewtonConfig(tol=1e-8, max_iters=50)
+        config = NewtonConfig(tol=1e-4, max_iters=50)
 
     p = np.atleast_1d(np.asarray(p, dtype=float))
     x = student_t_ppf(p, nu)

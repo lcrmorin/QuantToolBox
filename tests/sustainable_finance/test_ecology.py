@@ -58,6 +58,16 @@ def test_endemics_area_relationship_zero_area_gives_zero_endemics():
     assert np.isclose(result, 0.0)
 
 
+def test_endemics_area_relationship_histogram_mode_matches_n_i_mode():
+    n_i = np.array([1.0, 1.0, 2.0, 3.0, 3.0, 3.0])
+    j, s, _ = species_abundance_distribution(n_i)
+
+    area_total, area = 100.0, 40.0
+    direct = endemics_area_relationship(n_i, None, area_total, area)
+    via_hist = endemics_area_relationship(j, s, area_total, area)
+    assert np.isclose(direct, via_hist)
+
+
 def test_species_abundance_distribution_default_mode_matches_hand_count():
     n_i = np.array([1.0, 1.0, 2.0, 3.0, 3.0, 3.0])
     j, s, breaks = species_abundance_distribution(n_i)

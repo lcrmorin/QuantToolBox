@@ -46,7 +46,7 @@ def drc_log_normal(
     Original: stats/drcLogNormal.m
     """
     x = np.asarray(x, dtype=float)
-    y = normal_cdf(beta * (np.log(x) - np.log(alpha)))
+    y = np.asarray(normal_cdf(beta * (np.log(x) - np.log(alpha))))
     return y_min + (y_max - y_min) * y
 
 

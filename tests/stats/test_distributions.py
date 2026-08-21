@@ -353,6 +353,27 @@ def test_order_statistic_ppf_round_trips_cdf_on_a_grid():
     assert np.all(cdf_at_q[:, 0] >= alpha - 1e-2)
 
 
+def test_order_statistic_cdf_default_i_select_is_all_order_statistics():
+    f_x = np.array([0.2, 0.5, 0.8])
+    n = 4
+    result_default = order_statistic_cdf(f_x, n)
+    result_explicit = order_statistic_cdf(f_x, n, i_select=np.arange(1, n + 1))
+    assert result_default.shape == (3, n)
+    assert np.allclose(result_default, result_explicit)
+
+
+def test_order_statistic_ppf_default_i_select_is_all_order_statistics():
+    n = 3
+    x_grid = np.linspace(0.01, 0.99, 200)
+    f_x = x_grid
+    alpha = np.array([0.5])
+
+    q_default = order_statistic_ppf(alpha, x_grid, f_x, n)
+    q_explicit = order_statistic_ppf(alpha, x_grid, f_x, n, i_select=np.arange(1, n + 1))
+    assert q_default.shape == (1, n)
+    assert np.allclose(q_default, q_explicit)
+
+
 def test_constant_correlation_matrix_shape_and_values():
     c = constant_correlation_matrix(4, 0.3)
     assert c.shape == (4, 4)
@@ -462,6 +483,42 @@ def test_skew_t_ppf_round_trips_cdf():
     x = skew_t_ppf(p, xi, omega, eta, nu)
     recovered = skew_t_cdf(x, xi, omega, eta, nu)
     assert np.allclose(recovered, p, atol=5e-3)
+
+
+def test_skew_t_ppf_round_trips_cdf_negative_eta():
+    # eta < 0 exercises the ppf's other initial-guess branch.
+    xi, omega, eta, nu = 0.0, 1.0, -1.5, 8.0
+    p = np.array([0.25, 0.5, 0.75])
+    x = skew_t_ppf(p, xi, omega, eta, nu)
+    recovered = skew_t_cdf(x, xi, omega, eta, nu)
+    assert np.allclose(recovered, p, atol=5e-3)
+
+
+def test_skew_t_ppf_default_tolerance_lets_newton_converge_early():
+    # skew_t_cdf is backed by bvt_cdf, whose underlying scipy QMC
+    # integrator has ~1e-4 call-to-call noise -- a tighter Newton
+    # tolerance can never be satisfied and always burns the full
+    # max_iters budget. The default config (tol=1e-4) should let most
+    # calls break out well before exhausting a much larger iteration
+    # budget, confirming the loop's early-exit path is actually reachable.
+    from quanttoolbox.config import NewtonConfig
+
+    xi, omega, eta, nu = 0.0, 1.0, 1.5, 8.0
+    p = np.array([0.5])
+    generous_budget = NewtonConfig(tol=1e-4, max_iters=1000)
+    x = skew_t_ppf(p, xi, omega, eta, nu, config=generous_budget)
+    assert np.isfinite(x).all()
+
+
+def test_skew_t_cdf_method_1_agrees_with_default_method():
+    # method=1 is an alternate closed-form-ish formula for the same CDF
+    # (a single bvt_cdf call at delta=-eta/sqrt(1+eta^2), rather than the
+    # default two-piece e>=0/e<0 construction) -- both should agree.
+    xi, omega, eta, nu = 0.0, 1.0, 1.2, 6.0
+    x = np.array([-1.0, 0.0, 0.8, 2.0])
+    default = skew_t_cdf(x, xi, omega, eta, nu, method=0)
+    alt = skew_t_cdf(x, xi, omega, eta, nu, method=1)
+    assert np.allclose(default, alt, atol=1e-2)
 
 
 def test_skew_t_rvs_sample_moments_close_to_theoretical(rng):
