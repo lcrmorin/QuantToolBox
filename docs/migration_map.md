@@ -19,7 +19,7 @@ versus which genuinely justify staying custom.
 | `stats/moments.py` | `stats/skewness_coefficient.m`, `kurtosis_coefficient.m`, `herfindahl_index.m`, `mean_absolute_difference.m`, `cov2cor.m`, `cor2cov.m`, `corrx.m`, `pearson_correlation.m`, `active_share*.m`, `asynchronous_cov.m`, `weekly_cov.m`, `rolling_correlation.m`, `rolling_volatility.m` | ✅ |
 | `stats/regression/ols.py` | `stats/regOLS.m`, `regCenter.m`, `regStandardize.m`, `regCND.m`, `regPCA.m` | ✅ |
 | `stats/regression/ridge.py` | `stats/regRidge.m`, `regRidge2.m` (+ `theo/` duplicates) | ✅ |
-| `stats/regression/lasso.py` | `stats/regLassoCCD.m`, `regLassoADMM.m`, `regLasso.m`, `selectLasso.m`, `regElasticNet.m` (+ `theo/` duplicates) | ✅ |
+| `stats/regression/lasso.py` | `stats/regLassoCCD.m`, `regLassoADMM.m`, `regLasso.m`, `selectLasso.m`, `regElasticNet.m` (+ `theo/` duplicates) | 🟨 |
 | `stats/regression/kernel.py` | `stats/regKernelDensity.m`, `regKernelMean.m`, `regKernelQuantile.m`, `regKernelPayoff.m` | ✅ |
 | `stats/regression/quantile.py` (new, not in original module map) | `stats/quantile_regression.m`, `qrCopulaNormal.m`, `qrCopulaStudent.m` | ✅ |
 | `stats/regression/robust.py` | `ects/robust_regression.m`, `robust_huber_regression.m`, `robust_lad_regression.m`, `robust_quantile_regression.m`, `robust_inverse_quantile_regression.m` | ✅ |
@@ -33,8 +33,8 @@ versus which genuinely justify staying custom.
 | `optim/quadprog.py` | `optim/quadprog_bc_ccd.m`, `quadprog_lasso.m`, `quadprog_mixed_norm.m`, `quadprog_mixed2_norm.m`, `quadprog_ridge.m`, `quadprog_turnover.m`, `qp_hyperplane.m` | ✅ |
 | `optim/bisection.py` | `optim/bisection.m`, `bisection2.m`, `explicit2implicit.m`, `implicit2explicit.m` | ✅ |
 | `portfolio/risk_budgeting.py` | `rpb/compute_rb_*.m`, `crb/compute_rb_sd_*.m` (~55 files), `mloapa/compute_ERC_*.m`, `lagrange_rb_sd.m` | ✅ |
-| `portfolio/mean_variance.py` | `rpb/compute_mvo_portfolio*.m`, `compute_minvar_portfolio.m`, `mloapa/compute_MinVar_ADMM*.m`, `compute_MDP_ADMM.m`, `compute_mdp_*.m` | ✅ |
-| `portfolio/tracking_error.py` | `rpb/compute_te_portfolio*.m`, `compute_minimum_te_portfolio.m`, `compute_te_portfolio_mixed_norm.m` | ✅ |
+| `portfolio/mean_variance.py` | `rpb/compute_mvo_portfolio*.m`, `compute_minvar_portfolio.m`, `mloapa/compute_MinVar_ADMM*.m`, `compute_MDP_ADMM.m`, `compute_mdp_*.m` | 🟨 |
+| `portfolio/tracking_error.py` | `rpb/compute_te_portfolio*.m`, `compute_minimum_te_portfolio.m`, `compute_te_portfolio_mixed_norm.m` | 🟨 |
 | `portfolio/black_litterman.py` | `rpb/compute_Black_Litterman_moments.m`, `implied_risk_premia.m` | ✅ |
 | `portfolio/erc_mdp.py` | `rpb/compute_erc_portfolio.m`, `mloapa/compute_ERC_*.m`, `compute_MDP_ADMM.m` | ✅ |
 | `mixtures/gaussian_mixture.py` | `mixture/mixture_*.m`, `estimate_em_mixture.m`, `logl_em_mixture.m` | ✅ |
@@ -62,6 +62,24 @@ versus which genuinely justify staying custom.
 General guidance for anyone extending or re-verifying this port (see
 [`matlab_bugs_found.md`](./matlab_bugs_found.md) for the specific,
 already-resolved bugs found in the original source along the way):
+
+- **Gaps found while translating example scripts** (see
+  [`examples_tracking.md`](./examples_tracking.md) for the full
+  file-by-file status): `portfolio/mean_variance.py` and
+  `portfolio/tracking_error.py` are marked 🟨 because they only implement
+  the "gamma-problem" frontier mode (evaluate at a given risk-aversion
+  value). Several original examples (`test_bl3.m` through `test_bl6.m`,
+  `test_mvo3.m`, part of `test_mvo2.m`) use a "sigma-problem"/TE-target
+  mode instead -- bisecting an internal risk-aversion parameter to hit a
+  target portfolio volatility or tracking error directly, the same
+  pattern `portfolio.risk_budgeting.risk_budgeting_target` already
+  implements for risk budgeting. Extending `mean_variance.py`/
+  `tracking_error.py` with an equivalent `mvo_target`/`te_target`
+  function (bisecting `gamma` against `mvo_frontier`/`te_frontier`,
+  mirroring `risk_budgeting_target`'s implementation) would close this
+  gap. `stats/regression/lasso.py` is marked 🟨 for a smaller, unrelated
+  reason: `selectLasso.m` (lasso-path variable-*selection-ordering*, not
+  the coefficient path itself) isn't ported as a standalone function.
 
 - Every module still using MATLAB `global` state (ADMM/CCD tolerances, MVO
   problem context, Proximal_Algorithm, GMM/ML/Whittle settings) should take
