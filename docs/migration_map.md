@@ -72,11 +72,28 @@ maintained as a separate package. Its source (167 files) lives at
 reference material for the port; that folder is excluded from the
 installable package (not listed in `pyproject.toml`'s package scoping).
 
-None of this is started yet -- the table below is the planned module
+None of this is started yet -- the tables below are the planned module
 breakdown, not a status report. See
 [HSF-Notebooks](https://github.com/lcrmorin/HSF-Notebooks)'s
-`CHAPTERS.md` (chapter 0) for the matching entry and the per-chapter
-notebooks that will exercise these modules once ported.
+`CHAPTERS.md` for the per-chapter notebooks that will use these
+modules once ported.
+
+Source folder layout, under `reference/hsf_toolbox_matlab/`:
+
+| Folder | Files | Covers |
+|---|---|---|
+| `bond/` | 5 | Bond pricing, YTM, coupon yield, quadratic-form bond-portfolio risk |
+| `copula/` | 67 | CDFs/PDFs for ~23 copula families, Kendall's tau / Spearman's rho closed forms, empirical dependograms, copula simulation |
+| `credit/` | 17 | Structural credit models (Merton, Black-Cox, jump-diffusion) and reduced-form/Markov-generator hazard-rate models |
+| `genz/` | 10 | Genz-Bretz quadrature for multivariate normal/Student CDFs |
+| `hsf/` | 24 | Carbon budgets, ESG beta/minimum-variance/Pedersen portfolios, DICE temperature model, species-area/abundance ecology measures, Shannon entropy |
+| `maths/` | 2 | `arccosh`/`arcsinh` -- see "Not ported" above |
+| `stats/` | 38 | Skew-normal/skew-t, Bates, bivariate normal/t, order statistics, dose-response curves, and other distributions not in the original `QuantToolbox` |
+| `copula1.m`-`copula4.m` (loose, at this folder's root) | 4 | Worked copula-simulation examples (French), not a module -- see the note below |
+
+163 module files + these 4 loose examples = 167 total.
+
+Planned Python module mapping:
 
 | Python module (planned) | Original MATLAB files (`0. Toolbox/`) | Status |
 |---|---|---|
@@ -123,8 +140,7 @@ Tracks every script in the original MATLAB toolbox's `Examples/` folder
 The `tutorial/` folder (11 generic MATLAB-101 lessons, unrelated to any
 quanttoolbox function) is out of scope for this tracker -- see
 [HSF-Notebooks](https://github.com/lcrmorin/HSF-Notebooks)'s
-`notebooks/tutorials/` for the quanttoolbox-specific walkthroughs that
-replace it.
+`notebooks/hsf/00_tutorial.ipynb` for its Python translation.
 
 Status legend: ⬜ not translated · ✅ translated
 

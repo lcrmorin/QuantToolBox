@@ -11,24 +11,8 @@ build via `pyproject.toml`'s existing package scoping
 packaged, so no extra exclusion rule was needed).
 
 See [`docs/migration_map.md`](../../docs/migration_map.md)'s "HSF
-toolbox port (planned)" section for the planned Python module mapping,
-and [HSF-Notebooks](https://github.com/lcrmorin/HSF-Notebooks)'s
-`CHAPTERS.md` (chapter 0) for the matching notebook-side entry.
-
-## Contents
-
-| Folder | Files | Covers |
-|---|---|---|
-| `bond/` | 5 | Bond pricing, YTM, coupon yield, quadratic-form bond-portfolio risk |
-| `copula/` | 67 | CDFs/PDFs for ~23 copula families, Kendall's tau / Spearman's rho closed forms, empirical dependograms, copula simulation |
-| `credit/` | 17 | Structural credit models (Merton, Black-Cox, jump-diffusion) and reduced-form/Markov-generator hazard-rate models |
-| `genz/` | 10 | Genz-Bretz quadrature for multivariate normal/Student CDFs |
-| `hsf/` | 24 | Carbon budgets, ESG beta/minimum-variance/Pedersen portfolios, DICE temperature model, species-area/abundance ecology measures, Shannon entropy |
-| `maths/` | 2 | `arccosh`/`arcsinh` — not ported, see `docs/migration_map.md`'s "Not ported" table |
-| `stats/` | 38 | Skew-normal/skew-t, Bates, bivariate normal/t, order statistics, dose-response curves, and other distributions not in the original `QuantToolbox` |
-| `copula1.m`-`copula4.m` (loose, at this folder's root) | 4 | Worked copula-simulation examples (French), not a module — see the note in `docs/migration_map.md` |
-
-163 module files + these 4 loose examples = 167 total.
+toolbox port (planned)" section for the source folder layout and the
+planned Python module mapping.
 
 ## A few things to check before porting
 
