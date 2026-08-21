@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../svm/">
+        <link rel="prev" href="../building_blocks/">
       
       
-        <link rel="next" href="../bond/">
+        <link rel="next" href="../../api/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Combine core tools - QuantToolBox</title>
+        <title>Price bonds - QuantToolBox</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#building-blocks-bisection-linear-algebra-numerical-differentiation" class="md-skip">
+        <a href="#bond-pricing-and-sector-level-risk" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Combine core tools
+              Price bonds
             
           </span>
         </div>
@@ -536,6 +536,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../building_blocks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Combine core tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -555,7 +583,7 @@
   <span class="md-ellipsis">
     
   
-    Combine core tools
+    Price bonds
   
 
     
@@ -573,7 +601,7 @@
   <span class="md-ellipsis">
     
   
-    Combine core tools
+    Price bonds
   
 
     
@@ -599,10 +627,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bisection-root-finding" class="md-nav__link">
+  <a href="#price-yield-to-maturity-and-current-yield" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bisection root-finding
+        Price, yield to maturity, and current yield
       
     </span>
   </a>
@@ -610,32 +638,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#explicit-implicit-linear-constraint-conversion" class="md-nav__link">
+  <a href="#sector-level-modified-durationdts-risk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Explicit ↔ implicit linear constraint conversion
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vecvechxpnd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vec/vech/xpnd
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#numerical-gradient-and-hessian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Numerical gradient and Hessian
+        Sector-level modified-duration/DTS risk
       
     </span>
   </a>
@@ -646,34 +652,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../bond/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Price bonds
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1335,10 +1313,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bisection-root-finding" class="md-nav__link">
+  <a href="#price-yield-to-maturity-and-current-yield" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bisection root-finding
+        Price, yield to maturity, and current yield
       
     </span>
   </a>
@@ -1346,32 +1324,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#explicit-implicit-linear-constraint-conversion" class="md-nav__link">
+  <a href="#sector-level-modified-durationdts-risk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Explicit ↔ implicit linear constraint conversion
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vecvechxpnd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vec/vech/xpnd
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#numerical-gradient-and-hessian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Numerical gradient and Hessian
+        Sector-level modified-duration/DTS risk
       
     </span>
   </a>
@@ -1398,72 +1354,75 @@
   
 
 
-<h1 id="building-blocks-bisection-linear-algebra-numerical-differentiation">Building blocks: bisection, linear algebra, numerical differentiation<a class="headerlink" href="#building-blocks-bisection-linear-algebra-numerical-differentiation" title="Permanent link">&para;</a></h1>
-<p>Smaller, self-contained examples for the lower-level utilities other
-modules are built on.</p>
-<h2 id="bisection-root-finding">Bisection root-finding<a class="headerlink" href="#bisection-root-finding" title="Permanent link">&para;</a></h2>
-<p>Translated from <code>Examples/optim/bisection1.m</code>.</p>
+<h1 id="bond-pricing-and-sector-level-risk">Bond pricing and sector-level risk<a class="headerlink" href="#bond-pricing-and-sector-level-risk" title="Permanent link">&para;</a></h1>
+<p>Present value, yield to maturity, and current yield for a simple
+cash-flow schedule, followed by a sector-level modified-duration/DTS
+quadratic-risk example for a small bond portfolio.</p>
+<h2 id="price-yield-to-maturity-and-current-yield">Price, yield to maturity, and current yield<a class="headerlink" href="#price-yield-to-maturity-and-current-yield" title="Permanent link">&para;</a></h2>
+<p>A 5-year bond paying a 5 coupon annually plus 100 principal at maturity,
+priced off a flat 3.7% continuously-compounded discount rate.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.bisection</span><span class="w"> </span><span class="kn">import</span> <span class="n">bisection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.bond.pricing</span><span class="w"> </span><span class="kn">import</span> <span class="n">bond_price</span><span class="p">,</span> <span class="n">bond_ytm</span><span class="p">,</span> <span class="n">coupon_yield</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mf">4.0</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>
+<span class="n">cash_flows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">105.0</span><span class="p">])</span>
+<span class="n">rate</span> <span class="o">=</span> <span class="mf">0.037</span>
 
-<span class="n">root</span> <span class="o">=</span> <span class="n">bisection</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>  <span class="c1"># -&gt; 2.0 (the positive root of x^2 = 4, within the bracket [0, 10])</span>
-</code></pre></div>
-<h2 id="explicit-implicit-linear-constraint-conversion">Explicit ↔ implicit linear constraint conversion<a class="headerlink" href="#explicit-implicit-linear-constraint-conversion" title="Permanent link">&para;</a></h2>
-<p>Translated from <code>Examples/optim/explicit1.m</code>. Converts between an explicit
-constraint <code>C @ x = c</code> and an implicit null-space parametrization
-<code>x = R @ r + r0</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.bisection</span><span class="w"> </span><span class="kn">import</span> <span class="n">explicit_to_implicit</span><span class="p">,</span> <span class="n">implicit_to_explicit</span>
+<span class="n">price</span> <span class="o">=</span> <span class="n">bond_price</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"price:"</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
 
-<span class="n">CC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>  <span class="c1"># constraint: x[0] = 1</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">ytm</span> <span class="o">=</span> <span class="n">bond_ytm</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"ytm:"</span><span class="p">,</span> <span class="n">ytm</span><span class="p">)</span>  <span class="c1"># -&gt; recovers 0.037, within the bisection tolerance</span>
 
-<span class="n">RR</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">explicit_to_implicit</span><span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"R shape:"</span><span class="p">,</span> <span class="n">RR</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (8, 7) -- 7 free directions in the null space</span>
-<span class="n">CC2</span><span class="p">,</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">implicit_to_explicit</span><span class="p">(</span><span class="n">RR</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-<span class="c1"># CC2 is parallel to the original CC (same constraint, possibly rescaled)</span>
-</code></pre></div>
-<h2 id="vecvechxpnd"><code>vec</code>/<code>vech</code>/<code>xpnd</code><a class="headerlink" href="#vecvechxpnd" title="Permanent link">&para;</a></h2>
-<p>Translated from <code>Examples/matrix/vec1.m</code> and <code>vech1.m</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">vec</span><span class="p">,</span> <span class="n">vech</span><span class="p">,</span> <span class="n">xpnd</span><span class="p">,</span> <span class="n">reshapec</span>
-
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">vec</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>              <span class="c1"># column-major flatten</span>
-<span class="n">back</span> <span class="o">=</span> <span class="n">reshapec</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># and back</span>
-<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
-
-<span class="c1"># vech/xpnd: half-vectorization of a symmetric matrix and its inverse</span>
-<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">v</span> <span class="o">=</span> <span class="n">vech</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>      <span class="c1"># lower-triangle, row-wise order</span>
-<span class="n">back</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>    <span class="c1"># expands back to a full symmetric matrix</span>
-</code></pre></div>
-<h2 id="numerical-gradient-and-hessian">Numerical gradient and Hessian<a class="headerlink" href="#numerical-gradient-and-hessian" title="Permanent link">&para;</a></h2>
-<p>Translated from <code>Examples/maths/grad1.m</code> and <code>hess1.m</code>. Compares the
-numerical derivative of <code>f(x) = 3x² + 6x + 7 + log(x)</code> against its known
-analytical derivative <code>f'(x) = 6x + 6 + 1/x</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.maths.numerical_diff</span><span class="w"> </span><span class="kn">import</span> <span class="n">numerical_gradient</span><span class="p">,</span> <span class="n">numerical_hessian</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">fun_sum</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">grad_analytical</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">x</span>
-
-<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">g_numerical</span> <span class="o">=</span> <span class="n">numerical_gradient</span><span class="p">(</span><span class="n">fun_sum</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"forward"</span><span class="p">)</span>
-<span class="n">g_true</span> <span class="o">=</span> <span class="n">grad_analytical</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"max abs error:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">g_true</span> <span class="o">-</span> <span class="n">g_numerical</span><span class="p">)))</span>
+<span class="n">cy</span> <span class="o">=</span> <span class="n">coupon_yield</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"coupon yield:"</span><span class="p">,</span> <span class="n">cy</span><span class="p">)</span>
 </code></pre></div>
 <p>Output:</p>
-<div class="highlight"><pre><span></span><code>max abs error: 9.103828858769702e-06
+<div class="highlight"><pre><span></span><code>price: 105.51453826978027
+ytm: 0.036998748779296875
+coupon yield: 0.047386834856974556
 </code></pre></div>
-<p>A forward-difference gradient with default step size agrees with the
-analytical formula to about 6 significant figures — as expected for a
-smooth, well-scaled function like this one.</p>
+<p><code>bond_ytm</code> recovers the original discount rate from the price alone,
+via <code>optim.bisection.bisection</code> (see <a href="../building_blocks/">Building
+blocks</a>) rather than a hand-rolled search loop.</p>
+<h2 id="sector-level-modified-durationdts-risk">Sector-level modified-duration/DTS risk<a class="headerlink" href="#sector-level-modified-durationdts-risk" title="Permanent link">&para;</a></h2>
+<p>A 3-bond portfolio split across two sectors, penalized for deviating
+its per-sector modified duration (MD) and duration-times-spread (DTS)
+from targets, plus a linear carry term.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.bond.pricing</span><span class="w"> </span><span class="kn">import</span> <span class="n">bond_portfolio_quadratic_form</span>
+
+<span class="n">sector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>          <span class="c1"># bonds 0,1 in sector 1; bond 2 in sector 2</span>
+<span class="n">md</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">])</span>         <span class="c1"># modified duration per bond</span>
+<span class="n">md_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">])</span>         <span class="c1"># per-sector MD target</span>
+<span class="n">dts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>        <span class="c1"># duration-times-spread per bond</span>
+<span class="n">dts_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>        <span class="c1"># per-sector DTS target</span>
+<span class="n">carry</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">])</span>   <span class="c1"># carry per bond</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">])</span>        <span class="c1"># portfolio weights</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">bond_portfolio_quadratic_form</span><span class="p">(</span>
+    <span class="n">sector</span><span class="p">,</span>
+    <span class="n">varphi_md</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+    <span class="n">md</span><span class="o">=</span><span class="n">md</span><span class="p">,</span>
+    <span class="n">md_star</span><span class="o">=</span><span class="n">md_star</span><span class="p">,</span>
+    <span class="n">varphi_dts</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">dts</span><span class="o">=</span><span class="n">dts</span><span class="p">,</span>
+    <span class="n">dts_star</span><span class="o">=</span><span class="n">dts_star</span><span class="p">,</span>
+    <span class="n">gamma_carry</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">carry</span><span class="o">=</span><span class="n">carry</span><span class="p">,</span>
+    <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"risk (qf):"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">qf</span><span class="p">)</span>
+</code></pre></div>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code>risk (qf): 7.766875000000001
+</code></pre></div>
+<p><code>result.md</code>/<code>result.dts</code> are the individual
+<code>sustainable_finance.risk.QuadraticFormResult</code> terms the combined
+<code>(q, r, c)</code> was built from — each sector's contribution is broken out
+in <code>q_j</code>/<code>r_j</code>/<code>c_j</code> on those objects.
+<code>bond_portfolio_quadratic_form_vs_benchmark</code> extends this with an
+active-share term against a benchmark weight vector; see its docstring
+for the full parameterization.</p>
 
 
 

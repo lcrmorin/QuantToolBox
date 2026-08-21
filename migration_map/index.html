@@ -558,6 +558,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/bond/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Price bonds
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -660,6 +688,34 @@
     
   
     backtest
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/bond/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    bond
   
 
     
@@ -912,6 +968,34 @@
     
   
     stats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/sustainable_finance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    sustainable_finance
   
 
     
@@ -1812,8 +1896,9 @@ maintained as a separate package. Its source (167 files) lives at
 <a href="../reference/hsf_toolbox_matlab"><code>reference/hsf_toolbox_matlab/</code></a> as
 reference material for the port; that folder is excluded from the
 installable package (not listed in <code>pyproject.toml</code>'s package scoping).</p>
-<p>None of this is started yet -- the tables below are the planned module
-breakdown, not a status report. See
+<p>Port status: <code>bond/pricing.py</code> and <code>sustainable_finance/risk.py</code> are
+done (ported, tested, lint/type-clean); the rest of the tables below
+are still the planned module breakdown. See
 <a href="https://github.com/lcrmorin/HSF-Notebooks">HSF-Notebooks</a>'s
 <code>CHAPTERS.md</code> for the per-chapter notebooks that will use these
 modules once ported.</p>
@@ -1883,7 +1968,7 @@ modules once ported.</p>
 <tr>
 <td><code>bond/pricing.py</code> (new module)</td>
 <td><code>bond/compute_bond_price.m</code>, <code>compute_bond_ytm.m</code>, <code>compute_coupon_yield.m</code>, <code>quadratic_form_bond_portfolio1.m</code>, <code>quadratic_form_bond_portfolio2.m</code></td>
-<td>⬜</td>
+<td>✅</td>
 </tr>
 <tr>
 <td><code>copula/families.py</code> (new module)</td>
@@ -1953,7 +2038,7 @@ modules once ported.</p>
 <tr>
 <td><code>sustainable_finance/risk.py</code></td>
 <td><code>hsf/quadratic_form.m</code>, <code>quadratic_form_risk.m</code>, <code>bond_portfolio_metrics.m</code></td>
-<td>⬜</td>
+<td>✅</td>
 </tr>
 </tbody>
 </table>
