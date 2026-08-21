@@ -736,6 +736,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../api/copula/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    copula
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../api/credit/" class="md-nav__link">
         
   
@@ -1315,6 +1343,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#7-pdfcopulagumbel3m-does-not-match-the-derivative-of-its-own-cdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. pdfCopulaGumbel3.m does not match the derivative of its own CDF
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#summary-table" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1455,6 +1494,17 @@
     <span class="md-ellipsis">
       
         6. test_mvo3.m silently returns wrong portfolios by skipping init_global
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-pdfcopulagumbel3m-does-not-match-the-derivative-of-its-own-cdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. pdfCopulaGumbel3.m does not match the derivative of its own CDF
       
     </span>
   </a>
@@ -1757,6 +1807,38 @@ numbers throughout (i.e. what <code>test_mvo3.m</code> would produce if it calle
 <code>init_global</code> like its neighbors do) rather than faithfully reproducing the
 wrong ones, with this bug documented directly in its docstring.</p>
 <hr />
+<h2 id="7-pdfcopulagumbel3m-does-not-match-the-derivative-of-its-own-cdf">7. <code>pdfCopulaGumbel3.m</code> does not match the derivative of its own CDF<a class="headerlink" href="#7-pdfcopulagumbel3m-does-not-match-the-derivative-of-its-own-cdf" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong> <code>copula/cdfCopulaGumbel3.m</code>, <code>copula/pdfCopulaGumbel3.m</code></p>
+<p><strong>The bug:</strong> <code>cdfCopulaGumbel3.m</code> implements a 3-variable nested
+(hierarchical) Gumbel copula CDF: <code>(u1, u2)</code> coupled at strength <code>theta2</code>
+first, then combined with <code>u3</code> at strength <code>theta1</code>. <code>pdfCopulaGumbel3.m</code>
+is supposed to be its density, i.e. <code>d³C / du1 du2 du3</code> — but evaluating
+both independently at <code>theta1=1.5, theta2=3.0, u=(0.3, 0.5, 0.7)</code> gives
+different numbers: the shipped PDF formula evaluates to ≈1.0064, while the
+true third mixed partial derivative of the CDF is ≈1.2096.</p>
+<p><strong>How it was found:</strong> two independent methods to compute the true
+derivative were used and cross-checked against each other before
+concluding the shipped formula was wrong: (1) a 3-D central finite
+difference of <code>cdfCopulaGumbel3.m</code>'s own formula (<code>h=1e-4</code>), which gave
+≈1.2096330881394832; (2) exact symbolic differentiation via <code>sympy</code>
+(<code>pip install sympy</code>), which gave ≈1.2096324660456708 — agreeing with the
+finite-difference result to 6 significant figures, and disagreeing with
+the original formula's ≈1.0063584118923428 by roughly 20%.</p>
+<p><strong>Practical impact:</strong> any use of <code>pdfCopulaGumbel3.m</code> in the original
+toolbox — likelihood-based estimation of the nested Gumbel copula's
+parameters, or density evaluation for this specific 3-variable family —
+would silently use a wrong density. Since the two disagree by a
+non-trivial relative amount (not a rounding-level discrepancy) and the
+CDF itself is verified correct, this looks like a genuine algebra error
+in deriving the PDF from the CDF, not a translation or transcription slip.</p>
+<p><strong>Fix in the Python port:</strong> <code>quanttoolbox.copula.families.nested_gumbel_cdf</code>
+ports the (verified-correct) CDF; no corresponding PDF function is
+provided. Independently re-deriving a replacement PDF by hand would risk
+introducing a <em>different</em> subtle error in a rarely-used trivariate
+extension, so the safer choice was to ship the CDF only and document the
+finding, rather than either propagate the original's wrong formula or gamble
+on an unverified from-scratch derivation.</p>
+<hr />
 <h2 id="summary-table">Summary table<a class="headerlink" href="#summary-table" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1803,6 +1885,12 @@ wrong ones, with this bug documented directly in its docstring.</p>
 <td><code>Examples/rpb/test_mvo3.m</code></td>
 <td>Missing <code>init_global</code> call leaves <code>BISECTION_Tol</code> unset, silently breaking all bisection-based target-matching</td>
 <td>N/A (example script, not library code) — translation produces the correct numbers, bug documented</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>pdfCopulaGumbel3.m</code></td>
+<td>Shipped PDF formula doesn't match <code>d³C/du1du2du3</code> of its own CDF (verified via finite difference + <code>sympy</code>)</td>
+<td>⚠️ Not fixed — PDF not ported at all, documented</td>
 </tr>
 </tbody>
 </table>

@@ -734,6 +734,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../api/copula/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    copula
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../api/credit/" class="md-nav__link">
         
   
@@ -1418,6 +1446,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#copula-copula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copula (copula/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#summary-where-the-strongest-switch-cases-are" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1618,6 +1657,17 @@
     <span class="md-ellipsis">
       
         Credit models (credit/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#copula-copula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copula (copula/)
       
     </span>
   </a>
@@ -2259,6 +2309,77 @@ port has a capability the alternative lacks.</p>
 <td><strong>HYBRID</strong></td>
 <td>Both are full <em>survival-analysis</em> libraries: they <em>estimate</em> hazard/survival functions from observed (possibly censored) event-time data (Kaplan-Meier, Cox PH, etc.). This module instead <em>simulates from</em> and <em>inverts</em> an already-specified (piecewise-constant) hazard curve — a different, complementary use case neither library targets directly. Keep for simulation/quantile-inversion given an assumed hazard; reach for <code>lifelines</code>/<code>scikit-survival</code> when the hazard itself needs to be estimated from data.</td>
 <td>Different use case from what these libraries solve — not a natural upstream target.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="copula-copula">Copula (<code>copula/</code>)<a class="headerlink" href="#copula-copula" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Alternative</th>
+<th>Verdict</th>
+<th>Why</th>
+<th>Upstream potential</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>copula/families.py</code> — <code>clayton_cdf</code>/<code>pdf</code>, <code>frank_cdf</code>/<code>pdf</code>, <code>gumbel_cdf</code>/<code>pdf</code></td>
+<td><code>statsmodels.distributions.copula.api</code> (<code>ClaytonCopula</code>, <code>FrankCopula</code>, <code>GumbelCopula</code>; already a dependency)</td>
+<td><strong>HYBRID</strong></td>
+<td>Verified numerically identical to <code>statsmodels</code> to full float64 precision (CDF, PDF, and — via <code>dependence.py</code> — Kendall's tau). Not wrapped directly: <code>statsmodels</code>' classes fix one <code>theta</code> per instance at construction, while this port (like the original MATLAB) vectorizes <code>theta</code> per observation — a shape of API <code>statsmodels</code> doesn't offer. Kept as plain vectorized <code>numpy</code>, cross-checked against <code>statsmodels</code> in tests rather than depending on it at runtime.</td>
+<td><code>statsmodels</code>' copula classes already cover the non-vectorized case well; a vectorized-<code>theta</code> constructor mode is a plausible but narrow feature request, not an obvious gap.</td>
+</tr>
+<tr>
+<td><code>copula/families.py</code> — <code>gaussian_copula_cdf</code>/<code>pdf</code></td>
+<td><code>statsmodels.distributions.copula.api.GaussianCopula</code></td>
+<td><strong>HYBRID</strong>, internally reuses <code>stats/multivariate.py</code>'s <code>bvn_cdf</code>/<code>bvn_pdf</code> (bivariate) and <code>stats/distributions.py</code>'s <code>mvn_cdf</code> (n-dim)</td>
+<td>Verified numerically identical to <code>statsmodels</code> (bivariate and 3-dim). Rather than a third from-scratch bivariate/multivariate-normal-CDF implementation, <code>gaussian_copula_cdf</code>/<code>pdf</code> delegate to this package's own already-tested wrappers around <code>scipy.stats.multivariate_normal</code> — the actual redundancy this module avoids is internal, not <code>statsmodels</code>.</td>
+<td>N/A — the reuse is internal to this package, not a library gap.</td>
+</tr>
+<tr>
+<td><code>copula/families.py</code> — <code>student_copula_cdf</code>/<code>pdf</code></td>
+<td><code>statsmodels.distributions.copula.api.StudentTCopula</code></td>
+<td><strong>KEEP</strong> (statsmodels gap), reuses <code>stats/multivariate.py</code>'s <code>bvt_cdf</code> internally</td>
+<td><code>statsmodels</code>' <code>StudentTCopula.cdf()</code> raises <code>NotImplementedError("CDF not available in closed form.")</code> — no closed-form Student-t copula CDF is implemented there at all, so this had to be self-implemented via <code>scipy.stats.multivariate_t</code>/<code>bvt_cdf</code> regardless of the vectorization question above. <code>pdf</code> was cross-checked against <code>statsmodels</code> and matches.</td>
+<td>A <code>statsmodels</code> PR implementing <code>StudentTCopula.cdf()</code> (numerically, via <code>scipy.stats.multivariate_t.cdf</code>, the same approach used here) is a plausible, well-scoped gap to report upstream.</td>
+</tr>
+<tr>
+<td><code>copula/families.py</code> — Fréchet-Hoeffding bounds, independence copula</td>
+<td><em>(none needed — trivial closed forms)</em></td>
+<td><strong>KEEP</strong></td>
+<td><code>min</code>/<code>max</code>/product formulas; not worth a dependency either way, but merges each MATLAB n-dim/bivariate file pair (<code>cdfCopulaUpper.m</code>+<code>cdfCopulaUpper2.m</code>, etc.) into one function per bound, see module docstring.</td>
+<td>N/A — trivial formulas, no capability gap to speak of.</td>
+</tr>
+<tr>
+<td><code>copula/families.py</code> — AMH, Gumbel-Barnett, Galambos, Husler-Reiss, Plackett, FGM, Cubic, logistic-Gumbel, Marshall-Olkin, Sloane, nested Gumbel</td>
+<td><em>(none found)</em></td>
+<td><strong>KEEP</strong></td>
+<td>13 named bivariate copula families with no equivalent in <code>statsmodels</code>, <a href="https://github.com/sdv-dev/Copulas"><code>copulas</code></a> (focused on synthetic tabular data generation, ships Gaussian/Clayton/Frank/Gumbel only), or <a href="https://github.com/vinecopulib/pyvinecopulib"><code>pyvinecopulib</code></a> (vine-copula construction, not this set of standalone bivariate families).</td>
+<td>Individually small, closed-form <code>numpy</code> functions — plausible as a batch PR to a copula-focused library, but scattered enough across different published sources that a scoping conversation (which families a maintainer actually wants) would come first.</td>
+</tr>
+<tr>
+<td><code>copula/dependence.py</code> — <code>spearman_rho_numeric</code>, <code>clayton_rho</code>/<code>gumbel_rho</code>, Debye/dilog special functions</td>
+<td><em>(none found)</em></td>
+<td><strong>KEEP</strong></td>
+<td>The original <code>SpearmanCopula.m</code> is itself a generic double-integral Spearman's-rho estimator for <em>any</em> copula CDF, generalized here beyond the two families (Clayton, Gumbel) the original wired it up to. No general copula library exposes a "give me any CDF, get Spearman's rho" utility this directly.</td>
+<td>Genuinely generic and dependency-light (<code>scipy.integrate.dblquad</code>) — a plausible small PR to a copula-focused library, though the closed-form-first-numeric-fallback pattern would need to fit that library's existing API shape.</td>
+</tr>
+<tr>
+<td><code>copula/simulate.py</code> — <code>simulate_from_conditional_cdf</code></td>
+<td><em>(none found — general copula libraries expose named-family sampling, not this generic API)</em></td>
+<td><strong>KEEP</strong>, built on this package's own <code>optim/bisection.py</code></td>
+<td>The original <code>rndCopula2.m</code> is itself a generic bivariate copula simulator (draw <code>u1, v2</code>, invert <code>conditional_cdf(u1, u2) = v2</code> by bisection) the original only ever plugged Gumbel into. Generalized here to accept any family's conditional CDF. <code>statsmodels</code>/<code>copulas</code>/<code>pyvinecopulib</code> all expose per-family <code>.rvs()</code> methods, not a generic conditional-inversion primitive a caller can point at an arbitrary family.</td>
+<td>The generic engine is a plausible utility for a copula library's internals, but tied closely to this port's <code>BisectionConfig</code>/vectorized-bisection convention — a scoping conversation, not a drive-by PR.</td>
+</tr>
+<tr>
+<td><code>copula/simulate.py</code> — <code>simulate_gaussian_copula</code>/<code>simulate_student_copula</code></td>
+<td><code>statsmodels.distributions.copula.api.{GaussianCopula,StudentTCopula}.rvs()</code></td>
+<td><strong>HYBRID</strong></td>
+<td><code>statsmodels</code> already provides Cholesky-based sampling for these two families through its class <code>.rvs()</code> methods; kept here mainly so all of <code>copula/simulate.py</code>'s functions share one dependency-light, <code>numpy</code>-only calling convention (<code>corr</code>, <code>n_samples</code>, <code>random_state</code>) rather than mixing a <code>statsmodels</code>-class code path in with the from-scratch simulators the other families need regardless.</td>
+<td>N/A — <code>statsmodels</code> already covers this case; kept for calling-convention consistency, not a capability gap.</td>
 </tr>
 </tbody>
 </table>
