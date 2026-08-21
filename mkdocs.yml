@@ -1,4 +1,4 @@
-site_name: QuantToolbox
+site_name: QuantToolBox
 site_description: Python port of the MATLAB QuantToolbox — econometrics, portfolio optimization, and risk analytics.
 repo_url: https://github.com/lcrmorin/QuantToolBox
 repo_name: lcrmorin/QuantToolBox
@@ -59,7 +59,6 @@ nav:
       - Ridge, OLS, robust regression: examples/regression.md
       - SVM classification: examples/svm.md
       - Building blocks (bisection, linalg, numerical diff, proximal): examples/building_blocks.md
-      - Translation tracker (all 149 examples): examples/examples_tracking.md
   - API Reference:
       - Overview: api/index.md
       - dates: api/dates.md
@@ -75,6 +74,7 @@ nav:
       - linalg: api/linalg.md
       - viz: api/viz.md
   - Notes for translators:
+      - Translation tracker (all 149 examples): examples/examples_tracking.md
       - MATLAB bugs found: matlab_bugs_found.md
       - Library alternatives: library_alternatives.md
       - Migration map: migration_map.md

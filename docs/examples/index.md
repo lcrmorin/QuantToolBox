@@ -1,27 +1,22 @@
 # Examples
 
-Two different things live under "Examples" in this documentation, and
-it's worth being clear about which is which:
+Two things live under "Examples" here:
 
-- **This section** — a small set of hand-curated, narrated deep dives.
-  Each one picks a specific result (often a published textbook table),
-  walks through the code, shows the actual output, and explains what it
-  means. They're a good starting point for understanding *why* a module
-  exists, especially the ones flagged in [Library
+- **This section** — a handful of curated deep dives, each walking
+  through one published result (often a textbook table) with real output
+  and explanation. Start here to understand *why* a module exists,
+  especially the ones flagged in [Library
   alternatives](../library_alternatives.md) as doing something no other
   Python library does.
-- **The API Reference** — every quanttoolbox function that has a
-  translated example gets it shown directly on its own reference page,
-  under a collapsible "Examples" heading. That covers the full breadth:
-  essentially every translated script from the original MATLAB
-  `Examples/` folder (~150 scripts total; see the [translation
-  tracker](examples_tracking.md) for the file-by-file status), filed
-  under whichever module it actually exercises. Source is pulled in
-  live from the same `.py` files in the repo, so it can't drift out of
-  sync — go there for the complete, exhaustive set.
+- **The API Reference** — every function with a translated example shows
+  it directly on its reference page, live-synced from the same `.py`
+  files so it can't drift. That's the exhaustive set: essentially all
+  ~150 scripts from the original MATLAB `Examples/` folder (see the
+  [translation tracker](examples_tracking.md) for file-by-file status),
+  filed under whichever module they exercise.
 
-In short: come here for a guided tour of the interesting parts, go to
-the API Reference for the exhaustive, per-function catalog.
+In short: come here for the guided tour, go to the API Reference for the
+exhaustive catalog.
 
 ## Available deep dives
 
