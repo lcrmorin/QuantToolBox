@@ -59,9 +59,11 @@ nav:
       - Fit regressions: examples/regression.md
       - Classify data: examples/svm.md
       - Combine core tools: examples/building_blocks.md
+      - Price bonds: examples/bond.md
   - API Reference:
       - Overview: api/index.md
       - backtest: api/backtest.md
+      - bond: api/bond.md
       - dates: api/dates.md
       - econometrics: api/econometrics.md
       - linalg: api/linalg.md
@@ -71,6 +73,7 @@ nav:
       - portfolio: api/portfolio.md
       - spline: api/spline.md
       - stats: api/stats.md
+      - sustainable_finance: api/sustainable_finance.md
       - svm: api/svm.md
       - viz: api/viz.md
   - Notes for translators:

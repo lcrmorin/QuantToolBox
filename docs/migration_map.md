@@ -72,8 +72,9 @@ maintained as a separate package. Its source (167 files) lives at
 reference material for the port; that folder is excluded from the
 installable package (not listed in `pyproject.toml`'s package scoping).
 
-None of this is started yet -- the tables below are the planned module
-breakdown, not a status report. See
+Port status: `bond/pricing.py` and `sustainable_finance/risk.py` are
+done (ported, tested, lint/type-clean); the rest of the tables below
+are still the planned module breakdown. See
 [HSF-Notebooks](https://github.com/lcrmorin/HSF-Notebooks)'s
 `CHAPTERS.md` for the per-chapter notebooks that will use these
 modules once ported.
@@ -97,7 +98,7 @@ Planned Python module mapping:
 
 | Python module (planned) | Original MATLAB files (`0. Toolbox/`) | Status |
 |---|---|---|
-| `bond/pricing.py` (new module) | `bond/compute_bond_price.m`, `compute_bond_ytm.m`, `compute_coupon_yield.m`, `quadratic_form_bond_portfolio1.m`, `quadratic_form_bond_portfolio2.m` | ⬜ |
+| `bond/pricing.py` (new module) | `bond/compute_bond_price.m`, `compute_bond_ytm.m`, `compute_coupon_yield.m`, `quadratic_form_bond_portfolio1.m`, `quadratic_form_bond_portfolio2.m` | ✅ |
 | `copula/families.py` (new module) | `copula/cdfCopula*.m`, `pdfCopula*.m` (23 families: Normal, Student, Clayton, Frank, Gumbel (+2 variants), Plackett, FGM, AMH, Galambos, Husler-Reiss, Marshall-Olkin, Gumbel-Barnett, logistic-Gumbel, Sloane, cubic, upper/lower Fréchet, product) | ⬜ |
 | `copula/dependence.py` | `copula/KendallCopula*.m`, `SpearmanCopula*.m` (5 families each), `dependogram.m`, `DebyeFunction.m`, `diLogFunction.m` | ⬜ |
 | `copula/simulate.py` | `copula/rndCopula*.m`, `rndnCopula.m` (8 families) | ⬜ |
@@ -111,7 +112,7 @@ Planned Python module mapping:
 | `sustainable_finance/climate.py` | `hsf/dice_temperature_matrix.m`, `dice_temperature_simulation.m` | ⬜ |
 | `sustainable_finance/ecology.py` | `hsf/species_area_relationship.m`, `endemics_area_relationship.m`, `species_abundance_distribution.m`, `hurlbert.m` | ⬜ |
 | `sustainable_finance/entropy.py` | `hsf/shannon_entropy.m`, `shannon_entropy_markov_chain.m`, `estimate_markov_generator.m` | ⬜ |
-| `sustainable_finance/risk.py` | `hsf/quadratic_form.m`, `quadratic_form_risk.m`, `bond_portfolio_metrics.m` | ⬜ |
+| `sustainable_finance/risk.py` | `hsf/quadratic_form.m`, `quadratic_form_risk.m`, `bond_portfolio_metrics.m` | ✅ |
 
 Notes on the table above:
 

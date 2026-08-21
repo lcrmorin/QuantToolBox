@@ -141,6 +141,15 @@ port has a capability the alternative lacks.
 
 ---
 
+## Bond & sustainable finance (`bond/`, `sustainable_finance/`)
+
+| Module | Alternative | Verdict | Why | Upstream potential |
+|---|---|---|---|---|
+| `bond/pricing.py` — `bond_price`, `bond_ytm`, `coupon_yield` | [`QuantLib-Python`](https://github.com/lballabio/QuantLib-SWIG) | **HYBRID** | QuantLib has far more complete bond conventions (day-count fractions, calendars, callable/amortizing structures) than this flat-rate, cash-flow-list version. Its bond machinery is also a much heavier dependency for the simple flat-discounting case this module targets. Keep this module for quick, dependency-free pricing/YTM against an explicit cash-flow schedule; reach for QuantLib once real-world conventions (day counts, holiday calendars, embedded options) matter. | N/A — QuantLib already covers the general case more completely; this module's simplicity is the point, not a gap to contribute. |
+| `bond/pricing.py` — `bond_portfolio_quadratic_form(_vs_benchmark)`, `sustainable_finance/risk.py` | *(none found)* | **KEEP** | Sector-level modified-duration/DTS-targeting quadratic risk forms (with an optional active-share term against a benchmark) are specific to fixed-income portfolio construction and don't appear as a public utility in any general optimization or fixed-income library surveyed. | Narrow and tied to this port's (Q, R, c) quadratic-form convention (shared with `portfolio/risk_budgeting.py`) — more realistic as a documented pattern within this port than a standalone proposal. |
+
+---
+
 ## Summary: where the strongest "switch" cases are
 
 If prioritizing effort, these five would give the most practical benefit

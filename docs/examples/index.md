@@ -35,6 +35,9 @@ exhaustive catalog.
   differentiation](building_blocks.md) — `linalg.special_matrices` is
   a third "fills a real gap" case (vec/vech/duplication/elimination
   matrices have no clean public equivalent elsewhere).
+- [Bond pricing and sector-level risk](bond.md) — the first example
+  from the [HSF toolbox port](../migration_map.md), not part of the
+  `Examples/` translation tracker below.
 
 The full set of original MATLAB scripts these examples translate from
 is organized by module: `rpb/`, `optim/`, `stats/`, `svm/`, `ects/`,
