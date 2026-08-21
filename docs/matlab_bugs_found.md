@@ -1,6 +1,6 @@
 # Bugs found in the original MATLAB source
 
-While porting QuantToolbox to Python, every numeric routine was tested
+While porting QuantToolBox to Python, every numeric routine was tested
 against an independent source of truth where one was available: known
 analytical solutions, Monte Carlo simulation, algebraic identities that
 must hold exactly, or agreement with established libraries (scipy,

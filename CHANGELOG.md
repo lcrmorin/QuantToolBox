@@ -38,7 +38,7 @@ All notable changes to this project are documented here. Versions follow
 
 ## [0.1.0] - Initial release
 
-Complete Python port of the MATLAB QuantToolbox library. See
+Complete Python port of the MATLAB QuantToolBox library. See
 `docs/migration_map.md` for the full file-by-file mapping from the
 original MATLAB source.
 

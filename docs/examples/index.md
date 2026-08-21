@@ -20,24 +20,29 @@ exhaustive catalog.
 
 ## Available deep dives
 
+Ordered simplest-first, roughly following how the pieces build on each
+other: price a single instrument, build a portfolio, budget its risk,
+then the more specialized tools underneath.
+
+- [Bond pricing and sector-level risk](bond.md) — the simplest starting
+  point: pricing a single instrument.
+- [Mean-variance, minimum-variance, tracking error](mean_variance.md) —
+  building a portfolio from those instruments.
 - [Risk budgeting (ERC / VaR / ES)](risk_budgeting.md) — reproduces
   Roncalli (2013), Tables 2.2–2.4. `portfolio.risk_budgeting` is the
   single largest "no real alternative" case in the whole port.
 - [Black-Litterman](black_litterman.md) — reproduces Roncalli (2013),
-  page 24.
-- [Mean-variance, minimum-variance, tracking error](mean_variance.md)
+  page 24; blending market views into the portfolio.
+- [Building blocks: bisection, linear algebra, numerical
+  differentiation](building_blocks.md) — the lower-level tools the
+  above examples build on. `linalg.special_matrices` is a third
+  "fills a real gap" case (vec/vech/duplication/elimination matrices
+  have no clean public equivalent elsewhere).
+- [Ridge, OLS, and robust regression](regression.md)
 - [Whittle (frequency-domain) estimation](whittle.md) —
   `econometrics.whittle` is the other clean "nothing else does this"
   case: no `statsmodels`/`arch` equivalent exists.
-- [Ridge, OLS, and robust regression](regression.md)
 - [SVM classification](svm.md)
-- [Building blocks: bisection, linear algebra, numerical
-  differentiation](building_blocks.md) — `linalg.special_matrices` is
-  a third "fills a real gap" case (vec/vech/duplication/elimination
-  matrices have no clean public equivalent elsewhere).
-- [Bond pricing and sector-level risk](bond.md) — the first example
-  from the [HSF toolbox port](../migration_map.md), not part of the
-  `Examples/` translation tracker below.
 
 The full set of original MATLAB scripts these examples translate from
 is organized by module: `rpb/`, `optim/`, `stats/`, `svm/`, `ects/`,

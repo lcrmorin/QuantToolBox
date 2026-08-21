@@ -1,6 +1,6 @@
-# QuantToolbox
+# QuantToolBox
 
-A Python port of the MATLAB QuantToolbox: econometrics, portfolio
+A Python port of the MATLAB QuantToolBox: econometrics, portfolio
 optimization, and risk analytics.
 
 ```bash

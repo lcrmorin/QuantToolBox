@@ -1,5 +1,5 @@
 site_name: QuantToolBox
-site_description: Python port of the MATLAB QuantToolbox — econometrics, portfolio optimization, and risk analytics.
+site_description: Python port of the MATLAB QuantToolBox — econometrics, portfolio optimization, and risk analytics.
 repo_url: https://github.com/lcrmorin/QuantToolBox
 repo_name: lcrmorin/QuantToolBox
 
@@ -52,14 +52,14 @@ nav:
   - Home: index.md
   - Featured examples:
       - Overview: examples/index.md
+      - Price bonds: examples/bond.md
+      - Optimize portfolios: examples/mean_variance.md
       - Budget risk: examples/risk_budgeting.md
       - Blend market views: examples/black_litterman.md
-      - Optimize portfolios: examples/mean_variance.md
-      - Fit spectral models: examples/whittle.md
-      - Fit regressions: examples/regression.md
-      - Classify data: examples/svm.md
       - Combine core tools: examples/building_blocks.md
-      - Price bonds: examples/bond.md
+      - Fit regressions: examples/regression.md
+      - Fit spectral models: examples/whittle.md
+      - Classify data: examples/svm.md
   - API Reference:
       - Overview: api/index.md
       - backtest: api/backtest.md
