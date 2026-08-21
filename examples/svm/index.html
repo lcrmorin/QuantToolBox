@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../regression/">
       
       
-        <link rel="next" href="../black_litterman/">
+        <link rel="next" href="../building_blocks/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Risk budgeting (ERC / VaR / ES) - QuantToolbox</title>
+        <title>SVM classification - QuantToolbox</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#risk-budgeting-erc-var-and-es-contributions" class="md-skip">
+        <a href="#svm-classification-hard-margin" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Risk budgeting (ERC / VaR / ES)
+              SVM classification
             
           </span>
         </div>
@@ -368,37 +368,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Risk budgeting (ERC / VaR / ES)
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../risk_budgeting/" class="md-nav__link">
         
   
   
@@ -414,37 +387,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#equal-risk-contribution-portfolio" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Equal Risk Contribution portfolio
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -538,10 +480,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../svm/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -557,6 +508,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -1183,25 +1135,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#equal-risk-contribution-portfolio" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Equal Risk Contribution portfolio
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1220,69 +1153,40 @@
   
 
 
-<h1 id="risk-budgeting-erc-var-and-es-contributions">Risk budgeting: ERC, VaR, and ES contributions<a class="headerlink" href="#risk-budgeting-erc-var-and-es-contributions" title="Permanent link">&para;</a></h1>
-<p>Translated from <code>Examples/rpb/test_erc1.m</code>, which reproduces Tables 2.2,
-2.3, and 2.4 (pages 81–82) of Roncalli, T. (2013), <em>Introduction to Risk
-Parity and Budgeting</em>.</p>
-<p>Three assets with given volatilities and correlations; a fixed
-(non-equal-risk) weight vector <code>x = [0.50, 0.20, 0.30]</code>. The example
-computes the risk contribution decomposition under three different risk
-measures: plain volatility, 99% VaR, and 99% Expected Shortfall.</p>
+<h1 id="svm-classification-hard-margin">SVM classification (hard margin)<a class="headerlink" href="#svm-classification-hard-margin" title="Permanent link">&para;</a></h1>
+<p>Translated from <code>Examples/svm/svm1.m</code>. 15 points in 2-D, two linearly
+separable classes.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">xpnd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.moments</span><span class="w"> </span><span class="kn">import</span> <span class="n">corr_to_cov</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.risk_budgeting</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">risk_contribution</span><span class="p">,</span>
-    <span class="n">risk_contribution_var</span><span class="p">,</span>
-    <span class="n">risk_contribution_es</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.svm.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">svm_classification_primal</span>
 
-<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">])</span>
-<span class="n">rho_vech</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">])</span>
-<span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">rho_vech</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.7</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">2.3</span><span class="p">,</span> <span class="mf">5.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">7.7</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">8.8</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">7.4</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">6.5</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">8.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="p">])</span>
+<span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
 
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">svm_classification_primal</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># c=None -&gt; hard margin</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"beta0:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">beta0</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"margin:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 
-<span class="c1"># --- Volatility-based risk contribution ---</span>
-<span class="n">rc_vol</span> <span class="o">=</span> <span class="n">risk_contribution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"portfolio volatility:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rc_vol</span><span class="o">.</span><span class="n">risk</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"pct risk contribution:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rc_vol</span><span class="o">.</span><span class="n">pct_risk_contribution</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-
-<span class="c1"># --- VaR-based (99% confidence) ---</span>
-<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.99</span>
-<span class="n">rc_var</span> <span class="o">=</span> <span class="n">risk_contribution_var</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"99% VaR:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rc_var</span><span class="o">.</span><span class="n">risk</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-
-<span class="c1"># --- ES-based (99% confidence) ---</span>
-<span class="n">rc_es</span> <span class="o">=</span> <span class="n">risk_contribution_es</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"99</span><span class="si">% E</span><span class="s2">S:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rc_es</span><span class="o">.</span><span class="n">risk</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="c1"># recover support vectors: points exactly on the margin (residual ~ 0)</span>
+<span class="n">residuals</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">result</span><span class="o">.</span><span class="n">beta0</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">result</span><span class="o">.</span><span class="n">beta</span>
+<span class="n">support_vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"support vector indices:"</span><span class="p">,</span> <span class="n">support_vectors</span><span class="p">)</span>
 </code></pre></div>
 <p>Output:</p>
-<div class="highlight"><pre><span></span><code>portfolio volatility: 20.87
-pct risk contribution: [70.43 15.93 13.64]
-99% VaR: 48.55
-99% ES: 55.62
+<div class="highlight"><pre><span></span><code>beta0: 2.415929
+beta: [-0.707965  0.247788]
+margin: 1.777422
+support vector indices: [ 2  7 14]
 </code></pre></div>
-<p>The <code>20.87%</code> portfolio volatility and the <code>[70.43, 15.93, 13.64]</code> percent
-risk contribution split match the published Table 2.2 values exactly.</p>
-<h2 id="equal-risk-contribution-portfolio">Equal Risk Contribution portfolio<a class="headerlink" href="#equal-risk-contribution-portfolio" title="Permanent link">&para;</a></h2>
-<p>The same covariance matrix, but solving <em>for</em> the weights that make each
-asset's risk contribution equal (rather than decomposing a given,
-unequal weight vector):</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.portfolio.risk_budgeting</span><span class="w"> </span><span class="kn">import</span> <span class="n">erc_portfolio</span>
-
-<span class="n">erc</span> <span class="o">=</span> <span class="n">erc_portfolio</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"ERC weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">erc</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"pct risk contribution:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">erc</span><span class="o">.</span><span class="n">pct_risk_contribution</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-</code></pre></div>
-<p>Output:</p>
-<div class="highlight"><pre><span></span><code>ERC weights: [0.1969 0.3244 0.4787]
-pct risk contribution: [33.33 33.33 33.33]
-</code></pre></div>
-<p>By construction, all three assets now contribute exactly one-third of
-total portfolio risk.</p>
+<p>Only 3 of the 15 points end up as support vectors — the rest are strictly
+inside their class's margin and don't constrain the separating
+hyperplane at all, which is the hallmark sparsity property of the SVM
+solution.</p>
 
 
 
