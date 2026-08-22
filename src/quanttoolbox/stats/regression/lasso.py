@@ -141,12 +141,13 @@ def lasso_regularization_path(
     Returns
     -------
     LassoPathResult with, for each lambda in ``lambda_grid``:
-      - ``beta``: coefficient matrix, shape (n_lambda, p).
-      - ``l1_norm``: ``sum(abs(beta))`` per row.
-      - ``df``: count of coefficients with ``abs(beta) >= 1e-6`` per row.
-      - ``complexity``: ``1 / df`` per row (``+inf`` where every
-        coefficient has been shrunk to zero -- expected at heavy enough
-        penalization, not an error).
+
+        - ``beta``: coefficient matrix, shape (n_lambda, p).
+        - ``l1_norm``: ``sum(abs(beta))`` per row.
+        - ``df``: count of coefficients with ``abs(beta) >= 1e-6`` per row.
+        - ``complexity``: ``1 / df`` per row (``+inf`` where every
+          coefficient has been shrunk to zero -- expected at heavy enough
+          penalization, not an error).
     """
     x = np.asarray(x, dtype=float)
     lambda_grid = np.atleast_1d(np.asarray(lambda_grid, dtype=float))
