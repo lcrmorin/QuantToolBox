@@ -3,6 +3,27 @@
 All notable changes to this project are documented here. Versions follow
 [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`.
 
+## [Unreleased]
+
+### Added
+
+- `credit.vasicek`: single-factor Gaussian-copula credit-portfolio model
+  -- `thresholds_from_matrix` (discretizes a rating-transition matrix
+  into conditioning thresholds), `invcdf_default_rate` (the Vasicek
+  large-homogeneous-portfolio default-rate quantile, i.e. the Basel IRB
+  worst-case default rate), and `vasicek_density` (the matching limiting
+  density). Not ported from the MATLAB toolbox -- promoted from
+  HSF-Notebooks chapters 13g/13i/13j, where three notebooks had
+  independently hand-rolled the same closed forms.
+- `credit.markov_chain.expected_hitting_time`: expected number of steps
+  to reach a target rating/state set from each state of a discrete-time
+  Markov chain, via first-step analysis. Promoted from HSF-Notebooks
+  chapter 2a.
+- `portfolio.attribution.beta_pi_alpha`: CAPM beta/priced-risk/alpha
+  decomposition of every asset against an arbitrary reference portfolio
+  (Pastor & Pedersen (2022)-style). Promoted from HSF-Notebooks chapter
+  3b.
+
 ## [0.3.0] - Copula module, Python 3.13 support, documentation cleanup
 
 ### Added
