@@ -1,7 +1,7 @@
 """Lasso and elastic-net regression via coordinate descent / ADMM.
 
 Ported from QuantToolBox/stats/{regLassoCCD,regLassoADMM,regLassoADMM2,
-regLasso,regElasticNet,selectLasso}.m
+regLasso,regElasticNet,selectLasso,regLasso2}.m
 
 Translation notes:
 
@@ -31,9 +31,19 @@ Translation notes:
   to scikit-learn's ``l1_ratio`` naming.
 - MATLAB's ``global ADMM_*`` settings blocks are replaced by the
   ``quanttoolbox.config.ADMMConfig`` dataclass.
+- ``regLasso2.m`` builds a regularization path by looping its solver over a
+  vector of lambdas, returning ``[beta, tau, df, complexity]``. It uses
+  ``quadprog`` on a doubled positive/negative-part formulation of beta
+  (like ``regLasso.m``/``selectLasso.m``); this is ported as
+  ``lasso_regularization_path``, which loops ``lasso_ccd`` instead --
+  the same quadprog-avoiding substitution ``docs/examples/stats/lasso2.py``
+  already makes for ``Examples/stats/lasso2.m``'s single-lambda
+  ``regLasso2`` calls.
 """
 
 from __future__ import annotations
+
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -84,6 +94,80 @@ def lasso_ccd(
                 beta[j] = v / denom
 
     return beta, beta_path.T
+
+
+@dataclass
+class LassoPathResult:
+    lambda_grid: np.ndarray
+    beta: np.ndarray
+    l1_norm: np.ndarray
+    df: np.ndarray
+    complexity: np.ndarray
+
+
+def lasso_regularization_path(
+    y: np.ndarray,
+    x: np.ndarray,
+    lambda_grid: np.ndarray,
+    n_iters: int = 1000,
+) -> LassoPathResult:
+    """Build the full lasso regularization path by looping ``lasso_ccd``
+    (penalized-form coordinate descent) over a grid of lambda values.
+
+    At each lambda, records the fitted coefficients, their L1 norm, the
+    number of nonzero coefficients (degrees of freedom), and the resulting
+    model complexity (``1 / df``).
+
+    Original: stats/regLasso2.m -- ``regLasso2.m`` solves the same
+    ``[beta, tau, df, complexity] = f(y, x, lambda)`` grid problem via
+    ``quadprog`` on a doubled positive/negative-part formulation of beta;
+    this is translated using ``lasso_ccd``'s coordinate descent instead,
+    the same substitution ``docs/examples/stats/lasso2.py`` already makes
+    for ``Examples/stats/lasso2.m``'s single-lambda ``regLasso2`` calls
+    (see module docstring). Promoted from HSF-Notebooks chapter 15b
+    (``reg_lasso2``), which uses this exact grid-loop as a documented
+    example of driving quanttoolbox's own ``lasso_ccd`` solver across a
+    lambda grid, rather than an external one (e.g. scikit-learn's
+    ``lasso_path``).
+
+    Parameters
+    ----------
+    y : response vector, shape (n,).
+    x : design matrix, shape (n, p).
+    lambda_grid : penalty values to solve at, shape (n_lambda,).
+    n_iters : coordinate-descent iterations passed through to
+        ``lasso_ccd`` at each lambda.
+
+    Returns
+    -------
+    LassoPathResult with, for each lambda in ``lambda_grid``:
+      - ``beta``: coefficient matrix, shape (n_lambda, p).
+      - ``l1_norm``: ``sum(abs(beta))`` per row.
+      - ``df``: count of coefficients with ``abs(beta) >= 1e-6`` per row.
+      - ``complexity``: ``1 / df`` per row (``+inf`` where every
+        coefficient has been shrunk to zero -- expected at heavy enough
+        penalization, not an error).
+    """
+    x = np.asarray(x, dtype=float)
+    lambda_grid = np.atleast_1d(np.asarray(lambda_grid, dtype=float))
+    n_lambda = len(lambda_grid)
+    p = x.shape[1]
+
+    beta = np.zeros((n_lambda, p))
+    for i, lam in enumerate(lambda_grid):
+        b, _ = lasso_ccd(y, x, lam, n_iters=n_iters)
+        beta[i, :] = b
+
+    l1_norm = np.sum(np.abs(beta), axis=1)
+    df = np.sum(np.abs(beta) >= 1e-6, axis=1)
+    # At heavy enough shrinkage all coefficients are zeroed (df=0); complexity=1/df is
+    # then +inf at that boundary case, which is expected, not an error.
+    with np.errstate(divide="ignore"):
+        complexity = 1.0 / df
+
+    return LassoPathResult(
+        lambda_grid=lambda_grid, beta=beta, l1_norm=l1_norm, df=df, complexity=complexity
+    )
 
 
 def lasso_admm(

@@ -1,9 +1,10 @@
 """Tests for quanttoolbox.credit.reduced_form."""
 
 import numpy as np
-from scipy.linalg import expm
+from scipy.linalg import expm, logm
 
 from quanttoolbox.credit.reduced_form import (
+    build_climate_stressed_generator,
     cdf_exponential,
     density_markov_generator,
     hazard_markov_generator,
@@ -13,6 +14,7 @@ from quanttoolbox.credit.reduced_form import (
     survival_exponential,
     survival_markov_generator,
 )
+from quanttoolbox.sustainable_finance.entropy import estimate_markov_generator
 
 
 def test_survival_exponential_homogeneous_matches_closed_form():
@@ -209,3 +211,80 @@ def test_hazard_markov_generator_matches_density_over_survival():
     assert np.allclose(h, expected, equal_nan=True)
     assert np.all(np.isnan(h[:, 2]))
     assert np.all(np.isfinite(h[:, :2]))
+
+
+def test_build_climate_stressed_generator_preserves_row_sums_zero():
+    lambda_matrix = np.array(
+        [
+            [-0.3, 0.25, 0.05],
+            [0.1, -0.35, 0.25],
+            [0.0, 0.0, 0.0],
+        ]
+    )
+    for beta in [0.0, 0.5, 1.0, 2.5, 5.0]:
+        lambda_climate = build_climate_stressed_generator(lambda_matrix, beta)
+        assert np.allclose(lambda_climate.sum(axis=1), 0.0, atol=1e-12)
+
+
+def test_build_climate_stressed_generator_scales_default_column_and_rebalances_diagonal():
+    lambda_matrix = np.array(
+        [
+            [-0.3, 0.25, 0.05],
+            [0.1, -0.35, 0.25],
+            [0.0, 0.0, 0.0],
+        ]
+    )
+    beta = 2.5
+    lambda_climate = build_climate_stressed_generator(lambda_matrix, beta)
+
+    stress = beta * lambda_matrix[:, -1]
+    expected = lambda_matrix.copy()
+    expected[:, -1] = expected[:, -1] + stress
+    expected = expected - np.diag(stress)
+
+    assert np.allclose(lambda_climate, expected)
+    # off-diagonal entries in non-default columns are untouched by the
+    # stress scaling itself
+    assert np.isclose(lambda_climate[0, 1], lambda_matrix[0, 1])
+    assert np.isclose(lambda_climate[2, 0], lambda_matrix[2, 0])
+    # diagonal is shifted by exactly -stress
+    assert np.allclose(np.diag(lambda_climate) - np.diag(lambda_matrix), -stress)
+
+
+def test_build_climate_stressed_generator_matches_notebook_call_site():
+    # Reproduces the exact P -> Lambda derivation and beta_25 = 2.5 call
+    # site from HSF-Notebooks chapter 13f (cell defining beta_25).
+    p = np.array(
+        [
+            [92.82, 6.50, 0.56, 0.06, 0.06, 0.00, 0.00, 0.00],
+            [0.63, 91.87, 6.64, 0.65, 0.06, 0.11, 0.04, 0.00],
+            [0.08, 2.26, 91.66, 5.11, 0.61, 0.23, 0.01, 0.04],
+            [0.05, 0.27, 5.84, 87.74, 4.74, 0.98, 0.16, 0.22],
+            [0.04, 0.11, 0.64, 7.85, 81.14, 8.27, 0.89, 1.06],
+            [0.00, 0.11, 0.30, 0.42, 6.75, 83.07, 3.86, 5.49],
+            [0.19, 0.00, 0.38, 0.75, 2.44, 12.03, 60.71, 23.50],
+            [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 100.00],
+        ]
+    )
+    p = p / p.sum(axis=1, keepdims=True)
+
+    lambda_raw = logm(p)
+    lambda_matrix, _ = estimate_markov_generator(lambda_raw)
+
+    beta_25 = 2.5
+    lambda_climate = build_climate_stressed_generator(lambda_matrix, beta_25)
+
+    # generator-matrix validity: every row still sums to zero
+    assert np.allclose(lambda_climate.sum(axis=1), 0.0, atol=1e-10)
+
+    # cross-check against the notebook's own formula, evaluated directly
+    k = lambda_matrix.shape[1]
+    stress = beta_25 * lambda_matrix[:, k - 1]
+    expected = lambda_matrix.copy()
+    expected[:, k - 1] = expected[:, k - 1] + stress
+    expected = expected - np.diag(stress)
+    assert np.allclose(lambda_climate, expected)
+
+    # spot-check against a value independently computed from the notebook's
+    # own P -> Lambda -> Lambda_climate pipeline (CCC row, CCC column)
+    assert np.isclose(lambda_climate[6, 6], -1.2398547456, atol=1e-6)

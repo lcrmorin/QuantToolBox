@@ -111,14 +111,30 @@ def carbon_budget_compound_reduction(
     r_minus: float,
     ce_t0: float,
     g_y: float | None = None,
+    discrete: bool = False,
 ) -> float:
     """Cumulative emissions over [t0, t], for CE(s) declining at compound
     rate `delta_r` from an initial level ``CE(t0) * (1 - r_minus)``,
     optionally compounded against a GDP growth rate `g_y` (CE(s) then
     grows/shrinks at the net rate of decarbonization vs. growth).
 
-    Original: hsf/carbon_budget_compound_reduction.m
+    `discrete=False` (default, matches the original) treats `CE(s)` as
+    continuous and integrates the closed-form geometric series over
+    ``[t0, t]``. `discrete=True` instead sums `CE(s)` at each integer year
+    ``s = t0, t0+1, ..., t`` (``t0`` and `t` must be integers) -- added for
+    callers that budget year-by-year rather than continuously (e.g.
+    HSF-Notebooks chapter 11g); the two conventions can differ by several
+    percent on the same inputs, so this is a real modeling choice, not a
+    numerical-precision detail.
+
+    Original: hsf/carbon_budget_compound_reduction.m (`discrete=True` is
+    not part of the original, which is continuous-only)
     """
+    if discrete:
+        years = np.arange(t0, t + 1)
+        decay = (1.0 - delta_r) * (1.0 if g_y is None else 1.0 + g_y)
+        return float(np.sum(ce_t0 * (1.0 - r_minus) * decay ** (years - t0)))
+
     dt = t - t0
     if g_y is None:
         return ((1.0 - delta_r) ** dt - 1.0) / np.log(1.0 - delta_r) * (1.0 - r_minus) * ce_t0

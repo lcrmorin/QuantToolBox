@@ -36,6 +36,9 @@ from quanttoolbox.stats.distributions import (
     order_statistic_cdf,
     order_statistic_ppf,
     poisson_binomial_pmf,
+    poisson_binomial_pmf_brute_force,
+    poisson_binomial_pmf_dft,
+    poisson_binomial_pmf_dp,
     skew_normal_cdf,
     skew_normal_moments,
     skew_normal_pdf,
@@ -316,6 +319,42 @@ def test_poisson_binomial_reduces_to_binomial_for_equal_p():
     p = np.full(6, 0.4)
     k, pmf = poisson_binomial_pmf(p)
     assert np.allclose(pmf, binom.pmf(k, 6, 0.4))
+
+
+def test_poisson_binomial_three_independent_methods_agree_with_packaged_function():
+    # p vector from HSF-Notebooks chapter 16d, Question 1
+    p = np.array([0.20, 0.30, 0.10, 0.65, 0.10])
+
+    k_ref, pmf_ref = poisson_binomial_pmf(p)
+    k_dp, pmf_dp = poisson_binomial_pmf_dp(p)
+    k_dft, pmf_dft = poisson_binomial_pmf_dft(p)
+    k_bf, pmf_bf = poisson_binomial_pmf_brute_force(p)
+
+    assert np.allclose(k_dp, k_ref)
+    assert np.allclose(k_dft, k_ref)
+    assert np.allclose(k_bf, k_ref)
+
+    assert np.allclose(pmf_dp, pmf_ref, atol=1e-12)
+    assert np.allclose(pmf_dft, pmf_ref, atol=1e-12)
+    assert np.allclose(pmf_bf, pmf_ref, atol=1e-12)
+
+    assert np.isclose(pmf_dp.sum(), 1.0)
+    assert np.isclose(pmf_dft.sum(), 1.0)
+    assert np.isclose(pmf_bf.sum(), 1.0)
+
+
+def test_poisson_binomial_dp_dft_brute_force_reduce_to_binomial_for_equal_p():
+    from scipy.stats import binom
+
+    p = np.full(6, 0.4)
+    k_dp, pmf_dp = poisson_binomial_pmf_dp(p)
+    _, pmf_dft = poisson_binomial_pmf_dft(p)
+    _, pmf_bf = poisson_binomial_pmf_brute_force(p)
+    pmf_binom = binom.pmf(k_dp, 6, 0.4)
+
+    assert np.allclose(pmf_dp, pmf_binom)
+    assert np.allclose(pmf_dft, pmf_binom)
+    assert np.allclose(pmf_bf, pmf_binom)
 
 
 # ---------------------------------------------------------------------------

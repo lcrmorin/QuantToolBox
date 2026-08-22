@@ -17,6 +17,7 @@ from quanttoolbox.copula.families import (
     fgm_cdf,
     frank_cdf,
     frank_contour,
+    frank_level_curve,
     frank_pdf,
     frechet_lower_bound,
     galambos_cdf,
@@ -24,6 +25,7 @@ from quanttoolbox.copula.families import (
     gaussian_copula_cdf,
     gaussian_copula_conditional_cdf,
     gaussian_copula_pdf,
+    gaussian_copula_pdf_grid,
     gumbel_barnett_cdf,
     gumbel_barnett_pdf,
     gumbel_cdf,
@@ -221,6 +223,33 @@ def test_gaussian_copula_conditional_cdf_matches_partial_derivative():
     assert np.allclose(numeric, analytic, atol=1e-4)
 
 
+def test_gaussian_copula_pdf_grid_matches_pairwise_gaussian_copula_pdf():
+    u1 = np.array([0.2, 0.5, 0.8])
+    u2 = np.array([0.3, 0.6])
+    rho = 0.4
+    corr = np.array([[1.0, rho], [rho, 1.0]])
+    grid = gaussian_copula_pdf_grid(u1, u2, rho)
+    expected = np.array(
+        [[gaussian_copula_pdf(np.array([[a, b]]), corr)[0] for b in u2] for a in u1]
+    )
+    assert grid.shape == (u1.size, u2.size)
+    assert np.allclose(grid, expected)
+
+
+def test_gaussian_copula_pdf_grid_matches_notebook_chapter15a_values():
+    # HSF-Notebooks chapter 15a's 2x2 subplot loop: u1_1 = u2_1 =
+    # seqa(0.01, 0.01, 99), tau_1 = 0.6, rho_1 = sin(pi/2 * tau_1).
+    u1_1 = 0.01 + 0.01 * np.arange(99)
+    u2_1 = 0.01 + 0.01 * np.arange(99)
+    tau_1 = 0.6
+    rho_1 = np.sin(np.pi / 2 * tau_1)
+    pdf3 = gaussian_copula_pdf_grid(u1_1, u2_1, rho_1)
+    assert pdf3.shape == (99, 99)
+    assert np.isclose(pdf3[0, 0], 19.137818086560785)
+    assert np.isclose(pdf3[49, 49], 1.7013016167040798)
+    assert np.isclose(pdf3[98, 98], 19.137818086560785)
+
+
 # ---------------------------------------------------------------------------
 # Finite-difference pdf-from-cdf checks for the remaining named families
 # ---------------------------------------------------------------------------
@@ -309,6 +338,37 @@ def test_frank_contour_round_trips_through_frank_cdf():
     alpha = frank_cdf(u1, u2_true, theta)
     u2_recovered = frank_contour(u1, alpha, theta)
     assert np.allclose(u2_recovered, u2_true, atol=1e-6)
+
+
+def test_frank_level_curve_round_trips_through_frank_cdf_on_grid():
+    theta = np.array([3.0, 5.0])
+    u1 = np.array([0.65, 0.8, 0.95])
+    t = 0.2
+    u2_recovered = frank_level_curve(u1, t, theta)
+    assert u2_recovered.shape == (u1.size, theta.size)
+    c = frank_cdf(u1[:, None], u2_recovered, theta[None, :])
+    assert np.allclose(c, t, atol=1e-8)
+
+
+def test_frank_level_curve_matches_notebook_chapter15a_values():
+    # HSF-Notebooks chapter 15a's 2x2 level-curve figure and validation pass.
+    theta_3 = np.array([-3, -1, 0.001, 4])
+    u1_3 = np.concatenate([[0.001], 0.01 + 0.01 * np.arange(98), [0.999]])
+    u1_3[10] = 0.1
+
+    # At t=0.4, exactly 39 of the 100 x 4 = 400 (u1, theta) grid points have
+    # no valid u2 in [0, 1] (u1 < t) and are correctly nan.
+    n_nan = np.sum(np.isnan(frank_level_curve(u1_3, 0.4, theta_3)))
+    assert n_nan == 39
+
+    # Every computed level curve satisfies C(u1, u2(u1)) = t, restricted to
+    # u1 >= t (its valid domain) -- checked directly against frank_cdf, as
+    # the notebook's own validation pass does.
+    check_u1 = np.array([0.65, 0.8, 0.95])  # >= max(t_levels) = 0.6
+    for t in (0.1, 0.2, 0.4, 0.6):
+        u2c = frank_level_curve(check_u1, t, theta_3)
+        c = frank_cdf(check_u1[:, None], u2c, theta_3[None, :])
+        assert np.allclose(c, t, atol=1e-8)
 
 
 def test_logistic_gumbel_contour_round_trips():

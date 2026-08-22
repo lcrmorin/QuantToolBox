@@ -46,6 +46,16 @@ def test_bond_ytm_round_trips_a_known_rate():
     assert np.isclose(ytm, true_rate, atol=1e-4)
 
 
+def test_bond_ytm_round_trips_a_known_rate_discrete_compounding():
+    t = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+    ct = np.array([5.0, 5.0, 5.0, 5.0, 105.0])
+    true_rate = 0.037
+    price = bond_price(t, ct, true_rate, method=2)
+
+    ytm = bond_ytm(t, ct, price, method=2)
+    assert np.isclose(ytm, true_rate, atol=1e-4)
+
+
 def test_bond_ytm_zero_coupon():
     t = 10.0
     ct = [100.0]

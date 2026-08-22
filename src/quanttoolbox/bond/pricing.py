@@ -65,10 +65,18 @@ def bond_ytm(
     cash_flows: np.ndarray,
     price: float,
     config: BisectionConfig | None = None,
+    method: int = 1,
 ) -> float:
-    """Yield to maturity: the flat, continuously-compounded rate that
-    reprices `cash_flows` to `price` (bisection search over the rate
-    bracket [0, 1], i.e. 0%-100% annual yield).
+    """Yield to maturity: the flat rate that reprices `cash_flows` to
+    `price` (bisection search over the rate bracket [0, 1], i.e. 0%-100%
+    annual yield).
+
+    `method` selects the same discounting convention as `bond_price`:
+    method=1 (default, matches the original) is continuous compounding
+    (``exp(-t*rate)``); method=2 is discrete annual compounding
+    (``1/(1+rate)**t``) -- added for callers whose own pricing convention
+    is discrete (e.g. HSF-Notebooks chapter 4c), not part of the original
+    MATLAB source, which only ever calls this with continuous compounding.
 
     Original: bond/compute_bond_ytm.m (bisection loop replaced by
     `optim.bisection.bisection` -- see module docstring)
@@ -77,7 +85,7 @@ def bond_ytm(
         config = BisectionConfig(tol=1e-5)  # matches the original's (b-a) > 1e-5 stopping test
 
     def f(rate: np.ndarray) -> float:
-        return bond_price(maturities, cash_flows, float(rate), method=1) - price
+        return bond_price(maturities, cash_flows, float(rate), method=method) - price
 
     return float(bisection(f, 0.0, 1.0, config=config))
 

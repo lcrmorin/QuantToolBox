@@ -1,9 +1,13 @@
 """Species-area/endemics-area relationships, species-abundance
-distributions, and Hurlbert's rarefaction estimator -- classic biodiversity
-measures from ecology, used in this toolbox's biodiversity-risk chapters.
+distributions, Hurlbert's rarefaction estimator, and a colonization-
+extinction equilibrium model's net species-richness growth rate --
+classic biodiversity measures from ecology, used in this toolbox's
+biodiversity-risk chapters.
 
 Ported from HSF toolbox `hsf/{species_area_relationship,
 endemics_area_relationship,species_abundance_distribution,hurlbert}.m`.
+`fn_delta_t` has no standalone `.m` source in `hfs-archive` -- see its own
+docstring -- and is instead promoted from HSF-Notebooks chapter 16c.
 
 Translation notes:
 
@@ -17,7 +21,15 @@ Translation notes:
   argument (`brk`) is preserved as three explicit modes rather than
   MATLAB's type-based dispatch: `breaks=None` (unique-count histogram),
   `breaks="octave"` (Preston's log2 "octave" abundance classes), or
-  `breaks=<array>` (custom breakpoints).
+  `breaks=<array>` (custom breakpoints). The `"octave"` and `<array>`
+  modes' bucket-assignment rule was corrected to match numpy's own
+  `np.histogram` half-open-bin convention exactly (`floor(log2(n))` for
+  octaves; `np.histogram(n_i, bins=[0, *breaks])` for custom breakpoints)
+  -- the original bucket-assignment rule here used a different,
+  non-numpy-native inclusive convention, which HSF-Notebooks chapter 05c's
+  independent reimplementation of this same function was found to
+  disagree with on real (Whittaker/BCI) survey data before this fix; see
+  `species_abundance_distribution`'s own docstring.
 - `hurlbert.m`'s `method=2` (log-gamma) branch is numerically more stable
   than `method=1`'s direct `scipy.special.comb` ratio for large sample
   sizes (avoids overflow in the individual binomial coefficients); both
@@ -86,14 +98,34 @@ def species_abundance_distribution(
     histogram: `s[k]` species fall into abundance class `j[k]`.
 
     - `breaks=None` (default): one class per distinct count value in `n_i`.
-    - `breaks="octave"`: Preston's log2 "octave" classes (1; 2-3; 4-7;
-      8-15; ...).
-    - `breaks=<array>`: custom upper breakpoints; `j[k]` is the midpoint of
-      class k's range.
+    - `breaks="octave"`: Preston's log2 "octave" classes, class `k`
+      (`k=0,1,2,...`) covering `2**k <= n < 2**(k+1)` (so `k=0` is `n=1`;
+      `k=1` is `n` in `{2,3}`; `k=2` is `n` in `{4,...,7}`; etc.), assigned
+      via `k = floor(log2(n))`.
+    - `breaks=<array>`: custom upper breakpoints; classes are the
+      `numpy.histogram` bins of `n_i` over `[0, *breaks]` (all classes
+      half-open `[lower, upper)` except the last, which is closed at both
+      ends); `j[k]` is the midpoint of class `k`'s range.
 
     Returns `(j, s, breaks)` -- `breaks` is `None` for the default mode.
 
     Original: hsf/species_abundance_distribution.m
+
+    Note: the `"octave"` and `<array>` modes' bucket-assignment rule below
+    was corrected to this numpy-native `np.histogram`/`floor(log2(n))`
+    convention from an earlier, non-numpy-native inclusive rule (each
+    class taken as `(prev_break, this_break]`, closed at the top and open
+    at the bottom, with the first class starting from `n=1`/`n=0` rather
+    than a numpy-style half-open `[0, this_break)`). On real survey data
+    with non-integer abundance counts (Whittaker's Siskiyou Mountains tree
+    survey), the two conventions disagree: HSF-Notebooks chapter 05c's
+    independent reimplementation of this function -- built and used
+    without reference to this toolbox version -- was cross-checked against
+    it and found to classify some individual counts into different
+    buckets. This toolbox's binning was corrected to match the notebook's
+    (and numpy's own) convention exactly; see
+    `tests/sustainable_finance/test_ecology.py` for the real-data
+    cross-check.
     """
     n_i = np.asarray(n_i, dtype=float)
 
@@ -105,32 +137,18 @@ def species_abundance_distribution(
     if isinstance(breaks, str):
         if breaks.lower() != "octave":
             raise ValueError("breaks must be None, 'octave', or an array of breakpoints")
-        n_max = np.max(n_i)
-        k_max = int(np.ceil(np.log2(max(n_max, 1)))) or 1
-        k = np.arange(1, k_max + 1)
-        octave_breaks = 2.0**k - 1.0
-        s = np.zeros(k_max)
-        for it in range(k_max):
-            if it == 0:
-                cond = n_i <= octave_breaks[it]
-            else:
-                cond = (n_i > octave_breaks[it - 1]) & (n_i <= octave_breaks[it])
-            s[it] = np.sum(cond)
-        return k.astype(float), s, octave_breaks
+        k = np.floor(np.log2(n_i)).astype(int)
+        k_max = int(k.max())
+        octaves = np.arange(0, k_max + 1)
+        s = np.array([np.sum(k == kk) for kk in octaves], dtype=float)
+        octave_breaks = 2.0 ** (octaves + 1)
+        return octaves.astype(float), s, octave_breaks
 
     breaks = np.asarray(breaks, dtype=float)
-    n_classes = breaks.shape[0]
-    j = np.zeros(n_classes)
-    s = np.zeros(n_classes)
-    for it in range(n_classes):
-        if it == 0:
-            cond = n_i <= breaks[it]
-            j[it] = 0.5 * (1.0 + breaks[it])
-        else:
-            cond = (n_i > breaks[it - 1]) & (n_i <= breaks[it])
-            j[it] = 0.5 * (breaks[it - 1] + breaks[it])
-        s[it] = np.sum(cond)
-    return j, s, breaks
+    edges = np.concatenate([[0.0], breaks])
+    s, _ = np.histogram(n_i, bins=edges)
+    j = 0.5 * (edges[:-1] + edges[1:])
+    return j, s.astype(float), breaks
 
 
 def hurlbert(n_i: np.ndarray, m: int, method: int = 1) -> float:
@@ -164,3 +182,96 @@ def hurlbert(n_i: np.ndarray, m: int, method: int = 1) -> float:
             sac += 1.0
 
     return float(sac)
+
+
+def _fn_lambda_t(S_t: np.ndarray | float, lambda_0: float, beta1: float, S_s: float) -> np.ndarray:
+    """Colonization rate `lambda(S)`: `=lambda_0` at `S=0`, decaying to `0`
+    at `S=S_s` (a saturating island); `=0` for `S>S_s`. Internal helper for
+    `fn_delta_t`."""
+    S_t = np.asarray(S_t, dtype=float)
+    lambda_t = (
+        lambda_0
+        * (np.exp(-((S_t / S_s) ** (beta1 * lambda_0))) - np.exp(-1.0))
+        / (1.0 - np.exp(-1.0))
+    )
+    lambda_s = 0.0
+    e = S_t <= S_s
+    return np.where(e, lambda_t, lambda_s)
+
+
+def _fn_mu_long_t(S_t: np.ndarray | float, mu_s: float, beta2: float, S_s: float) -> np.ndarray:
+    """Long-term extinction rate `mu^long(S)`: `=0` at `S=0`, rising to
+    `mu_s` at `S=S_s`; `=mu_s` for `S>S_s`. Internal helper for
+    `fn_delta_t`."""
+    S_t = np.asarray(S_t, dtype=float)
+    mu_long_t = mu_s * (np.exp((S_t / S_s) ** (beta2 * mu_s)) - 1.0) / (np.exp(1.0) - 1.0)
+    e = S_t <= S_s
+    return np.where(e, mu_long_t, mu_s)
+
+
+def _fn_mu_short_t(
+    S_t: np.ndarray | float,
+    lambda_t: np.ndarray | float,
+    beta3: float,
+    beta4: float,
+    S_s: float,
+) -> np.ndarray:
+    """Short-term extinction rate `mu^short(S) = beta3*lambda(S)*exp(-beta4*S)`
+    -- proportional to the colonization rate (recently-arrived species are
+    more extinction-prone); `=0` for `S>S_s`. Internal helper for
+    `fn_delta_t`."""
+    S_t = np.asarray(S_t, dtype=float)
+    mu_short_t = beta3 * lambda_t * np.exp(-beta4 * S_t)
+    eta_s = 0.0
+    e = S_t <= S_s
+    return np.where(e, mu_short_t, eta_s)
+
+
+def fn_delta_t(
+    S_t: np.ndarray | float,
+    lambda_0: float,
+    beta1: float,
+    mu_s: float,
+    beta2: float,
+    beta3: float,
+    beta4: float,
+    S_s: float,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Net species-richness growth rate `delta(S) = lambda(S) - mu(S)` of a
+    colonization-extinction equilibrium model (the theory of island
+    biogeography, TIB), where `mu(S) = mu^long(S) + mu^short(S)`:
+
+    - `lambda(S)`: colonization rate, `=lambda_0` at `S=0`, decaying to
+      `0` at the saturation richness `S=S_s`.
+    - `mu^long(S)`: long-term extinction rate, `=0` at `S=0`, rising to
+      `mu_s` at `S=S_s`.
+    - `mu^short(S) = beta3*lambda(S)*exp(-beta4*S)`: a short-term
+      extinction component proportional to the colonization rate
+      (recently-arrived species are more extinction-prone).
+
+    `S_t` is clipped to `S_t = max(0, S_t)` before evaluation, so the
+    ODE/root-finder driving `dS/dt = delta(S)` never evaluates the model
+    at a negative richness -- this clip protects only this one function
+    evaluation, not the ODE trajectory as a whole (an unclipped `S(t)` can
+    still run negative between evaluations if `delta(S)` stays negative
+    all the way down).
+
+    Returns `(delta_t, lambda_t, mu_long_t, mu_short_t, mu_t)`. Used for
+    equilibrium root-finding (`delta_t == 0`), ODE trajectory integration
+    (`dS/dt = delta_t`), and comparative-statics sweeps over the model
+    parameters.
+
+    Not ported from a standalone MATLAB HSF toolbox library function -- no
+    `hsf/fn_delta_t.m` file exists in `hfs-archive`. The identical model
+    (`fn_lambda_t`, `fn_mu_long_t`, `fn_mu_short_t`, `fn_delta_t`) does
+    appear as local (embedded) functions inside `HSF/16. Exercise
+    Solution/chap16_chap5_exercise2.m`, of which HSF-Notebooks chapter 16c
+    is itself a direct Python port; promoted here from that notebook.
+    """
+    S_t = np.maximum(0.0, np.asarray(S_t, dtype=float))
+    lambda_t = _fn_lambda_t(S_t, lambda_0, beta1, S_s)
+    mu_long_t = _fn_mu_long_t(S_t, mu_s, beta2, S_s)
+    mu_short_t = _fn_mu_short_t(S_t, lambda_t, beta3, beta4, S_s)
+    mu_t = mu_long_t + mu_short_t
+    delta_t = lambda_t - mu_t
+    return delta_t, lambda_t, mu_long_t, mu_short_t, mu_t

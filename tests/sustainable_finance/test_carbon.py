@@ -106,3 +106,33 @@ def test_carbon_budget_compound_reduction_with_gdp_matches_numerical_integral():
     expected, _ = quad(ce, t0, t)
     result = carbon_budget_compound_reduction(t0, t, delta_r, r_minus, ce_t0, g_y=g_y)
     assert np.isclose(result, expected)
+
+
+def test_carbon_budget_compound_reduction_discrete_matches_direct_year_by_year_sum():
+    t0, t, delta_r, r_minus, ce_t0 = 2020, 2050, 0.05, 0.2, 36.0
+
+    years = np.arange(t0, t + 1)
+    expected = np.sum(ce_t0 * (1.0 - r_minus) * (1.0 - delta_r) ** (years - t0))
+    result = carbon_budget_compound_reduction(t0, t, delta_r, r_minus, ce_t0, discrete=True)
+    assert np.isclose(result, expected)
+
+
+def test_carbon_budget_compound_reduction_discrete_with_gdp_matches_direct_year_by_year_sum():
+    t0, t, delta_r, r_minus, ce_t0, g_y = 2020, 2050, 0.07, 0.0, 100.0, 0.03
+
+    years = np.arange(t0, t + 1)
+    decay = (1.0 - delta_r) * (1.0 + g_y)
+    expected = np.sum(ce_t0 * (1.0 - r_minus) * decay ** (years - t0))
+    result = carbon_budget_compound_reduction(
+        t0, t, delta_r, r_minus, ce_t0, g_y=g_y, discrete=True
+    )
+    assert np.isclose(result, expected)
+
+
+def test_carbon_budget_compound_reduction_discrete_and_continuous_disagree_materially():
+    # Documents the real modeling difference the discrete option exists
+    # for -- these are NOT expected to be numerically close.
+    t0, t, delta_r, r_minus, ce_t0 = 2020, 2050, 0.05, 0.0, 36.0
+    continuous = carbon_budget_compound_reduction(t0, t, delta_r, r_minus, ce_t0)
+    discrete = carbon_budget_compound_reduction(t0, t, delta_r, r_minus, ce_t0, discrete=True)
+    assert abs(discrete - continuous) / abs(continuous) > 0.03

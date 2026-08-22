@@ -182,6 +182,31 @@ def gaussian_copula_pdf(u: np.ndarray, corr: np.ndarray) -> np.ndarray:
     return np.exp(-0.5 * quad_form) / np.sqrt(np.linalg.det(corr))
 
 
+def gaussian_copula_pdf_grid(u1: np.ndarray, u2: np.ndarray, rho: float) -> np.ndarray:
+    """Evaluate the bivariate Gaussian copula density on the full
+    outer-product grid ``u1 x u2``. `gaussian_copula_pdf` above takes
+    paired ``(n_obs, 2)`` columns, not a broadcasting row/column pair,
+    so this builds the grid explicitly with `numpy.meshgrid`, flattens
+    it into pairs for `gaussian_copula_pdf`, and reshapes the result
+    back to the grid's shape.
+
+    Not ported from the MATLAB HSF toolbox -- no `.m` file in
+    `hfs-archive` implements this as a function (the toolbox instead
+    relies on MATLAB's implicit column/row broadcasting, e.g.
+    `chap15_copula1.m`'s ``pdfCopulaNormal2(u1, u2, rho)`` with `u1` a
+    column and `u2` a row, which `numpy` does not do for
+    `gaussian_copula_pdf`'s paired-columns API). Promoted from
+    HSF-Notebooks chapter 15a.
+    """
+    u1 = np.asarray(u1, dtype=float)
+    u2 = np.asarray(u2, dtype=float)
+    grid_u1, grid_u2 = np.meshgrid(u1, u2, indexing="ij")
+    u_pairs = np.column_stack([grid_u1.ravel(), grid_u2.ravel()])
+    corr = np.array([[1.0, rho], [rho, 1.0]])
+    z = gaussian_copula_pdf(u_pairs, corr)
+    return z.reshape(grid_u1.shape)
+
+
 def gaussian_copula_conditional_cdf(
     u1: np.ndarray | float, u2: np.ndarray | float, rho: np.ndarray | float
 ) -> np.ndarray:
@@ -691,3 +716,34 @@ def frank_contour(
     )
     u2 = np.where(np.abs(np.imag(u2)) > 0.01, np.nan, np.real(u2))
     return np.where((u2 < 0.0) | (u2 > 1.0), np.nan, u2)
+
+
+def frank_level_curve(u1: np.ndarray, t: np.ndarray | float, theta: np.ndarray) -> np.ndarray:
+    """``u2(u1)`` such that the Frank copula ``C(u1, u2; theta) = t``,
+    from the closed-form inversion of the Frank copula CDF, evaluated on
+    the outer-product grid of `u1` (rows) against `theta` (columns) --
+    `theta` may be a vector of scenarios, broadcasting against `u1` in
+    one call, unlike `frank_contour` above which broadcasts `u1` and
+    `theta` elementwise. Since any copula satisfies ``C(u1, u2) <=
+    min(u1, u2) <= u1`` (its value at ``u2 = 1`` is exactly `u1`, its
+    maximum over `u2`), a solution ``u2`` in ``[0, 1]`` only exists for
+    ``u1 >= t``; below that the log argument goes negative and this
+    returns `nan` for `theta > 0` (matching the level curve's true
+    domain) -- but, unlike `frank_contour`, does *not* additionally
+    clamp results outside ``[0, 1]`` to `nan`, so for `theta < 0` (or
+    `theta` near ``0``) and ``u1 < t`` it can return an out-of-domain
+    value greater than ``1`` rather than `nan`; this is carried over
+    unchanged from the source notebook, which only exercises `u1 >= t`.
+
+    This is the same closed-form as `frank_contour` immediately above
+    (`copula/contourCopulaFrank.m`) -- not re-derived here -- reshaped
+    for grid evaluation over a vector `theta` and without `frank_contour`'s
+    extra domain clamp, matching the source notebook's own
+    implementation exactly. Promoted from HSF-Notebooks chapter 15a.
+    """
+    u1 = np.asarray(u1, dtype=float)[:, None]
+    theta = np.asarray(theta, dtype=float)[None, :]
+    num = (np.exp(-theta * t) - 1.0) * (np.exp(-theta) - 1.0)
+    denom = np.exp(-theta * u1) - 1.0
+    with np.errstate(invalid="ignore"):
+        return -1.0 / theta * np.log(1.0 + num / denom)

@@ -513,6 +513,78 @@ def poisson_binomial_pmf(p: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     return k, poisson_binom.pmf(k, p)
 
 
+def poisson_binomial_pmf_dp(p: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """PMF of the sum of `n` independent Bernoulli(p_i) variables, via the
+    direct O(n^2) DP/convolution recursion (each Bernoulli in turn either
+    shifts the running PMF by one and scales by `p_i`, or leaves it in
+    place scaled by `1 - p_i`).
+
+    Not ported from the MATLAB HSF toolbox -- no `.m` file in `hfs-archive`
+    implements this. Promoted from HSF-Notebooks chapter 16d as an
+    independent reference implementation, kept deliberately separate from
+    `poisson_binomial_pmf` -- see that notebook's three-way cross-check of
+    DP/DFT/brute-force methods against the packaged function.
+    """
+    p = np.asarray(p, dtype=float)
+    pmf = np.array([1.0])
+    for pi in p:
+        pmf = np.concatenate([pmf, [0.0]]) * (1 - pi) + np.concatenate([[0.0], pmf]) * pi
+    k = np.arange(len(pmf))
+    return k, pmf
+
+
+def poisson_binomial_pmf_dft(p: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """PMF of the sum of `n` independent Bernoulli(p_i) variables, via a
+    DFT of the characteristic function (Fernandez & Williams (2010) /
+    the `poibin` package's "DFT-CF" method).
+
+    Not ported from the MATLAB HSF toolbox -- no `.m` file in `hfs-archive`
+    implements this. Promoted from HSF-Notebooks chapter 16d as an
+    independent reference implementation, kept deliberately separate from
+    `poisson_binomial_pmf` -- see that notebook's three-way cross-check of
+    DP/DFT/brute-force methods against the packaged function.
+    """
+    p = np.asarray(p, dtype=float)
+    n = len(p)
+    length = n + 1
+    ell = np.arange(length)
+    omega = 2 * np.pi * ell / length
+    exp_iw = np.exp(1j * omega)
+    chi = np.prod(1 - p[:, None] + p[:, None] * exp_iw[None, :], axis=0)
+    # np.fft.fft(chi)/length matches the DFT-CF inversion formula's sign
+    # convention (pmf[k] = (1/length) * sum_l chi(omega_l) * exp(-i*omega_l*k));
+    # np.fft.ifft uses the opposite sign and gives the *reversed* PMF instead --
+    # verified against brute-force enumeration.
+    pmf = np.real(np.fft.fft(chi)) / length
+    k = np.arange(length)
+    return k, pmf
+
+
+def poisson_binomial_pmf_brute_force(p: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """PMF of the sum of `n` independent Bernoulli(p_i) variables, via
+    exact brute-force enumeration over all 2^n outcomes -- feasible only
+    for small `n`; intended purely as an independent cross-check of
+    `poisson_binomial_pmf_dp`/`poisson_binomial_pmf_dft`, not for general
+    use.
+
+    Not ported from the MATLAB HSF toolbox -- no `.m` file in `hfs-archive`
+    implements this. Promoted from HSF-Notebooks chapter 16d as an
+    independent reference implementation, kept deliberately separate from
+    `poisson_binomial_pmf` -- see that notebook's three-way cross-check of
+    DP/DFT/brute-force methods against the packaged function.
+    """
+    from itertools import product
+
+    p = np.asarray(p, dtype=float)
+    n = len(p)
+    pmf = np.zeros(n + 1)
+    for outcome_tuple in product([0, 1], repeat=n):
+        outcome = np.array(outcome_tuple)
+        prob = np.prod(np.where(outcome == 1, p, 1 - p))
+        pmf[outcome.sum()] += prob
+    return np.arange(n + 1), pmf
+
+
 # ---------------------------------------------------------------------------
 # Order statistics
 # ---------------------------------------------------------------------------

@@ -1,10 +1,15 @@
 """ESG-tilted portfolio construction: the "implied ESG beta" a
 minimum-variance investor effectively targets (Roncalli's ESG beta-star
-model), the resulting minimum-variance-plus-ESG-tilt portfolio, and
-Pedersen, Fitzgibbons & Pomorski (2021)'s ESG-efficient-frontier portfolio.
+model), the resulting minimum-variance-plus-ESG-tilt portfolio,
+Pedersen, Fitzgibbons & Pomorski (2021)'s ESG-efficient-frontier
+portfolio, ESG score-bucket transition/turnover matrices, and a Monte
+Carlo power-law-weighted-portfolio-score simulation.
 
 Ported from HSF toolbox `hsf/{compute_esg_beta_star,
 compute_esg_minimum_variance,compute_pedersen_portfolio}.m`.
+`esg_transition_matrix` and `mc_weighted_score` have no standalone `.m`
+source in `hfs-archive` -- see their own docstrings -- and are instead
+promoted from HSF-Notebooks chapter 16a.
 
 Translation notes:
 
@@ -28,6 +33,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import numpy as np
+from scipy.stats import multivariate_normal, norm
 
 
 def esg_beta_star(
@@ -251,3 +257,121 @@ def pedersen_portfolio(
         sr_w=all_sr_w,
         c_x_y=c_x_y,
     )
+
+
+def _rectangle_prob(mvn: multivariate_normal, xl: np.ndarray, xu: np.ndarray) -> float:
+    """`P(xl[0]<X<xu[0], xl[1]<Y<xu[1])` for a bivariate distribution `mvn`,
+    by inclusion-exclusion on the joint CDF:
+    `P(a<X<b,c<Y<d) = F(b,d) - F(a,d) - F(b,c) + F(a,c)`."""
+    return float(
+        mvn.cdf([xu[0], xu[1]])
+        - mvn.cdf([xl[0], xu[1]])
+        - mvn.cdf([xu[0], xl[1]])
+        + mvn.cdf([xl[0], xl[1]])
+    )
+
+
+@dataclass
+class EsgTransitionMatrixResult:
+    """ESG score-bucket transition probabilities `p` (`p[j, k]` = the
+    probability of moving from bucket `j` to bucket `k` on remeasurement),
+    the equilibrium bucket probabilities `cdf`, the per-bucket turnover
+    `to = 1 - diag(p)`, and the aggregate (probability-weighted) turnover
+    `to_system`."""
+
+    p: np.ndarray
+    cdf: np.ndarray
+    to: np.ndarray
+    to_system: float
+
+
+def esg_transition_matrix(s: np.ndarray, sigma: float) -> EsgTransitionMatrixResult:
+    """The bucket-to-bucket transition probability matrix and turnover of
+    an ESG score-bucket scheme with cut points `s` (`K = 1 + len(s)`
+    buckets, delimited by `-inf = s_0 < s_1 < ... < s_{K-1} < s_K = +inf`),
+    under a "true" ESG factor `g1 ~ N(0, 1)` and a noisy remeasurement
+    `g2 = g1 + sigma*eps` (`eps ~ N(0, 1)` independent of `g1`), so
+    `(g1, g2)` is bivariate normal with `Cov(g1, g2) = 1` and
+    `Var(g2) = 1 + sigma**2`.
+
+    `p[j, k] = P(g2 in bucket k | g1 in bucket j)` is computed via the
+    two-sided bivariate-normal rectangle probability (`_rectangle_prob`).
+    `to = 1 - diag(p)` is the per-bucket turnover (probability of *not*
+    staying in the same bucket); `to_system = sum(cdf * to)` is the
+    overall, probability-weighted turnover.
+
+    Not ported from a standalone MATLAB HSF toolbox library function --
+    no `hsf/esg_transition_matrix.m` file exists in `hfs-archive`. The
+    identical algorithm does appear as a local (embedded) function inside
+    `HSF/16. Exercise Solution/chap16_chap2_exercise4.m`, of which
+    HSF-Notebooks chapter 16a is itself a direct Python port; promoted
+    here from that notebook.
+    """
+    s = np.asarray(s, dtype=float)
+    k = 1 + s.shape[0]
+    s_ext = np.sort(np.concatenate([[-np.inf], s, [np.inf]]))
+
+    p = np.zeros((k, k))
+    cdf = np.zeros(k)
+    mvn = multivariate_normal(
+        mean=[0.0, 0.0], cov=[[1.0, 1.0], [1.0, 1.0 + sigma**2]], allow_singular=True
+    )
+
+    for j in range(k):
+        cdf1 = norm.cdf(s_ext[j + 1]) - norm.cdf(s_ext[j])
+        cdf[j] = cdf1
+        for kk in range(k):
+            cdf2 = _rectangle_prob(mvn, [s_ext[j], s_ext[kk]], [s_ext[j + 1], s_ext[kk + 1]])
+            p[j, kk] = cdf2 / cdf1
+
+    to = 1.0 - np.diag(p)
+    to_system = float(np.sum(cdf * to))
+
+    return EsgTransitionMatrixResult(p=p, cdf=cdf, to=to, to_system=to_system)
+
+
+def mc_weighted_score(
+    alpha_vec: np.ndarray,
+    nS: int,
+    n: int,
+    rng: np.random.Generator,
+    g1: np.ndarray | None = None,
+    g2: np.ndarray | None = None,
+) -> np.ndarray:
+    """Monte Carlo simulation of `S(x) = sum(x*s)`, the score of a
+    power-law-weighted portfolio, for `nS` draws at once (vectorized over
+    the draw axis), for each power-law exponent in `alpha_vec`.
+
+    Portfolio weights `x` are built by drawing `n` iid uniforms `u1`,
+    raising them to the power `1/alpha` (a power-law reweighting of an
+    otherwise-uniform allocation), and normalizing to sum to 1.
+
+    - `g1=None` (default): `u1` and the per-asset scores `s` are drawn
+      fresh and independent of one another (`s` uncorrelated with the
+      weights `x`).
+    - `g1` given: `u1 = Phi(g1)` (so the weights are tilted from the
+      standard-normal factor `g1`) and `s = g2` -- letting `g1`/`g2` be
+      correlated standard normals induces a correlation between the
+      weights and the scores.
+
+    Not ported from a standalone MATLAB HSF toolbox library function --
+    no `.m` file in `hfs-archive` implements this as a reusable function.
+    `HSF/16. Exercise Solution/chap16_chap2_exercise4.m` performs the same
+    Monte Carlo computation inline, in per-scenario loops (Questions
+    2.e/2.g/2.h); HSF-Notebooks chapter 16a factored that inline
+    computation into this function, and it is promoted here from that
+    notebook.
+    """
+    if g1 is None:
+        u1 = rng.random((n, nS))
+        s = rng.standard_normal((n, nS))
+    else:
+        u1 = norm.cdf(g1)
+        s = g2
+
+    s_x = np.empty((nS, len(alpha_vec)))
+    for j, a in enumerate(alpha_vec):
+        v = u1 ** (1.0 / a)
+        x = v / v.sum(axis=0, keepdims=True)
+        s_x[:, j] = (x * s).sum(axis=0)
+    return s_x

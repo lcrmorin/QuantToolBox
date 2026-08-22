@@ -109,6 +109,28 @@ def hazard_markov_generator(t: np.ndarray | float, lambda_matrix: np.ndarray) ->
     return f / s
 
 
+def build_climate_stressed_generator(lambda_matrix: np.ndarray, beta: float) -> np.ndarray:
+    """Climate-stressed variant of a continuous-time Markov generator
+    `lambda_matrix` (K x K), scaling the default-column (K-th, i.e. the
+    last column) entries by a stress multiplier `beta` and re-balancing
+    the diagonal so every row still sums to zero (a valid generator
+    matrix): ``stress = beta * Lambda[:, K-1]``,
+    ``Lambda_climate[:, K-1] = Lambda[:, K-1] + stress``,
+    ``Lambda_climate = Lambda_climate - diag(stress)``.
+
+    Not ported from the MATLAB HSF toolbox -- no `.m` file in
+    `hfs-archive` implements this. Promoted from HSF-Notebooks chapter
+    13f.
+    """
+    lambda_matrix = np.asarray(lambda_matrix, dtype=float)
+    k = lambda_matrix.shape[1]
+    stress = beta * lambda_matrix[:, k - 1]
+    lambda_climate = lambda_matrix.copy()
+    lambda_climate[:, k - 1] = lambda_climate[:, k - 1] + stress
+    lambda_climate = lambda_climate - np.diag(stress)
+    return lambda_climate
+
+
 def _discretize_bin(t: np.ndarray, edges: np.ndarray) -> np.ndarray:
     """0-based bin index of each `t` among `edges` (bin k covers
     ``[edges[k], edges[k+1])``); values below `edges[0]` clamp to bin 0."""
