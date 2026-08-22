@@ -259,15 +259,41 @@ def pedersen_portfolio(
     )
 
 
+def _mvn_cdf_2d(mvn: multivariate_normal, x: float, y: float) -> float:
+    """`P(X<=x, Y<=y)` for a bivariate distribution `mvn`, handling
+    `x`/`y = +-inf` explicitly rather than passing them through to
+    `mvn.cdf`.
+
+    Some `scipy` versions' bivariate-normal CDF (a Genz-algorithm-based
+    numerical integration, not a closed form) return `nan` rather than
+    the mathematically exact 0/1 when an argument is infinite -- observed
+    on CI (a different, unpinned scipy version than this dev environment)
+    even though `mvn.cdf([-inf, y])` cleanly returns 0.0 locally. Since
+    `P(X<=-inf, ...) = 0` and `P(X<=inf, Y<=y) = P(Y<=y)` (the marginal)
+    always hold exactly regardless of correlation, computing those cases
+    directly sidesteps the numerical routine entirely instead of relying
+    on it to handle an edge case some versions apparently mishandle.
+    """
+    if x == -np.inf or y == -np.inf:
+        return 0.0
+    if x == np.inf and y == np.inf:
+        return 1.0
+    if x == np.inf:
+        return float(norm.cdf(y, loc=mvn.mean[1], scale=np.sqrt(mvn.cov[1, 1])))
+    if y == np.inf:
+        return float(norm.cdf(x, loc=mvn.mean[0], scale=np.sqrt(mvn.cov[0, 0])))
+    return float(mvn.cdf([x, y]))
+
+
 def _rectangle_prob(mvn: multivariate_normal, xl: np.ndarray, xu: np.ndarray) -> float:
     """`P(xl[0]<X<xu[0], xl[1]<Y<xu[1])` for a bivariate distribution `mvn`,
     by inclusion-exclusion on the joint CDF:
     `P(a<X<b,c<Y<d) = F(b,d) - F(a,d) - F(b,c) + F(a,c)`."""
-    return float(
-        mvn.cdf([xu[0], xu[1]])
-        - mvn.cdf([xl[0], xu[1]])
-        - mvn.cdf([xu[0], xl[1]])
-        + mvn.cdf([xl[0], xl[1]])
+    return (
+        _mvn_cdf_2d(mvn, xu[0], xu[1])
+        - _mvn_cdf_2d(mvn, xl[0], xu[1])
+        - _mvn_cdf_2d(mvn, xu[0], xl[1])
+        + _mvn_cdf_2d(mvn, xl[0], xl[1])
     )
 
 
