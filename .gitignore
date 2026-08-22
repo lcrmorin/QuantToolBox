@@ -27,3 +27,4 @@ htmlcov/
 *.mat
 data/raw/
 site/
+_to_delete/
