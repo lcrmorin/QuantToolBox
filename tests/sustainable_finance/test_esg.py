@@ -17,12 +17,28 @@ def _notebook_esg_transition_matrix(s, sigma):
     # `esg_transition_matrix`/`rectangle_prob` (notebook 16a, cell 28),
     # kept independent of quanttoolbox's implementation so it serves as a
     # genuine cross-check rather than testing the code against itself.
+    def mvn_cdf(mvn, x, y):
+        # Some scipy versions' bivariate-normal CDF returns nan (not the
+        # mathematically exact 0/1) for an infinite argument -- observed on
+        # CI. Handled directly here too (independently of quanttoolbox's own
+        # equivalent fix) so this stays a genuine, self-contained oracle
+        # rather than importing the fix from the code under test.
+        if x == -np.inf or y == -np.inf:
+            return 0.0
+        if x == np.inf and y == np.inf:
+            return 1.0
+        if x == np.inf:
+            return norm.cdf(y, loc=mvn.mean[1], scale=np.sqrt(mvn.cov[1, 1]))
+        if y == np.inf:
+            return norm.cdf(x, loc=mvn.mean[0], scale=np.sqrt(mvn.cov[0, 0]))
+        return mvn.cdf([x, y])
+
     def rectangle_prob(mvn, xl, xu):
         return (
-            mvn.cdf([xu[0], xu[1]])
-            - mvn.cdf([xl[0], xu[1]])
-            - mvn.cdf([xu[0], xl[1]])
-            + mvn.cdf([xl[0], xl[1]])
+            mvn_cdf(mvn, xu[0], xu[1])
+            - mvn_cdf(mvn, xl[0], xu[1])
+            - mvn_cdf(mvn, xu[0], xl[1])
+            + mvn_cdf(mvn, xl[0], xl[1])
         )
 
     K = 1 + len(s)
