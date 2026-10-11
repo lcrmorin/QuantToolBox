@@ -60,7 +60,8 @@ class WeitzmanResult:
     `delta_w` is the expected welfare gain of the price instrument over
     the quantity instrument, and `delta_w_analytical` is its closed form
     (Weitzman's classic result: the price instrument dominates in
-    expectation iff `beta_c > beta_b`)."""
+    expectation iff `beta_c > beta_b`).
+    """
 
     epsilon_i: np.ndarray
     p_i: np.ndarray

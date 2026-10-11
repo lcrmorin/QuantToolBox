@@ -33,7 +33,8 @@ from scipy.linalg import cho_factor, cho_solve
 @dataclass
 class SplineCoefficients:
     """Cubic spline in piecewise form: on [x[i], x[i+1]),
-    s(x) = c0[i] + c1[i]*z + c2[i]*z^2/2 + c3[i]*z^3/6, z = x - x[i]."""
+    s(x) = c0[i] + c1[i]*z + c2[i]*z^2/2 + c3[i]*z^3/6, z = x - x[i].
+    """
 
     x: np.ndarray
     c0: np.ndarray

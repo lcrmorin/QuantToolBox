@@ -91,7 +91,8 @@ def _jump_univariate_params(
     """Univariate jump->mixture transform matching jump_skewness.m /
     jump_univariate_thresholding.m's convention (sigma1/sigma2 as std
     devs, with sigma2 combining variances in quadrature rather than
-    Sigma1*dt + Sigma_tilde -- see those originals)."""
+    Sigma1*dt + Sigma_tilde -- see those originals).
+    """
     pi1 = 1 - lambda_ * dt
     mu1 = mu_bar * dt
     sigma1 = sigma_bar * np.sqrt(dt)

@@ -1,44 +1,21 @@
-"""Mean-variance, minimum-variance, and most-diversified portfolio construction.
+"""Mean-variance, minimum-variance, and most-diversified portfolios.
 
-Ported from QuantToolBox/rpb/{compute_mvo_portfolio,compute_minvar_portfolio,
-compute_mdp_portfolio,compute_mdp_objective_function}.m and
-QuantToolBox/mloapa/{compute_MDP_ADMM,compute_MinVar_ADMM1,
-compute_MinVar_ADMM2}.m.
+Original: QuantToolBox/rpb/{compute_mvo_portfolio,compute_minvar_portfolio,
+compute_mdp_portfolio,compute_mdp_objective_function}.m. The alternative
+solvers in mloapa/{compute_MDP_ADMM,compute_MinVar_ADMM1,compute_MinVar_ADMM2}.m
+are consolidated into the same portfolio interfaces.
 
-Consolidation notes:
+Mean-variance optimization uses ``optim.quadprog.solve_qp``. Its ``gamma``
+parameter weights expected return relative to variance: zero gives the
+minimum-variance portfolio; larger values give return more weight.
+Target matching bisects on this parameter. The source's separate boundary
+and search limits are retained: ``gamma_max=100`` for boundary checks and
+``gamma_bracket=(0, 10)`` for bisection. Targets requiring an intermediate
+gamma above the search bracket can therefore return NaN weights.
 
-- ``mvo_portfolio``/``minvar_portfolio`` route through
-  ``quanttoolbox.optim.quadprog.solve_qp`` (see that module's docstring for
-  why this eliminates the original's separate quadprog_lasso/ridge/etc.
-  variable-splitting machinery); ``minvar_portfolio`` is literally
-  ``mvo_portfolio`` with mu=0.
-- ``mvo_frontier`` evaluates at a list of risk-aversion (gamma) values,
-  covering the original's "gamma-problem" mode (``problem=0``).
-  ``mvo_target_portfolio`` covers the "mu-problem"/"sigma-problem"
-  target-matching modes (``problem=1``/``problem=2``): for each target
-  expected-return or target volatility, it bisects on gamma (via
-  ``quanttoolbox.optim.bisection.bisection``) until ``mvo_portfolio``'s
-  achieved return/volatility hits that target, exactly mirroring
-  ``compute_mvo_portfolio.m``'s three-branch structure (boundary cases at
-  gamma=0/gamma=100, bisection in between over gamma in [0, 10] by
-  default -- both bounds preserved as separate, independently
-  configurable parameters, matching a real quirk in the original: the
-  *achievability* check against the "infinite risk aversion" case uses
-  gamma=100, but the interior bisection search is only ever bracketed to
-  [0, 10], so a target only reachable at a gamma between 10 and 100 will
-  come back as unreachable (NaN), exactly as the MATLAB source does. See
-  ``docs/matlab_bugs_found.md`` for a related, genuine bug this surfaced
-  in one of the original's own example scripts.)
-- ``mdp_portfolio`` (most diversified portfolio) has a genuinely nonlinear
-  objective (log(portfolio vol) - log(weighted-avg individual vol)), so it
-  uses ``scipy.optimize.minimize`` (SLSQP) rather than ``solve_qp`` --
-  matching the original's use of ``fmincon`` rather than ``quadprog``.
-  ``mloapa/compute_MDP_ADMM.m`` (an alternative ADMM-based MDP solver) is
-  not separately ported since SLSQP solves the same small nonlinear
-  program directly and reliably.
-- ``mloapa/compute_MinVar_ADMM{1,2}.m`` are alternative ADMM solvers for
-  the same minimum-variance QP that ``solve_qp`` already solves directly;
-  not separately ported.
+Most-diversified portfolios use SLSQP for the nonlinear diversification
+objective. See ``docs/migration_map.md`` for source mappings and
+``docs/matlab_bugs_found.md`` for known source issues.
 """
 
 from __future__ import annotations
@@ -54,6 +31,8 @@ from quanttoolbox.optim.quadprog import solve_qp
 
 @dataclass
 class PortfolioResult:
+    """Portfolio weights, expected return, and volatility."""
+
     weights: np.ndarray
     expected_return: float
     volatility: float
@@ -61,6 +40,8 @@ class PortfolioResult:
 
 @dataclass
 class MVOTargetResult(PortfolioResult):
+    """Target-matched portfolio with its return-weight parameter, gamma."""
+
     gamma: float
 
 
@@ -113,8 +94,9 @@ def mvo_frontier(
     gamma_values: np.ndarray,
     **kwargs,
 ) -> list[PortfolioResult]:
-    """Evaluate the mean-variance frontier at each risk-aversion value in
-    gamma_values (the "gamma-problem" mode of compute_mvo_portfolio.m).
+    """Evaluate the frontier at each return-weight value in ``gamma_values``.
+
+    This is the "gamma-problem" mode of compute_mvo_portfolio.m.
 
     See ``mvo_target_portfolio`` for the mu-problem/sigma-problem
     target-matching modes.
@@ -138,10 +120,11 @@ def mvo_target_portfolio(
     gamma_bracket: tuple[float, float] = (0.0, 10.0),
     gamma_max: float = 100.0,
 ) -> list[MVOTargetResult]:
-    """Target-matching mean-variance portfolios: for each value in
-    ``targets``, find the risk-aversion gamma whose ``mvo_portfolio``
-    solution achieves that target expected return (``problem="mu"``) or
-    that target volatility (``problem="sigma"``), via bisection on gamma.
+    """Match target portfolio returns or volatilities by bisection on gamma.
+
+    For each value in ``targets``, find the return-weight parameter whose
+    ``mvo_portfolio`` solution achieves the expected return (``problem="mu"``)
+    or volatility (``problem="sigma"``).
 
     Original: rpb/compute_mvo_portfolio.m (mu-problem/problem=1 and
     sigma-problem/problem=2 branches), via
@@ -161,12 +144,10 @@ def mvo_target_portfolio(
       return returns that portfolio directly; otherwise gamma is bisected
       within ``gamma_bracket``.
 
-    Note the original's own quirk, preserved here: the boundary checks use
-    ``gamma_max`` (100 by default) but the bisection search itself is only
-    ever bracketed to ``gamma_bracket`` ((0, 10) by default) -- so a target
-    only reachable at a gamma between the two is misreported as
-    unreachable. See the module docstring and
-    ``docs/matlab_bugs_found.md`` for more.
+    Boundary checks use ``gamma_max`` (100 by default), while bisection
+    uses ``gamma_bracket`` ((0, 10) by default). A target requiring gamma
+    above the search bracket can be reported as unreachable even if it
+    passes the boundary checks. This behavior is retained from the source.
     """
     if problem not in ("mu", "sigma"):
         raise ValueError('problem must be "mu" or "sigma"')

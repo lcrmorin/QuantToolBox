@@ -1,14 +1,18 @@
 """Tests for quanttoolbox.bond.pricing."""
 
 import numpy as np
+import pytest
 
 from quanttoolbox.bond.pricing import (
+    bond_convexity,
+    bond_duration,
     bond_portfolio_quadratic_form,
     bond_portfolio_quadratic_form_vs_benchmark,
     bond_price,
     bond_ytm,
     coupon_yield,
 )
+from quanttoolbox.config import BisectionConfig
 
 
 def test_bond_price_zero_coupon_continuous_matches_closed_form():
@@ -192,3 +196,135 @@ def test_bond_portfolio_quadratic_form_vs_benchmark_defaults_star_to_zero():
         b=b,
     )
     assert np.isfinite(result.qf)
+
+
+@pytest.mark.parametrize("method", [1, 2])
+@pytest.mark.parametrize("rate", [-0.8, -0.02, 0.0, 0.04, 2.5])
+def test_yield_recovers_closed_form_zero_coupon(method, rate):
+    price = 100 * (np.exp(-3 * rate) if method == 1 else (1 + rate) ** -3)
+    actual = bond_ytm(3, [100], price, BisectionConfig(tol=1e-12), method)
+    assert actual == pytest.approx(rate, abs=1e-11)
+
+
+@pytest.mark.parametrize("method", [1, 2])
+def test_yield_handles_immediate_payment_and_fractional_times(method):
+    times = np.array([0, 0.25, 1.5, 7.75])
+    flows = np.array([7, 0, 3, 103])
+    price = bond_price(times, flows, -0.015, method)
+    actual = bond_ytm(times, flows, price, BisectionConfig(tol=1e-12), method)
+    assert actual == pytest.approx(-0.015, abs=1e-11)
+
+
+def test_yield_search_does_not_overflow_for_long_maturity():
+    # The initial negative-rate bracket would overflow direct price evaluation.
+    price = 100 * np.exp(10)
+    assert bond_ytm(1000, [100], price) == pytest.approx(-0.01, abs=1e-5)
+
+
+@pytest.mark.parametrize(
+    "times,flows,rate,method,match",
+    [
+        ([], [], 0.03, 1, "nonempty"),
+        ([1, 2], [100], 0.03, 1, "matching"),
+        ([[1], [2]], [5, 105], 0.03, 1, "1-D"),
+        ([-1], [100], 0.03, 1, "nonnegative"),
+        ([np.nan], [100], 0.03, 1, "finite"),
+        ([1], [np.inf], 0.03, 1, "finite"),
+        ([1], [100], np.nan, 1, "finite scalar"),
+        ([1], [100], [0.03], 1, "finite scalar"),
+        ([1], [100], -1, 2, "greater than -1"),
+        ([1], [100], 0.03, 3, "method"),
+    ],
+)
+def test_price_rejects_invalid_inputs(times, flows, rate, method, match):
+    with pytest.raises(ValueError, match=match):
+        bond_price(times, flows, rate, method)
+
+
+@pytest.mark.parametrize(
+    "times,flows,price,match",
+    [
+        ([1, 2], [-5, 105], 100, "nonnegative"),
+        ([0], [100], 100, "future"),
+        ([1], [0], 100, "future"),
+        ([0, 1], [10, 100], 10, "price"),
+        ([1], [100], 0, "price"),
+        ([1], [100], np.inf, "price"),
+    ],
+)
+def test_yield_rejects_nonunique_or_impossible_inputs(times, flows, price, match):
+    with pytest.raises(ValueError, match=match):
+        bond_ytm(times, flows, price)
+
+
+@pytest.mark.parametrize(
+    "config",
+    [
+        BisectionConfig(tol=0),
+        BisectionConfig(tol=np.nan),
+        BisectionConfig(max_iters=0),
+        BisectionConfig(max_iters=1.5),
+    ],
+)
+def test_yield_rejects_invalid_solver_configuration(config):
+    with pytest.raises(ValueError, match="config"):
+        bond_ytm(5, [100], 90, config)
+
+
+def test_yield_reports_nonconvergence():
+    with pytest.raises(RuntimeError, match="converge"):
+        bond_ytm([1, 5], [5, 105], 90, BisectionConfig(tol=1e-14, max_iters=1), 2)
+
+
+def test_annual_yield_reports_unrepresentable_boundary():
+    with pytest.raises(RuntimeError, match="too close to -1"):
+        bond_ytm(0.001, [1], 100, method=2)
+
+
+def test_price_accepts_signed_flows_and_scalar_maturity():
+    assert bond_price(0, [-10, 30], 0.02) == 20
+    assert bond_price(1, 100, 0.0) == 100
+
+
+def test_price_reports_overflow_but_ignores_zero_payments():
+    with pytest.raises(OverflowError, match="present value"):
+        bond_price(1000, [100], -1)
+    assert bond_price([0, 1000], [100, 0], -1) == 100
+
+
+@pytest.mark.parametrize("method", [1, 2])
+def test_zero_coupon_duration_and_convexity(method):
+    rate, maturity = 0.04, 5
+    divisor = 1 if method == 1 else 1 + rate
+    assert bond_duration(maturity, [100], rate, method) == pytest.approx(maturity / divisor)
+    assert bond_duration(maturity, [100], rate, method, modified=False) == pytest.approx(maturity)
+    expected = maturity**2 if method == 1 else maturity * (maturity + 1) / divisor**2
+    assert bond_convexity(maturity, [100], rate, method) == pytest.approx(expected)
+
+
+@pytest.mark.parametrize("method", [1, 2])
+@pytest.mark.parametrize("rate", [-0.02, 0.05])
+def test_sensitivities_match_numerical_price_derivatives(method, rate):
+    times, flows = [0, 0.5, 1.5, 5], [2, 3, 3, 103]
+    h = 1e-4
+    price = bond_price(times, flows, rate, method)
+    up = bond_price(times, flows, rate + h, method)
+    down = bond_price(times, flows, rate - h, method)
+    assert bond_duration(times, flows, rate, method) == pytest.approx(
+        -(up - down) / (2 * h * price), rel=1e-6
+    )
+    assert bond_convexity(times, flows, rate, method) == pytest.approx(
+        (up - 2 * price + down) / (h**2 * price), rel=1e-6
+    )
+
+
+@pytest.mark.parametrize("function", [bond_duration, bond_convexity])
+@pytest.mark.parametrize("flows", [[-5, 105], [0, 0]])
+def test_sensitivities_reject_invalid_weights(function, flows):
+    with pytest.raises(ValueError, match="nonnegative"):
+        function([1, 2], flows, 0.03)
+
+
+def test_coupon_yield_rejects_zero_price():
+    with pytest.raises(ValueError, match="positive present value"):
+        coupon_yield(1, [0], 0.03)

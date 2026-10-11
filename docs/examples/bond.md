@@ -21,7 +21,7 @@ price = bond_price(t, cash_flows, rate, method=1)
 print("price:", price)
 
 ytm = bond_ytm(t, cash_flows, price)
-print("ytm:", ytm)  # -> recovers 0.037, within the bisection tolerance
+print("ytm:", round(ytm, 5))  # -> recovers 0.037 within the solver tolerance
 
 cy = coupon_yield(t, cash_flows, rate)
 print("coupon yield:", cy)
@@ -31,13 +31,53 @@ Output:
 
 ```text
 price: 105.51453826978027
-ytm: 0.036998748779296875
+ytm: 0.037
 coupon yield: 0.047386834856974556
 ```
 
-`bond_ytm` recovers the original discount rate from the price alone,
-via `optim.bisection.bisection` (see [Building
-blocks](building_blocks.md)) rather than a hand-rolled search loop.
+`bond_ytm` uses a bracketed solver with an expanding search interval. It
+supports negative yields and yields above 100%. Cash flows must be
+nonnegative, with at least one positive payment in the future, so the
+solution is unique. A time-zero payment is allowed, but the supplied price
+must exceed the total paid at time zero. Invalid schedules raise
+`ValueError`; failure to bracket or converge raises `RuntimeError`.
+
+Times are year fractions, and rates are decimals. `method=1` means
+continuous compounding; `method=2` means annual compounding and requires a
+rate greater than -1. Use the same method when pricing and recovering a
+yield. The functions value exactly the payments supplied: they do not
+construct coupon schedules or adjust for accrued interest or settlement.
+
+`coupon_yield` retains the original MATLAB first-payment / price ratio.
+This is an annual current yield only if the first payment is the annual
+coupon, without principal. It does not identify coupons or annualize them.
+
+## Duration and convexity
+
+`bond_duration` returns the sensitivity `-P'/P` by default.
+`modified=False` instead returns the present-value-weighted payment time
+(Macaulay duration for annual compounding). `bond_convexity` returns
+`P''/P`, using the same rate convention as pricing. Both require
+nonnegative cash flows with at least one positive payment.
+
+```python
+from quanttoolbox.bond.pricing import bond_duration, bond_convexity
+
+# A five-year zero-coupon bond at a 4% annually compounded yield.
+duration = bond_duration(5.0, [100.0], 0.04, method=2)
+convexity = bond_convexity(5.0, [100.0], 0.04, method=2)
+print(round(duration, 6))   # 4.807692 = 5 / 1.04
+print(round(convexity, 6))  # 27.736686 = 5 * 6 / 1.04**2
+
+# Approximate relative price change for a 10-basis-point yield increase.
+dr = 0.001
+relative_change = -duration * dr + 0.5 * convexity * dr**2
+```
+
+With continuous compounding, duration is the weighted payment time and
+convexity is the weighted squared payment time. The second-order price
+approximation is useful for small yield changes, not a replacement for
+repricing large moves.
 
 ## Sector-level modified-duration/DTS risk
 

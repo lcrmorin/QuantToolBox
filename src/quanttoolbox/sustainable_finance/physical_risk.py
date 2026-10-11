@@ -1,53 +1,21 @@
-"""Physical/geophysical-science formulas used in this book's physical-risk
-chapters -- as distinct from `sustainable_finance.esg` (ESG portfolio
-scoring) and `sustainable_finance.climate` (the DICE economic-climate
-model). Covers a bistable ice-albedo energy-balance model
-(`ice_albedo`/`ice_albedo_tau`), IPCC-style climate-model grid horizontal
-resolution (`compute_horizontal_resolution`, `resolution_to_angular`), and
-the closed-form polar-aspect Wiechel map projection (`wiechel_forward`).
+"""Ice-albedo dynamics, climate-grid resolution, and the Wiechel projection.
 
-Port-status note (checked directly against `hfs-archive`, since none of
-these four functions live in the `hsf/` toolbox library folder tracked by
-`docs/migration_map.md`):
+Sources:
 
-- `ice_albedo`/`ice_albedo_tau` *do* have a MATLAB antecedent -- an inline
-  local function (byte-identical across all five copies), not a
-  standalone toolbox file: `HSF/8. Economic Modeling/chap8_physic4{d,e,h,
-  i,j}.m`. Promoted here from HSF-Notebooks chapter 08c's own NumPy
-  translation of that inline formula.
-- `compute_horizontal_resolution` *does* have a MATLAB antecedent: `HSF/12.
-  Physical Risk/compute_horizontal_resolution.m`, called from
-  `chap12_grid2e.m`/`chap12_grid3{a,b,c,d}.m`. Promoted here from
-  HSF-Notebooks chapter 12c's own translation, which reproduces the same
-  formula (verified against the `.m` source).
-- `resolution_to_angular` and `wiechel_forward` have no MATLAB antecedent
-  at all: `resolution_to_angular`'s three-notation lookup is original to
-  the notebook, and the one MATLAB reference to Wiechel
-  (`HSF/12. Physical Risk/chap12_coordinate6.m`) only calls MATLAB Mapping
-  Toolbox's built-in `axesm('wiechel', ...)` -- no formula is implemented
-  in the archive. Not ported from the MATLAB HSF toolbox -- no `.m` file
-  in `hfs-archive` implements this. Promoted from HSF-Notebooks chapter
-  12d/12b respectively.
+- ``ice_albedo`` and ``ice_albedo_tau``: local functions in
+  ``HSF/8. Economic Modeling/chap8_physic4{d,e,h,i,j}.m``, adapted via
+  HSF-Notebooks chapter 08c.
+- ``compute_horizontal_resolution``:
+  ``HSF/12. Physical Risk/compute_horizontal_resolution.m``, via chapter 12c.
+- ``resolution_to_angular`` and ``wiechel_forward``: notebook implementations
+  from chapters 12d and 12b; no corresponding formula is implemented in the
+  MATLAB archive.
 
-Translation notes:
-
-- `ice_albedo`/`ice_albedo_tau` keep the notebook's own vectorization
-  choices verbatim: `ice_albedo` uses a two-level `np.where` (rather than
-  MATLAB's three-mask sum) and clips the `(T_warm - T_s)` base to
-  non-negative before raising to the (possibly non-integer) power `eta`,
-  avoiding `nan`s from a negative base outside the mixed-phase band.
-  `ice_albedo_tau` reshapes any scalar/1-D parameter to a column vector
-  (`_as_column`) when `T_s` is 2-D, exactly matching the notebook's own
-  broadcasting helper -- needed because the calling notebook evaluates the
-  relaxation time at all three temperature branches (columns) across a
-  swept parameter (rows) at once.
-- `compute_horizontal_resolution` hardcodes `length_phi = 111.2` km/deg
-  (i.e. Earth radius `R = 6371` km), matching both the MATLAB `.m` file
-  and the notebook's own derivation to 1 decimal place.
-- `resolution_to_angular` returns `(nan, nan)` for an unrecognized
-  resolution string, matching the notebook's own fallback (used so a
-  `pandas` column of mixed/unknown resolution labels degrades to `NaN`
-  rather than raising).
+The albedo model clips the mixed-phase temperature base to non-negative
+values before exponentiation. For two-dimensional temperatures,
+``ice_albedo_tau`` broadcasts scalar and one-dimensional parameters as
+columns. Horizontal resolution uses 111.2 km per degree, as in the source.
+Unknown resolution labels return ``(nan, nan)``.
 """
 
 from __future__ import annotations
@@ -84,7 +52,8 @@ TRIANGULAR_RESOLUTIONS: dict[str, float] = {
 def _as_column(v: np.ndarray | float, n: int) -> np.ndarray:
     """Reshape a scalar/1-D array of length `n` to an `(n, 1)` column so it
     broadcasts against an `(n, k)` array; anything else passes through
-    unchanged."""
+    unchanged.
+    """
     v = np.asarray(v, dtype=float)
     return v.reshape(n, 1) if v.ndim == 1 and v.shape[0] == n else v
 
@@ -144,7 +113,8 @@ def ice_albedo(
 class IceAlbedoRelaxationResult:
     """Local relaxation timescale `tau` and linearized feedback
     `lambda_` of the ice-albedo model at a given surface temperature (or
-    array of temperatures) -- see `ice_albedo_tau`."""
+    array of temperatures) -- see `ice_albedo_tau`.
+    """
 
     tau: np.ndarray | float
     lambda_: np.ndarray | float
@@ -204,7 +174,8 @@ def ice_albedo_tau(
 class HorizontalResolutionResult:
     """IPCC-style grid-cell horizontal resolution (km) at the equator
     (`r_0`), at 45 degrees latitude (`r_45`), and the latitude-averaged
-    shortcut `r_avg` -- see `compute_horizontal_resolution`."""
+    shortcut `r_avg` -- see `compute_horizontal_resolution`.
+    """
 
     r_0: np.ndarray | float
     r_45: np.ndarray | float
@@ -238,7 +209,8 @@ def compute_horizontal_resolution(
 @dataclass
 class AngularResolution:
     """A grid-resolution label converted to a `(delta_phi, delta_lambda)`
-    degree pair -- see `resolution_to_angular`."""
+    degree pair -- see `resolution_to_angular`.
+    """
 
     delta_phi: float
     delta_lambda: float
@@ -275,7 +247,8 @@ def resolution_to_angular(res: str) -> AngularResolution:
 @dataclass
 class WiechelProjection:
     """Projected planar coordinates `(x, y)` from the polar-aspect
-    Wiechel map projection -- see `wiechel_forward`."""
+    Wiechel map projection -- see `wiechel_forward`.
+    """
 
     x: np.ndarray | float
     y: np.ndarray | float

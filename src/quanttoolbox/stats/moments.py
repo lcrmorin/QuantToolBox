@@ -1,22 +1,14 @@
-"""Sample moments, dispersion, covariance/correlation, and portfolio-overlap measures.
+"""Sample moments, dispersion, covariance, and portfolio-overlap measures.
 
 Ported from QuantToolBox/stats/{skewness_coefficient,kurtosis_coefficient,
 herfindahl_index,mean_absolute_difference,cov2cor,cor2cov,corrx,
 pearson_correlation,active_share,active_share_upper_bound,asynchronous_cov,
-weekly_cov,rolling_correlation,rolling_volatility}.m
+weekly_cov,rolling_correlation,rolling_volatility}.m.
 
-Translation notes:
-
-- Every "column vector output for each column of x" pattern (MATLAB loops
-  over ``cols(x)``) is replaced by native NumPy/pandas vectorized
-  operations (``axis=0`` reductions) instead of an explicit Python loop.
-- ``packr`` (drop rows containing NaN before computing a statistic) is
-  replaced by pandas' NaN-aware reductions (``.mean()``, ``.std()``, ...
-  skip NaN by default) or explicit ``~np.isnan(...)`` masks where a
-  NumPy-only implementation is used.
-- Excess-kurtosis convention: like the original, ``kurtosis`` here returns
-  the *raw* fourth standardized moment (3.0 for a normal distribution),
-  not scipy's default excess-kurtosis convention (which subtracts 3).
+Columns represent variables. Missing-value handling is function-specific:
+column-wise moments omit NaNs separately, while ``corrx`` drops any row
+containing a NaN. ``kurtosis`` returns the raw fourth standardized moment
+(3 for a normal distribution), without subtracting 3.
 """
 
 from __future__ import annotations
@@ -25,7 +17,10 @@ import numpy as np
 
 
 def skewness(x: np.ndarray) -> np.ndarray:
-    """Sample skewness of each column of x. Original: stats/skewness_coefficient.m"""
+    """Compute each column's skewness, omitting NaNs without bias correction.
+
+    Original: stats/skewness_coefficient.m
+    """
     x = np.asarray(x, dtype=float)
     if x.ndim == 1:
         x = x[:, None]
@@ -42,6 +37,9 @@ def skewness(x: np.ndarray) -> np.ndarray:
 
 def kurtosis(x: np.ndarray) -> np.ndarray:
     """Sample kurtosis (raw, not excess) of each column of x.
+
+    NaNs are omitted separately for each column; no bias correction is applied.
+
     Original: stats/kurtosis_coefficient.m
     """
     x = np.asarray(x, dtype=float)
@@ -61,8 +59,11 @@ def kurtosis(x: np.ndarray) -> np.ndarray:
 def herfindahl_index(
     x: np.ndarray, b: np.ndarray | None = None
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray | None]:
-    """Herfindahl index H = sum(x^2), its inverse N = 1/H (effective number of
-    positions), and optionally the same for a benchmark b.
+    """Compute concentration, effective position count, and a benchmark ratio.
+
+    Returns ``(H, N, ratio)``, where ``H = sum(x**2, axis=0)`` and
+    ``N = 1 / H``. If ``b`` is provided, ``ratio = sum(b**2, axis=0) / H``;
+    otherwise, ``ratio`` is ``None``. Weights are used without normalization.
 
     Original: stats/herfindahl_index.m
     """

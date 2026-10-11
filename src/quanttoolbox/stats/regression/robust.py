@@ -278,8 +278,10 @@ def inverse_quantile_m_regression(
     alpha: float,
     config: RobustRegressionConfig | None = None,
 ) -> RobustRegressionResult:
-    """ "Inverse" quantile regression (loss weighted by which side of zero
-    the residual falls on, complementary to quantile_m_regression).
+    """Fit inverse quantile regression.
+
+    Weight the loss by the residual's sign, complementary to
+    ``quantile_m_regression``.
 
     Original: ects/robust_inverse_quantile_regression.m
     """

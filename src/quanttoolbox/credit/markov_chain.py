@@ -1,11 +1,8 @@
-"""Generic discrete-time Markov-chain primitives used across the rating-
-transition chapters (e.g. expected time to migrate into a default or
-target-rating set).
+"""Expected hitting times for discrete-time Markov chains.
 
-Not ported from the MATLAB HSF toolbox -- no `.m` file in `hfs-archive`
-implements this. It's a standard first-step-analysis result (solving the
-linear system for expected hitting times), matching the Python formula
-already used in this book's own notebooks (HSF-Notebooks chapter 2a).
+Adapted from HSF-Notebooks chapter 02a. The implementation solves the
+standard first-step linear system for the expected time to reach a target
+rating set; it is not a MATLAB toolbox port.
 """
 
 from __future__ import annotations

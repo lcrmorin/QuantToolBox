@@ -102,9 +102,7 @@ from scipy.stats import binom, chi2, f, multivariate_normal, ncx2, norm, poisson
 from quanttoolbox.config import NewtonConfig
 from quanttoolbox.stats.multivariate import bvn_cdf, bvt_cdf
 
-# ---------------------------------------------------------------------------
 # Simple distributions (thin scipy.stats wrappers)
-# ---------------------------------------------------------------------------
 
 
 def normal_cdf(x: float | np.ndarray, mu: float = 0.0, sigma: float = 1.0) -> float | np.ndarray:
@@ -187,9 +185,7 @@ def mvn_rvs(mu: np.ndarray, sigma: np.ndarray, n_samples: int, random_state=None
     )
 
 
-# ---------------------------------------------------------------------------
 # GQF #1: distribution of sum(a_i * (Z_i + b_i)^2), Z_i ~ iid N(0,1)
-# ---------------------------------------------------------------------------
 
 
 def gqf1_moments(a: np.ndarray, b: np.ndarray) -> tuple[float, float, float, float]:
@@ -292,9 +288,7 @@ def gqf1_to_gqf2(a: np.ndarray, b: np.ndarray) -> tuple[np.ndarray, np.ndarray, 
     return mu, sigma, q
 
 
-# ---------------------------------------------------------------------------
 # GQF #2: distribution of the quadratic form X'QX for X ~ N(mu, Sigma)
-# ---------------------------------------------------------------------------
 
 
 def gqf2_moments(
@@ -399,9 +393,7 @@ def gqf2_to_gqf1(mu: np.ndarray, sigma: np.ndarray, q: np.ndarray) -> tuple[np.n
     return a, b
 
 
-# ---------------------------------------------------------------------------
 # Beta / lognormal / inverse-Gaussian / Bates (HSF toolbox stats/)
-# ---------------------------------------------------------------------------
 
 
 def beta_cdf(x: np.ndarray, a: float, b: float) -> np.ndarray:
@@ -494,9 +486,7 @@ def bates_pdf(x: np.ndarray, n: int) -> np.ndarray:
     return pdf
 
 
-# ---------------------------------------------------------------------------
 # Poisson-binomial distribution (sum of independent, non-identical Bernoullis)
-# ---------------------------------------------------------------------------
 
 
 def poisson_binomial_pmf(p: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -585,9 +575,7 @@ def poisson_binomial_pmf_brute_force(p: np.ndarray) -> tuple[np.ndarray, np.ndar
     return np.arange(n + 1), pmf
 
 
-# ---------------------------------------------------------------------------
 # Order statistics
-# ---------------------------------------------------------------------------
 
 
 def order_statistic_cdf(f_x: np.ndarray, n: int, i_select: np.ndarray | None = None) -> np.ndarray:
@@ -656,16 +644,15 @@ def constant_correlation_matrix(n: int, rho: float) -> np.ndarray:
     return c
 
 
-# ---------------------------------------------------------------------------
 # Normal-ratio distribution (Hinkley): Z = X / Y for independent normals
-# ---------------------------------------------------------------------------
 
 
 @dataclass
 class NormalRatioResult:
     """CDF or PDF of Z = X / Y (X, Y independent normals), plus the
     intermediate quantities (``a_z``, ``b_z``, ``c``, ``rho_z``) the
-    original returns alongside the probability."""
+    original returns alongside the probability.
+    """
 
     p: np.ndarray
     a_z: np.ndarray
@@ -728,10 +715,8 @@ def normal_ratio_pdf(
     return NormalRatioResult(p=p, a_z=a_z, b_z=b_z, c=np.full_like(a_z, c), rho_z=rho_z)
 
 
-# ---------------------------------------------------------------------------
 # Skew-normal (fully switched to scipy.stats.skewnorm -- see module
 # docstring for the numerical verification)
-# ---------------------------------------------------------------------------
 
 
 def skew_normal_cdf(x: np.ndarray, xi: float, omega: float, eta: float) -> np.ndarray:
@@ -785,10 +770,8 @@ def skew_normal_rvs(
     return skewnorm.rvs(eta, loc=xi, scale=omega, size=size, random_state=random_state)
 
 
-# ---------------------------------------------------------------------------
 # Skew-t (Azzalini): no scipy equivalent -- ``scipy.stats.jf_skew_t`` is a
 # different family (Jones & Faddy), see module docstring
-# ---------------------------------------------------------------------------
 
 
 def skew_t_cdf(

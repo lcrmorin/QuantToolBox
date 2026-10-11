@@ -1,47 +1,16 @@
-"""Cobb-Douglas consumer welfare under a relative-price shock: Marshallian
-demand, indirect utility, and both the closed-form and independently
-re-derived Compensating Variation (CV) and Equivalent Variation (EV)
-welfare measures for a 2-good Cobb-Douglas consumer facing a price
-change.
+"""Cobb-Douglas demand and welfare changes under a relative-price shock.
 
-Not ported from the MATLAB HSF toolbox's general-purpose `hsf/` folder
-(`reference/hsf_toolbox_matlab/hsf/`) -- no `.m` file there implements a
-`cobb_douglas_welfare` function. The formulas do, however, match
-`HSF/16. Exercise Solution/chap16_chap10_exercise1a.m` and
-`chap16_chap10_exercise1b.m` in the `hfs-archive` checkout verbatim
-(two inline exercise scripts, identical except `alpha` and `p1_t1`, that
-this book's own Chapter-16 exercise solutions run once each rather than
-defining as a reusable function). Promoted from HSF-Notebooks chapter
-16e, which collapsed those two near-identical scripts into one
-parametrized `cobb_douglas_welfare` helper.
+Adapted from HSF-Notebooks chapter 16e, which combines
+``HSF/16. Exercise Solution/chap16_chap10_exercise1a.m`` and
+``chap16_chap10_exercise1b.m`` into one parameterized calculation.
+Plotting grids, budget-line series, and display labels are omitted.
 
-Translation notes:
-
-- The original notebook helper additionally builds a `x1_grid` plotting
-  grid and the indifference-curve/budget-line series
-  (`x2_utility_t0/t1`, `x2_budget_t0/t1/cv/ev`) consumed only by a
-  companion `plot_welfare_diagram` function -- dropped here as
-  visualization-only intermediates, matching this module's `label`
-  parameter (print-formatting only, also dropped).
-- A genuine, faithfully-reproduced asymmetry in the source: the "CV"
-  numerical cross-check (`cv_numerical`) is computed from the *same*
-  closed-form `y_cv` the primary `cv` value is built from, so it is
-  tautologically equal to `cv` (not an independent check), whereas the
-  "EV" numerical cross-check genuinely re-derives `y_ev` from a separate
-  expenditure-minimization formula evaluated at `u_t1` and prices
-  `(p1_t0, p2)` -- so `ev` and `ev_numerical` are independent
-  computations that happen to agree to floating-point precision. Both
-  are reproduced exactly as in the source rather than symmetrized.
-- The task description accompanying this port asked to keep an
-  internal `scipy.optimize.minimize`-based numerical cross-check, but no
-  such call exists anywhere in the source notebook (confirmed by
-  grepping the notebook for `scipy`/`optimize`) -- the notebook's own
-  "numerical" cross-check is the alternate closed-form derivation
-  described above, not a numerical optimizer. Faithfully porting the
-  actual source therefore does not use `scipy.optimize.minimize`; this
-  module's test suite instead adds an independent
-  `scipy.optimize.minimize`-based utility-maximization check not present
-  in the original, to verify the closed-form demand really is optimal.
+The results include compensating variation (CV) and equivalent variation
+(EV), together with the source's alternate calculations. ``cv_numerical``
+uses the same closed-form expenditure as ``cv``; ``ev_numerical`` uses a
+separate expenditure-minimization formula. Despite their names, neither
+uses a numerical optimizer. The tests independently check demand with
+numerical utility maximization.
 """
 
 from __future__ import annotations
@@ -51,15 +20,14 @@ from dataclasses import dataclass
 
 @dataclass
 class CobbDouglasWelfareResult:
-    """Cobb-Douglas consumer welfare analysis for one before/after price
-    shock: optimal demand and utility at the baseline prices (`_t0`,
-    point A) and post-shock prices (`_t1`, point B), the Compensating
-    Variation basket/income (`_cv`, point C) and welfare measure (`cv`),
-    and the Equivalent Variation basket/income (`_ev`, point D) and
-    welfare measure (`ev`), each alongside an independently-derived
-    numerical cross-check (`u_numerical_t0`/`t1`, `cv_numerical`,
-    `ev_numerical`) -- see the module docstring for the one genuine
-    asymmetry between the CV and EV cross-checks."""
+    """Demand, utility, and welfare before and after a price shock.
+
+    Suffixes ``_t0`` and ``_t1`` identify baseline and post-shock values.
+    Suffixes ``_cv`` and ``_ev`` identify compensating- and
+    equivalent-variation baskets and incomes. The ``*_numerical`` fields
+    contain alternate closed-form calculations described in the module
+    docstring; the CV calculation is not an independent check.
+    """
 
     alpha: float
     beta: float

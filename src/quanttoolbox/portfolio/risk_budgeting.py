@@ -529,7 +529,8 @@ def _var_multiplier(alpha: float) -> float:
 
 def _es_multiplier(alpha: float) -> float:
     """Gaussian ES (expected shortfall) risk-measure multiplier
-    c = phi(Phi^-1(alpha)) / (1 - alpha)."""
+    c = phi(Phi^-1(alpha)) / (1 - alpha).
+    """
     z = norm.ppf(alpha)
     return float(norm.pdf(z) / (1 - alpha))
 
@@ -616,7 +617,8 @@ def _solve_rb_at_c(
 ) -> tuple[np.ndarray, float, float, bool]:
     """Shared helper: solve risk budgeting at a fixed c, return
     (weights, active_return, active_volatility, converged) relative to
-    x_benchmark."""
+    x_benchmark.
+    """
     if solver == "unconstrained":
         result = solve_unconstrained(cov_matrix, b=b, mu=mu, c=c, x0=x0, **solver_kwargs)
     elif solver == "box":

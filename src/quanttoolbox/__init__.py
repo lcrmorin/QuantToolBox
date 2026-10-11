@@ -9,6 +9,5 @@ from importlib.metadata import PackageNotFoundError, version
 try:
     __version__ = version("quanttoolbox")
 except PackageNotFoundError:
-    # package not installed (e.g. running from a source checkout without
-    # `pip install -e .`) -- fall back to a placeholder rather than error
+    # Source checkouts may not have installed package metadata.
     __version__ = "0.0.0+unknown"

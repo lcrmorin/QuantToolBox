@@ -395,3 +395,31 @@ def test_sloane_cdf_is_symmetric_and_within_unit_interval():
     c2 = sloane_cdf(u2, u1, rho)
     assert np.allclose(c1, c2)
     assert np.all(c1 >= -1e-8) and np.all(c1 <= 1.0 + 1e-8)
+
+
+@pytest.mark.parametrize("cdf", [galambos_cdf, husler_reiss_cdf])
+def test_extreme_value_copula_edges_and_corners_without_warnings(cdf):
+    u = np.array([0.0, 0.2, 0.5, 0.8, 1.0])
+    with np.errstate(all="raise"):
+        np.testing.assert_array_equal(cdf(0, u, 1.5), np.zeros_like(u))
+        np.testing.assert_array_equal(cdf(u, 0, 1.5), np.zeros_like(u))
+        np.testing.assert_array_equal(cdf(1, u, 1.5), u)
+        np.testing.assert_array_equal(cdf(u, 1, 1.5), u)
+        assert cdf(0, 0, 1.5) == 0
+        assert cdf(1, 1, 1.5) == 1
+
+
+@pytest.mark.parametrize("cdf", [galambos_cdf, husler_reiss_cdf])
+def test_extreme_value_copula_broadcasts_parameters_with_mixed_boundaries(cdf):
+    u = np.array([[0.0], [0.3], [1.0]])
+    v = np.array([0.0, 0.7, 1.0])
+    theta = np.array([0.5, 1.0, 2.0])
+    with np.errstate(all="raise"):
+        result = cdf(u, v, theta)
+    assert result.shape == (3, 3)
+    np.testing.assert_array_equal(result[0], 0)
+    np.testing.assert_array_equal(result[-1], v)
+    np.testing.assert_array_equal(result[:, 0], 0)
+    np.testing.assert_array_equal(result[:, -1], u[:, 0])
+    assert max(0, 0.3 + 0.7 - 1) <= result[1, 1] <= 0.3
+    assert result[1, 1] == pytest.approx(cdf(0.3, 0.7, 1.0))

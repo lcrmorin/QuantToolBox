@@ -72,9 +72,7 @@ from scipy.stats import norm as normdist
 from quanttoolbox.stats.distributions import mvn_cdf
 from quanttoolbox.stats.multivariate import bvn_cdf, bvn_pdf, bvt_cdf
 
-# ---------------------------------------------------------------------------
 # Fréchet-Hoeffding bounds and independence
-# ---------------------------------------------------------------------------
 
 
 def comonotonicity_cdf(u: np.ndarray) -> np.ndarray:
@@ -141,9 +139,7 @@ def countermonotonicity_support(u1: np.ndarray | float) -> np.ndarray:
     return 1.0 - np.asarray(u1, dtype=float)
 
 
-# ---------------------------------------------------------------------------
 # Elliptical copulas: Gaussian, Student-t
-# ---------------------------------------------------------------------------
 
 
 def gaussian_copula_cdf(u: np.ndarray, corr: np.ndarray) -> np.ndarray:
@@ -271,9 +267,7 @@ def student_copula_pdf(u: np.ndarray, corr: np.ndarray, nu: float) -> np.ndarray
     return np.where(np.isnan(pdf), 0.0, pdf)
 
 
-# ---------------------------------------------------------------------------
 # Archimedean copulas
-# ---------------------------------------------------------------------------
 
 
 def clayton_cdf(
@@ -456,9 +450,7 @@ def gumbel_barnett_pdf(
     )
 
 
-# ---------------------------------------------------------------------------
 # Extreme-value copulas
-# ---------------------------------------------------------------------------
 
 
 def galambos_cdf(
@@ -468,12 +460,17 @@ def galambos_cdf(
 
     Original: copula/cdfCopulaGalambos.m
     """
-    u1 = np.asarray(u1, dtype=float)
-    u2 = np.asarray(u2, dtype=float)
-    theta = np.asarray(theta, dtype=float)
-    u1t = -np.log(u1)
-    u2t = -np.log(u2)
-    return u1 * u2 * np.exp((u1t ** (-theta) + u2t ** (-theta)) ** (-1.0 / theta))
+    u1, u2, theta = np.broadcast_arrays(
+        np.asarray(u1, dtype=float), np.asarray(u2, dtype=float), np.asarray(theta, dtype=float)
+    )
+    # Every copula is zero on the lower edges and equals u on the upper edges.
+    boundary = (u1 == 0) | (u2 == 0) | (u1 == 1) | (u2 == 1)
+    result = np.array(np.minimum(u1, u2), copy=True)
+    interior = ~boundary
+    x, y, th = u1[interior], u2[interior], theta[interior]
+    u1t, u2t = -np.log(x), -np.log(y)
+    result[interior] = x * y * np.exp((u1t ** (-th) + u2t ** (-th)) ** (-1.0 / th))
+    return result[()]
 
 
 def galambos_pdf(
@@ -508,23 +505,23 @@ def husler_reiss_cdf(
 
     Original: copula/cdfCopulaHuslerReiss.m
     """
-    u1 = np.asarray(u1, dtype=float)
-    u2 = np.asarray(u2, dtype=float)
-    theta = np.asarray(theta, dtype=float)
-    # `+ 0.0` normalizes the -0.0 that `-np.log(1.0)` produces (IEEE 754
-    # negation of +0.0) back to +0.0 -- left as -0.0, `u2t / u1t` below
-    # would evaluate to -inf instead of +inf at the u1 == 1 boundary, and
-    # `log(-inf)` is NaN instead of the correct +inf.
-    u1t = -np.log(u1) + 0.0
-    u2t = -np.log(u2) + 0.0
-    phi1 = 1.0 / theta + 0.5 * theta * np.log(u1t / u2t)
-    phi2 = 1.0 / theta + 0.5 * theta * np.log(u2t / u1t)
-    return np.exp(-u1t * normdist.cdf(phi1) - u2t * normdist.cdf(phi2))
+    u1, u2, theta = np.broadcast_arrays(
+        np.asarray(u1, dtype=float), np.asarray(u2, dtype=float), np.asarray(theta, dtype=float)
+    )
+    boundary = (u1 == 0) | (u2 == 0) | (u1 == 1) | (u2 == 1)
+    result = np.array(np.minimum(u1, u2), copy=True)
+    interior = ~boundary
+    u1t, u2t = -np.log(u1[interior]), -np.log(u2[interior])
+    th = theta[interior]
+    # Subtract logs to avoid overflow in the ratio for interior probabilities.
+    log_ratio = np.log(u1t) - np.log(u2t)
+    phi1 = 1.0 / th + 0.5 * th * log_ratio
+    phi2 = 1.0 / th - 0.5 * th * log_ratio
+    result[interior] = np.exp(-u1t * normdist.cdf(phi1) - u2t * normdist.cdf(phi2))
+    return result[()]
 
 
-# ---------------------------------------------------------------------------
 # Other named families
-# ---------------------------------------------------------------------------
 
 
 def plackett_cdf(

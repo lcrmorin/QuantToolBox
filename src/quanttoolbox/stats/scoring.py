@@ -1,31 +1,10 @@
-"""Rank-, standardization-, and Beta-shaped scoring transforms, plus
-weighted aggregation of already-computed scores.
+"""Rank, z-score, and Beta scoring transforms with weighted aggregation.
 
-Ported from the MATLAB HSF toolbox: `hfs-archive/HSF/2. ESG Scoring/
-chap2_scoring9.m` and `chap2_scoring10.m` define nested MATLAB functions
-`qscore_function`, `zscore_function`, `aggregate_function`, `qz_function`,
-`zq_function`, `bz_function`, and `bz_skew_function` implementing exactly
-this rank / standardize / Beta-transform / aggregate family. (`bz_function`
-fixes Beta(2, 2) and `bz_skew_function` fixes Beta(2.5, 1.5); `bz_score`
-below generalizes that fixed-parameter MATLAB pair into a single function
-taking the Beta shape parameters `a`, `b` directly.)
-
-This module promotes HSF-Notebooks chapter 02b's Python translation of
-those functions (`qscore`, `zscore`, `aggregate`, `qz_score`, `zq_score`,
-`bz_score`), which itself already matches the MATLAB formulas exactly. The
-same z-score formula is also reused, under the name `standardize`, in
-chapter 15b's LASSO regularization-path notebook -- confirming it is a
-genuinely shared building block across chapters, not a one-off.
-
-Note (see the package's PACKAGING_CANDIDATES.md tracking doc):
-`scipy.stats.zscore` / `scipy.stats.rankdata` already cover the individual
-zscore/qscore transforms on their own, and `sklearn.preprocessing.
-QuantileTransformer` covers a fancier version of the same idea. This
-module deliberately keeps the notebook's own formulas (including the
-parts that overlap those libraries) rather than delegating to them -- the
-point of promoting it is a single, consistent call interface across all
-five transforms plus the weighted-aggregation layer, not swapping out the
-pieces that happen to already exist elsewhere.
+Adapted from the local scoring functions in
+``HSF/2. ESG Scoring/chap2_scoring9.m`` and ``chap2_scoring10.m``, via
+HSF-Notebooks chapter 02b. The transforms retain the notebook formulas
+and share a consistent interface. ``bz_score`` generalizes the original
+Beta(2, 2) and Beta(2.5, 1.5) transforms to caller-supplied shape parameters.
 """
 
 from __future__ import annotations

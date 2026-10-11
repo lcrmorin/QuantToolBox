@@ -1,49 +1,15 @@
-"""Bivariate normal/Student-t CDF and PDF wrappers, matching the original
-toolbox's call signature (explicit ``x``, ``y``, ``rho``, ``nu`` arguments,
-broadcast element-wise) rather than requiring the caller to assemble a full
-covariance matrix.
+"""Bivariate normal and Student-t probabilities with element-wise broadcasting.
 
-Ported from HSF toolbox `stats/{cdfbvn,pdfbvn,cdfbvt}.m`.
+Ported from HSF toolbox ``stats/{cdfbvn,pdfbvn,cdfbvt}.m``. The CDF functions
+accept explicit ``x``, ``y``, ``rho``, and (for Student-t) ``nu`` arguments.
+CDF evaluation delegates to SciPy rather than reproducing the original
+Genz integration routines.
 
-Translation notes:
-
-- `genz/{bvn,bvnu}.m` are Alan Genz's Drezner-Wesolowsky quadrature for the
-  bivariate normal CDF; `stats/cdfbvn.m` is a thin wrapper around `bvnu.m`.
-  `scipy.stats.multivariate_normal.cdf` already computes this (for any
-  dimension, not just 2) via `scipy.stats._mvn`, which is itself built on
-  Alan Genz's own Fortran `mvndst` routine -- the same author, the same
-  underlying algorithm. `bvn_cdf` here is therefore a thin `scipy`-backed
-  convenience wrapper with the original's `(x, y, rho)` call signature, not
-  a hand-rolled reimplementation of `bvnu.m`'s quadrature.
-- `stats/cdfbvt.m` wraps MATLAB's Statistics Toolbox `mvtcdf`; ported the
-  same way, via `scipy.stats.multivariate_t.cdf` (arbitrary dimension,
-  available since SciPy 1.9).
-- Both `bvn_cdf` and `bvt_cdf` clip `rho` a hair inside (-1, 1) before
-  building the 2x2 correlation matrix: `scipy`'s `multivariate_normal`/
-  `multivariate_t` raise `LinAlgError` on an exactly-singular (`|rho| ==
-  1`) matrix rather than falling back to the (well-defined) degenerate
-  limit, and `rho` can round to exactly +/-1 in float64 even when the
-  caller's inputs are only extremely close to that boundary -- e.g.
-  `stats.distributions.skew_t_cdf` hits this at `eta` near 0, where
-  `delta = (1 - eta^2) / (1 + eta^2)` underflows to `1.0`. Clipping is a
-  robustness addition beyond a literal transliteration of the original,
-  not a behavior change: the clipped and unclipped results agree to
-  float64 precision anywhere `scipy` would have succeeded anyway.
-- `genz/{qsimvn,qsimvnv,qsimvt,qsimvtv,qsilatmvnv,qsilatmvtv,qsimvnauto,
-  mvnrcnv}.m` (8 of the 10 files in `genz/`) are randomized quasi-Monte-Carlo
-  integrators solving exactly the same problem as
-  `scipy.stats.multivariate_normal.cdf`/`multivariate_t.cdf` -- arbitrary-
-  dimension MVN/MVT orthant probabilities -- via the same Genz (1992)
-  algorithm family (Niederreiter/Cranley-Patterson randomized lattice
-  rules); `mvnrcnv.m` is a constant-correlation special case of the same
-  problem. None of these are hand-ported: doing so would duplicate
-  already-available, better-tested `scipy` functionality (the same author's
-  own algorithm, reimplemented) with no functional gain. See
-  `stats.distributions.mvn_cdf`/`mvn_pdf` for the general n-dimensional
-  case (already ported); `bvn_cdf`/`bvt_cdf` below just add the bivariate-
-  specific call signature (`x`, `y`, `rho` rather than a point + covariance
-  matrix) for parity with how the original toolbox's other modules call
-  these.
+The CDF wrappers clip ``rho`` just inside (-1, 1) to avoid singular
+correlation matrices, including values rounded to +/-1 during intermediate
+calculations. This approximates the degenerate boundary distribution.
+For general multivariate normal probabilities, see
+``stats.distributions.mvn_cdf`` and ``mvn_pdf``.
 """
 
 from __future__ import annotations

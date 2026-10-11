@@ -39,7 +39,8 @@ def quadratic_form(x: np.ndarray, q: np.ndarray, r: np.ndarray, c: float) -> flo
 class QuadraticFormResult:
     """Sector-decomposed quadratic-risk form: qf = 0.5 w'Qw - w'R + c,
     with `q_j`/`r_j`/`c_j` holding each sector's own contribution to
-    Q/R/c (summed into `q`/`r`/`c`)."""
+    Q/R/c (summed into `q`/`r`/`c`).
+    """
 
     qf: float
     q: np.ndarray
@@ -111,7 +112,8 @@ def quadratic_form_risk(
 @dataclass
 class BondPortfolioMetrics:
     """Portfolio- and sector-level modified duration (MD) and
-    duration-times-spread (DTS)."""
+    duration-times-spread (DTS).
+    """
 
     md_portfolio: float
     dts_portfolio: float

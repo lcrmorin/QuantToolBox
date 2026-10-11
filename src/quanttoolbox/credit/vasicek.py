@@ -1,30 +1,13 @@
-"""Vasicek (2002) single-factor Gaussian-copula credit-portfolio model:
-discretizing a rating-transition matrix into single-factor conditioning
-thresholds, and the resulting large-homogeneous-portfolio default-rate
-quantile and density.
+"""Single-factor Gaussian credit thresholds and Vasicek default-rate measures.
 
-Not ported from the MATLAB HSF toolbox -- no `.m` file in `hfs-archive`
-implements this family of functions. These are the standard closed-form
-Vasicek (2002) results (`invcdf_default_rate`, `vasicek_density`) and a
-direct single-factor-copula discretization of a transition matrix
-(`thresholds_from_matrix`), matching the Python formulas already used in
-this book's own notebooks (chapters 13g/13i/13j of the HSF-Notebooks
-series) rather than a translation of an existing source file.
+Adapted from HSF-Notebooks chapters 13g, 13i, and 13j using the Vasicek
+(2002) large-homogeneous-portfolio formulas, rather than a MATLAB port.
+``invcdf_default_rate`` and ``vasicek_density`` provide the quantile and
+density of the limiting portfolio default-rate distribution.
 
-Translation notes:
-
-- `thresholds_from_matrix` follows the calling notebooks' own +/-10
-  sentinel convention for the open ends of the outermost rating buckets
-  (rather than +/- infinity): `Phi(10)`/`Phi(-10)` are already within
-  ~1e-23 of 1/0, so this is a deliberate finite-sentinel choice (matching
-  the notebooks' own round-trip check `Phi(z2) - Phi(z1) == p_ij` to
-  float precision), not an approximation any caller would notice at a
-  smaller `inf_limit`.
-- `invcdf_default_rate` is the closed-form single-factor /
-  large-homogeneous-portfolio (asymptotic) default-rate quantile at
-  confidence `alpha` -- the "worst-case default rate" (WCDR) formula
-  behind the Basel II/III IRB capital requirement, and the quantile
-  function of the distribution `vasicek_density` is the density of.
+``thresholds_from_matrix`` uses finite outer thresholds of +/-10 by
+default. Smaller ``inf_limit`` values truncate more probability mass, so
+threshold-implied probabilities can differ from the normalized input.
 """
 
 from __future__ import annotations
@@ -37,12 +20,12 @@ from scipy.stats import norm
 
 @dataclass
 class SingleFactorThresholdsResult:
-    """Single-factor Gaussian-copula conditioning thresholds for each
-    destination rating, discretized from a row-stochastic transition
-    matrix: `z1`/`z2` bracket the systematic-factor range landing in each
-    destination rating, so that `Phi(z2) - Phi(z1) == p_ij` (the
-    row-normalized transition probability actually used) up to float
-    precision."""
+    """Gaussian thresholds for each origin/destination rating pair.
+
+    ``z1`` and ``z2`` bound each destination bucket; ``p_ij`` contains the
+    row-normalized transition probabilities. ``Phi(z2) - Phi(z1)`` recovers
+    those probabilities up to finite-tail truncation and rounding error.
+    """
 
     z1: np.ndarray
     z2: np.ndarray

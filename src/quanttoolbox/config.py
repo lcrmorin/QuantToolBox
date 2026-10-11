@@ -56,7 +56,8 @@ class ProximalConfig:
 @dataclass(frozen=True)
 class EstimationConfig:
     """Replaces Print_Results / Parameter_Labels / Header_Model /
-    GMM_* / ML_* / WHITTLE_* globals used by econometrics estimators."""
+    GMM_* / ML_* / WHITTLE_* globals used by econometrics estimators.
+    """
 
     print_results: bool = False
     max_iters: int = 1000

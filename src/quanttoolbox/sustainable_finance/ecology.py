@@ -187,7 +187,8 @@ def hurlbert(n_i: np.ndarray, m: int, method: int = 1) -> float:
 def _fn_lambda_t(S_t: np.ndarray | float, lambda_0: float, beta1: float, S_s: float) -> np.ndarray:
     """Colonization rate `lambda(S)`: `=lambda_0` at `S=0`, decaying to `0`
     at `S=S_s` (a saturating island); `=0` for `S>S_s`. Internal helper for
-    `fn_delta_t`."""
+    `fn_delta_t`.
+    """
     S_t = np.asarray(S_t, dtype=float)
     lambda_t = (
         lambda_0
@@ -202,7 +203,8 @@ def _fn_lambda_t(S_t: np.ndarray | float, lambda_0: float, beta1: float, S_s: fl
 def _fn_mu_long_t(S_t: np.ndarray | float, mu_s: float, beta2: float, S_s: float) -> np.ndarray:
     """Long-term extinction rate `mu^long(S)`: `=0` at `S=0`, rising to
     `mu_s` at `S=S_s`; `=mu_s` for `S>S_s`. Internal helper for
-    `fn_delta_t`."""
+    `fn_delta_t`.
+    """
     S_t = np.asarray(S_t, dtype=float)
     mu_long_t = mu_s * (np.exp((S_t / S_s) ** (beta2 * mu_s)) - 1.0) / (np.exp(1.0) - 1.0)
     e = S_t <= S_s
@@ -219,7 +221,8 @@ def _fn_mu_short_t(
     """Short-term extinction rate `mu^short(S) = beta3*lambda(S)*exp(-beta4*S)`
     -- proportional to the colonization rate (recently-arrived species are
     more extinction-prone); `=0` for `S>S_s`. Internal helper for
-    `fn_delta_t`."""
+    `fn_delta_t`.
+    """
     S_t = np.asarray(S_t, dtype=float)
     mu_short_t = beta3 * lambda_t * np.exp(-beta4 * S_t)
     eta_s = 0.0

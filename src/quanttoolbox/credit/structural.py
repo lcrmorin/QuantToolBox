@@ -64,7 +64,8 @@ class BlackScholesResult:
     """European call/put prices under the generalized Black-Scholes
     model with cost-of-carry `b` (`b = r` for equities with no dividend,
     `b = r - q` for a dividend yield `q`, `b = 0` for futures, `b = r -
-    r_f` for FX)."""
+    r_f` for FX).
+    """
 
     call: np.ndarray
     put: np.ndarray
@@ -97,7 +98,8 @@ class PdMertonModelResult:
     """Merton (1974) calibrated default probability: `a0`/`sigma_a` are
     the calibrated (unobserved) asset value/volatility, `dd_tau` the
     distance-to-default and `s_tau`/`pd_tau` the survival/default
-    probability at horizon `tau`."""
+    probability at horizon `tau`.
+    """
 
     pd_tau: np.ndarray
     a0: np.ndarray
@@ -298,7 +300,8 @@ def pd_extended_merton_model(
 @dataclass
 class PdBlackCoxResult:
     """Black-Cox (1976) first-passage default probability at horizon
-    `tau`, plus the intermediate `d1`/`d2`/`varphi` terms."""
+    `tau`, plus the intermediate `d1`/`d2`/`varphi` terms.
+    """
 
     pd_tau: np.ndarray
     s_tau: np.ndarray
@@ -339,7 +342,8 @@ def pd_black_cox_model(
 class MertonJumpResult:
     """Merton (1976) jump-diffusion European call/put prices, plus `k`
     (the expected relative jump size, used in the risk-neutral drift
-    correction)."""
+    correction).
+    """
 
     call: np.ndarray
     put: np.ndarray
@@ -388,7 +392,8 @@ def merton_jump_model(
 class MertonJumpClimateResult:
     """Merton (1976) jump-diffusion firm-value equity/bond values (a
     climate-risk application: sudden jumps represent transition-risk
-    shocks to asset value), plus `k` (the expected relative jump size)."""
+    shocks to asset value), plus `k` (the expected relative jump size).
+    """
 
     e0: np.ndarray
     b0: np.ndarray
@@ -445,7 +450,8 @@ class ReindersCreditModelResult:
     """Reinders et al. credit-transition loss at asset-value shock `xi`:
     `loss` (the equity+debt mark-to-market loss), its first (`d_loss`)
     and second (`d2_loss`) derivatives with respect to `xi`, and the
-    pre-/post-shock equity/debt values."""
+    pre-/post-shock equity/debt values.
+    """
 
     loss: np.ndarray
     d_loss: np.ndarray

@@ -90,7 +90,8 @@ class EsgMinimumVarianceResult:
     covariance matrix `sigma`, its portfolio volatility `sigma_x`, the
     beta-star pair the tilt was built from, and (`sigma_tilde_matrix`,
     `x_tilde`) the plain (untilted) minimum-variance portfolio restricted
-    to the selected universe, for comparison."""
+    to the selected universe, for comparison.
+    """
 
     x: np.ndarray
     sigma: np.ndarray
@@ -163,7 +164,8 @@ class PedersenPortfolioResult:
     """Pedersen-Fitzgibbons-Pomorski ESG-efficient portfolios: `w` (shape
     (n_assets, n_scenarios)) holds one portfolio per (`sigma_bar`, `s_bar`)
     scenario, with `w_r` its residual (cash/risk-free) weight and the rest
-    the per-scenario risk/return/ESG-score/Sharpe-ratio diagnostics."""
+    the per-scenario risk/return/ESG-score/Sharpe-ratio diagnostics.
+    """
 
     w: np.ndarray
     w_r: np.ndarray
@@ -288,7 +290,8 @@ def _mvn_cdf_2d(mvn: multivariate_normal, x: float, y: float) -> float:
 def _rectangle_prob(mvn: multivariate_normal, xl: np.ndarray, xu: np.ndarray) -> float:
     """`P(xl[0]<X<xu[0], xl[1]<Y<xu[1])` for a bivariate distribution `mvn`,
     by inclusion-exclusion on the joint CDF:
-    `P(a<X<b,c<Y<d) = F(b,d) - F(a,d) - F(b,c) + F(a,c)`."""
+    `P(a<X<b,c<Y<d) = F(b,d) - F(a,d) - F(b,c) + F(a,c)`.
+    """
     return (
         _mvn_cdf_2d(mvn, xu[0], xu[1])
         - _mvn_cdf_2d(mvn, xl[0], xu[1])
@@ -303,7 +306,8 @@ class EsgTransitionMatrixResult:
     probability of moving from bucket `j` to bucket `k` on remeasurement),
     the equilibrium bucket probabilities `cdf`, the per-bucket turnover
     `to = 1 - diag(p)`, and the aggregate (probability-weighted) turnover
-    `to_system`."""
+    `to_system`.
+    """
 
     p: np.ndarray
     cdf: np.ndarray

@@ -133,7 +133,8 @@ def build_climate_stressed_generator(lambda_matrix: np.ndarray, beta: float) -> 
 
 def _discretize_bin(t: np.ndarray, edges: np.ndarray) -> np.ndarray:
     """0-based bin index of each `t` among `edges` (bin k covers
-    ``[edges[k], edges[k+1])``); values below `edges[0]` clamp to bin 0."""
+    ``[edges[k], edges[k+1])``); values below `edges[0]` clamp to bin 0.
+    """
     idx = np.searchsorted(edges, t, side="right") - 1
     return np.where(idx < 0, 0, idx)
 
@@ -143,7 +144,8 @@ def _piecewise_pieces(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Shared setup for the piecewise-constant-hazard branch: knot left
     edges `tm0`, bin `edges` (extended to `+inf`), per-interval hazard
-    rates `lam`, and cumulative hazard `hcum` accrued *before* each knot."""
+    rates `lam`, and cumulative hazard `hcum` accrued *before* each knot.
+    """
     tm = lambda_[:, 0].copy()
     lam = lambda_[:, 1:]
     tm[-1] = np.inf

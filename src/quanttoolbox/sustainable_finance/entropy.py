@@ -1,43 +1,17 @@
-"""Shannon-entropy diversity/dependence measures, and the Israel-Rosenthal-Wei
-(2001) technique for repairing an estimated Markov generator matrix that
-fails to satisfy the generator constraints (non-negative off-diagonal
-entries, zero row sums) because it was estimated from discretely-observed
-transition data.
+"""Shannon entropy measures and Markov generator repair.
 
-Ported from HSF toolbox `hsf/{shannon_entropy,
-shannon_entropy_markov_chain,estimate_markov_generator}.m`.
+Ported from HSF toolbox
+``hsf/{shannon_entropy,shannon_entropy_markov_chain,estimate_markov_generator}.m``.
 
-Translation notes:
+Entropy calculations use ``scipy.special.xlogy`` to handle ``0 * log(0)``
+without warnings. Markov-chain entropy retains the source's long-horizon
+stationary-distribution approximation, ``expm(Lambda * 1000)``.
 
-- MATLAB's ``missrv(x, v)`` (replace non-finite/flagged entries of `x` with
-  `v`) is used throughout the originals to implement the ``0 * log(0) = 0``
-  convention; translated as ``scipy.special.xlogy(p, p)``, which computes
-  ``p * log(p)`` and returns exactly `0.0` at `p == 0` without ever
-  evaluating ``log(0)`` (so, unlike ``np.where(p > 0, p * np.log(p), 0.0)``,
-  it raises no divide-by-zero warning).
-- `shannon_entropy_markov_chain.m` approximates the Markov chain's
-  stationary distribution via ``expm(Lambda * 1000)`` (a long-horizon
-  transition-probability matrix, every row of which has converged to the
-  stationary distribution) -- kept as-is via `scipy.linalg.expm`.
-- `estimate_markov_generator.m` implements Israel, Rosenthal & Wei (2001)'s
-  two generator-repair methods for a possibly-invalid estimated generator
-  `Lambda` (e.g. from `Lambda = logm(P) / dt` on an empirical transition
-  matrix `P`, which need not itself be a valid generator):
-
-  - ``Lambda1`` ("diagonal adjustment"): zero out negative off-diagonal
-    entries and absorb the removed mass into the diagonal. This exactly
-    preserves each row's original sum (``min(x, 0) + max(x, 0) = x``), so
-    ``Lambda1``'s row sums equal ``Lambda``'s row sums (zero, if `Lambda`
-    already had zero row sums as intended).
-  - ``Lambda2`` ("proportional redistribution"): redistribute each row's
-    negative mass proportionally across that row's positive off-diagonal
-    entries, leaving rows with no positive off-diagonal mass (`g[i] == 0`)
-    unchanged.
-
-  Both are standard generator-matrix regularizations in credit-rating
-  transition-intensity estimation (Roncalli's `hsf` toolbox applies this to
-  rating-migration generators); the row-sum-preservation property of
-  ``Lambda1`` is verified in this module's tests.
+Generator repair follows Israel, Rosenthal & Wei (2001). Diagonal
+adjustment removes negative off-diagonal entries and adjusts the diagonal,
+preserving the input row sums. Proportional redistribution allocates each
+row's negative mass across its positive off-diagonal entries; rows with no
+positive off-diagonal mass are unchanged.
 """
 
 from __future__ import annotations
@@ -115,10 +89,13 @@ def shannon_entropy_markov_chain(
 
 
 def estimate_markov_generator(lam: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """Repair a possibly-invalid estimated Markov generator `lam` (e.g. one
-    with negative off-diagonal entries) into two valid generators
-    (non-negative off-diagonal, zero row sums), via Israel, Rosenthal & Wei
-    (2001)'s two methods.
+    """Apply diagonal adjustment and proportional redistribution to ``lam``.
+
+    The input is an estimated Markov generator with zero row sums that
+    may contain negative off-diagonal entries. Diagonal adjustment
+    preserves the input row sums; it does not normalize them. Proportional
+    redistribution leaves rows without positive off-diagonal mass unchanged.
+    The methods follow Israel, Rosenthal & Wei (2001).
 
     Returns ``(Lambda1, Lambda2)`` -- see the module docstring for the
     method descriptions.

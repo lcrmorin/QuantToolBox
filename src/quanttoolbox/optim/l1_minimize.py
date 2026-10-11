@@ -1,52 +1,18 @@
-"""Direct nonsmooth SLSQP minimization of a mixed L1-norm objective under
-linear constraints.
+"""Minimize mixed L1 penalties under linear constraints using SLSQP.
 
-Turns out to have a MATLAB antecedent in `hfs-archive` after all, despite
-no filename in the archive matching `solve_bond_l1_duration_neutral_smooth`:
-`HSF/11. Portfolio Optimization/chap11_net_zero5.m`'s
-`fmincon(R_Mix, x0, C, D, A, B, lb, ub, [], options_fmincon)` call -- same
-`b`/`CI`/`MD`/`DTS`/`Sector` data, the same `R_AS`/`R_DTS`/`R_Mix` L1
-formulas, the same budget/duration-neutrality/carbon-intensity-reduction
-constraints and R-target glide path, and even the same solver tolerances
-(`MaxIterations=1000`, `OptimalityTolerance=1e-15`, matching the notebook's
-and this module's `maxiter=1000`/`ftol=1e-15`). Not discoverable by
-filename search since the MATLAB script is a chapter run-script (named
-after the chapter/section, like its neighbors `chap11_net_zero{1..18}.m`),
-not after the function it happens to define inline -- so it isn't tracked
-in `docs/migration_map.md`'s `hsf/` toolbox-library-folder mapping either.
-Promoted here from HSF-Notebooks chapter 11h's own
-`solve_bond_l1_duration_neutral_smooth` (the notebook's own Python
-translation, itself apparently written independently of the MATLAB script
-rather than as a direct port, but implementing the identical algorithm),
-generalized to plain array arguments and kept as an independent
-SLSQP-based algorithm, deliberately not routed through
-quanttoolbox.optim.quadprog.solve_qp -- see docstring of the notebook's
-LP-based `solve_bond_l1_duration_neutral` counterpart (chap11_net_zero5.m's
-`linprog` branch) for why.
+The objective is ``sum_k weight_k * ||operator_k @ (x - x0)||_1``.
+An operator of ``None`` denotes the identity. The solver accepts equality
+constraints, optional inequality constraints, and box bounds.
 
-Translation notes:
+Adapted from HSF-Notebooks chapter 11h's
+``solve_bond_l1_duration_neutral_smooth``, corresponding to the ``fmincon``
+branch in ``HSF/11. Portfolio Optimization/chap11_net_zero5.m``. The
+notebook's budget, duration, and carbon constraints are generalized to
+array arguments; the SLSQP algorithm and default tolerances are retained.
+This direct nonsmooth solve remains separate from the LP/QP formulation.
 
-- The notebook's `solve_bond_l1_duration_neutral_smooth` minimizes
-  ``varphi_DTS * ||C_DTS @ (w - b)||_1 + 0.5 * ||w - b||_1`` subject to a
-  budget constraint, a duration-neutrality constraint, and a carbon-
-  intensity-reduction inequality, all specific to that chapter's bond
-  problem. The two L1 terms differ only in their linear operator
-  (``C_DTS`` vs. the identity) and scalar weight (``varphi_DTS`` vs. a
-  fixed 0.5) -- so here that is generalized directly into its natural
-  generic shape: an arbitrary list of ``(weight, operator)`` pairs summed
-  into ``sum_k weight_k * ||operator_k @ (x - x0)||_1``, with generic
-  linear equality/inequality constraints and box bounds standing in for
-  the notebook's budget/duration/carbon-intensity rows. The underlying
-  algorithm (direct SLSQP minimization of the nonsmooth L1 objective, via
-  scipy's ``method="SLSQP"``, same tolerances/options) is unchanged.
-- ``operator=None`` in a penalty term denotes the identity map (matches
-  the notebook's ``R_AS`` term, an elementwise L1 penalty with no linear
-  transform).
-- The notebook's function returns only ``res.x``, silently accepting
-  whatever SLSQP converges to. `minimize_l1_objective` instead returns a
-  `L1MinimizeResult` surfacing `success`/`message` alongside `x`, so a
-  non-convergent solve is visible to the caller rather than swallowed --
-  a pure interface addition, not a change to the algorithm itself.
+``L1MinimizeResult`` includes solver success and diagnostic information
+alongside the solution so callers can detect non-convergence.
 """
 
 from __future__ import annotations

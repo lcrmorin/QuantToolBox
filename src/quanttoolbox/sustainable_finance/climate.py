@@ -36,7 +36,8 @@ class DiceTemperatureMatrices:
     """The DICE carbon-cycle (`phi_cc`, `b_cc`) and temperature (`xi_t`,
     `b_t`) state-transition matrices for one time step of length
     `delta_t`, plus the intermediate physical constants they were built
-    from."""
+    from.
+    """
 
     phi_cc: np.ndarray
     b_cc: np.ndarray

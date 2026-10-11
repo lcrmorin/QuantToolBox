@@ -5,7 +5,23 @@ All notable changes to this project are documented here. Versions follow
 
 ## [Unreleased]
 
+### Fixed
+
+- Bond pricing now rejects invalid methods, nonfinite inputs, negative
+  payment times, and mismatched cash-flow shapes instead of silently
+  broadcasting or selecting an unintended convention.
+- Bond yield inversion supports negative yields and yields above 100%,
+  using log prices for robust bracketing. Nonnegative cash flows are now
+  required for uniqueness; invalid inputs raise `ValueError` and solver
+  failures raise `RuntimeError` rather than silently returning NaN.
+- Galambos and Husler-Reiss copula CDFs handle the exact edges and corners
+  of the unit square without invalid arithmetic or boundary NaNs.
+
 ### Added
+
+- `bond.pricing.bond_duration` and `bond_convexity`: price sensitivities for
+  explicit cash-flow schedules under continuous or annual compounding,
+  with numerical derivative and closed-form regression tests.
 
 - `portfolio.tracking_error.minimum_te_portfolio`: new `on_infeasible`
   option (`"raise"`, the default, unchanged; `"nearest"` catches

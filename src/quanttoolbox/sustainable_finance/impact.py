@@ -1,37 +1,15 @@
-"""Blended-finance cash-flow waterfalls: allocating cumulative portfolio
-losses and coupon income between a junior (first-loss) and senior tranche
-given a realized cumulative-default path.
+"""Allocate blended-finance losses and coupons to junior and senior tranches.
 
-Original: `HSF/5. Impact Investing/blended_finance_simulation.m` in the
-`hfs-archive` checkout -- a genuine standalone MATLAB function (not a
-chapter exercise script), though it lives in the chapter-specific
-`HSF/5. Impact Investing/` folder rather than the bundled
-`reference/hsf_toolbox_matlab/hsf/` toolbox subset the rest of
-`quanttoolbox.sustainable_finance` was ported from. Promoted from
-HSF-Notebooks chapter 05a, which already carried a line-for-line Python
-port of this exact `.m` function inline.
+Original: ``HSF/5. Impact Investing/blended_finance_simulation.m``,
+adapted via HSF-Notebooks chapter 05a.
 
-Translation notes:
+While cumulative defaults satisfy ``nt_default <= D_junior / Ni``, the
+senior tranche receives its minimum coupon and the junior tranche receives
+the residual. Once the junior loss buffer is exhausted, all coupon income
+goes to the senior tranche.
 
-- The original MATLAB function additionally returns four "_check" series
-  (`Lt_junior_check`, `Lt_senior_check`, `Delta_Gt_junior_check`,
-  `Delta_Gt_senior_check`), built from explicit 0/1 indicator variables
-  (`cnd1`/`cnd2`) as a self-verification of the `min`/`max`/`where`-based
-  main computation -- algebraically identical to the primary series, not
-  new information (the same redundant-by-construction self-check pattern
-  already documented for this module's siblings, e.g. `carbon.py`'s
-  closed-form-vs-`integral()` pairs). Only the primary series are
-  returned here; the indicator-based formulas are instead exercised in
-  this module's own test suite as a cross-check.
-- Coupon income is allocated in two regimes, faithfully reproduced from
-  the original: while cumulative defaults stay at or below the junior
-  tranche's loss capacity (``nt_default <= D_junior / Ni``), the senior
-  tranche receives only its guaranteed minimum coupon and the junior
-  tranche keeps the (larger) residual; once that threshold is crossed,
-  the senior tranche instead claims the *entire* period's coupon income
-  and the junior tranche's income drops to zero -- a support mechanism
-  for the senior tranche once the junior first-loss buffer is
-  exhausted, not a bug.
+Only the primary cash-flow series are returned. The original's redundant
+indicator-based check series are covered by the tests.
 """
 
 from __future__ import annotations
@@ -48,7 +26,8 @@ class BlendedFinanceResult:
     coupon income (`gt`), cumulative return (`rt`), and annualized return
     (`rt_bar`), each for the portfolio as a whole and for the junior and
     senior tranches individually. `t` holds the period index (1-based),
-    matching the length of `nt_default`."""
+    matching the length of `nt_default`.
+    """
 
     t: np.ndarray
     lt: np.ndarray

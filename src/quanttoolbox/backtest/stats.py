@@ -190,7 +190,8 @@ def _reindex_to_full_calendar(
 ) -> tuple[pd.DatetimeIndex, np.ndarray]:
     """Reindex values onto a full daily calendar between begin/end, then
     forward/back-fill gaps -- mirrors the original's generate_trading_dates
-    + indnv + fillmiss(...,4) pattern."""
+    + indnv + fillmiss(...,4) pattern.
+    """
     _, full_dates = generate_trading_dates(begin, end)
     series = pd.DataFrame(values, index=dates).reindex(full_dates)
     series = series.ffill().bfill()

@@ -163,7 +163,8 @@ def ols_estimation(
 
 def _bartlett_covariance(h: np.ndarray, n_lags: int) -> np.ndarray:
     """Bartlett-kernel (Newey-West-style) HAC covariance of moment
-    conditions h (n_obs, n_moments)."""
+    conditions h (n_obs, n_moments).
+    """
     n = h.shape[0]
     vcv = (h.T @ h) / n
     w = vcv.copy()
