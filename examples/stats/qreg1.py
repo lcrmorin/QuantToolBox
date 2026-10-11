@@ -1,8 +1,22 @@
-"""Translated from Examples/stats/qreg1.m -- linear quantile regression at
+"""Conditional quantiles versus conditional means.
+
+Learning goal
+-------------
+Fit several quantiles to the same predictors. Quantile regression minimizes asymmetric
+absolute loss, not residual standard deviation; this design has no intercept.
+
+Try it
+------
+Compare the quantile loss at each fitted coefficient vector.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/stats/qreg1.m -- linear quantile regression at
 9 quantile levels (tau=0.1..0.9) on a simulated 3-predictor dataset.
 
 The original draws x/b/u from MATLAB's unseeded `rand`/`randn`; a fixed
-seed (`np.random.default_rng(0)`) is substituted here."""
+seed (`np.random.default_rng(0)`) is substituted here.
+"""
 
 import numpy as np
 

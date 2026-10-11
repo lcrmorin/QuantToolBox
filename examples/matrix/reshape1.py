@@ -1,10 +1,24 @@
-"""Translated from Examples/matrix/reshape1.m -- vech/xpnd (both row- and
+"""Reshaping and symmetric reconstruction.
+
+Learning goal
+-------------
+Compare row-major and column-major ordering. Half-vectorization discards one triangle,
+so expanding a nonsymmetric input cannot recover that input.
+
+Try it
+------
+Use a symmetric input and verify the vech/xpnd round trip.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/matrix/reshape1.m -- vech/xpnd (both row- and
 column-wise orderings) and reshaper/reshapec on a fixed 4x4 matrix.
 
 The original also exercises `shiftr` (a lagged-shift primitive); that
 function is not ported (superseded by NumPy roll/slicing idioms -- see
 `matrix/shiftr1.m`'s own tracker entry) and is skipped here rather than
-reimplemented."""
+reimplemented.
+"""
 
 import numpy as np
 

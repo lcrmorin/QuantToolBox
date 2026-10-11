@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/kalman2c.m -- Harvey [1990], pages
+"""Likelihood estimation before trend filtering.
+
+Learning goal
+-------------
+Estimate trend-model noise scales with the Kalman likelihood. Compare the fitted path
+with kalman2b.py without expecting identical finite-sample estimates.
+
+Try it
+------
+Inspect convergence and the estimated slope-noise scale.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/kalman2c.m -- Harvey [1990], pages
 89-90: time-domain (exact) maximum-likelihood estimation of the Local
 Linear Trend model's (sigma_epsilon, sigma_eta, sigma_zeta) on the same
 61-observation Gnp.asc series as kalman2a.py/kalman2b.py, then runs the
@@ -6,7 +19,8 @@ Kalman filter with the estimated parameters (numeric core only, plot
 dropped).
 
 As in kalman1b.py/kalman1c.py, the original's `theta = sqrt(theta.^2)`
-inside `LLT_ml` is translated as `np.abs(theta)`."""
+inside `LLT_ml` is translated as `np.abs(theta)`.
+"""
 
 import numpy as np
 

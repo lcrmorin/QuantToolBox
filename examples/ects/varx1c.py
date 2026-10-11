@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/varx1c.m -- Lutkepohl [1991], section
+"""Contemporaneous residual dependence.
+
+Learning goal
+-------------
+Test restrictions on the residual covariance parameterization. Contemporaneous
+correlation alone does not identify a causal direction.
+
+Try it
+------
+Compare the residual correlation matrix with the tested restriction.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx1c.m -- Lutkepohl [1991], section
 3.6: Wald test for no instantaneous causality from income/consumption to
 investment, on the ML estimate of the VAR(2) model from varx1a.py/
 varx1b.py's data. `varx_ls`/`varx_ml` map to `varx_estimate(...,
@@ -6,7 +19,8 @@ method="ls"|"ml")`; with method="ml" the returned `theta` is the
 21-element stacked coefficient vector followed by the 6-element vech of
 the Cholesky factor of Sigma (`varx_estimate`'s documented ML
 convention), so theta[23]/theta[24] (1-indexed) fall within that
-appended Cholesky block -- exactly as in the original."""
+appended Cholesky block -- exactly as in the original.
+"""
 
 import io
 

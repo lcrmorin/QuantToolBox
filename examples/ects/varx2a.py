@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/varx2a.m -- Lutkepohl [1991], chapter
+"""Adding exogenous regressors to a VAR.
+
+Learning goal
+-------------
+Fit log-level endogenous series with a lagged exogenous investment series and a
+constant. Including levels does not establish stationarity.
+
+Try it
+------
+Identify each lag block in the design before changing the lag order.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx2a.m -- Lutkepohl [1991], chapter
 10: estimation of the reduced form (10.2.4) of a system of dynamic
 simultaneous equations relating West German Income and Consumption to
 their own lag and lagged Investment, on the same 76-row Lutkepohl.asc
@@ -10,7 +23,8 @@ Consumption(t-1)] (added automatically by `varx_estimate` for p=1) plus
 the exogenous [constant, Investment(t-1)] -- exactly the 4-column layout
 the original prints under the header "Inc(t-1)  Cons(t-1)  Constant
 Inv(t-1)". `results.B` (not a field on `VARXResult`) is reconstructed as
-`np.hstack([phi, beta])`, matching that same column order."""
+`np.hstack([phi, beta])`, matching that same column order.
+"""
 
 import io
 

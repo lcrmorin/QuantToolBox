@@ -1,6 +1,20 @@
-"""Translated from Examples/rpb/test_minvar2.m -- minimum-variance
+"""Reading portfolio constraints.
+
+Learning goal
+-------------
+Minimize variance with a budget, w[0]+w[1]=0, and w[3]>=0.9. Wide signed bounds permit
+short positions; full investment alone does not prevent leverage.
+
+Try it
+------
+Print every equality and inequality residual for the returned weights.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_minvar2.m -- minimum-variance
 portfolio with general linear equality/inequality constraints and box
-bounds."""
+bounds.
+"""
 
 import numpy as np
 

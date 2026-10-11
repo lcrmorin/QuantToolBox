@@ -1,10 +1,24 @@
-"""Translated from Examples/stats/qreg2.m -- local-polynomial kernel mean
+"""Local polynomial quantile curves.
+
+Learning goal
+-------------
+Estimate a curved conditional 95th percentile with local linear and quadratic fits. The
+known conditional mean and quantile are different comparison curves.
+
+Try it
+------
+Change bandwidth and inspect errors near the boundaries separately.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/stats/qreg2.m -- local-polynomial kernel mean
 and quantile regression (orders 1 and 2) of a nonlinear y=f(x)+noise
 relationship, compared against the known population mean/quantile curves
 (numeric core only; the original's scatter+curve plot is dropped).
 
 The original explicitly seeds MATLAB's RNG (`rng(123)`); NumPy's generator
-is seeded the same way for a comparable (not bit-identical) run."""
+is seeded the same way for a comparable (not bit-identical) run.
+"""
 
 import numpy as np
 

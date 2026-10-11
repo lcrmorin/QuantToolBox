@@ -1,4 +1,18 @@
-"""Translated from Examples/rpb/test_bl3.m -- Roncalli [2013], "Introduction
+"""Comparing views at matched volatility.
+
+Learning goal
+-------------
+Match each portfolio to benchmark volatility before comparing active returns. The
+historical alpha/portfolio-volatility ratio is not the usual information ratio
+alpha/tracking-error.
+
+Try it
+------
+Compute alpha divided by tracking error and compare it with the historical ratio.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_bl3.m -- Roncalli [2013], "Introduction
 to Risk Parity and Budgeting", page 24: five Black-Litterman view scenarios
 (varying the view itself, its confidence Omega, and the scaling tau), each
 turned into a portfolio matched to the *same* target volatility as the
@@ -15,7 +29,8 @@ the whole results matrix is multiplied by 100 for percent-style display
 before formatting. Since IR_x is already a ratio, that display convention
 ends up printing 100*IR rather than IR itself; this translation keeps that
 same convention (labelled `100*IR`) so the printed numbers match the
-original table (Roncalli page 26) directly."""
+original table (Roncalli page 26) directly.
+"""
 
 import numpy as np
 

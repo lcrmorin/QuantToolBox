@@ -464,6 +464,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blend market views
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -480,6 +498,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#weaken-the-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weaken the views
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1303,6 +1351,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#weaken-the-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weaken the views
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1322,6 +1389,11 @@
 
 
 <h1 id="black-litterman">Black-Litterman<a class="headerlink" href="#black-litterman" title="Permanent link">&para;</a></h1>
+<p><strong>Goal:</strong> translate two beliefs into matrix rows and inspect how uncertainty
+controls the update. Read <a href="../mean_variance/">Mean-variance</a> first.</p>
+<p>Use one return horizon throughout. <code>pi</code> is an excess return; <code>mu_tilde</code> and the
+absolute view in <code>Q</code> are total returns. <code>Omega</code> stores view-error <strong>variances</strong>,
+not standard deviations. Larger entries represent less confidence.</p>
 <p>Translated from <code>Examples/rpb/test_bl1.m</code>, which reproduces the example
 on page 24 of Roncalli, T. (2013), <em>Introduction to Risk Parity and
 Budgeting</em>.</p>
@@ -1337,15 +1409,13 @@ asset 2 and asset 3's returns.</p>
 <span class="p">)</span>
 
 <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">])</span>
-<span class="n">rho_vech</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-    <span class="p">[</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]</span>
-<span class="p">)</span>
+<span class="n">rho_vech</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">])</span>
 <span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">rho_vech</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
 
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">])</span>   <span class="c1"># reference (e.g. market-cap) weights</span>
-<span class="n">r</span> <span class="o">=</span> <span class="mf">0.03</span>                                  <span class="c1"># risk-free rate</span>
-<span class="n">sharpe_ratio</span> <span class="o">=</span> <span class="mf">0.25</span>                       <span class="c1"># assumed market Sharpe ratio</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">])</span>  <span class="c1"># reference (e.g. market-cap) weights</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mf">0.03</span>  <span class="c1"># risk-free rate</span>
+<span class="n">sharpe_ratio</span> <span class="o">=</span> <span class="mf">0.25</span>  <span class="c1"># assumed market Sharpe ratio</span>
 
 <span class="c1"># Step 1: back out the implied equilibrium excess returns</span>
 <span class="n">irp</span> <span class="o">=</span> <span class="n">implied_risk_premia</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">sharpe_ratio</span><span class="p">)</span>
@@ -1375,8 +1445,20 @@ posterior mu_bar: [4.39 6.64 7.68 7.61]
 1's posterior return (<code>4.39%</code>) shifts down from its equilibrium value
 (<code>5.47%</code>) toward the view target (<code>4%</code>), and the asset‑2‑minus‑asset‑3
 spread narrows from its equilibrium value toward the <code>-1%</code> view target,
-each moving proportionally to how confident the corresponding view's
-<code>Omega</code> entry says it is.</p>
+with the joint update determined by the prior covariance and view uncertainty.
+Correlations allow a view on one asset to change other assets too.</p>
+<h2 id="weaken-the-views">Weaken the views<a class="headerlink" href="#weaken-the-views" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">weak_views</span> <span class="o">=</span> <span class="n">black_litterman_moments</span><span class="p">(</span><span class="n">mu_tilde</span><span class="p">,</span> <span class="n">gamma_matrix</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="n">Omega</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"prior view returns:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">P</span> <span class="o">@</span> <span class="n">mu_tilde</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"posterior view returns:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">P</span> <span class="o">@</span> <span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"view targets:"</span><span class="p">,</span> <span class="n">Q</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">weak_views</span><span class="o">.</span><span class="n">mu_bar</span> <span class="o">-</span> <span class="n">mu_tilde</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">bl</span><span class="o">.</span><span class="n">mu_bar</span> <span class="o">-</span> <span class="n">mu_tilde</span><span class="p">)</span>
+</code></pre></div>
+<p>The posterior need not hit <code>Q</code> exactly: the views have finite uncertainty.
+<code>gamma_matrix = tau * cov_matrix</code> is prior uncertainty about the mean;
+it is distinct from the scalar return-reward <code>gamma</code> used in portfolio optimization.</p>
+<p><strong>Try it:</strong> reduce only the second view's variance and inspect both view returns.
+Keep the first variance and prior fixed so the experiment has one changing input.</p>
 
 
 

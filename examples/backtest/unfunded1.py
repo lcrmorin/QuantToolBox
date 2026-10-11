@@ -1,4 +1,18 @@
-"""Translated from Examples/backtest/unfunded1.m -- compares a funded
+"""Funded and excess-return backtests.
+
+Learning goal
+-------------
+Compare three funding representations. Annual volatility scales by the square root of
+time; the annual simple cash rate scales by time. Inspect discrepancies as well as
+endpoint values.
+
+Try it
+------
+Set the cash rate to zero and compare the three paths.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/backtest/unfunded1.m -- compares a funded
 (price-return) backtest against economically equivalent unfunded
 (excess-return) formulations, three different ways:
 Backtest1 -- pure funded weights on funded prices.
@@ -8,7 +22,8 @@ and the risky assets unfunded (price_to_unfunded'd), which should match
 Backtest1/Backtest2 economically since unfunding + re-funding is neutral.
 
 The original draws R from MATLAB's unseeded `randn`; a fixed seed
-(`np.random.default_rng(0)`) is substituted here. Plotting is dropped."""
+(`np.random.default_rng(0)`) is substituted here. Plotting is dropped.
+"""
 
 import numpy as np
 
@@ -26,7 +41,8 @@ r = sigma * rng.standard_normal((n_dates, 2))
 prices_funded = 100 * np.cumprod(1 + r, axis=0)
 
 rate = 0.03
-r_libor = rate * np.sqrt(1 / 260) * np.ones((n_dates, 1))
+# Simple annual cash-rate convention: divide by trading days, not sqrt(days).
+r_libor = rate / 260 * np.ones((n_dates, 1))
 libor_index = 100 * np.cumprod(1 + r_libor, axis=0)
 prices_unfunded = price_to_unfunded(prices_funded, libor_index, method=1)
 

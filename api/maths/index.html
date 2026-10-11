@@ -2131,9 +2131,23 @@ original).</p>
 </div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Numerical gradient and Hessian vs. analytical, near a small coordinate — maths/hess2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/hess2.m -- numerical gradient and Hessian</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Curvature and mixed derivatives.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare a numerical Hessian with its analytical diagonal and mixed entries. A gradient</span>
+<span class="sd">check alone does not validate curvature.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Try larger and smaller finite-difference steps; the smallest step need not be best.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/maths/hess2.m -- numerical gradient and Hessian</span>
 <span class="sd">of the same function as grad2.m, at a point with a very small second</span>
-<span class="sd">coordinate (x2=1e-5), compared against their known analytical forms."""</span>
+<span class="sd">coordinate (x2=1e-5), compared against their known analytical forms.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2178,9 +2192,23 @@ original).</p>
 </details>
 <details class="example">
 <summary>Numerical gradient of a two-variable scalar function — maths/grad2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/grad2.m -- numerical vs. analytical</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Finite differences for a coupled function.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare analytical, forward, and central derivatives. Keep the logarithm argument</span>
+<span class="sd">positive; the small second coordinate makes step size important.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Vary the differentiation step and compare maximum absolute errors.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/maths/grad2.m -- numerical vs. analytical</span>
 <span class="sd">gradient of a scalar function of two variables that mixes polynomial,</span>
-<span class="sd">log, and exponential terms."""</span>
+<span class="sd">log, and exponential terms.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2213,7 +2241,20 @@ original).</p>
 </details>
 <details class="example">
 <summary>Numerical gradient of an elementwise function via a sum trick — maths/grad3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/grad3.m -- numerical vs. analytical</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Differentiating a separable exponential.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Each output depends on one coordinate, so differentiating their sum gives the coordinate</span>
+<span class="sd">derivatives. This shortcut does not construct a general vector-valued Jacobian.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase the coordinates and observe how curvature affects finite-difference error.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/maths/grad3.m -- numerical vs. analytical</span>
 <span class="sd">gradient of the separable, elementwise function f(x) = x^2 * exp(x^2/3).</span>
 
 <span class="sd">The original MATLAB `numerical_gradient` accepts an elementwise-vectorized</span>
@@ -2222,7 +2263,8 @@ original).</p>
 <span class="sd">the general vector case), so the elementwise function is summed first --</span>
 <span class="sd">since each term depends on a single x_i, the gradient of the sum w.r.t.</span>
 <span class="sd">x_i equals the elementwise derivative at x_i (see also grad1.m's</span>
-<span class="sd">translation in building_blocks.md, which uses the same trick)."""</span>
+<span class="sd">translation in building_blocks.md, which uses the same trick).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2257,11 +2299,25 @@ original).</p>
 </details>
 <details class="example">
 <summary>Numerical gradient, same elementwise-sum trick as grad3 — maths/grad4.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/grad4.m -- numerical vs. analytical</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Checking a product-rule derivative.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare numerical derivatives of 2*x*exp(x**2/3) with the analytical product rule.</span>
+<span class="sd">Absolute errors grow with the scale of the function.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare both absolute and relative error at smaller coordinates.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/maths/grad4.m -- numerical vs. analytical</span>
 <span class="sd">gradient of the separable, elementwise function f(x) = 2*x * exp(x^2/3).</span>
 
 <span class="sd">Same elementwise-via-sum approach as grad3.py's translation (see that</span>
-<span class="sd">file's docstring for why)."""</span>
+<span class="sd">file's docstring for why).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2296,12 +2352,26 @@ original).</p>
 </details>
 <details class="example">
 <summary>Numerical gradient, scalar vs. explicit-sum function forms — maths/grad5.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/grad5.m -- two equivalent formulations of</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Equivalent formulas, equivalent gradients.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Two implementations of the same scalar objective should give matching derivatives.</span>
+<span class="sd">Reciprocal terms require nonzero coordinates.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Change the positive evaluation point and check agreement again.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/maths/grad5.m -- two equivalent formulations of</span>
 <span class="sd">the same gradient: fun(x) = 0.5*x'x + exp(x)'*(1/x) (already scalar-valued,</span>
 <span class="sd">so it needs no summing trick), and fun2(x) = sum(0.5*x_i^2 + exp(x_i)/x_i)</span>
 <span class="sd">(explicitly written as a sum of separable terms). Both have gradient</span>
 <span class="sd">g(x) = x + exp(x) .* (1/x - 1/x^2), confirming the two formulations agree</span>
-<span class="sd">numerically."""</span>
+<span class="sd">numerically.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 

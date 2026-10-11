@@ -1,11 +1,25 @@
-"""Translated from Examples/svm/svm8.m -- OLS, LAD, quantile, and SVM
+"""A larger simulated regression comparison.
+
+Learning goal
+-------------
+Compare regression losses on a seeded sample with known coefficients. All displayed
+results are in-sample; epsilon has the same units as the response.
+
+Try it
+------
+Generate an independent test sample and compare prediction errors there.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/svm/svm8.m -- OLS, LAD, quantile, and SVM
 regression (primal, at two very different C values, LS- and
 epsilon-insensitive) compared on a larger (n=1000) simulated dataset.
 
 The original draws x/beta/u from MATLAB's unseeded `rand`/`randn`; a fixed
 seed (`np.random.default_rng(0)`) is substituted here for reproducibility
 -- this is the fixed-seed substitution the tracker notes svm8.m as still
-needing."""
+needing.
+"""
 
 import numpy as np
 

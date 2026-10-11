@@ -1,4 +1,17 @@
-"""Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],
+"""Budget constraints and portfolio penalties.
+
+Learning goal
+-------------
+Separate an unconstrained quadratic optimum from a fully invested portfolio. Ridge and
+L1 penalties pull holdings toward their specified reference allocations.
+
+Try it
+------
+Compare the sum of weights in the unconstrained and budget-constrained cases.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],
 "Introduction to Risk Parity and Budgeting", Example 1 (page 53):
 compares an unconstrained gamma-problem MVO portfolio against the same
 problem with a budget (sum-to-1) constraint, and ridge/lasso-penalized
@@ -9,7 +22,9 @@ problem.
 `mvo_portfolio`/`solve_qp(..., ridge_penalty=...)`/`solve_qp(...,
 lasso_penalty=...)` as established in test_lasso3.py/test_lasso5.py; the
 original's `0, 0` sentinel arguments for "no equality constraint" /
-"no bounds" map to simply omitting those keyword arguments."""
+"no bounds" map to omitting those keywords in solve_qp. The mvo_portfolio wrapper
+adds a budget by default, so the unrestricted case calls solve_qp directly.
+"""
 
 import numpy as np
 
@@ -28,7 +43,8 @@ x0 = np.full(n, 1 / n)
 # Case gamma-problem
 gamma_x = 0.5
 
-x1 = mvo_portfolio(mu, cov_matrix, gamma=gamma_x).weights
+# solve_qp has no implicit budget; mvo_portfolio defaults to sum(weights)=1.
+x1 = solve_qp(cov_matrix, gamma_x * mu)
 x2 = mvo_portfolio(
     mu, cov_matrix, gamma=gamma_x, a_eq=np.ones((1, n)), b_eq=np.array([1.0])
 ).weights
@@ -46,3 +62,8 @@ x6 = solve_qp(cov_matrix, gamma_x * mu, lasso_penalty=(s_lasso, x0))
 results = 100 * np.column_stack([x1, x2, x3, x4, x5, x6])
 print("            x1      x2      x3      x4      x5      x6")
 print(np.round(results, 2))
+
+# Unconstrained first-order condition and the explicit budget are different checks.
+assert np.allclose(cov_matrix @ x1, gamma_x * mu, atol=1e-7)
+assert np.isclose(x2.sum(), 1.0)
+print("sum of weights (unconstrained / budget):", x1.sum(), x2.sum())

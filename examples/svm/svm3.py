@@ -1,6 +1,23 @@
-"""Translated from Examples/svm/svm3.m -- soft margin SVM classification
+"""Soft margins and hinge penalties.
+
+Learning goal
+-------------
+Vary C on a dataset that needs slack. Larger C penalizes margin violations more
+strongly; raw feature scale affects the geometric interpretation.
+
+Try it
+------
+Count signed scores below one for each C.
+
+The result.margin field is 1 / (beta @ beta), the squared geometric
+half-margin. The geometric half-margin is 1 / np.linalg.norm(beta).
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/svm/svm3.m -- soft margin SVM classification
 (binary hinge loss), primal formulation, at 4 different C values. 17-point
-dataset (2 extra, harder-to-separate points added vs. svm1/svm2)."""
+dataset (2 extra, harder-to-separate points added vs. svm1/svm2).
+"""
 
 import numpy as np
 
@@ -31,4 +48,6 @@ y, x = data[:, 2], data[:, 0:2]
 
 for c in [0.01, 0.03, 0.05, 0.30]:
     r = svm_classification_primal(y, x, c=c, loss="hinge")
-    print(f"C={c}: beta0={round(r.beta0,6)} beta={np.round(r.beta,6)} margin={round(r.margin,6)}")
+    print(
+        f"C={c}: beta0={round(r.beta0, 6)} beta={np.round(r.beta, 6)} squared_half_margin={round(r.margin, 6)}"
+    )

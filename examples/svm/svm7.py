@@ -1,6 +1,20 @@
-"""Translated from Examples/svm/svm7.m -- same comparison as svm6.m
+"""Dual formulations of regression losses.
+
+Learning goal
+-------------
+Repeat the regression comparison through dual SVM solvers. Compare predictions and
+objectives, since equivalent losses can have nonunique coefficients.
+
+Try it
+------
+Compare the same C and epsilon settings with svm6.py.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/svm/svm7.m -- same comparison as svm6.m
 (OLS/LAD/quantile vs SVM regression), but using the dual formulation
-(svm_regression_dual) instead of primal."""
+(svm_regression_dual) instead of primal.
+"""
 
 import numpy as np
 

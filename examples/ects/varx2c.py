@@ -1,6 +1,20 @@
-"""Translated from Examples/ects/varx2c.m -- identical setup to
+"""Restricted VARX likelihood.
+
+Learning goal
+-------------
+Repeat the VARX restrictions with conditional maximum likelihood. Cross-equation
+residual covariance influences a restricted system fit.
+
+Try it
+------
+Compare estimates and residual covariance with varx2b.py.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx2c.m -- identical setup to
 varx2b.py, but estimated via `varx_cml` -> `varx_estimate_cml`
-(concentrated/iterated ML) instead of restricted LS."""
+(concentrated/iterated ML) instead of restricted LS.
+"""
 
 import io
 

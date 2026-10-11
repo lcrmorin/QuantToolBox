@@ -2211,11 +2211,24 @@ or a plain serial day count, returning pandas Timestamps.</p>
 </div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Flat transaction cost under a realistic rebalancing schedule — backtest/backtest5.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest5.m -- generate_backtest with</span>
-<span class="sd">a flat transaction cost (0.01) under monthly rebalancing (the original</span>
-<span class="sd">builds weekly and daily rebalancing schedules too, but overwrites both</span>
-<span class="sd">before use, so only the monthly one -- `RB_Dates = ones(nDates,1)`, i.e.</span>
-<span class="sd">every date is a rebalance -- is actually exercised; reproduced as-is)."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Compounding the cost of rebalancing.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Rebalance on every trading date and compare gross and net wealth. Turnover times the fee</span>
+<span class="sd">rate is an approximation to cumulative drag, not an exact compounded return.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Halve the fee rate and compare the change in final wealth.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/backtest/backtest5.m -- generate_backtest with</span>
+<span class="sd">a flat transaction cost (0.01) with rebalancing on every trading date.</span>
+<span class="sd">The original overwrites earlier schedules with `RB_Dates = ones(nDates,1)`;</span>
+<span class="sd">its comment calling this monthly rebalancing is misleading.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2240,9 +2253,7 @@ or a plain serial day count, returning pandas Timestamps.</p>
 <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
 <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">rb_dates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
-    <span class="n">n_dates</span>
-<span class="p">)</span>  <span class="c1"># "monthly rebalancing" per the original's final overwrite -&gt; every date</span>
+<span class="n">rb_dates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_dates</span><span class="p">)</span>  <span class="c1"># every trading date is a rebalance</span>
 
 <span class="n">result1</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates</span><span class="p">)</span>
 <span class="n">tc</span> <span class="o">=</span> <span class="mf">0.01</span>
@@ -2268,13 +2279,27 @@ or a plain serial day count, returning pandas Timestamps.</p>
 </details>
 <details class="example">
 <summary>Maximum drawdown in relative mode — backtest/mdd1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/mdd1.m -- maximum_drawdown on 3</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Maximum drawdown and its dates.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Read the peak, subsequent trough, and loss for each simulated asset. Peak-to-trough</span>
+<span class="sd">duration is not the time needed to recover the peak.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Replace one price path with a steadily rising sequence and predict its drawdown.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/backtest/mdd1.m -- maximum_drawdown on 3</span>
 <span class="sd">simulated price indices (numeric core only; the original's plot marking</span>
 <span class="sd">the drawdown peak/trough on each series is dropped).</span>
 
 <span class="sd">The original explicitly seeds MATLAB's RNG (`rng(1234567)`); NumPy's</span>
 <span class="sd">generator is seeded the same way for a comparable (not bit-identical)</span>
-<span class="sd">run."""</span>
+<span class="sd">run.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2306,14 +2331,28 @@ or a plain serial day count, returning pandas Timestamps.</p>
 </details>
 <details class="example">
 <summary>Per-asset bid/ask transaction costs vs. turnover — backtest/backtest4.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest4.m -- generate_backtest with</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Turnover and trading costs.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Prices are deliberately flat, so wealth changes isolate trading costs. Fees also change</span>
+<span class="sd">subsequent holdings; static turnover need not exactly match the cost-aware backtest.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Set all transaction costs to zero and check that wealth stays flat after inception.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/backtest/backtest4.m -- generate_backtest with</span>
 <span class="sd">per-asset bid/ask transaction costs, comparing turnover computed inside</span>
 <span class="sd">the backtest against `static_turnover` computed independently from the</span>
 <span class="sd">rebalance-date weights.</span>
 
 <span class="sd">The original explicitly seeds MATLAB's RNG (`rng(123456789)`); NumPy's</span>
 <span class="sd">generator is seeded the same way for a comparable (not bit-identical --</span>
-<span class="sd">different RNG algorithms) run."""</span>
+<span class="sd">different RNG algorithms) run.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2373,7 +2412,20 @@ or a plain serial day count, returning pandas Timestamps.</p>
 </details>
 <details class="example">
 <summary>Three rebalancing schedules on a small backtest — backtest/backtest2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest2.m -- generate_backtest at</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Rebalancing dates and missing prices.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare a single initial allocation with scheduled rebalancing. Rows are dates and</span>
+<span class="sd">columns are assets; NaNs in the date-subset case indicate unavailable history.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Move one rebalance date and compare final wealth with buy-and-hold.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/backtest/backtest2.m -- generate_backtest at</span>
 <span class="sd">three rebalancing schedules (single rebalance at t0, four fixed</span>
 <span class="sd">positional rebalances, and a schedule mixing an actual date subset with</span>
 <span class="sd">two out-of-range placeholder dates) on a simulated 3-asset equal-weight</span>
@@ -2383,7 +2435,8 @@ or a plain serial day count, returning pandas Timestamps.</p>
 <span class="sd">(`np.random.default_rng(0)`) is substituted here for reproducibility,</span>
 <span class="sd">same convention used elsewhere in this port. Plotting is dropped (see</span>
 <span class="sd">`docs/migration_map.md`'s example translation tracker Notes column</span>
-<span class="sd">convention)."""</span>
+<span class="sd">convention).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2910,11 +2963,24 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 </div><h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Flat transaction cost under a realistic rebalancing schedule — backtest/backtest5.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest5.m -- generate_backtest with</span>
-<span class="sd">a flat transaction cost (0.01) under monthly rebalancing (the original</span>
-<span class="sd">builds weekly and daily rebalancing schedules too, but overwrites both</span>
-<span class="sd">before use, so only the monthly one -- `RB_Dates = ones(nDates,1)`, i.e.</span>
-<span class="sd">every date is a rebalance -- is actually exercised; reproduced as-is)."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Compounding the cost of rebalancing.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Rebalance on every trading date and compare gross and net wealth. Turnover times the fee</span>
+<span class="sd">rate is an approximation to cumulative drag, not an exact compounded return.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Halve the fee rate and compare the change in final wealth.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/backtest/backtest5.m -- generate_backtest with</span>
+<span class="sd">a flat transaction cost (0.01) with rebalancing on every trading date.</span>
+<span class="sd">The original overwrites earlier schedules with `RB_Dates = ones(nDates,1)`;</span>
+<span class="sd">its comment calling this monthly rebalancing is misleading.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2939,9 +3005,7 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_dates</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">))</span>
 <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">rb_dates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
-    <span class="n">n_dates</span>
-<span class="p">)</span>  <span class="c1"># "monthly rebalancing" per the original's final overwrite -&gt; every date</span>
+<span class="n">rb_dates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_dates</span><span class="p">)</span>  <span class="c1"># every trading date is a rebalance</span>
 
 <span class="n">result1</span> <span class="o">=</span> <span class="n">generate_backtest</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">rb_dates</span><span class="p">)</span>
 <span class="n">tc</span> <span class="o">=</span> <span class="mf">0.01</span>
@@ -2967,13 +3031,27 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 </details>
 <details class="example">
 <summary>Maximum drawdown in relative mode — backtest/mdd1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/mdd1.m -- maximum_drawdown on 3</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Maximum drawdown and its dates.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Read the peak, subsequent trough, and loss for each simulated asset. Peak-to-trough</span>
+<span class="sd">duration is not the time needed to recover the peak.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Replace one price path with a steadily rising sequence and predict its drawdown.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/backtest/mdd1.m -- maximum_drawdown on 3</span>
 <span class="sd">simulated price indices (numeric core only; the original's plot marking</span>
 <span class="sd">the drawdown peak/trough on each series is dropped).</span>
 
 <span class="sd">The original explicitly seeds MATLAB's RNG (`rng(1234567)`); NumPy's</span>
 <span class="sd">generator is seeded the same way for a comparable (not bit-identical)</span>
-<span class="sd">run."""</span>
+<span class="sd">run.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3005,14 +3083,28 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 </details>
 <details class="example">
 <summary>Per-asset bid/ask transaction costs vs. turnover — backtest/backtest4.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest4.m -- generate_backtest with</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Turnover and trading costs.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Prices are deliberately flat, so wealth changes isolate trading costs. Fees also change</span>
+<span class="sd">subsequent holdings; static turnover need not exactly match the cost-aware backtest.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Set all transaction costs to zero and check that wealth stays flat after inception.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/backtest/backtest4.m -- generate_backtest with</span>
 <span class="sd">per-asset bid/ask transaction costs, comparing turnover computed inside</span>
 <span class="sd">the backtest against `static_turnover` computed independently from the</span>
 <span class="sd">rebalance-date weights.</span>
 
 <span class="sd">The original explicitly seeds MATLAB's RNG (`rng(123456789)`); NumPy's</span>
 <span class="sd">generator is seeded the same way for a comparable (not bit-identical --</span>
-<span class="sd">different RNG algorithms) run."""</span>
+<span class="sd">different RNG algorithms) run.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3072,7 +3164,20 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 </details>
 <details class="example">
 <summary>Three rebalancing schedules on a small backtest — backtest/backtest2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/backtest/backtest2.m -- generate_backtest at</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Rebalancing dates and missing prices.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare a single initial allocation with scheduled rebalancing. Rows are dates and</span>
+<span class="sd">columns are assets; NaNs in the date-subset case indicate unavailable history.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Move one rebalance date and compare final wealth with buy-and-hold.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/backtest/backtest2.m -- generate_backtest at</span>
 <span class="sd">three rebalancing schedules (single rebalance at t0, four fixed</span>
 <span class="sd">positional rebalances, and a schedule mixing an actual date subset with</span>
 <span class="sd">two out-of-range placeholder dates) on a simulated 3-asset equal-weight</span>
@@ -3082,7 +3187,8 @@ original). Internally converted to pandas' Monday=0 convention.</p>
 <span class="sd">(`np.random.default_rng(0)`) is substituted here for reproducibility,</span>
 <span class="sd">same convention used elsewhere in this port. Plotting is dropped (see</span>
 <span class="sd">`docs/migration_map.md`'s example translation tracker Notes column</span>
-<span class="sd">convention)."""</span>
+<span class="sd">convention).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 

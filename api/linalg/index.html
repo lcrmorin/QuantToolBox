@@ -2490,9 +2490,23 @@ method=2 or 'c': column-wise ordering.</p>
 </div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Black-Litterman view sensitivity across five scenarios — rpb/test_bl2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl2.m -- Black-Litterman sensitivity</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""How views change portfolio weights.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Vary view returns, uncertainty, and prior scaling while keeping the return-reward gamma</span>
+<span class="sd">fixed. Omega contains variances; a larger Omega means weaker views.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase only one view variance and compare the posterior portfolio with the benchmark.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_bl2.m -- Black-Litterman sensitivity</span>
 <span class="sd">analysis across 6 scenarios (base case + 5 view/uncertainty/tau variants),</span>
-<span class="sd">each solved as a fixed-risk-aversion MVO portfolio."""</span>
+<span class="sd">each solved as a fixed-return-reward MVO portfolio.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2558,13 +2572,26 @@ method=2 or 'c': column-wise ordering.</p>
 
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">r_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"scenario </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: weights=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'weights'</span><span class="p">],</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> mu=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'mu'</span><span class="p">],</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2"> te=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'te'</span><span class="p">],</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+        <span class="sa">f</span><span class="s2">"scenario </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: weights=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'weights'</span><span class="p">],</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> mu=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'mu'</span><span class="p">],</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2"> te=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'te'</span><span class="p">],</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Elimination/duplication/commutation matrix identities across sizes — matrix/matrix2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/matrix/matrix2.m -- checks seven algebraic</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Vectorization matrix identities.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Check elimination, duplication, and commutation identities for increasing matrix sizes.</span>
+<span class="sd">Dimensions connect M-by-M matrices with full and half vectorizations.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Work through the M=2 case by hand, then inspect the corresponding matrices.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/matrix/matrix2.m -- checks seven algebraic</span>
 <span class="sd">identities relating the elimination, duplication, and commutation</span>
 <span class="sd">matrices, for M = 1..10.</span>
 
@@ -2574,7 +2601,8 @@ method=2 or 'c': column-wise ordering.</p>
 <span class="sd">checks, but `inv(D'*D)` (a genuine matrix inversion) is not bit-exact, so</span>
 <span class="sd">`np.isclose`/`np.allclose` are used throughout instead of `==` to make the</span>
 <span class="sd">comparison robust the way an equivalent MATLAB run using a tolerance</span>
-<span class="sd">would be."""</span>
+<span class="sd">would be.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2596,7 +2624,7 @@ method=2 or 'c': column-wise ordering.</p>
     <span class="n">checks</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">L</span> <span class="o">@</span> <span class="n">D</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">p</span><span class="p">)),</span>
         <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">K</span> <span class="o">@</span> <span class="n">D</span><span class="p">,</span> <span class="n">D</span><span class="p">),</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">K1</span> <span class="o">==</span> <span class="n">K2</span><span class="p">,</span> <span class="n">K1</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">M</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">K1</span><span class="p">,</span> <span class="n">K2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">K1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">M</span><span class="p">)),</span>
         <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">K</span><span class="p">)),</span> <span class="n">M</span><span class="p">),</span>
         <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">D</span><span class="p">)),</span> <span class="n">M</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span>
         <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">L</span> <span class="o">@</span> <span class="n">L</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">p</span><span class="p">)),</span>
@@ -2611,9 +2639,23 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Equal risk contribution and box-constrained risk budgeting — rpb/test_box1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_box1.m -- ERC and box-constrained</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Risk budgets under allocation limits.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Tight boxes around initial holdings can prevent equal risk contributions. Wider boxes</span>
+<span class="sd">approach the unrestricted ERC allocation.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare risk contributions, not just weights, as the box widens.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_box1.m -- ERC and box-constrained</span>
 <span class="sd">("C-ERC") risk budgeting portfolios at progressively wider bounds around</span>
-<span class="sd">a starting position."""</span>
+<span class="sd">a starting position.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2642,9 +2684,23 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Explicit/implicit constraint round-trip, plus a design() demo — optim/explicit2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/optim/explicit2.m -- explicit&lt;-&gt;implicit</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Equality constraints as free coordinates.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Translate x[0]=x[1] into a lower-dimensional parametrization. Different null-space bases</span>
+<span class="sd">can represent the same feasible set.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Choose free coordinates, reconstruct x, and check the equality residual.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/optim/explicit2.m -- explicit&lt;-&gt;implicit</span>
 <span class="sd">constraint conversion for a single equality constraint (x[0] = x[1]), plus</span>
-<span class="sd">a `design` matrix built from a category-index vector."""</span>
+<span class="sd">a `design` matrix built from a category-index vector.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2675,7 +2731,20 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Larger restricted SUR system, two covariance variants compared — ects/varx4b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx4b.m -- Judge, Hill, Griffiths,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Restrictions across a three-equation system.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare two sets of cross-equation restrictions in a SUR model. Changing restrictions</span>
+<span class="sd">also changes the covariance used for weighting.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Count free coefficients in each model and verify the restricted equalities.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx4b.m -- Judge, Hill, Griffiths,</span>
 <span class="sd">Lutkepohl &amp; Lee [1988], pages 460-462: restricted SUR estimation of a</span>
 <span class="sd">3-equation system (log income on log prices + log quantity, 15 stacked</span>
 <span class="sd">coefficients restricted to 7/9 free parameters) on a 30-observation</span>
@@ -2687,7 +2756,8 @@ method=2 or 'c': column-wise ordering.</p>
 <span class="sd">restriction (`w`), (2) Sigma2 from a more tightly restricted 7-free-</span>
 <span class="sd">parameter version of the same `w` (indices 8 and 12 tied to the same</span>
 <span class="sd">free parameter as index 4), (3) the final restricted SUR fit run once</span>
-<span class="sd">with each Sigma."""</span>
+<span class="sd">with each Sigma.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2762,17 +2832,31 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Mean-variance frontier: risk-aversion, return, and volatility targets — rpb/test_mvo2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_mvo2.m -- Roncalli [2013], "Introduction</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Three ways to specify mean-variance portfolios.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare a return-reward gamma, a target return, and a target volatility. Larger gamma</span>
+<span class="sd">emphasizes return in 0.5*w@cov@w - gamma*mu@w.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Match an achieved return with a return-target solve and compare weights.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_mvo2.m -- Roncalli [2013], "Introduction</span>
 <span class="sd">to Risk Parity and Budgeting", Example 1 (pages 7-8): the same 4-asset</span>
 <span class="sd">mean-variance problem evaluated three ways -- the gamma-problem (pick a</span>
-<span class="sd">risk-aversion, solve directly), the mu-problem (pick a target expected</span>
+<span class="sd">return reward, solve directly), the mu-problem (pick a target expected</span>
 <span class="sd">return, bisect on gamma to hit it), and the sigma-problem (pick a target</span>
 <span class="sd">volatility, bisect on gamma to hit it). All three route through</span>
 <span class="sd">`compute_mvo_portfolio.m`'s three branches; here that's</span>
 <span class="sd">`mvo_frontier`/`mvo_target_portfolio`.</span>
 
 <span class="sd">The original passes `lb=0, ub=0` (MATLAB's "use the default -100/100 wide</span>
-<span class="sd">bounds" sentinel); passed through explicitly here as `lb=-100, ub=100`."""</span>
+<span class="sd">bounds" sentinel); passed through explicitly here as `lb=-100, ub=100`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2817,7 +2901,20 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Mean-variance optimization plus ridge/lasso-penalized portfolios — rpb/test_lasso1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Budget constraints and portfolio penalties.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Separate an unconstrained quadratic optimum from a fully invested portfolio. Ridge and</span>
+<span class="sd">L1 penalties pull holdings toward their specified reference allocations.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the sum of weights in the unconstrained and budget-constrained cases.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],</span>
 <span class="sd">"Introduction to Risk Parity and Budgeting", Example 1 (page 53):</span>
 <span class="sd">compares an unconstrained gamma-problem MVO portfolio against the same</span>
 <span class="sd">problem with a budget (sum-to-1) constraint, and ridge/lasso-penalized</span>
@@ -2828,7 +2925,9 @@ method=2 or 'c': column-wise ordering.</p>
 <span class="sd">`mvo_portfolio`/`solve_qp(..., ridge_penalty=...)`/`solve_qp(...,</span>
 <span class="sd">lasso_penalty=...)` as established in test_lasso3.py/test_lasso5.py; the</span>
 <span class="sd">original's `0, 0` sentinel arguments for "no equality constraint" /</span>
-<span class="sd">"no bounds" map to simply omitting those keyword arguments."""</span>
+<span class="sd">"no bounds" map to omitting those keywords in solve_qp. The mvo_portfolio wrapper</span>
+<span class="sd">adds a budget by default, so the unrestricted case calls solve_qp directly.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2847,7 +2946,8 @@ method=2 or 'c': column-wise ordering.</p>
 <span class="c1"># Case gamma-problem</span>
 <span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
 
-<span class="n">x1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span>
+<span class="c1"># solve_qp has no implicit budget; mvo_portfolio defaults to sum(weights)=1.</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">)</span>
 <span class="n">x2</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span>
     <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
 <span class="p">)</span><span class="o">.</span><span class="n">weights</span>
@@ -2865,13 +2965,32 @@ method=2 or 'c': column-wise ordering.</p>
 <span class="n">results</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">x5</span><span class="p">,</span> <span class="n">x6</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"            x1      x2      x3      x4      x5      x6"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># Unconstrained first-order condition and the explicit budget are different checks.</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">cov_matrix</span> <span class="o">@</span> <span class="n">x1</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x2</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"sum of weights (unconstrained / budget):"</span><span class="p">,</span> <span class="n">x1</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">x2</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Minimum-variance portfolio under general linear constraints — rpb/test_minvar2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_minvar2.m -- minimum-variance</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Reading portfolio constraints.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Minimize variance with a budget, w[0]+w[1]=0, and w[3]&gt;=0.9. Wide signed bounds permit</span>
+<span class="sd">short positions; full investment alone does not prevent leverage.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Print every equality and inequality residual for the returned weights.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_minvar2.m -- minimum-variance</span>
 <span class="sd">portfolio with general linear equality/inequality constraints and box</span>
-<span class="sd">bounds."""</span>
+<span class="sd">bounds.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2897,9 +3016,23 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Mixed ridge+lasso penalties toward two different target vectors — rpb/test_lasso5.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Choosing the regularization target.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare shrinkage toward equal weights and toward a nonuniform allocation. The target is</span>
+<span class="sd">part of the model, not merely a numerical setting.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Use identical targets in both cases and check that the corresponding solutions agree.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
 <span class="sd">portfolios with two different ridge/lasso target vectors (equal-weight</span>
-<span class="sd">and a custom 20/20/30/30 target)."""</span>
+<span class="sd">and a custom 20/20/30/30 target).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2962,8 +3095,22 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Principal component analysis of a 3-asset correlation matrix — stats/pca1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/pca1.m -- PCA on a 3-asset correlation</span>
-<span class="sd">matrix."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Explained variance with correlated variables.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">For three standardized variables with correlation 0.8, eigenvalues are 2.6, 0.2, 0.2.</span>
+<span class="sd">Eigenvector signs and bases within repeated eigenspaces are not unique.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Set the correlation to zero and predict the explained-variance shares.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/pca1.m -- PCA on a 3-asset correlation</span>
+<span class="sd">matrix.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -2979,7 +3126,20 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Restricted seemingly-unrelated-regressions system, two-step GLS — ects/varx4a.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx4a.m -- Judge, Hill, Griffiths,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Seemingly unrelated regressions.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Fit two equations with restrictions, then use estimated cross-equation residual</span>
+<span class="sd">covariance for feasible GLS. This covariance describes errors, not regressors.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the initial and updated residual covariance estimates.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx4a.m -- Judge, Hill, Griffiths,</span>
 <span class="sd">Lutkepohl &amp; Lee [1988], "Introduction to the Theory and Practice of</span>
 <span class="sd">Econometrics", pages 444-455: restricted SUR (seemingly-unrelated-</span>
 <span class="sd">regressions) estimation of a 2-equation system with 10 stacked</span>
@@ -2992,7 +3152,8 @@ method=2 or 'c': column-wise ordering.</p>
 <span class="sd">weighting matrix (`varx_cls` -&gt; `varx_estimate(..., method="ls")` in</span>
 <span class="sd">both steps; `p=0` means no autoregressive lags, i.e. this is a pure</span>
 <span class="sd">restricted SUR regression via the VARX machinery, `results.B` here is</span>
-<span class="sd">just `result.beta` since `p=0` makes `result.phi` empty)."""</span>
+<span class="sd">just `result.beta` since `p=0` makes `result.phi` empty).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3046,9 +3207,23 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Restricted VAR via concentrated ML, vs. restricted least squares — ects/varx2c.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx2c.m -- identical setup to</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Restricted VARX likelihood.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Repeat the VARX restrictions with conditional maximum likelihood. Cross-equation</span>
+<span class="sd">residual covariance influences a restricted system fit.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare estimates and residual covariance with varx2b.py.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx2c.m -- identical setup to</span>
 <span class="sd">varx2b.py, but estimated via `varx_cml` -&gt; `varx_estimate_cml`</span>
-<span class="sd">(concentrated/iterated ML) instead of restricted LS."""</span>
+<span class="sd">(concentrated/iterated ML) instead of restricted LS.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -3164,7 +3339,20 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Restricted VAR(2) via least squares and concentrated ML — ects/varx1d.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx1d.m -- Lutkepohl [1991], chapter 5:</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A restricted VAR.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Impose zero restrictions and compare least squares with conditional maximum likelihood.</span>
+<span class="sd">Selecting restrictions after inspecting significance changes inferential interpretation.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Reconstruct the full coefficient array and verify every imposed zero.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx1d.m -- Lutkepohl [1991], chapter 5:</span>
 <span class="sd">re-estimates the VAR(2) model from varx1a.py with 14 of its 21</span>
 <span class="sd">coefficients restricted to exactly 0 (the ones that came out</span>
 <span class="sd">non-significant in the unrestricted fit), leaving only 7 free</span>
@@ -3176,7 +3364,8 @@ method=2 or 'c': column-wise ordering.</p>
 <span class="sd">`RR = design(w)` builds the (21, 7) restriction matrix directly from the</span>
 <span class="sd">free-parameter index vector `w` (0 = restricted to r=0, k = maps to free</span>
 <span class="sd">parameter k), exactly matching `quanttoolbox`'s `restriction=(RR, r)`</span>
-<span class="sd">convention."""</span>
+<span class="sd">convention.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -3303,13 +3492,27 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Restricted-coefficient VAR via restricted least squares — ects/varx2b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx2b.m -- Lutkepohl [1991], chapter</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Restricted VARX least squares.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Impose coefficient values, including a fixed one and fixed zeros. Restrictions reduce</span>
+<span class="sd">free coordinates rather than deleting observed variables.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Verify the imposed values directly in the fitted coefficient matrix.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx2b.m -- Lutkepohl [1991], chapter</span>
 <span class="sd">10: re-estimates the reduced-form dynamic simultaneous-equations model</span>
 <span class="sd">from varx2a.py with four coefficients restricted: the Inc(t-1)</span>
 <span class="sd">coefficient in the Inc(t) equation fixed at 1, and the Cons(t-1)/</span>
 <span class="sd">constant coefficients in the Inc(t) equation and the Inv(t-1)</span>
 <span class="sd">coefficient in the Cons(t) equation all fixed at 0 -- via `varx_cls` -&gt;</span>
-<span class="sd">`varx_estimate(..., method="ls")`."""</span>
+<span class="sd">`varx_estimate(..., method="ls")`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -3427,10 +3630,24 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Ridge, lasso, and mixed-norm penalized portfolios — rpb/test_lasso3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso3.m (byte-identical to</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""When an L1 penalty cannot help.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">For nonnegative weights summing to one, their L1 norm is always one. An L1 penalty</span>
+<span class="sd">toward zero is then constant; a penalty toward existing holdings can still matter.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare zero-target L1 weights with the unpenalized long-only solution.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_lasso3.m (byte-identical to</span>
 <span class="sd">test_lasso4.m) -- MVO/ridge/lasso/mixed-penalty portfolios via the</span>
 <span class="sd">consolidated solve_qp (replacing the original's separate quadprog_ridge/</span>
-<span class="sd">quadprog_lasso/quadprog_mixed calls -- see optim/quadprog.py docstring)."""</span>
+<span class="sd">quadprog_lasso/quadprog_mixed calls -- see optim/quadprog.py docstring).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3520,8 +3737,22 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Risk budgeting toward unequal target budgets — rpb/test_erc3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc3.m -- Example 17 (page 123),</span>
-<span class="sd">Roncalli (2013). RB portfolio with unequal target budgets."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Unequal risk-contribution targets.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Allocate to 20/20/30/30 risk budgets in a correlated four-asset model. Check convergence</span>
+<span class="sd">and achieved contributions rather than expecting those capital weights.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Switch to equal budgets and compare both allocations and risk shares.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_erc3.m -- Example 17 (page 123),</span>
+<span class="sd">Roncalli (2013). RB portfolio with unequal target budgets.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3545,9 +3776,23 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Risk contribution decomposition and equal-budget risk budgeting — rpb/test_erc2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc2.m -- Example 7 (page 80),</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Capital weights versus risk budgets.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare a fixed allocation, equal risk budgets, and budgets numerically equal to that</span>
+<span class="sd">allocation. Equal capital weights do not generally imply equal risk.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase one asset volatility and inspect its ERC weight.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_erc2.m -- Example 7 (page 80),</span>
 <span class="sd">Roncalli (2013). Risk contribution decomposition + risk budgeting at</span>
-<span class="sd">various target budgets."""</span>
+<span class="sd">various target budgets.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3572,7 +3817,21 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>Simultaneous-equations system: OLS, GLS, and LIML compared — ects/varx5a.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx5a.m -- Judge, Hill, Griffiths,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Structural and reduced-form systems.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare structural estimation methods and their implied reduced form. Identification</span>
+<span class="sd">restrictions and instrument validity are substantive assumptions; iterative fits need</span>
+<span class="sd">convergence checks.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare reduced-form predictions as well as structural coefficient tables.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx5a.m -- Judge, Hill, Griffiths,</span>
 <span class="sd">Lutkepohl &amp; Lee [1988], pages 636-663: a 3-equation simultaneous linear</span>
 <span class="sd">model estimated four ways -- OLS, GLS-2S, GLS-3S, LIML -- on a</span>
 <span class="sd">20-observation embedded dataset, recovering the structural Gamma/B</span>
@@ -3584,15 +3843,16 @@ method=2 or 'c': column-wise ordering.</p>
 <span class="sd">concentrated/iterated ML) for the LIML step, seeded from step 3's Sigma</span>
 <span class="sd">via `VARX_Tol = 1e-20`. `varx_estimate_cml` here always starts its own</span>
 <span class="sd">internal iteration from the identity matrix rather than accepting a</span>
-<span class="sd">seed Sigma -- since concentrated ML converges to the same fixed point</span>
-<span class="sd">regardless of starting Sigma (only the number of iterations to get there</span>
-<span class="sd">differs), this is translated as a plain `varx_estimate_cml(..., tol=</span>
-<span class="sd">1e-20)` call rather than trying to seed it.</span>
+<span class="sd">seed Sigma. The translation therefore calls `varx_estimate_cml` directly.</span>
+<span class="sd">Convergence to the same solution from different starting covariances is</span>
+<span class="sd">not guaranteed; inspect the fitted likelihood and convergence diagnostics.</span>
+<span class="sd">The historical tolerance 1e-20 is below ordinary floating-point resolution.</span>
 
 <span class="sd">`theta(1:9)` reshaped (row-major, truncating/ignoring the rest) into</span>
 <span class="sd">Gamma, and `theta(10:24)` reshaped into B, are both translated via the</span>
 <span class="sd">ported `reshaper` (row-major reshape/recycle) exactly as in the</span>
-<span class="sd">original."""</span>
+<span class="sd">original.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3660,13 +3920,27 @@ method=2 or 'c': column-wise ordering.</p>
 </details>
 <details class="example">
 <summary>vech/xpnd (both orderings) and reshaper/reshapec compared — matrix/reshape1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/matrix/reshape1.m -- vech/xpnd (both row- and</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Reshaping and symmetric reconstruction.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare row-major and column-major ordering. Half-vectorization discards one triangle,</span>
+<span class="sd">so expanding a nonsymmetric input cannot recover that input.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Use a symmetric input and verify the vech/xpnd round trip.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/matrix/reshape1.m -- vech/xpnd (both row- and</span>
 <span class="sd">column-wise orderings) and reshaper/reshapec on a fixed 4x4 matrix.</span>
 
 <span class="sd">The original also exercises `shiftr` (a lagged-shift primitive); that</span>
 <span class="sd">function is not ported (superseded by NumPy roll/slicing idioms -- see</span>
 <span class="sd">`matrix/shiftr1.m`'s own tracker entry) and is skipped here rather than</span>
-<span class="sd">reimplemented."""</span>
+<span class="sd">reimplemented.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 

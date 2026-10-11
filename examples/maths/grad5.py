@@ -1,9 +1,23 @@
-"""Translated from Examples/maths/grad5.m -- two equivalent formulations of
+"""Equivalent formulas, equivalent gradients.
+
+Learning goal
+-------------
+Two implementations of the same scalar objective should give matching derivatives.
+Reciprocal terms require nonzero coordinates.
+
+Try it
+------
+Change the positive evaluation point and check agreement again.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/maths/grad5.m -- two equivalent formulations of
 the same gradient: fun(x) = 0.5*x'x + exp(x)'*(1/x) (already scalar-valued,
 so it needs no summing trick), and fun2(x) = sum(0.5*x_i^2 + exp(x_i)/x_i)
 (explicitly written as a sum of separable terms). Both have gradient
 g(x) = x + exp(x) .* (1/x - 1/x^2), confirming the two formulations agree
-numerically."""
+numerically.
+"""
 
 import numpy as np
 

@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/varx1b.m -- Lutkepohl [1991], section
+"""Testing predictive restrictions in a VAR.
+
+Learning goal
+-------------
+Test a joint set of lag coefficients with a Wald statistic. Granger predictability is
+not evidence of a structural causal mechanism.
+
+Try it
+------
+Inspect the restricted coefficient indices before interpreting the p-value.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx1b.m -- Lutkepohl [1991], section
 3.6: Wald test for no Granger-causality from income/consumption to
 investment in the VAR(2) model estimated in varx1a.py (same
 log-differenced Lutkepohl.asc data), i.e. H0: theta[4] = theta[7] =
@@ -8,7 +21,8 @@ coefficient vector).
 `RR = [design([4;7;13;16]) zeros(4,5)]` is only used to build the
 constraint function `C(theta) = RR @ theta` -- it is not a restriction
 passed to `varx_estimate` here, so it's translated as a direct 4-element
-index/select into theta rather than via `design`."""
+index/select into theta rather than via `design`.
+"""
 
 import io
 

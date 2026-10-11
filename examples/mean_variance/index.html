@@ -408,6 +408,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimize portfolios
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -424,6 +442,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#check-the-constraints-then-change-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check the constraints, then change one
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1303,6 +1351,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#check-the-constraints-then-change-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check the constraints, then change one
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1322,6 +1389,12 @@
 
 
 <h1 id="mean-variance-minimum-variance-and-tracking-error">Mean-variance, minimum-variance, and tracking error<a class="headerlink" href="#mean-variance-minimum-variance-and-tracking-error" title="Permanent link">&para;</a></h1>
+<p><strong>Goal:</strong> understand how the objective and allocation constraints change a portfolio.
+Read <a href="../building_blocks/">Building blocks</a> first if covariance matrices are new to you.</p>
+<p>All returns and volatilities below use the same annual horizon, in decimals.
+The objective minimizes <code>0.5 * w @ cov @ w - gamma * mu @ w</code>:
+<strong>larger gamma puts more weight on return</strong>. It is an inverse risk-aversion
+convention. The default budget is <code>sum(w)=1</code>; short positions are allowed.</p>
 <p>Translated from <code>Examples/rpb/test_mvo1.m</code>, <code>test_minvar1.m</code>, <code>test_te1.m</code>.
 Same four-asset dataset as the <a href="../black_litterman/">Black-Litterman example</a>.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -1336,7 +1409,7 @@ Same four-asset dataset as the <a href="../black_litterman/">Black-Litterman exa
 <span class="n">rho</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">rho_vech</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_to_cov</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
 
-<span class="c1"># --- Mean-variance optimal, risk-aversion gamma=0.5 ---</span>
+<span class="c1"># --- Mean-variance optimal, return-reward gamma=0.5 ---</span>
 <span class="n">mvo</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"MVO weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">mvo</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"expected return:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">mvo</span><span class="o">.</span><span class="n">expected_return</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="s2">"volatility:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">mvo</span><span class="o">.</span><span class="n">volatility</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -1364,6 +1437,25 @@ tracking error: 0.0
 correctly returns exactly the benchmark weights — zero tracking error is
 achievable trivially by holding the benchmark itself, and the optimizer
 finds it.</p>
+<h2 id="check-the-constraints-then-change-one">Check the constraints, then change one<a class="headerlink" href="#check-the-constraints-then-change-one" title="Permanent link">&para;</a></h2>
+<p>Negative weights are short positions. A portfolio can sum to one while having
+gross exposure <code>sum(abs(w))</code> greater than one. Add bounds to make the comparison
+long-only, keeping the same inputs and objective:</p>
+<div class="highlight"><pre><span></span><code><span class="n">long_only</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"long-only weights:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">long_only</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">"gross exposure, signed / long-only:"</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mvo</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">long_only</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">mvo</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">long_only</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">long_only</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">1e-7</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">te</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">x_benchmark</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Try it:</strong> compare gamma values 0, 0.5, and 1 under the same long-only bounds.
+Record expected return and volatility, not just weights. These are model
+forecasts; this calculation does not establish realized performance.</p>
 
 
 

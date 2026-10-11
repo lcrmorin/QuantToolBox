@@ -1,4 +1,18 @@
-"""Translated from Examples/ects/varx5a.m -- Judge, Hill, Griffiths,
+"""Structural and reduced-form systems.
+
+Learning goal
+-------------
+Compare structural estimation methods and their implied reduced form. Identification
+restrictions and instrument validity are substantive assumptions; iterative fits need
+convergence checks.
+
+Try it
+------
+Compare reduced-form predictions as well as structural coefficient tables.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx5a.m -- Judge, Hill, Griffiths,
 Lutkepohl & Lee [1988], pages 636-663: a 3-equation simultaneous linear
 model estimated four ways -- OLS, GLS-2S, GLS-3S, LIML -- on a
 20-observation embedded dataset, recovering the structural Gamma/B
@@ -10,15 +24,16 @@ the GLS weight) before switching to `varx_cml` (-> `varx_estimate_cml`,
 concentrated/iterated ML) for the LIML step, seeded from step 3's Sigma
 via `VARX_Tol = 1e-20`. `varx_estimate_cml` here always starts its own
 internal iteration from the identity matrix rather than accepting a
-seed Sigma -- since concentrated ML converges to the same fixed point
-regardless of starting Sigma (only the number of iterations to get there
-differs), this is translated as a plain `varx_estimate_cml(..., tol=
-1e-20)` call rather than trying to seed it.
+seed Sigma. The translation therefore calls `varx_estimate_cml` directly.
+Convergence to the same solution from different starting covariances is
+not guaranteed; inspect the fitted likelihood and convergence diagnostics.
+The historical tolerance 1e-20 is below ordinary floating-point resolution.
 
 `theta(1:9)` reshaped (row-major, truncating/ignoring the rest) into
 Gamma, and `theta(10:24)` reshaped into B, are both translated via the
 ported `reshaper` (row-major reshape/recycle) exactly as in the
-original."""
+original.
+"""
 
 import numpy as np
 

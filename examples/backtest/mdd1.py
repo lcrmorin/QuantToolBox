@@ -1,10 +1,24 @@
-"""Translated from Examples/backtest/mdd1.m -- maximum_drawdown on 3
+"""Maximum drawdown and its dates.
+
+Learning goal
+-------------
+Read the peak, subsequent trough, and loss for each simulated asset. Peak-to-trough
+duration is not the time needed to recover the peak.
+
+Try it
+------
+Replace one price path with a steadily rising sequence and predict its drawdown.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/backtest/mdd1.m -- maximum_drawdown on 3
 simulated price indices (numeric core only; the original's plot marking
 the drawdown peak/trough on each series is dropped).
 
 The original explicitly seeds MATLAB's RNG (`rng(1234567)`); NumPy's
 generator is seeded the same way for a comparable (not bit-identical)
-run."""
+run.
+"""
 
 import numpy as np
 

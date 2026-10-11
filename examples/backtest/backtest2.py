@@ -1,4 +1,17 @@
-"""Translated from Examples/backtest/backtest2.m -- generate_backtest at
+"""Rebalancing dates and missing prices.
+
+Learning goal
+-------------
+Compare a single initial allocation with scheduled rebalancing. Rows are dates and
+columns are assets; NaNs in the date-subset case indicate unavailable history.
+
+Try it
+------
+Move one rebalance date and compare final wealth with buy-and-hold.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/backtest/backtest2.m -- generate_backtest at
 three rebalancing schedules (single rebalance at t0, four fixed
 positional rebalances, and a schedule mixing an actual date subset with
 two out-of-range placeholder dates) on a simulated 3-asset equal-weight
@@ -8,7 +21,8 @@ The original draws R from MATLAB's unseeded `randn`; a fixed seed
 (`np.random.default_rng(0)`) is substituted here for reproducibility,
 same convention used elsewhere in this port. Plotting is dropped (see
 `docs/migration_map.md`'s example translation tracker Notes column
-convention)."""
+convention).
+"""
 
 import numpy as np
 

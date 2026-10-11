@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/whittle2.m -- fits a Bloomfield
+"""Supplying a custom spectral density.
+
+Learning goal
+-------------
+Fit a fourth-order Bloomfield spectrum with an analytical Jacobian. Exponentiation
+ensures a positive spectrum; normalization must match the periodogram.
+
+Try it
+------
+Change the spectral order and compare fit with parameter count.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/whittle2.m -- fits a Bloomfield
 exponential spectral density (Dzhaparidze [1986], p.125) of order 4 to
 the 500-observation Whittle2.asc series (embedded directly below) via
 Whittle (frequency-domain) maximum likelihood, using a custom `sdf_fn`
@@ -11,7 +24,8 @@ optimizer path (BFGS), so there is just one call here. The trailing `0,
 0` positional arguments in `whittle_estimation(y, sdf, sv, 0, 0)`
 (restriction, weights) are the GAUSS/MATLAB-toolbox "use the default"
 sentinel and map to `restriction=None, weights=1.0`, i.e. the keyword
-defaults -- so they're simply omitted below."""
+defaults -- so they're simply omitted below.
+"""
 
 import io
 

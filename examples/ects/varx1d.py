@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/varx1d.m -- Lutkepohl [1991], chapter 5:
+"""A restricted VAR.
+
+Learning goal
+-------------
+Impose zero restrictions and compare least squares with conditional maximum likelihood.
+Selecting restrictions after inspecting significance changes inferential interpretation.
+
+Try it
+------
+Reconstruct the full coefficient array and verify every imposed zero.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx1d.m -- Lutkepohl [1991], chapter 5:
 re-estimates the VAR(2) model from varx1a.py with 14 of its 21
 coefficients restricted to exactly 0 (the ones that came out
 non-significant in the unrestricted fit), leaving only 7 free
@@ -10,7 +23,8 @@ resulting B = [Phi, beta] matrices.
 `RR = design(w)` builds the (21, 7) restriction matrix directly from the
 free-parameter index vector `w` (0 = restricted to r=0, k = maps to free
 parameter k), exactly matching `quanttoolbox`'s `restriction=(RR, r)`
-convention."""
+convention.
+"""
 
 import io
 

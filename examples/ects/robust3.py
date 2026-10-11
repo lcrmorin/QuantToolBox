@@ -1,10 +1,24 @@
-"""Translated from Examples/ects/robust3.m -- OLS vs. median regression,
+"""Iterative and exact quantile regression.
+
+Learning goal
+-------------
+Compare an IRLS approximation with a linear-programming quantile fit. Check convergence
+and asymmetric loss, not just rounded coefficients.
+
+Try it
+------
+Vary the target quantile and inspect the two objective values.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/robust3.m -- OLS vs. median regression,
 LAD regression, and quantile regression at alpha=0.90, both via the IRLS
 M-estimator (`quantile_m_regression`) and the exact LP formulation
 (`quantile_regression`), on a simulated 3-predictor dataset.
 
 The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed
-seed (`np.random.default_rng(0)`) is substituted here."""
+seed (`np.random.default_rng(0)`) is substituted here.
+"""
 
 import numpy as np
 
@@ -29,6 +43,11 @@ beta_med, _, _ = quantile_regression(y, x, alpha)
 print("\nMedian regression beta:", np.round(beta_med, 4))
 
 r_lad = lad_regression(y, x)
+# LAD's nonsmooth loss can make IRLS stop at its iteration limit.
+# The median-regression LP above supplies an objective-value cross-check.
+if not r_lad.converged:
+    print("LAD IRLS reached its iteration limit; compare absolute loss with the LP fit.")
+
 print("\nLAD regression beta:", np.round(r_lad.beta, 4), "converged:", r_lad.converged)
 
 alpha = 0.90
@@ -37,3 +56,8 @@ print(f"\nQuantile (alpha={alpha}) regression via IRLS M-estimator, beta:", np.r
 
 beta_q, _, _ = quantile_regression(y, x, alpha)
 print(f"Quantile (alpha={alpha}) regression via exact LP, beta:        ", np.round(beta_q, 4))
+
+# Absolute-loss agreement can be useful even when IRLS has not met its stopping rule.
+loss_lp = np.abs(y - x @ beta_med).sum()
+loss_irls = np.abs(y - x @ r_lad.beta).sum()
+print("LAD absolute loss, LP / IRLS:", loss_lp, loss_irls)

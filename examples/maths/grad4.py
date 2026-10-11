@@ -1,8 +1,22 @@
-"""Translated from Examples/maths/grad4.m -- numerical vs. analytical
+"""Checking a product-rule derivative.
+
+Learning goal
+-------------
+Compare numerical derivatives of 2*x*exp(x**2/3) with the analytical product rule.
+Absolute errors grow with the scale of the function.
+
+Try it
+------
+Compare both absolute and relative error at smaller coordinates.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/maths/grad4.m -- numerical vs. analytical
 gradient of the separable, elementwise function f(x) = 2*x * exp(x^2/3).
 
 Same elementwise-via-sum approach as grad3.py's translation (see that
-file's docstring for why)."""
+file's docstring for why).
+"""
 
 import numpy as np
 

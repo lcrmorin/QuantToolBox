@@ -1,9 +1,23 @@
-"""Translated from Examples/backtest/unfunded2.m -- a tiny (n=8),
+"""A funding round trip.
+
+Learning goal
+-------------
+Follow constant per-period risky and cash returns through unfunding and refunding. The
+first return is undefined because there is no previous price.
+
+Try it
+------
+Change the cash return and verify that the reconstructed funded prices still agree.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/backtest/unfunded2.m -- a tiny (n=8),
 hand-traceable version of unfunded1.py's funded/unfunded round-trip:
 checks that price_to_unfunded -> unfunded_to_price recovers the original
 funded prices, and that the three backtest formulations agree, on a
 deterministic constant-return series (no randomness involved, so no
-fixed-seed substitution is needed here)."""
+fixed-seed substitution is needed here).
+"""
 
 import numpy as np
 

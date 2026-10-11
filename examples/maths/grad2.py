@@ -1,6 +1,20 @@
-"""Translated from Examples/maths/grad2.m -- numerical vs. analytical
+"""Finite differences for a coupled function.
+
+Learning goal
+-------------
+Compare analytical, forward, and central derivatives. Keep the logarithm argument
+positive; the small second coordinate makes step size important.
+
+Try it
+------
+Vary the differentiation step and compare maximum absolute errors.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/maths/grad2.m -- numerical vs. analytical
 gradient of a scalar function of two variables that mixes polynomial,
-log, and exponential terms."""
+log, and exponential terms.
+"""
 
 import numpy as np
 

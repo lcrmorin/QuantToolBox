@@ -1,4 +1,17 @@
-"""Translated from Examples/rpb/test_bl4.m -- Roncalli [2013], "Introduction
+"""A tracking-error frontier.
+
+Learning goal
+-------------
+Increase the active risk budget against a fixed benchmark. Expected active return is
+model-implied, not realized performance.
+
+Try it
+------
+Inspect how close the achieved tracking error is to each target.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_bl4.m -- Roncalli [2013], "Introduction
 to Risk Parity and Budgeting", page 24: a single Black-Litterman view
 (same P/Q/Omega/tau as test_bl3.py's scenario 1) turned into a *tracking-error*
 frontier against the x0 benchmark -- the sigma-problem branch of
@@ -6,7 +19,8 @@ frontier against the x0 benchmark -- the sigma-problem branch of
 tracking-error levels (effectively 0% through 5%) show how active return and
 the information ratio (alpha/te, here genuinely dimensionless -- unlike
 test_bl3.py's alpha/sigma_x convention) scale with the amount of tracking
-error taken."""
+error taken.
+"""
 
 import numpy as np
 

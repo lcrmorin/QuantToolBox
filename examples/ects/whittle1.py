@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/whittle1.m -- Harvey [1990],
+"""A spectral fit of a local-level model.
+
+Learning goal
+-------------
+Estimate observation and state noise from a short historical series. Whittle likelihood
+is a frequency-domain approximation; estimated scales are not exact truths.
+
+Try it
+------
+Compare with the time-domain estimates in kalman1c.py.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/whittle1.m -- Harvey [1990],
 "Forecasting, Structural Time Series and the Kalman Filter", pages
 89-90: estimate a local-level model's variance parameters in the
 frequency domain via Whittle maximum likelihood, on the same 71-
@@ -10,7 +23,8 @@ different optimizer implementations of the same Whittle MLE problem;
 single optimizer path (`scipy.optimize.minimize` with BFGS), since all
 three MATLAB variants solve the identical optimization problem and
 should converge to the same estimate -- so there is only one call here,
-not three."""
+not three.
+"""
 
 import numpy as np
 

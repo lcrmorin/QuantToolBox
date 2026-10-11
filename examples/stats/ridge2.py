@@ -1,7 +1,21 @@
-"""Translated from Examples/stats/ridge2.m -- tau-targeted ridge regression
+"""Selecting ridge shrinkage by coefficient norm.
+
+Learning goal
+-------------
+Compare requested norm targets with a penalty-grid solution. Grid resolution and range
+limit how accurately a target can be reached.
+
+Try it
+------
+Refine the grid and compare achieved norms, not just the selected lambda.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/stats/ridge2.m -- tau-targeted ridge regression
 (`ridge_tau_targeted`) cross-checked against fixed-lambda ridge (`ridge`),
 in both absolute and OLS-relative tau modes, on the same 15-observation
-dataset used throughout stats/."""
+dataset used throughout stats/.
+"""
 
 import numpy as np
 

@@ -1,4 +1,17 @@
-"""Translated from Examples/stats/kalman1.m -- simulates a 200-
+"""Estimating changing regression coefficients.
+
+Learning goal
+-------------
+Fit noise parameters, then inspect one-step predicted states. Predicted states precede
+the current observation; filtered states incorporate it.
+
+Try it
+------
+Compare a_pred with a_filt to see the effect of each observation.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/stats/kalman1.m -- simulates a 200-
 observation time-varying-coefficient regression y_t = b0_t + x1_t*b1_t +
 u_t, where b0_t and b1_t are independent random walks starting at 10 and
 4 respectively, then recovers (a0, sigma_epsilon, sigma_b0, sigma_b1) by
@@ -20,7 +33,8 @@ equals its per-period innovation variance, exactly as the original does.
 
 The original draws from MATLAB's unseeded `randn`; a fixed seed
 (`np.random.default_rng(0)`) is substituted here, in the same call order
-(b0 innovations, b1 innovations, x1, u) as the original."""
+(b0 innovations, b1 innovations, x1, u) as the original.
+"""
 
 import numpy as np
 from scipy.optimize import minimize
@@ -64,6 +78,7 @@ lb = np.array([-10.0, -10.0, 0.00001, 0.0001, 0.0001])
 ub = np.array([10.0, 10.0, 100.0, 100.0, 100.0])
 
 opt_result = minimize(_neg_sum_logl, sv, method="L-BFGS-B", bounds=list(zip(lb, ub, strict=True)))
+print("optimizer converged:", opt_result.success, "message:", opt_result.message)
 theta = opt_result.x.copy()
 theta[2:5] = theta[2:5] ** 2
 
@@ -78,6 +93,6 @@ result = kalman_filter(ssm, y[:, None], a0, p0)
 a_cond = result.a_pred
 
 s = np.arange(1, nobs + 1)
-print("\ns, true b0, filtered b0, true b1, filtered b1 -- first/last 10:")
+print("\ns, true b0, predicted b0, true b1, predicted b1 -- first/last 10:")
 print(np.round(np.column_stack([s, b0, a_cond[:, 0], b1, a_cond[:, 1]])[:10], 4))
 print(np.round(np.column_stack([s, b0, a_cond[:, 0], b1, a_cond[:, 1]])[-10:], 4))

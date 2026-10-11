@@ -1,4 +1,17 @@
-"""Translated from Examples/matrix/matrix2.m -- checks seven algebraic
+"""Vectorization matrix identities.
+
+Learning goal
+-------------
+Check elimination, duplication, and commutation identities for increasing matrix sizes.
+Dimensions connect M-by-M matrices with full and half vectorizations.
+
+Try it
+------
+Work through the M=2 case by hand, then inspect the corresponding matrices.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/matrix/matrix2.m -- checks seven algebraic
 identities relating the elimination, duplication, and commutation
 matrices, for M = 1..10.
 
@@ -8,7 +21,8 @@ products are exact in floating point for the equality- and sum-based
 checks, but `inv(D'*D)` (a genuine matrix inversion) is not bit-exact, so
 `np.isclose`/`np.allclose` are used throughout instead of `==` to make the
 comparison robust the way an equivalent MATLAB run using a tolerance
-would be."""
+would be.
+"""
 
 import numpy as np
 
@@ -30,7 +44,7 @@ for M in range(1, 11):
     checks = [
         np.allclose(L @ D, np.eye(p)),
         np.allclose(K @ D, D),
-        np.array_equal(K1 == K2, K1 == np.eye(M)),
+        np.array_equal(K1, K2) and np.array_equal(K1, np.eye(M)),
         np.isclose(np.sum(np.diag(K)), M),
         np.isclose(np.sum(np.diag(D.T @ D)), M**2),
         np.allclose(L @ L.T, np.eye(p)),

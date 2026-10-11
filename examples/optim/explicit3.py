@@ -1,7 +1,21 @@
-"""Translated from Examples/optim/explicit3.m -- explicit-to-implicit
+"""Fixing selected coefficients at zero.
+
+Learning goal
+-------------
+Three restrictions leave five free coordinates in an eight-parameter vector. Validate
+the reconstructed vector rather than comparing basis entries.
+
+Try it
+------
+Add another independent zero restriction and predict the new basis shape.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/optim/explicit3.m -- explicit-to-implicit
 conversion for three simultaneous zero-restrictions on an 8-parameter
 vector (as would arise e.g. from AR1_12=0, MA1_11=0, MA1_21=0 in a VAR
-specification)."""
+specification).
+"""
 
 import numpy as np
 

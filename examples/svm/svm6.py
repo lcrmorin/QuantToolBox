@@ -1,6 +1,20 @@
-"""Translated from Examples/svm/svm6.m -- comparison of OLS, LAD, and
+"""Loss functions in SVM regression.
+
+Learning goal
+-------------
+Compare squared, absolute, quantile, and epsilon-insensitive losses. The SVM intercept
+is handled separately from the column of ones used by the regression routines.
+
+Try it
+------
+Set epsilon to zero and increase C to compare with least absolute deviations.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/svm/svm6.m -- comparison of OLS, LAD, and
 SVM-regression (LS-SVM and epsilon-SVM, at two different C values)
-estimates on the same 10-obs dataset used in ols1.m/robust1.m."""
+estimates on the same 10-obs dataset used in ols1.m/robust1.m.
+"""
 
 import numpy as np
 

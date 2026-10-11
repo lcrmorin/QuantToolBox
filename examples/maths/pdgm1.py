@@ -1,8 +1,22 @@
-"""Translated from Examples/maths/pdgm1.m -- raw periodogram of a
+"""FFT coefficients and spectral scaling.
+
+Learning goal
+-------------
+Trace a four-observation series into its periodogram. The scaled and unscaled versions
+differ by a constant normalization, not by frequency content.
+
+Try it
+------
+Multiply the observations by two and check that spectral power grows fourfold.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/maths/pdgm1.m -- raw periodogram of a
 4-observation series, unscaled and scaled by 1/(2*pi). Despite the
 tracker's earlier note, this is a small numeric example, not a plot;
 `pdgm(y)`/`pdgm(y,1)` map directly to
-`periodogram(y, scaling=False)`/`periodogram(y, scaling=True)`."""
+`periodogram(y, scaling=False)`/`periodogram(y, scaling=True)`.
+"""
 
 import numpy as np
 

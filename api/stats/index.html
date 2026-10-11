@@ -6938,9 +6938,22 @@ variate divided by sqrt(chi-square(nu) / nu).</p>
 </div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Pinball-loss quantile estimation vs. sample and true quantiles — ects/quantile1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/quantile1.m -- illustrates that</span>
-<span class="sd">minimizing the pinball (check) loss recovers the same quantile as the</span>
-<span class="sd">standard sorted-sample quantile estimator, compared against the true</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Quantiles as asymmetric-loss minimizers.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Minimize pinball loss for a scalar location. A finite-sample minimizer need not equal an</span>
+<span class="sd">interpolated NumPy quantile; multiple minimizers can exist.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Try a small even-sized sample and inspect the loss between its middle observations.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/quantile1.m -- illustrates that</span>
+<span class="sd">minimizing the pinball (check) loss estimates a sample quantile, compared</span>
+<span class="sd">with NumPy's interpolated sample quantile and the true</span>
 <span class="sd">Normal quantile function (numeric core only; the original's comparison</span>
 <span class="sd">plot is dropped).</span>
 
@@ -6948,7 +6961,8 @@ variate divided by sqrt(chi-square(nu) / nu).</p>
 <span class="sd">(`np.random.default_rng(0)`) is substituted here. `quantile`/`sort`-based</span>
 <span class="sd">quantile estimation uses plain `np.quantile` directly (not a ported</span>
 <span class="sd">quanttoolbox function -- there's nothing toolbox-specific to translate</span>
-<span class="sd">here, same as other examples that lean on bare NumPy/pandas idioms)."""</span>
+<span class="sd">here, same as other examples that lean on bare NumPy/pandas idioms).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize_scalar</span>
@@ -8703,9 +8717,23 @@ weekly correlations are less affected by asynchronous trading).</p>
 </div><h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Black-Litterman view sensitivity across five scenarios — rpb/test_bl2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl2.m -- Black-Litterman sensitivity</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""How views change portfolio weights.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Vary view returns, uncertainty, and prior scaling while keeping the return-reward gamma</span>
+<span class="sd">fixed. Omega contains variances; a larger Omega means weaker views.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase only one view variance and compare the posterior portfolio with the benchmark.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_bl2.m -- Black-Litterman sensitivity</span>
 <span class="sd">analysis across 6 scenarios (base case + 5 view/uncertainty/tau variants),</span>
-<span class="sd">each solved as a fixed-risk-aversion MVO portfolio."""</span>
+<span class="sd">each solved as a fixed-return-reward MVO portfolio.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -8771,15 +8799,29 @@ weekly correlations are less affected by asynchronous trading).</p>
 
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">r_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"scenario </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: weights=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'weights'</span><span class="p">],</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> mu=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'mu'</span><span class="p">],</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2"> te=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'te'</span><span class="p">],</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+        <span class="sa">f</span><span class="s2">"scenario </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: weights=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'weights'</span><span class="p">],</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> mu=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'mu'</span><span class="p">],</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2"> te=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'te'</span><span class="p">],</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Equal risk contribution and box-constrained risk budgeting — rpb/test_box1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_box1.m -- ERC and box-constrained</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Risk budgets under allocation limits.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Tight boxes around initial holdings can prevent equal risk contributions. Wider boxes</span>
+<span class="sd">approach the unrestricted ERC allocation.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare risk contributions, not just weights, as the box widens.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_box1.m -- ERC and box-constrained</span>
 <span class="sd">("C-ERC") risk budgeting portfolios at progressively wider bounds around</span>
-<span class="sd">a starting position."""</span>
+<span class="sd">a starting position.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -8808,17 +8850,31 @@ weekly correlations are less affected by asynchronous trading).</p>
 </details>
 <details class="example">
 <summary>Mean-variance frontier: risk-aversion, return, and volatility targets — rpb/test_mvo2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_mvo2.m -- Roncalli [2013], "Introduction</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Three ways to specify mean-variance portfolios.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare a return-reward gamma, a target return, and a target volatility. Larger gamma</span>
+<span class="sd">emphasizes return in 0.5*w@cov@w - gamma*mu@w.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Match an achieved return with a return-target solve and compare weights.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_mvo2.m -- Roncalli [2013], "Introduction</span>
 <span class="sd">to Risk Parity and Budgeting", Example 1 (pages 7-8): the same 4-asset</span>
 <span class="sd">mean-variance problem evaluated three ways -- the gamma-problem (pick a</span>
-<span class="sd">risk-aversion, solve directly), the mu-problem (pick a target expected</span>
+<span class="sd">return reward, solve directly), the mu-problem (pick a target expected</span>
 <span class="sd">return, bisect on gamma to hit it), and the sigma-problem (pick a target</span>
 <span class="sd">volatility, bisect on gamma to hit it). All three route through</span>
 <span class="sd">`compute_mvo_portfolio.m`'s three branches; here that's</span>
 <span class="sd">`mvo_frontier`/`mvo_target_portfolio`.</span>
 
 <span class="sd">The original passes `lb=0, ub=0` (MATLAB's "use the default -100/100 wide</span>
-<span class="sd">bounds" sentinel); passed through explicitly here as `lb=-100, ub=100`."""</span>
+<span class="sd">bounds" sentinel); passed through explicitly here as `lb=-100, ub=100`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -8863,7 +8919,20 @@ weekly correlations are less affected by asynchronous trading).</p>
 </details>
 <details class="example">
 <summary>Mean-variance optimization plus ridge/lasso-penalized portfolios — rpb/test_lasso1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Budget constraints and portfolio penalties.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Separate an unconstrained quadratic optimum from a fully invested portfolio. Ridge and</span>
+<span class="sd">L1 penalties pull holdings toward their specified reference allocations.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the sum of weights in the unconstrained and budget-constrained cases.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],</span>
 <span class="sd">"Introduction to Risk Parity and Budgeting", Example 1 (page 53):</span>
 <span class="sd">compares an unconstrained gamma-problem MVO portfolio against the same</span>
 <span class="sd">problem with a budget (sum-to-1) constraint, and ridge/lasso-penalized</span>
@@ -8874,7 +8943,9 @@ weekly correlations are less affected by asynchronous trading).</p>
 <span class="sd">`mvo_portfolio`/`solve_qp(..., ridge_penalty=...)`/`solve_qp(...,</span>
 <span class="sd">lasso_penalty=...)` as established in test_lasso3.py/test_lasso5.py; the</span>
 <span class="sd">original's `0, 0` sentinel arguments for "no equality constraint" /</span>
-<span class="sd">"no bounds" map to simply omitting those keyword arguments."""</span>
+<span class="sd">"no bounds" map to omitting those keywords in solve_qp. The mvo_portfolio wrapper</span>
+<span class="sd">adds a budget by default, so the unrestricted case calls solve_qp directly.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -8893,7 +8964,8 @@ weekly correlations are less affected by asynchronous trading).</p>
 <span class="c1"># Case gamma-problem</span>
 <span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
 
-<span class="n">x1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span>
+<span class="c1"># solve_qp has no implicit budget; mvo_portfolio defaults to sum(weights)=1.</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">)</span>
 <span class="n">x2</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span>
     <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
 <span class="p">)</span><span class="o">.</span><span class="n">weights</span>
@@ -8911,13 +8983,32 @@ weekly correlations are less affected by asynchronous trading).</p>
 <span class="n">results</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">x5</span><span class="p">,</span> <span class="n">x6</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"            x1      x2      x3      x4      x5      x6"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># Unconstrained first-order condition and the explicit budget are different checks.</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">cov_matrix</span> <span class="o">@</span> <span class="n">x1</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x2</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"sum of weights (unconstrained / budget):"</span><span class="p">,</span> <span class="n">x1</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">x2</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Minimum-variance portfolio under general linear constraints — rpb/test_minvar2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_minvar2.m -- minimum-variance</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Reading portfolio constraints.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Minimize variance with a budget, w[0]+w[1]=0, and w[3]&gt;=0.9. Wide signed bounds permit</span>
+<span class="sd">short positions; full investment alone does not prevent leverage.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Print every equality and inequality residual for the returned weights.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_minvar2.m -- minimum-variance</span>
 <span class="sd">portfolio with general linear equality/inequality constraints and box</span>
-<span class="sd">bounds."""</span>
+<span class="sd">bounds.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -8943,9 +9034,23 @@ weekly correlations are less affected by asynchronous trading).</p>
 </details>
 <details class="example">
 <summary>Mixed ridge+lasso penalties toward two different target vectors — rpb/test_lasso5.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Choosing the regularization target.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare shrinkage toward equal weights and toward a nonuniform allocation. The target is</span>
+<span class="sd">part of the model, not merely a numerical setting.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Use identical targets in both cases and check that the corresponding solutions agree.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
 <span class="sd">portfolios with two different ridge/lasso target vectors (equal-weight</span>
-<span class="sd">and a custom 20/20/30/30 target)."""</span>
+<span class="sd">and a custom 20/20/30/30 target).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9008,10 +9113,24 @@ weekly correlations are less affected by asynchronous trading).</p>
 </details>
 <details class="example">
 <summary>Ridge, lasso, and mixed-norm penalized portfolios — rpb/test_lasso3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso3.m (byte-identical to</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""When an L1 penalty cannot help.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">For nonnegative weights summing to one, their L1 norm is always one. An L1 penalty</span>
+<span class="sd">toward zero is then constant; a penalty toward existing holdings can still matter.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare zero-target L1 weights with the unpenalized long-only solution.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_lasso3.m (byte-identical to</span>
 <span class="sd">test_lasso4.m) -- MVO/ridge/lasso/mixed-penalty portfolios via the</span>
 <span class="sd">consolidated solve_qp (replacing the original's separate quadprog_ridge/</span>
-<span class="sd">quadprog_lasso/quadprog_mixed calls -- see optim/quadprog.py docstring)."""</span>
+<span class="sd">quadprog_lasso/quadprog_mixed calls -- see optim/quadprog.py docstring).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9101,8 +9220,22 @@ weekly correlations are less affected by asynchronous trading).</p>
 </details>
 <details class="example">
 <summary>Risk budgeting toward unequal target budgets — rpb/test_erc3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc3.m -- Example 17 (page 123),</span>
-<span class="sd">Roncalli (2013). RB portfolio with unequal target budgets."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Unequal risk-contribution targets.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Allocate to 20/20/30/30 risk budgets in a correlated four-asset model. Check convergence</span>
+<span class="sd">and achieved contributions rather than expecting those capital weights.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Switch to equal budgets and compare both allocations and risk shares.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_erc3.m -- Example 17 (page 123),</span>
+<span class="sd">Roncalli (2013). RB portfolio with unequal target budgets.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9126,9 +9259,23 @@ weekly correlations are less affected by asynchronous trading).</p>
 </details>
 <details class="example">
 <summary>Risk contribution decomposition and equal-budget risk budgeting — rpb/test_erc2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc2.m -- Example 7 (page 80),</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Capital weights versus risk budgets.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare a fixed allocation, equal risk budgets, and budgets numerically equal to that</span>
+<span class="sd">allocation. Equal capital weights do not generally imply equal risk.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase one asset volatility and inspect its ERC weight.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_erc2.m -- Example 7 (page 80),</span>
 <span class="sd">Roncalli (2013). Risk contribution decomposition + risk budgeting at</span>
-<span class="sd">various target budgets."""</span>
+<span class="sd">various target budgets.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9598,9 +9745,24 @@ NaN-dropped mean/std).</p>
 </div><h3 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Elastic-net regression path — stats/elasticnet1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/elasticnet1.m and elasticnet2.m --</span>
-<span class="sd">elastic net regression path at two different alpha (L1/L2 mix) values,</span>
-<span class="sd">on the same 15-observation dataset used in ridge1.m/lasso1.m."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Mixing L1 and L2 penalties.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare two elastic-net mixing parameters on standardized predictors. L1 encourages</span>
+<span class="sd">zeros; L2 stabilizes correlated coefficients. This is a two-point comparison, not a full</span>
+<span class="sd">path.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Add intermediate mixing parameters while holding the overall penalty fixed.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/elasticnet1.m and elasticnet2.m --</span>
+<span class="sd">elastic net regression at two different alpha (L1/L2 mix) values,</span>
+<span class="sd">on the same 15-observation dataset used in ridge1.m/lasso1.m.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9631,17 +9793,31 @@ NaN-dropped mean/std).</p>
 
 <span class="k">for</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">lam</span> <span class="ow">in</span> <span class="p">[(</span><span class="mf">0.50</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)]:</span>
     <span class="n">beta</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">elastic_net_ccd</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">: beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">: beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Lasso path with R-squared, degrees of freedom, and complexity — stats/lasso1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/lasso1.m -- penalized-form lasso path at</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A lasso coefficient path.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Follow coefficients and their L1 norm as the penalty rises. Training mean squared error</span>
+<span class="sd">measures fit; the number of nonzero coefficients is only a complexity proxy.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Count nonzero coefficients with a small tolerance instead of exact equality.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/lasso1.m -- penalized-form lasso path at</span>
 <span class="sd">5 lambda values (numeric core only; the original's 501-point tau-sweep and</span>
 <span class="sd">its multi-line coefficient-path plot are dropped -- the same lambda</span>
 <span class="sd">values and dataset are already used by lasso2.py, which this extends with</span>
 <span class="sd">R^2/degrees-of-freedom/complexity reporting to match lasso1.m's own</span>
-<span class="sd">output table)."""</span>
+<span class="sd">output table).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9673,27 +9849,41 @@ NaN-dropped mean/std).</p>
 <span class="n">beta_ols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span> <span class="o">@</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">tss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"lambda  |beta|         tau=sum|beta| rss     R2      df  complexity"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"lambda  |beta|         tau=sum|beta| mse     R2      df  complexity"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">]:</span>
     <span class="n">beta</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lasso_ccd</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta</span>
-    <span class="n">rss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">u</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">r2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rss</span> <span class="o">/</span> <span class="n">tss</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">u</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">mse</span> <span class="o">/</span> <span class="n">tss</span>
     <span class="n">tau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
     <span class="n">df</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">1e-6</span><span class="p">))</span>
     <span class="n">complexity</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">df</span> <span class="k">if</span> <span class="n">df</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">lam</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">  tau=</span><span class="si">{</span><span class="n">tau</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  rss=</span><span class="si">{</span><span class="n">rss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">lam</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">  tau=</span><span class="si">{</span><span class="n">tau</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  mse=</span><span class="si">{</span><span class="n">mse</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  "</span>
         <span class="sa">f</span><span class="s2">"R2=</span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  df=</span><span class="si">{</span><span class="n">df</span><span class="si">}</span><span class="s2">  complexity=</span><span class="si">{</span><span class="n">complexity</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Norm-budget (tau-targeted) ridge regression vs. fixed-lambda ridge — stats/ridge2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/ridge2.m -- tau-targeted ridge regression</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Selecting ridge shrinkage by coefficient norm.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare requested norm targets with a penalty-grid solution. Grid resolution and range</span>
+<span class="sd">limit how accurately a target can be reached.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Refine the grid and compare achieved norms, not just the selected lambda.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/ridge2.m -- tau-targeted ridge regression</span>
 <span class="sd">(`ridge_tau_targeted`) cross-checked against fixed-lambda ridge (`ridge`),</span>
 <span class="sd">in both absolute and OLS-relative tau modes, on the same 15-observation</span>
-<span class="sd">dataset used throughout stats/."""</span>
+<span class="sd">dataset used throughout stats/.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9768,8 +9958,22 @@ NaN-dropped mean/std).</p>
 </details>
 <details class="example">
 <summary>Penalized-form lasso path via coordinate descent — stats/lasso2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/lasso2.m -- penalized-form lasso</span>
-<span class="sd">(regLasso2) at several lambda values, on the same 15-obs dataset."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Lasso versus unpenalized least squares.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Start at zero penalty, then inspect which standardized coefficients vanish. Correlated</span>
+<span class="sd">predictors can exchange weight along the path.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the zero-penalty fitted values with ordinary least squares.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/lasso2.m -- penalized-form lasso</span>
+<span class="sd">(regLasso2) at several lambda values, on the same 15-obs dataset.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9801,14 +10005,28 @@ NaN-dropped mean/std).</p>
 
 <span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">]:</span>
     <span class="n">beta</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lasso_ccd</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-    <span class="n">rss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">: beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> rss=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rss</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">: beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> mse=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mse</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Principal component analysis of a 3-asset correlation matrix — stats/pca1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/pca1.m -- PCA on a 3-asset correlation</span>
-<span class="sd">matrix."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Explained variance with correlated variables.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">For three standardized variables with correlation 0.8, eigenvalues are 2.6, 0.2, 0.2.</span>
+<span class="sd">Eigenvector signs and bases within repeated eigenspaces are not unique.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Set the correlation to zero and predict the explained-variance shares.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/pca1.m -- PCA on a 3-asset correlation</span>
+<span class="sd">matrix.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -10212,10 +10430,24 @@ budget tau, found by grid search over a candidate lambda range.</p>
 </div><h3 id="examples_3">Examples<a class="headerlink" href="#examples_3" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Norm-budget (tau-targeted) ridge regression vs. fixed-lambda ridge — stats/ridge2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/ridge2.m -- tau-targeted ridge regression</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Selecting ridge shrinkage by coefficient norm.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare requested norm targets with a penalty-grid solution. Grid resolution and range</span>
+<span class="sd">limit how accurately a target can be reached.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Refine the grid and compare achieved norms, not just the selected lambda.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/ridge2.m -- tau-targeted ridge regression</span>
 <span class="sd">(`ridge_tau_targeted`) cross-checked against fixed-lambda ridge (`ridge`),</span>
 <span class="sd">in both absolute and OLS-relative tau modes, on the same 15-observation</span>
-<span class="sd">dataset used throughout stats/."""</span>
+<span class="sd">dataset used throughout stats/.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -11267,9 +11499,24 @@ stats/selectLasso.m without needing a QP solver.</p>
 </div><h3 id="examples_4">Examples<a class="headerlink" href="#examples_4" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Elastic-net regression path — stats/elasticnet1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/elasticnet1.m and elasticnet2.m --</span>
-<span class="sd">elastic net regression path at two different alpha (L1/L2 mix) values,</span>
-<span class="sd">on the same 15-observation dataset used in ridge1.m/lasso1.m."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Mixing L1 and L2 penalties.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare two elastic-net mixing parameters on standardized predictors. L1 encourages</span>
+<span class="sd">zeros; L2 stabilizes correlated coefficients. This is a two-point comparison, not a full</span>
+<span class="sd">path.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Add intermediate mixing parameters while holding the overall penalty fixed.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/elasticnet1.m and elasticnet2.m --</span>
+<span class="sd">elastic net regression at two different alpha (L1/L2 mix) values,</span>
+<span class="sd">on the same 15-observation dataset used in ridge1.m/lasso1.m.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -11300,17 +11547,31 @@ stats/selectLasso.m without needing a QP solver.</p>
 
 <span class="k">for</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">lam</span> <span class="ow">in</span> <span class="p">[(</span><span class="mf">0.50</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)]:</span>
     <span class="n">beta</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">elastic_net_ccd</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">: beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">: beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Lasso path with R-squared, degrees of freedom, and complexity — stats/lasso1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/lasso1.m -- penalized-form lasso path at</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A lasso coefficient path.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Follow coefficients and their L1 norm as the penalty rises. Training mean squared error</span>
+<span class="sd">measures fit; the number of nonzero coefficients is only a complexity proxy.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Count nonzero coefficients with a small tolerance instead of exact equality.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/lasso1.m -- penalized-form lasso path at</span>
 <span class="sd">5 lambda values (numeric core only; the original's 501-point tau-sweep and</span>
 <span class="sd">its multi-line coefficient-path plot are dropped -- the same lambda</span>
 <span class="sd">values and dataset are already used by lasso2.py, which this extends with</span>
 <span class="sd">R^2/degrees-of-freedom/complexity reporting to match lasso1.m's own</span>
-<span class="sd">output table)."""</span>
+<span class="sd">output table).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -11342,25 +11603,39 @@ stats/selectLasso.m without needing a QP solver.</p>
 <span class="n">beta_ols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span> <span class="o">@</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">tss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"lambda  |beta|         tau=sum|beta| rss     R2      df  complexity"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"lambda  |beta|         tau=sum|beta| mse     R2      df  complexity"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">]:</span>
     <span class="n">beta</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lasso_ccd</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta</span>
-    <span class="n">rss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">u</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">r2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rss</span> <span class="o">/</span> <span class="n">tss</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">u</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">mse</span> <span class="o">/</span> <span class="n">tss</span>
     <span class="n">tau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
     <span class="n">df</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">1e-6</span><span class="p">))</span>
     <span class="n">complexity</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">df</span> <span class="k">if</span> <span class="n">df</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">lam</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">  tau=</span><span class="si">{</span><span class="n">tau</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  rss=</span><span class="si">{</span><span class="n">rss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">lam</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">  tau=</span><span class="si">{</span><span class="n">tau</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  mse=</span><span class="si">{</span><span class="n">mse</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  "</span>
         <span class="sa">f</span><span class="s2">"R2=</span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  df=</span><span class="si">{</span><span class="n">df</span><span class="si">}</span><span class="s2">  complexity=</span><span class="si">{</span><span class="n">complexity</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Penalized-form lasso path via coordinate descent — stats/lasso2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/lasso2.m -- penalized-form lasso</span>
-<span class="sd">(regLasso2) at several lambda values, on the same 15-obs dataset."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Lasso versus unpenalized least squares.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Start at zero penalty, then inspect which standardized coefficients vanish. Correlated</span>
+<span class="sd">predictors can exchange weight along the path.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the zero-penalty fitted values with ordinary least squares.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/lasso2.m -- penalized-form lasso</span>
+<span class="sd">(regLasso2) at several lambda values, on the same 15-obs dataset.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -11392,8 +11667,8 @@ stats/selectLasso.m without needing a QP solver.</p>
 
 <span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">]:</span>
     <span class="n">beta</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lasso_ccd</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-    <span class="n">rss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">: beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> rss=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rss</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"lambda=</span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">: beta=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> mse=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mse</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <h2 id="statsregressionkernel"><code>stats.regression.kernel</code><a class="headerlink" href="#statsregressionkernel" title="Permanent link">&para;</a></h2>
@@ -11888,12 +12163,26 @@ evaluated at points z.</p>
 </div><h3 id="examples_5">Examples<a class="headerlink" href="#examples_5" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Gaussian kernel density of two correlated series — stats/kernel1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/kernel1.m -- Gaussian-kernel density</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Bandwidth and marginal density estimates.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Estimate separate Gaussian kernel densities for two related series. These are marginal</span>
+<span class="sd">densities, not their joint distribution or a dependence estimate.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Change bandwidth and compare smoothness while checking approximate area under the curve.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/kernel1.m -- Gaussian-kernel density</span>
 <span class="sd">estimate of two correlated series (numeric core only; the original's plot</span>
 <span class="sd">of both density curves is dropped).</span>
 
 <span class="sd">The original draws x from MATLAB's unseeded `randn`; a fixed seed</span>
-<span class="sd">(`np.random.default_rng(0)`) is substituted here."""</span>
+<span class="sd">(`np.random.default_rng(0)`) is substituted here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -11916,13 +12205,27 @@ evaluated at points z.</p>
 </details>
 <details class="example">
 <summary>Kernel mean and quantile regression vs. true population curves — stats/qreg2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/qreg2.m -- local-polynomial kernel mean</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Local polynomial quantile curves.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Estimate a curved conditional 95th percentile with local linear and quadratic fits. The</span>
+<span class="sd">known conditional mean and quantile are different comparison curves.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Change bandwidth and inspect errors near the boundaries separately.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/qreg2.m -- local-polynomial kernel mean</span>
 <span class="sd">and quantile regression (orders 1 and 2) of a nonlinear y=f(x)+noise</span>
 <span class="sd">relationship, compared against the known population mean/quantile curves</span>
 <span class="sd">(numeric core only; the original's scatter+curve plot is dropped).</span>
 
 <span class="sd">The original explicitly seeds MATLAB's RNG (`rng(123)`); NumPy's generator</span>
-<span class="sd">is seeded the same way for a comparable (not bit-identical) run."""</span>
+<span class="sd">is seeded the same way for a comparable (not bit-identical) run.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -12253,11 +12556,25 @@ via linear programming (Koenker &amp; Bassett's LP formulation).</p>
 </div><h3 id="examples_6">Examples<a class="headerlink" href="#examples_6" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Linear quantile regression at nine quantile levels — stats/qreg1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/qreg1.m -- linear quantile regression at</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Conditional quantiles versus conditional means.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Fit several quantiles to the same predictors. Quantile regression minimizes asymmetric</span>
+<span class="sd">absolute loss, not residual standard deviation; this design has no intercept.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the quantile loss at each fitted coefficient vector.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/qreg1.m -- linear quantile regression at</span>
 <span class="sd">9 quantile levels (tau=0.1..0.9) on a simulated 3-predictor dataset.</span>
 
 <span class="sd">The original draws x/b/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -12283,14 +12600,28 @@ via linear programming (Koenker &amp; Bassett's LP formulation).</p>
 </details>
 <details class="example">
 <summary>Monte Carlo OLS vs. LAD regression under heteroskedastic noise — ects/quantile2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/quantile2.m -- Monte Carlo comparison of</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Monte Carlo comparison of OLS and LAD.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare coefficient distributions over repeated heteroskedastic samples. Their spread is</span>
+<span class="sd">estimator variability, not the standard error of the Monte Carlo mean.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase repetitions and separate simulation noise from differences between estimators.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/quantile2.m -- Monte Carlo comparison of</span>
 <span class="sd">OLS vs. LAD (median quantile regression) under heteroskedastic noise:</span>
 <span class="sd">mean and standard error of each estimator's slope coefficient across many</span>
 <span class="sd">simulated datasets (numeric core only; the original's kernel-density plot</span>
 <span class="sd">of the two estimators' sampling distributions is dropped).</span>
 
 <span class="sd">The original draws x/sigma/u from MATLAB's unseeded `rand`/`randn`; a</span>
-<span class="sd">fixed seed (`np.random.default_rng(0)`) is substituted here."""</span>
+<span class="sd">fixed seed (`np.random.default_rng(0)`) is substituted here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -12327,9 +12658,23 @@ via linear programming (Koenker &amp; Bassett's LP formulation).</p>
 </details>
 <details class="example">
 <summary>OLS, LAD, quantile, and SVM regression compared — svm/svm6.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm6.m -- comparison of OLS, LAD, and</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Loss functions in SVM regression.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare squared, absolute, quantile, and epsilon-insensitive losses. The SVM intercept</span>
+<span class="sd">is handled separately from the column of ones used by the regression routines.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Set epsilon to zero and increase C to compare with least absolute deviations.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/svm/svm6.m -- comparison of OLS, LAD, and</span>
 <span class="sd">SVM-regression (LS-SVM and epsilon-SVM, at two different C values)</span>
-<span class="sd">estimates on the same 10-obs dataset used in ols1.m/robust1.m."""</span>
+<span class="sd">estimates on the same 10-obs dataset used in ols1.m/robust1.m.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -12377,12 +12722,26 @@ via linear programming (Koenker &amp; Bassett's LP formulation).</p>
 </details>
 <details class="example">
 <summary>OLS, median, LAD, and Huber regression compared — ects/robust2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust2.m -- OLS vs. median (quantile,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""OLS, median, LAD, and Huber regression.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare loss functions on the same simulated regression. Read the convergence flag:</span>
+<span class="sd">close coefficients do not establish successful iterative convergence.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Add one response outlier and compare coefficient changes across estimators.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/robust2.m -- OLS vs. median (quantile,</span>
 <span class="sd">alpha=0.5) regression, LAD regression, and Huber regression, on a</span>
 <span class="sd">simulated 3-predictor dataset.</span>
 
 <span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -12407,6 +12766,11 @@ via linear programming (Koenker &amp; Bassett's LP formulation).</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="c1"># LAD's nonsmooth loss can make IRLS stop at its iteration limit.</span>
+<span class="c1"># The median-regression LP above supplies an objective-value cross-check.</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"LAD IRLS reached its iteration limit; compare absolute loss with the LP fit."</span><span class="p">)</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
 
 <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_ols</span><span class="p">),</span> <span class="mf">0.90</span><span class="p">)</span>
@@ -12417,17 +12781,36 @@ via linear programming (Koenker &amp; Bassett's LP formulation).</p>
     <span class="s2">"converged:"</span><span class="p">,</span>
     <span class="n">r_huber</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="c1"># Absolute-loss agreement can be useful even when IRLS has not met its stopping rule.</span>
+<span class="n">loss_lp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_med</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">loss_irls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"LAD absolute loss, LP / IRLS:"</span><span class="p">,</span> <span class="n">loss_lp</span><span class="p">,</span> <span class="n">loss_irls</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>OLS/median/LAD plus quantile regression via IRLS and exact LP — ects/robust3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust3.m -- OLS vs. median regression,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Iterative and exact quantile regression.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare an IRLS approximation with a linear-programming quantile fit. Check convergence</span>
+<span class="sd">and asymmetric loss, not just rounded coefficients.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Vary the target quantile and inspect the two objective values.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/robust3.m -- OLS vs. median regression,</span>
 <span class="sd">LAD regression, and quantile regression at alpha=0.90, both via the IRLS</span>
 <span class="sd">M-estimator (`quantile_m_regression`) and the exact LP formulation</span>
 <span class="sd">(`quantile_regression`), on a simulated 3-predictor dataset.</span>
 
 <span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -12452,6 +12835,11 @@ via linear programming (Koenker &amp; Bassett's LP formulation).</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="c1"># LAD's nonsmooth loss can make IRLS stop at its iteration limit.</span>
+<span class="c1"># The median-regression LP above supplies an objective-value cross-check.</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"LAD IRLS reached its iteration limit; compare absolute loss with the LP fit."</span><span class="p">)</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
 
 <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.90</span>
@@ -12460,18 +12848,37 @@ via linear programming (Koenker &amp; Bassett's LP formulation).</p>
 
 <span class="n">beta_q</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Quantile (alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">) regression via exact LP, beta:        "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_q</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># Absolute-loss agreement can be useful even when IRLS has not met its stopping rule.</span>
+<span class="n">loss_lp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_med</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">loss_irls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"LAD absolute loss, LP / IRLS:"</span><span class="p">,</span> <span class="n">loss_lp</span><span class="p">,</span> <span class="n">loss_irls</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>OLS/SVM-LS and quantile/SVM-epsilon regression on synthetic data — svm/svm8.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm8.m -- OLS, LAD, quantile, and SVM</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A larger simulated regression comparison.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare regression losses on a seeded sample with known coefficients. All displayed</span>
+<span class="sd">results are in-sample; epsilon has the same units as the response.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Generate an independent test sample and compare prediction errors there.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/svm/svm8.m -- OLS, LAD, quantile, and SVM</span>
 <span class="sd">regression (primal, at two very different C values, LS- and</span>
 <span class="sd">epsilon-insensitive) compared on a larger (n=1000) simulated dataset.</span>
 
 <span class="sd">The original draws x/beta/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
 <span class="sd">seed (`np.random.default_rng(0)`) is substituted here for reproducibility</span>
 <span class="sd">-- this is the fixed-seed substitution the tracker notes svm8.m as still</span>
-<span class="sd">needing."""</span>
+<span class="sd">needing.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -13194,9 +13601,23 @@ not supplied).</p>
 </div><h3 id="examples_7">Examples<a class="headerlink" href="#examples_7" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>OLS, LAD, quantile, and SVM regression compared — svm/svm6.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm6.m -- comparison of OLS, LAD, and</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Loss functions in SVM regression.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare squared, absolute, quantile, and epsilon-insensitive losses. The SVM intercept</span>
+<span class="sd">is handled separately from the column of ones used by the regression routines.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Set epsilon to zero and increase C to compare with least absolute deviations.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/svm/svm6.m -- comparison of OLS, LAD, and</span>
 <span class="sd">SVM-regression (LS-SVM and epsilon-SVM, at two different C values)</span>
-<span class="sd">estimates on the same 10-obs dataset used in ols1.m/robust1.m."""</span>
+<span class="sd">estimates on the same 10-obs dataset used in ols1.m/robust1.m.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -13244,12 +13665,26 @@ not supplied).</p>
 </details>
 <details class="example">
 <summary>OLS, median, LAD, and Huber regression compared — ects/robust2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust2.m -- OLS vs. median (quantile,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""OLS, median, LAD, and Huber regression.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare loss functions on the same simulated regression. Read the convergence flag:</span>
+<span class="sd">close coefficients do not establish successful iterative convergence.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Add one response outlier and compare coefficient changes across estimators.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/robust2.m -- OLS vs. median (quantile,</span>
 <span class="sd">alpha=0.5) regression, LAD regression, and Huber regression, on a</span>
 <span class="sd">simulated 3-predictor dataset.</span>
 
 <span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -13274,6 +13709,11 @@ not supplied).</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="c1"># LAD's nonsmooth loss can make IRLS stop at its iteration limit.</span>
+<span class="c1"># The median-regression LP above supplies an objective-value cross-check.</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"LAD IRLS reached its iteration limit; compare absolute loss with the LP fit."</span><span class="p">)</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
 
 <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_ols</span><span class="p">),</span> <span class="mf">0.90</span><span class="p">)</span>
@@ -13284,17 +13724,36 @@ not supplied).</p>
     <span class="s2">"converged:"</span><span class="p">,</span>
     <span class="n">r_huber</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="c1"># Absolute-loss agreement can be useful even when IRLS has not met its stopping rule.</span>
+<span class="n">loss_lp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_med</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">loss_irls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"LAD absolute loss, LP / IRLS:"</span><span class="p">,</span> <span class="n">loss_lp</span><span class="p">,</span> <span class="n">loss_irls</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>OLS/median/LAD plus quantile regression via IRLS and exact LP — ects/robust3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust3.m -- OLS vs. median regression,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Iterative and exact quantile regression.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare an IRLS approximation with a linear-programming quantile fit. Check convergence</span>
+<span class="sd">and asymmetric loss, not just rounded coefficients.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Vary the target quantile and inspect the two objective values.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/robust3.m -- OLS vs. median regression,</span>
 <span class="sd">LAD regression, and quantile regression at alpha=0.90, both via the IRLS</span>
 <span class="sd">M-estimator (`quantile_m_regression`) and the exact LP formulation</span>
 <span class="sd">(`quantile_regression`), on a simulated 3-predictor dataset.</span>
 
 <span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -13319,6 +13778,11 @@ not supplied).</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="c1"># LAD's nonsmooth loss can make IRLS stop at its iteration limit.</span>
+<span class="c1"># The median-regression LP above supplies an objective-value cross-check.</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"LAD IRLS reached its iteration limit; compare absolute loss with the LP fit."</span><span class="p">)</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
 
 <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.90</span>
@@ -13327,18 +13791,37 @@ not supplied).</p>
 
 <span class="n">beta_q</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Quantile (alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">) regression via exact LP, beta:        "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_q</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># Absolute-loss agreement can be useful even when IRLS has not met its stopping rule.</span>
+<span class="n">loss_lp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_med</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">loss_irls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"LAD absolute loss, LP / IRLS:"</span><span class="p">,</span> <span class="n">loss_lp</span><span class="p">,</span> <span class="n">loss_irls</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>OLS/SVM-LS and quantile/SVM-epsilon regression on synthetic data — svm/svm8.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm8.m -- OLS, LAD, quantile, and SVM</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A larger simulated regression comparison.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare regression losses on a seeded sample with known coefficients. All displayed</span>
+<span class="sd">results are in-sample; epsilon has the same units as the response.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Generate an independent test sample and compare prediction errors there.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/svm/svm8.m -- OLS, LAD, quantile, and SVM</span>
 <span class="sd">regression (primal, at two very different C values, LS- and</span>
 <span class="sd">epsilon-insensitive) compared on a larger (n=1000) simulated dataset.</span>
 
 <span class="sd">The original draws x/beta/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
 <span class="sd">seed (`np.random.default_rng(0)`) is substituted here for reproducibility</span>
 <span class="sd">-- this is the fixed-seed substitution the tracker notes svm8.m as still</span>
-<span class="sd">needing."""</span>
+<span class="sd">needing.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 

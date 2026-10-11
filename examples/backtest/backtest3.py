@@ -1,6 +1,20 @@
-"""Translated from Examples/backtest/backtest3.m -- generate_backtest at
+"""Rebalancing by hand.
+
+Learning goal
+-------------
+Use seven dates and two assets to trace how equal-weight rebalancing differs from buy-
+and-hold. Rebalancing frequency changes the path even without fees.
+
+Try it
+------
+Calculate the first two portfolio returns by hand before running the script.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/backtest/backtest3.m -- generate_backtest at
 four different rebalancing frequencies (buy-and-hold, every period, every
-2 periods, every 3 periods) on a fixed 7-date, 2-asset price series."""
+2 periods, every 3 periods) on a fixed 7-date, 2-asset price series.
+"""
 
 import numpy as np
 import pandas as pd

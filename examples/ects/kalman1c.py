@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/kalman1c.m -- Harvey [1990],
+"""Time-domain and frequency-domain estimation.
+
+Learning goal
+-------------
+Compare exact Kalman likelihood with Whittle approximation on the same short series.
+Finite-sample estimates need not coincide.
+
+Try it
+------
+Compare fitted noise standard deviations and resulting filtered paths.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/kalman1c.m -- Harvey [1990],
 "Forecasting, Structural Time Series and the Kalman Filter", pages
 89-90: compares time-domain (exact) maximum likelihood against
 frequency-domain (Whittle) maximum likelihood estimation of the
@@ -9,7 +22,8 @@ As in the original, the time-domain likelihood is evaluated with a0 = 0,
 P0 = 0 during estimation, but the final filter run used to compare the
 two estimates' one-step-ahead predictions uses a0 = y[0], P0 = 0 (the
 original's own, slightly inconsistent, choice -- preserved here rather
-than "fixed")."""
+than "fixed").
+"""
 
 import numpy as np
 

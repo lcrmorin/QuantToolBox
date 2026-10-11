@@ -3610,9 +3610,23 @@ standard-deviation measure under normality).</p>
 </div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Equal risk contribution and box-constrained risk budgeting — rpb/test_box1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_box1.m -- ERC and box-constrained</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Risk budgets under allocation limits.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Tight boxes around initial holdings can prevent equal risk contributions. Wider boxes</span>
+<span class="sd">approach the unrestricted ERC allocation.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare risk contributions, not just weights, as the box widens.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_box1.m -- ERC and box-constrained</span>
 <span class="sd">("C-ERC") risk budgeting portfolios at progressively wider bounds around</span>
-<span class="sd">a starting position."""</span>
+<span class="sd">a starting position.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3641,8 +3655,22 @@ standard-deviation measure under normality).</p>
 </details>
 <details class="example">
 <summary>Risk budgeting toward unequal target budgets — rpb/test_erc3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc3.m -- Example 17 (page 123),</span>
-<span class="sd">Roncalli (2013). RB portfolio with unequal target budgets."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Unequal risk-contribution targets.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Allocate to 20/20/30/30 risk budgets in a correlated four-asset model. Check convergence</span>
+<span class="sd">and achieved contributions rather than expecting those capital weights.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Switch to equal budgets and compare both allocations and risk shares.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_erc3.m -- Example 17 (page 123),</span>
+<span class="sd">Roncalli (2013). RB portfolio with unequal target budgets.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3666,9 +3694,23 @@ standard-deviation measure under normality).</p>
 </details>
 <details class="example">
 <summary>Risk contribution decomposition and equal-budget risk budgeting — rpb/test_erc2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_erc2.m -- Example 7 (page 80),</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Capital weights versus risk budgets.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare a fixed allocation, equal risk budgets, and budgets numerically equal to that</span>
+<span class="sd">allocation. Equal capital weights do not generally imply equal risk.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase one asset volatility and inspect its ERC weight.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_erc2.m -- Example 7 (page 80),</span>
 <span class="sd">Roncalli (2013). Risk contribution decomposition + risk budgeting at</span>
-<span class="sd">various target budgets."""</span>
+<span class="sd">various target budgets.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -5776,7 +5818,20 @@ the gamma_max/gamma_bracket quirk they share.</p>
 </div><h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Black-Litterman view matched to six tracking-error targets — rpb/test_bl4.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl4.m -- Roncalli [2013], "Introduction</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A tracking-error frontier.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Increase the active risk budget against a fixed benchmark. Expected active return is</span>
+<span class="sd">model-implied, not realized performance.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Inspect how close the achieved tracking error is to each target.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_bl4.m -- Roncalli [2013], "Introduction</span>
 <span class="sd">to Risk Parity and Budgeting", page 24: a single Black-Litterman view</span>
 <span class="sd">(same P/Q/Omega/tau as test_bl3.py's scenario 1) turned into a *tracking-error*</span>
 <span class="sd">frontier against the x0 benchmark -- the sigma-problem branch of</span>
@@ -5784,7 +5839,8 @@ the gamma_max/gamma_bracket quirk they share.</p>
 <span class="sd">tracking-error levels (effectively 0% through 5%) show how active return and</span>
 <span class="sd">the information ratio (alpha/te, here genuinely dimensionless -- unlike</span>
 <span class="sd">test_bl3.py's alpha/sigma_x convention) scale with the amount of tracking</span>
-<span class="sd">error taken."""</span>
+<span class="sd">error taken.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -5822,9 +5878,23 @@ the gamma_max/gamma_bracket quirk they share.</p>
 </details>
 <details class="example">
 <summary>Black-Litterman view sensitivity across five scenarios — rpb/test_bl2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl2.m -- Black-Litterman sensitivity</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""How views change portfolio weights.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Vary view returns, uncertainty, and prior scaling while keeping the return-reward gamma</span>
+<span class="sd">fixed. Omega contains variances; a larger Omega means weaker views.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase only one view variance and compare the posterior portfolio with the benchmark.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_bl2.m -- Black-Litterman sensitivity</span>
 <span class="sd">analysis across 6 scenarios (base case + 5 view/uncertainty/tau variants),</span>
-<span class="sd">each solved as a fixed-risk-aversion MVO portfolio."""</span>
+<span class="sd">each solved as a fixed-return-reward MVO portfolio.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -5890,13 +5960,27 @@ the gamma_max/gamma_bracket quirk they share.</p>
 
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">r_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"scenario </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: weights=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'weights'</span><span class="p">],</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> mu=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'mu'</span><span class="p">],</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2"> te=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'te'</span><span class="p">],</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+        <span class="sa">f</span><span class="s2">"scenario </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: weights=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'weights'</span><span class="p">],</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> mu=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'mu'</span><span class="p">],</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2"> te=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="s1">'te'</span><span class="p">],</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Black-Litterman views matched to a benchmark's volatility — rpb/test_bl3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl3.m -- Roncalli [2013], "Introduction</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Comparing views at matched volatility.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Match each portfolio to benchmark volatility before comparing active returns. The</span>
+<span class="sd">historical alpha/portfolio-volatility ratio is not the usual information ratio</span>
+<span class="sd">alpha/tracking-error.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compute alpha divided by tracking error and compare it with the historical ratio.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_bl3.m -- Roncalli [2013], "Introduction</span>
 <span class="sd">to Risk Parity and Budgeting", page 24: five Black-Litterman view scenarios</span>
 <span class="sd">(varying the view itself, its confidence Omega, and the scaling tau), each</span>
 <span class="sd">turned into a portfolio matched to the *same* target volatility as the</span>
@@ -5913,7 +5997,8 @@ the gamma_max/gamma_bracket quirk they share.</p>
 <span class="sd">before formatting. Since IR_x is already a ratio, that display convention</span>
 <span class="sd">ends up printing 100*IR rather than IR itself; this translation keeps that</span>
 <span class="sd">same convention (labelled `100*IR`) so the printed numbers match the</span>
-<span class="sd">original table (Roncalli page 26) directly."""</span>
+<span class="sd">original table (Roncalli page 26) directly.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -5960,17 +6045,32 @@ the gamma_max/gamma_bracket quirk they share.</p>
 </details>
 <details class="example">
 <summary>Full-view Black-Litterman with tracking-error target-matching — rpb/test_bl5.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl5.m -- a second, independent 4-asset</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Prior uncertainty and portfolio risk.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">With P=I and equal prior and view covariances, the posterior mean is the midpoint of</span>
+<span class="sd">prior and views. Posterior mean uncertainty is not automatically asset-return</span>
+<span class="sd">covariance.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Verify the midpoint identity, then compare weights under the two covariance choices.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_bl5.m -- a second, independent 4-asset</span>
 <span class="sd">Black-Litterman + tracking-error worked example (no book page cited in the</span>
-<span class="sd">original). Every asset gets a direct view (`P=I`, `Q=mu`, full confidence</span>
-<span class="sd">`Omega=Sigma_epsilon=covMatrix`) -- an unusually strong-conviction setup</span>
-<span class="sd">that pulls the posterior most of the way from the equilibrium prior toward</span>
-<span class="sd">the raw sample means.</span>
+<span class="sd">original). Every asset gets a direct view (`P=I`, `Q=mu`, equal prior and view uncertainty</span>
+<span class="sd">`Omega=Sigma_epsilon=covMatrix`). The posterior mean is halfway between</span>
+<span class="sd">the equilibrium prior and the specified return views; this is not full confidence.</span>
+<span class="sd">The two covariance choices below illustrate sensitivity, not a claim that</span>
+<span class="sd">posterior mean uncertainty is interchangeable with asset-return covariance.</span>
 
 <span class="sd">Four blocks, each comparing the resulting active portfolio (x) against the</span>
 <span class="sd">x0 benchmark:</span>
 
-<span class="sd">1. gamma-problem MVO (mu_BL, Sigma_BL) at the implied risk-aversion gamma0.</span>
+<span class="sd">1. gamma-problem MVO (mu_BL, Sigma_BL) at the implied return-reward gamma0.</span>
 <span class="sd">2. sigma-problem TE-target=1% (mu_BL, Sigma_BL), i.e. `te_target_portfolio`.</span>
 <span class="sd">3. gamma-problem MVO (mu_BL, covMatrix) -- same posterior mean, but</span>
 <span class="sd">   optimized against the *original* (pre-view) covariance rather than the</span>
@@ -5979,7 +6079,8 @@ the gamma_max/gamma_bracket quirk they share.</p>
 
 <span class="sd">The original's final block repeats block 2 verbatim (mu_BL, Sigma_BL again)</span>
 <span class="sd">-- included here too for a faithful translation, and it does reproduce</span>
-<span class="sd">identical numbers, as expected."""</span>
+<span class="sd">identical numbers, as expected.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -6075,17 +6176,31 @@ the gamma_max/gamma_bracket quirk they share.</p>
 </details>
 <details class="example">
 <summary>Mean-variance frontier: risk-aversion, return, and volatility targets — rpb/test_mvo2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_mvo2.m -- Roncalli [2013], "Introduction</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Three ways to specify mean-variance portfolios.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare a return-reward gamma, a target return, and a target volatility. Larger gamma</span>
+<span class="sd">emphasizes return in 0.5*w@cov@w - gamma*mu@w.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Match an achieved return with a return-target solve and compare weights.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_mvo2.m -- Roncalli [2013], "Introduction</span>
 <span class="sd">to Risk Parity and Budgeting", Example 1 (pages 7-8): the same 4-asset</span>
 <span class="sd">mean-variance problem evaluated three ways -- the gamma-problem (pick a</span>
-<span class="sd">risk-aversion, solve directly), the mu-problem (pick a target expected</span>
+<span class="sd">return reward, solve directly), the mu-problem (pick a target expected</span>
 <span class="sd">return, bisect on gamma to hit it), and the sigma-problem (pick a target</span>
 <span class="sd">volatility, bisect on gamma to hit it). All three route through</span>
 <span class="sd">`compute_mvo_portfolio.m`'s three branches; here that's</span>
 <span class="sd">`mvo_frontier`/`mvo_target_portfolio`.</span>
 
 <span class="sd">The original passes `lb=0, ub=0` (MATLAB's "use the default -100/100 wide</span>
-<span class="sd">bounds" sentinel); passed through explicitly here as `lb=-100, ub=100`."""</span>
+<span class="sd">bounds" sentinel); passed through explicitly here as `lb=-100, ub=100`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -6130,7 +6245,20 @@ the gamma_max/gamma_bracket quirk they share.</p>
 </details>
 <details class="example">
 <summary>Mean-variance optimization plus ridge/lasso-penalized portfolios — rpb/test_lasso1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Budget constraints and portfolio penalties.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Separate an unconstrained quadratic optimum from a fully invested portfolio. Ridge and</span>
+<span class="sd">L1 penalties pull holdings toward their specified reference allocations.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the sum of weights in the unconstrained and budget-constrained cases.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_lasso1.m -- Roncalli [2013],</span>
 <span class="sd">"Introduction to Risk Parity and Budgeting", Example 1 (page 53):</span>
 <span class="sd">compares an unconstrained gamma-problem MVO portfolio against the same</span>
 <span class="sd">problem with a budget (sum-to-1) constraint, and ridge/lasso-penalized</span>
@@ -6141,7 +6269,9 @@ the gamma_max/gamma_bracket quirk they share.</p>
 <span class="sd">`mvo_portfolio`/`solve_qp(..., ridge_penalty=...)`/`solve_qp(...,</span>
 <span class="sd">lasso_penalty=...)` as established in test_lasso3.py/test_lasso5.py; the</span>
 <span class="sd">original's `0, 0` sentinel arguments for "no equality constraint" /</span>
-<span class="sd">"no bounds" map to simply omitting those keyword arguments."""</span>
+<span class="sd">"no bounds" map to omitting those keywords in solve_qp. The mvo_portfolio wrapper</span>
+<span class="sd">adds a budget by default, so the unrestricted case calls solve_qp directly.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -6160,7 +6290,8 @@ the gamma_max/gamma_bracket quirk they share.</p>
 <span class="c1"># Case gamma-problem</span>
 <span class="n">gamma_x</span> <span class="o">=</span> <span class="mf">0.5</span>
 
-<span class="n">x1</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span>
+<span class="c1"># solve_qp has no implicit budget; mvo_portfolio defaults to sum(weights)=1.</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">solve_qp</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">)</span>
 <span class="n">x2</span> <span class="o">=</span> <span class="n">mvo_portfolio</span><span class="p">(</span>
     <span class="n">mu</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma_x</span><span class="p">,</span> <span class="n">a_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span> <span class="n">b_eq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
 <span class="p">)</span><span class="o">.</span><span class="n">weights</span>
@@ -6178,13 +6309,32 @@ the gamma_max/gamma_bracket quirk they share.</p>
 <span class="n">results</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">x5</span><span class="p">,</span> <span class="n">x6</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"            x1      x2      x3      x4      x5      x6"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># Unconstrained first-order condition and the explicit budget are different checks.</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">cov_matrix</span> <span class="o">@</span> <span class="n">x1</span><span class="p">,</span> <span class="n">gamma_x</span> <span class="o">*</span> <span class="n">mu</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x2</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"sum of weights (unconstrained / budget):"</span><span class="p">,</span> <span class="n">x1</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">x2</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Minimum-variance portfolio under general linear constraints — rpb/test_minvar2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_minvar2.m -- minimum-variance</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Reading portfolio constraints.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Minimize variance with a budget, w[0]+w[1]=0, and w[3]&gt;=0.9. Wide signed bounds permit</span>
+<span class="sd">short positions; full investment alone does not prevent leverage.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Print every equality and inequality residual for the returned weights.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_minvar2.m -- minimum-variance</span>
 <span class="sd">portfolio with general linear equality/inequality constraints and box</span>
-<span class="sd">bounds."""</span>
+<span class="sd">bounds.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -6210,9 +6360,23 @@ the gamma_max/gamma_bracket quirk they share.</p>
 </details>
 <details class="example">
 <summary>Mixed ridge+lasso penalties toward two different target vectors — rpb/test_lasso5.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Choosing the regularization target.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare shrinkage toward equal weights and toward a nonuniform allocation. The target is</span>
+<span class="sd">part of the model, not merely a numerical setting.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Use identical targets in both cases and check that the corresponding solutions agree.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed</span>
 <span class="sd">portfolios with two different ridge/lasso target vectors (equal-weight</span>
-<span class="sd">and a custom 20/20/30/30 target)."""</span>
+<span class="sd">and a custom 20/20/30/30 target).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -6275,7 +6439,20 @@ the gamma_max/gamma_bracket quirk they share.</p>
 </details>
 <details class="example">
 <summary>Raw QP solve vs. te_portfolio, plus a gamma-recovery check — rpb/test_bl6.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_bl6.m -- same 4-asset setup as</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Cross-checking a tracking-error solution.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare direct quadratic programming with the portfolio wrapper and target-based</span>
+<span class="sd">formulation. Agreement checks the formulation, not future investment performance.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Change the benchmark and compare achieved tracking error again.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_bl6.m -- same 4-asset setup as</span>
 <span class="sd">test_bl5.py, demonstrating that a raw QP call and `te_portfolio` at a fixed</span>
 <span class="sd">gamma agree, then cross-checking that fixed-gamma solution against</span>
 <span class="sd">`te_target_portfolio`'s sigma-problem mode targeting the tracking error that</span>
@@ -6286,7 +6463,8 @@ the gamma_max/gamma_bracket quirk they share.</p>
 <span class="sd">`te_portfolio(x0, mu, covMatrix, gamma=gamma0, ...)` computes internally</span>
 <span class="sd">(see tracking_error.py's `r_lin = gamma*mu + cov_matrix @ x_benchmark`) --</span>
 <span class="sd">so it's translated directly as a `te_portfolio` call rather than a raw</span>
-<span class="sd">`solve_qp` call, and the two are verified to agree below."""</span>
+<span class="sd">`solve_qp` call, and the two are verified to agree below.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -6347,10 +6525,24 @@ the gamma_max/gamma_bracket quirk they share.</p>
 </details>
 <details class="example">
 <summary>Ridge, lasso, and mixed-norm penalized portfolios — rpb/test_lasso3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso3.m (byte-identical to</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""When an L1 penalty cannot help.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">For nonnegative weights summing to one, their L1 norm is always one. An L1 penalty</span>
+<span class="sd">toward zero is then constant; a penalty toward existing holdings can still matter.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare zero-target L1 weights with the unpenalized long-only solution.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_lasso3.m (byte-identical to</span>
 <span class="sd">test_lasso4.m) -- MVO/ridge/lasso/mixed-penalty portfolios via the</span>
 <span class="sd">consolidated solve_qp (replacing the original's separate quadprog_ridge/</span>
-<span class="sd">quadprog_lasso/quadprog_mixed calls -- see optim/quadprog.py docstring)."""</span>
+<span class="sd">quadprog_lasso/quadprog_mixed calls -- see optim/quadprog.py docstring).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -6440,7 +6632,20 @@ the gamma_max/gamma_bracket quirk they share.</p>
 </details>
 <details class="example">
 <summary>Ridge/lasso penalty sweep, points from a 250-point scan — rpb/test_lasso2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_lasso2.m -- Roncalli [2013],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Static and reference-based regularization.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare penalties toward zero with penalties toward existing equal-weight holdings.</span>
+<span class="sd">Budget constraints and penalty targets both affect the interpretation.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Set penalties to zero before attributing any difference to regularization.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_lasso2.m -- Roncalli [2013],</span>
 <span class="sd">"Introduction to Risk Parity and Budgeting", Example 1 (page 53): the</span>
 <span class="sd">original sweeps 250 ridge/lasso penalty strengths and plots the resulting</span>
 <span class="sd">weight paths (4 subplots: ridge toward zero with a budget constraint,</span>
@@ -6464,7 +6669,8 @@ the gamma_max/gamma_bracket quirk they share.</p>
 <span class="sd">environment; `solve_qp`'s native (variable-splitting-free) L1 handling via</span>
 <span class="sd">cvxpy does not have that problem and returns sensible, well-conditioned</span>
 <span class="sd">weights throughout, consistent with test_lasso1.py's already-established</span>
-<span class="sd">output."""</span>
+<span class="sd">output.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -6525,7 +6731,20 @@ the gamma_max/gamma_bracket quirk they share.</p>
 </details>
 <details class="example">
 <summary>Volatility-target mean-variance under three weight-bound configurations — rpb/test_mvo3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/rpb/test_mvo3.m -- Roncalli [2013], "Introduction</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Long-only and capped frontiers.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare broad signed bounds, long-only weights, and a 40 percent cap. Constraints alter</span>
+<span class="sd">the feasible risk-return set and may make targets unattainable.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Check achieved volatility and weight bounds for each target.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/rpb/test_mvo3.m -- Roncalli [2013], "Introduction</span>
 <span class="sd">to Risk Parity and Budgeting", Example 1 (page 10): the same sigma-problem</span>
 <span class="sd">target-matching as test_mvo2.py's section 3, now under three different</span>
 <span class="sd">weight-bound configurations (unconstrained-ish, long-only, long-only capped</span>
@@ -6550,7 +6769,8 @@ the gamma_max/gamma_bracket quirk they share.</p>
 <span class="sd">`docs/matlab_bugs_found.md` for the full writeup. This translation produces</span>
 <span class="sd">the *correct* target-matching numbers (as `test_mvo3.m` would if it called</span>
 <span class="sd">`init_global` like its neighbors do), since `mvo_target_portfolio`'s Python</span>
-<span class="sd">`bisection` always has a well-defined tolerance."""</span>
+<span class="sd">`bisection` always has a well-defined tolerance.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 

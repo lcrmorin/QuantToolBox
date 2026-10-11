@@ -1,7 +1,22 @@
-"""Translated from Examples/ects/ml2.m -- OLS covariance matrix vs.
+"""Maximum likelihood and covariance estimators.
+
+Learning goal
+-------------
+Compare regression estimates and three standard-error calculations. The Hessian, score
+outer product, and sandwich use different finite-sample information.
+
+Try it
+------
+Compare coefficients first, then standard errors; do not treat them as interchangeable
+outputs.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/ml2.m -- OLS covariance matrix vs.
 Gaussian-MLE covariance matrix under all three `ml_estimation` cov
 estimators (Hessian, OPG, heteroskedasticity-consistent sandwich), on a
-10-observation dataset."""
+10-observation dataset.
+"""
 
 import numpy as np
 

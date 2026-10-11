@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/varx1a.m -- Lutkepohl [1991],
+"""A first vector autoregression.
+
+Learning goal
+-------------
+Fit a VAR(2) to log differences of three economic series. Coefficient blocks correspond
+to lagged variables; the constant is a separate regressor.
+
+Try it
+------
+Reduce the lag order and compare residual covariance.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx1a.m -- Lutkepohl [1991],
 "Introduction to Multiple Time Series Analysis", section 3.2.3:
 estimation of a VAR(2) process on log-differenced West German
 investment/income/consumption data (1960Q1-1978Q4, the first 76 of the
@@ -16,7 +29,8 @@ exogenous regressor `x`, which is the classic GAUSS/MATLAB-toolbox
 shorthand for "just a constant" (equivalent to `ones(n, 1)`); that is
 translated literally as `x = np.ones((n, 1))` below. `lag1` (first row
 undefined/NaN, replaced by `varx_estimate`'s own NaN-row-dropping logic)
-is translated as a plain first-difference with a leading NaN."""
+is translated as a plain first-difference with a leading NaN.
+"""
 
 import io
 

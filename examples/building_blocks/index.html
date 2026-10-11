@@ -1455,6 +1455,9 @@
 
 
 <h1 id="building-blocks-bisection-linear-algebra-numerical-differentiation">Building blocks: bisection, linear algebra, numerical differentiation<a class="headerlink" href="#building-blocks-bisection-linear-algebra-numerical-differentiation" title="Permanent link">&para;</a></h1>
+<p><strong>Goal:</strong> verify numerical tools against identities you can calculate yourself.
+You need NumPy arrays, matrix multiplication, and basic differentiation.
+Each check below tests meaning, not just whether the function returns.</p>
 <p>Smaller, self-contained examples for the lower-level utilities other
 modules are built on.</p>
 <h2 id="bisection-root-finding">Bisection root-finding<a class="headerlink" href="#bisection-root-finding" title="Permanent link">&para;</a></h2>
@@ -1462,10 +1465,14 @@ modules are built on.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.optim.bisection</span><span class="w"> </span><span class="kn">import</span> <span class="n">bisection</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mf">4.0</span>
 
+
+<span class="k">assert</span> <span class="n">f</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span>  <span class="c1"># bracket a sign change for this continuous function</span>
 <span class="n">root</span> <span class="o">=</span> <span class="n">bisection</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">root</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>  <span class="c1"># -&gt; 2.0 (the positive root of x^2 = 4, within the bracket [0, 10])</span>
 </code></pre></div>
 <h2 id="explicit-implicit-linear-constraint-conversion">Explicit ↔ implicit linear constraint conversion<a class="headerlink" href="#explicit-implicit-linear-constraint-conversion" title="Permanent link">&para;</a></h2>
@@ -1480,7 +1487,10 @@ constraint <code>C @ x = c</code> and an implicit null-space parametrization
 <span class="n">RR</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">explicit_to_implicit</span><span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"R shape:"</span><span class="p">,</span> <span class="n">RR</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (8, 7) -- 7 free directions in the null space</span>
 <span class="n">CC2</span><span class="p">,</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">implicit_to_explicit</span><span class="p">(</span><span class="n">RR</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-<span class="c1"># CC2 is parallel to the original CC (same constraint, possibly rescaled)</span>
+<span class="c1"># Different bases or rescalings can describe the same feasible set.</span>
+<span class="n">x_feasible</span> <span class="o">=</span> <span class="n">RR</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">+</span> <span class="n">r</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">CC</span> <span class="o">@</span> <span class="n">x_feasible</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">CC2</span> <span class="o">@</span> <span class="n">x_feasible</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="vecvechxpnd"><code>vec</code>/<code>vech</code>/<code>xpnd</code><a class="headerlink" href="#vecvechxpnd" title="Permanent link">&para;</a></h2>
 <p>Translated from <code>Examples/matrix/vec1.m</code> and <code>vech1.m</code>.</p>
@@ -1488,14 +1498,16 @@ constraint <code>C @ x = c</code> and an implicit null-space parametrization
 <span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.linalg.special_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">vec</span><span class="p">,</span> <span class="n">vech</span><span class="p">,</span> <span class="n">xpnd</span><span class="p">,</span> <span class="n">reshapec</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">vec</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>              <span class="c1"># column-major flatten</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">vec</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># column-major flatten</span>
 <span class="n">back</span> <span class="o">=</span> <span class="n">reshapec</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># and back</span>
 <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
 
 <span class="c1"># vech/xpnd: half-vectorization of a symmetric matrix and its inverse</span>
 <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">v</span> <span class="o">=</span> <span class="n">vech</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>      <span class="c1"># lower-triangle, row-wise order</span>
-<span class="n">back</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>    <span class="c1"># expands back to a full symmetric matrix</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">+</span> <span class="n">xs</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># symmetry is essential for this round trip</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">vech</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># lower-triangle, row-wise order</span>
+<span class="n">back</span> <span class="o">=</span> <span class="n">xpnd</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># expands back to a full symmetric matrix</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">back</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="numerical-gradient-and-hessian">Numerical gradient and Hessian<a class="headerlink" href="#numerical-gradient-and-hessian" title="Permanent link">&para;</a></h2>
 <p>Translated from <code>Examples/maths/grad1.m</code> and <code>hess1.m</code>. Compares the
@@ -1503,23 +1515,33 @@ numerical derivative of <code>f(x) = 3x² + 6x + 7 + log(x)</code> against its k
 analytical derivative <code>f'(x) = 6x + 6 + 1/x</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.maths.numerical_diff</span><span class="w"> </span><span class="kn">import</span> <span class="n">numerical_gradient</span><span class="p">,</span> <span class="n">numerical_hessian</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">fun_sum</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">grad_analytical</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">x</span>
+
 
 <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 <span class="n">g_numerical</span> <span class="o">=</span> <span class="n">numerical_gradient</span><span class="p">(</span><span class="n">fun_sum</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"forward"</span><span class="p">)</span>
 <span class="n">g_true</span> <span class="o">=</span> <span class="n">grad_analytical</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"max abs error:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">g_true</span> <span class="o">-</span> <span class="n">g_numerical</span><span class="p">)))</span>
 </code></pre></div>
-<p>Output:</p>
-<div class="highlight"><pre><span></span><code>max abs error: 9.103828858769702e-06
+<p>The default forward step gives a maximum absolute gradient error around
+<code>1e-5</code> here. That is an absolute error, not a universal number of significant
+digits. Check curvature separately:</p>
+<div class="highlight"><pre><span></span><code><span class="n">h_numerical</span> <span class="o">=</span> <span class="n">numerical_hessian</span><span class="p">(</span><span class="n">fun_sum</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+<span class="n">h_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mi">6</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Hessian max absolute error:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">h_true</span> <span class="o">-</span> <span class="n">h_numerical</span><span class="p">)))</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">g_numerical</span><span class="p">,</span> <span class="n">g_true</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">h_numerical</span><span class="p">,</span> <span class="n">h_true</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
 </code></pre></div>
-<p>A forward-difference gradient with default step size agrees with the
-analytical formula to about 6 significant figures — as expected for a
-smooth, well-scaled function like this one.</p>
+<p><strong>Try it:</strong> vary the finite-difference step <code>dh</code> over <code>1e-3</code>, <code>1e-5</code>, and
+<code>1e-7</code>. Truncation error falls initially, but subtracting nearly equal floating
+point values eventually increases rounding error. Keep every logarithm argument
+positive, including at perturbed evaluation points.</p>
 
 
 

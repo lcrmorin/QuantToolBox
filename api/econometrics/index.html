@@ -2971,9 +2971,23 @@ the free parameter gamma by weighted least squares.</p>
 </div><h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Beta-distribution MLE for LGD modeling — ects/ml3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/ml3.m -- Beta-distribution MLE (LGD --</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A beta likelihood for bounded observations.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Fit a beta distribution to loss-given-default observations between zero and one.</span>
+<span class="sd">Distribution shape parameters must stay positive.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the fitted mean with the sample mean and inspect behavior near the endpoints.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/ml3.m -- Beta-distribution MLE (LGD --</span>
 <span class="sd">Loss Given Default -- modeling), comparing the Hessian/OPG/HC covariance</span>
-<span class="sd">estimators, on 13 observed LGD values."""</span>
+<span class="sd">estimators, on 13 observed LGD values.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">beta</span> <span class="k">as</span> <span class="n">beta_dist</span>
@@ -3006,7 +3020,20 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>Local Linear Trend model fit by time-domain ML, vs. Whittle — ects/kalman2c.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman2c.m -- Harvey [1990], pages</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Likelihood estimation before trend filtering.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Estimate trend-model noise scales with the Kalman likelihood. Compare the fitted path</span>
+<span class="sd">with kalman2b.py without expecting identical finite-sample estimates.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Inspect convergence and the estimated slope-noise scale.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman2c.m -- Harvey [1990], pages</span>
 <span class="sd">89-90: time-domain (exact) maximum-likelihood estimation of the Local</span>
 <span class="sd">Linear Trend model's (sigma_epsilon, sigma_eta, sigma_zeta) on the same</span>
 <span class="sd">61-observation Gnp.asc series as kalman2a.py/kalman2b.py, then runs the</span>
@@ -3014,7 +3041,8 @@ the free parameter gamma by weighted least squares.</p>
 <span class="sd">dropped).</span>
 
 <span class="sd">As in kalman1b.py/kalman1c.py, the original's `theta = sqrt(theta.^2)`</span>
-<span class="sd">inside `LLT_ml` is translated as `np.abs(theta)`."""</span>
+<span class="sd">inside `LLT_ml` is translated as `np.abs(theta)`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3131,18 +3159,35 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>ML recovery of all free state-space model parameters — ects/kalman3d.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman3d.m -- maximum-likelihood</span>
-<span class="sd">recovery of all 11 free parameters (Z diagonal, d[0], H diagonal, T,</span>
-<span class="sd">c, Q) of the general state-space model used in kalman3a.py/kalman3b.py/</span>
-<span class="sd">kalman3c.py, starting the optimizer from the model's own true parameter</span>
-<span class="sd">values (as the original does) and comparing the recovered estimates</span>
-<span class="sd">against them.</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Identification before state-space estimation.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">The unrestricted parameterization has latent-scale and location ambiguities. The</span>
+<span class="sd">teaching fit fixes observation loadings and intercepts before estimating noise and</span>
+<span class="sd">dynamics.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare fitted observation likelihoods rather than demanding exact recovery from 100</span>
+<span class="sd">observations.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman3d.m -- maximum-likelihood</span>
+<span class="sd">estimation of the general state-space model used in kalman3a.py/</span>
+<span class="sd">kalman3b.py/kalman3c.py. Unlike the original unrestricted 11-parameter fit,</span>
+<span class="sd">this example fixes Z=I and d=[10, 0] to define the latent scale and origin.</span>
+<span class="sd">It estimates the remaining eight noise and dynamic parameters, starting</span>
+<span class="sd">from their simulation values. Without identification restrictions the</span>
+<span class="sd">Hessian can be singular and standard errors invalid even if the fit runs.</span>
 
 <span class="sd">`theta([4 5 11]) = sqrt(theta([4 5 11]).^2)` in the original enforces</span>
 <span class="sd">H[0,0], H[1,1], Q &gt; 0 (indices 4, 5, 11 in MATLAB's 1-based numbering);</span>
 <span class="sd">translated as `np.abs(theta[[3, 4, 10]])` here. `a0`/`P0` are</span>
 <span class="sd">recomputed from the model's own steady state at every trial `theta`,</span>
-<span class="sd">exactly as in `ssm_ml_fun`."""</span>
+<span class="sd">exactly as in `ssm_ml_fun`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -3290,21 +3335,45 @@ the free parameter gamma by weighted least squares.</p>
 
 <span class="n">sv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
 
-<span class="n">ml_result</span> <span class="o">=</span> <span class="n">ml_estimation</span><span class="p">(</span><span class="n">ssm_ml_fun</span><span class="p">,</span> <span class="n">sv</span><span class="p">)</span>
+<span class="c1"># theta = R @ free_parameters + offset fixes the first three entries.</span>
+<span class="n">free_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="n">restriction_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">11</span><span class="p">)[:,</span> <span class="n">free_indices</span><span class="p">]</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">offset</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">sv</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">ml_result</span> <span class="o">=</span> <span class="n">ml_estimation</span><span class="p">(</span><span class="n">ssm_ml_fun</span><span class="p">,</span> <span class="n">sv</span><span class="p">[</span><span class="n">free_indices</span><span class="p">],</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">restriction_matrix</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"optimizer converged:"</span><span class="p">,</span> <span class="n">ml_result</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"finite standard errors:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">ml_result</span><span class="o">.</span><span class="n">stderr</span><span class="p">)))</span>
 <span class="n">theta_hat</span> <span class="o">=</span> <span class="n">ml_result</span><span class="o">.</span><span class="n">theta</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2"> True           Estimated"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">" values         values"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">sv</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">]),</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">theta_hat</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">sv</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># fixed identification restrictions</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">ml_result</span><span class="o">.</span><span class="n">stderr</span><span class="p">))</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Numerical vs. analytical Jacobian/Hessian across covariance estimators — ects/ml4.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/ml4.m -- Gaussian-MLE with numerical vs.</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Analytical derivatives in maximum likelihood.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Supply a Gaussian regression score and Hessian, then compare with numerical derivatives.</span>
+<span class="sd">Keep track of whether the noise parameter represents variance or standard deviation.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Perturb the starting point and compare the final likelihood and convergence.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/ml4.m -- Gaussian-MLE with numerical vs.</span>
 <span class="sd">analytical Jacobian/Hessian, comparing all three covariance estimators</span>
 <span class="sd">under both, on a 10-observation dataset. Note theta[4] is parametrized as</span>
 <span class="sd">sigma^2 directly here (not sigma), matching the original's own warning</span>
-<span class="sd">comment."""</span>
+<span class="sd">comment.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3387,10 +3456,25 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>OLS vs. Gaussian-MLE covariance: Hessian, OPG, and HC estimators — ects/ml2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/ml2.m -- OLS covariance matrix vs.</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Maximum likelihood and covariance estimators.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare regression estimates and three standard-error calculations. The Hessian, score</span>
+<span class="sd">outer product, and sandwich use different finite-sample information.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare coefficients first, then standard errors; do not treat them as interchangeable</span>
+<span class="sd">outputs.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/ml2.m -- OLS covariance matrix vs.</span>
 <span class="sd">Gaussian-MLE covariance matrix under all three `ml_estimation` cov</span>
 <span class="sd">estimators (Hessian, OPG, heteroskedasticity-consistent sandwich), on a</span>
-<span class="sd">10-observation dataset."""</span>
+<span class="sd">10-observation dataset.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3441,7 +3525,21 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>OLS vs. Gaussian-MLE covariance: Hessian, OPG, and HC standard errors — stats/cov1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/cov1.m -- OLS in closed form vs. maximum</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Uncertainty estimates for regression.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare OLS and Gaussian maximum likelihood with Hessian, outer-product, and sandwich</span>
+<span class="sd">covariance estimates. Coefficient estimates and their standard errors answer different</span>
+<span class="sd">questions.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase the sample size and compare the scale of the standard errors.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/cov1.m -- OLS in closed form vs. maximum</span>
 <span class="sd">likelihood (Gaussian log-likelihood, same model), comparing standard</span>
 <span class="sd">errors from the Hessian, OPG, and "sandwich" (HC) covariance estimators.</span>
 
@@ -3454,7 +3552,8 @@ the free parameter gamma by weighted least squares.</p>
 <span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed seed</span>
 <span class="sd">(`np.random.default_rng(0)`) is substituted here. `ml_ols.m` (the</span>
 <span class="sd">per-observation log-density) is inlined below rather than kept as a</span>
-<span class="sd">separate file, matching its role as a helper, not a standalone example."""</span>
+<span class="sd">separate file, matching its role as a helper, not a standalone example.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3468,9 +3567,10 @@ the free parameter gamma by weighted least squares.</p>
 <span class="n">u</span> <span class="o">=</span> <span class="n">sigma_true</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_true</span> <span class="o">+</span> <span class="n">u</span>
 
-<span class="n">beta_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span> <span class="o">@</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">beta_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">u_hat</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_hat</span>
-<span class="n">sigma_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">u_hat</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Residual degrees of freedom are n - k, even without an intercept.</span>
+<span class="n">sigma_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">u_hat</span> <span class="o">@</span> <span class="n">u_hat</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 <span class="n">cov_beta</span> <span class="o">=</span> <span class="p">(</span><span class="n">sigma_hat</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span>
 <span class="n">stderr_ols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_beta</span><span class="p">))</span>
 
@@ -3504,9 +3604,23 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>OLS, LAD, quantile, and SVM regression compared — svm/svm6.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm6.m -- comparison of OLS, LAD, and</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Loss functions in SVM regression.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare squared, absolute, quantile, and epsilon-insensitive losses. The SVM intercept</span>
+<span class="sd">is handled separately from the column of ones used by the regression routines.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Set epsilon to zero and increase C to compare with least absolute deviations.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/svm/svm6.m -- comparison of OLS, LAD, and</span>
 <span class="sd">SVM-regression (LS-SVM and epsilon-SVM, at two different C values)</span>
-<span class="sd">estimates on the same 10-obs dataset used in ols1.m/robust1.m."""</span>
+<span class="sd">estimates on the same 10-obs dataset used in ols1.m/robust1.m.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3554,12 +3668,26 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>OLS, median, LAD, and Huber regression compared — ects/robust2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust2.m -- OLS vs. median (quantile,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""OLS, median, LAD, and Huber regression.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare loss functions on the same simulated regression. Read the convergence flag:</span>
+<span class="sd">close coefficients do not establish successful iterative convergence.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Add one response outlier and compare coefficient changes across estimators.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/robust2.m -- OLS vs. median (quantile,</span>
 <span class="sd">alpha=0.5) regression, LAD regression, and Huber regression, on a</span>
 <span class="sd">simulated 3-predictor dataset.</span>
 
 <span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3584,6 +3712,11 @@ the free parameter gamma by weighted least squares.</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="c1"># LAD's nonsmooth loss can make IRLS stop at its iteration limit.</span>
+<span class="c1"># The median-regression LP above supplies an objective-value cross-check.</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"LAD IRLS reached its iteration limit; compare absolute loss with the LP fit."</span><span class="p">)</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
 
 <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_ols</span><span class="p">),</span> <span class="mf">0.90</span><span class="p">)</span>
@@ -3594,11 +3727,29 @@ the free parameter gamma by weighted least squares.</p>
     <span class="s2">"converged:"</span><span class="p">,</span>
     <span class="n">r_huber</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="c1"># Absolute-loss agreement can be useful even when IRLS has not met its stopping rule.</span>
+<span class="n">loss_lp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_med</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">loss_irls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"LAD absolute loss, LP / IRLS:"</span><span class="p">,</span> <span class="n">loss_lp</span><span class="p">,</span> <span class="n">loss_irls</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>OLS, MLE, and GMM under an optional linear restriction — ects/gmm1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/gmm1.m -- linear regression estimated</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""OLS, likelihood, and moment conditions.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Fit the same regression through several estimators, then impose a coefficient</span>
+<span class="sd">restriction. Missing observations and moment weights affect what can be compared.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Check the imposed coefficient and compare the unrestricted fitted values.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/gmm1.m -- linear regression estimated</span>
 <span class="sd">three ways (OLS, Gaussian MLE, GMM with moment conditions matching OLS's</span>
 <span class="sd">normal equations plus a second-moment condition), each in an unconstrained</span>
 <span class="sd">and a beta[3]=1 restricted form, on a 10-observation dataset with one</span>
@@ -3609,7 +3760,8 @@ the free parameter gamma by weighted least squares.</p>
 <span class="sd">function instead of using the RR/r restriction machinery) is not</span>
 <span class="sd">re-translated separately -- `theta6` below already demonstrates the</span>
 <span class="sd">restriction via `gmm_estimation`'s own `restriction=` parameter, the same</span>
-<span class="sd">mechanism `ols_estimation`/`ml_estimation` use for `theta2`/`theta4`."""</span>
+<span class="sd">mechanism `ols_estimation`/`ml_estimation` use for `theta2`/`theta4`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3681,13 +3833,27 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>OLS/median/LAD plus quantile regression via IRLS and exact LP — ects/robust3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/robust3.m -- OLS vs. median regression,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Iterative and exact quantile regression.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare an IRLS approximation with a linear-programming quantile fit. Check convergence</span>
+<span class="sd">and asymmetric loss, not just rounded coefficients.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Vary the target quantile and inspect the two objective values.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/robust3.m -- OLS vs. median regression,</span>
 <span class="sd">LAD regression, and quantile regression at alpha=0.90, both via the IRLS</span>
 <span class="sd">M-estimator (`quantile_m_regression`) and the exact LP formulation</span>
 <span class="sd">(`quantile_regression`), on a simulated 3-predictor dataset.</span>
 
 <span class="sd">The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
-<span class="sd">seed (`np.random.default_rng(0)`) is substituted here."""</span>
+<span class="sd">seed (`np.random.default_rng(0)`) is substituted here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3712,6 +3878,11 @@ the free parameter gamma by weighted least squares.</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Median regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_med</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="n">r_lad</span> <span class="o">=</span> <span class="n">lad_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="c1"># LAD's nonsmooth loss can make IRLS stop at its iteration limit.</span>
+<span class="c1"># The median-regression LP above supplies an objective-value cross-check.</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"LAD IRLS reached its iteration limit; compare absolute loss with the LP fit."</span><span class="p">)</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">LAD regression beta:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"converged:"</span><span class="p">,</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
 
 <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.90</span>
@@ -3720,18 +3891,37 @@ the free parameter gamma by weighted least squares.</p>
 
 <span class="n">beta_q</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Quantile (alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">) regression via exact LP, beta:        "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">beta_q</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># Absolute-loss agreement can be useful even when IRLS has not met its stopping rule.</span>
+<span class="n">loss_lp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">beta_med</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">loss_irls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">r_lad</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"LAD absolute loss, LP / IRLS:"</span><span class="p">,</span> <span class="n">loss_lp</span><span class="p">,</span> <span class="n">loss_irls</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>OLS/SVM-LS and quantile/SVM-epsilon regression on synthetic data — svm/svm8.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/svm/svm8.m -- OLS, LAD, quantile, and SVM</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A larger simulated regression comparison.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare regression losses on a seeded sample with known coefficients. All displayed</span>
+<span class="sd">results are in-sample; epsilon has the same units as the response.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Generate an independent test sample and compare prediction errors there.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/svm/svm8.m -- OLS, LAD, quantile, and SVM</span>
 <span class="sd">regression (primal, at two very different C values, LS- and</span>
 <span class="sd">epsilon-insensitive) compared on a larger (n=1000) simulated dataset.</span>
 
 <span class="sd">The original draws x/beta/u from MATLAB's unseeded `rand`/`randn`; a fixed</span>
 <span class="sd">seed (`np.random.default_rng(0)`) is substituted here for reproducibility</span>
 <span class="sd">-- this is the fixed-seed substitution the tracker notes svm8.m as still</span>
-<span class="sd">needing."""</span>
+<span class="sd">needing.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3786,7 +3976,20 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>Time-domain ML of Kalman noise variances, two starting states — ects/kalman1b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman1b.m -- Harvey [1990],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Likelihood sensitivity to initialization.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Fit a local-level model using two initial-state conventions. Estimation initialization</span>
+<span class="sd">and the initialization used to display filtered states are separate choices.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the first few filtered values with the last few.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman1b.m -- Harvey [1990],</span>
 <span class="sd">"Forecasting, Structural Time Series and the Kalman Filter", pages</span>
 <span class="sd">89-90: time-domain (exact) maximum-likelihood estimation of the</span>
 <span class="sd">local-level model's (sigma_epsilon, sigma_eta) on the same 71-</span>
@@ -3804,7 +4007,8 @@ the free parameter gamma by weighted least squares.</p>
 <span class="sd">per-observation `log_l` array (the natural per-observation log-density</span>
 <span class="sd">for this model), rather than a single pre-summed scalar (which</span>
 <span class="sd">`ml_estimation` would also accept, but only as a degenerate 1-observation</span>
-<span class="sd">case)."""</span>
+<span class="sd">case).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -3935,7 +4139,20 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>Time-domain vs. frequency-domain (Whittle) Kalman ML — ects/kalman1c.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman1c.m -- Harvey [1990],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Time-domain and frequency-domain estimation.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare exact Kalman likelihood with Whittle approximation on the same short series.</span>
+<span class="sd">Finite-sample estimates need not coincide.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare fitted noise standard deviations and resulting filtered paths.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman1c.m -- Harvey [1990],</span>
 <span class="sd">"Forecasting, Structural Time Series and the Kalman Filter", pages</span>
 <span class="sd">89-90: compares time-domain (exact) maximum likelihood against</span>
 <span class="sd">frequency-domain (Whittle) maximum likelihood estimation of the</span>
@@ -3946,7 +4163,8 @@ the free parameter gamma by weighted least squares.</p>
 <span class="sd">P0 = 0 during estimation, but the final filter run used to compare the</span>
 <span class="sd">two estimates' one-step-ahead predictions uses a0 = y[0], P0 = 0 (the</span>
 <span class="sd">original's own, slightly inconsistent, choice -- preserved here rather</span>
-<span class="sd">than "fixed")."""</span>
+<span class="sd">than "fixed").</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -4078,7 +4296,20 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>Time-varying-coefficient model with variances estimated by ML — ects/kalman4b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman4b.m -- same simulated</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Estimating coefficient process noise.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Estimate three noise scales before filtering the simulated regression. Known simulation</span>
+<span class="sd">parameters are a reference, not guaranteed finite-sample estimates.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Repeat with another random seed and compare parameter recovery.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman4b.m -- same simulated</span>
 <span class="sd">time-varying-coefficient regression as kalman4a.py, but instead of using</span>
 <span class="sd">the true (sigma_epsilon, sigma_beta1, sigma_beta2), estimates them by</span>
 <span class="sd">maximum likelihood (starting from sv = [1, 1, 1]) and re-runs the</span>
@@ -4086,7 +4317,8 @@ the free parameter gamma by weighted least squares.</p>
 <span class="sd">recovered beta_t path against the simulated true path.</span>
 
 <span class="sd">As in kalman1b.py/kalman2c.py/kalman3d.py, `theta = sqrt(theta.^2)` is</span>
-<span class="sd">translated as `np.abs(theta)`."""</span>
+<span class="sd">translated as `np.abs(theta)`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -4154,11 +4386,25 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>VAR(0) equivalence to plain OLS — ects/varx3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx3.m -- a trivial 5-observation</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""OLS as a zero-lag VAR.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Use a tiny design to check that a VAR with no autoregressive lags reduces to regression.</span>
+<span class="sd">This is a useful starting point before the larger VARX examples.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare fitted values and coefficient orientation with OLS.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx3.m -- a trivial 5-observation</span>
 <span class="sd">example comparing plain OLS against `varx_estimate(..., p=0)` on the</span>
 <span class="sd">same regressor matrix. With no autoregressive lags (p=0), VARX</span>
 <span class="sd">estimation collapses to OLS, so `theta`/`beta` from the second call</span>
-<span class="sd">should match `beta` from the first."""</span>
+<span class="sd">should match `beta` from the first.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -4188,7 +4434,20 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>Wald test for no Granger-causality between VAR variables — ects/varx1b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx1b.m -- Lutkepohl [1991], section</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Testing predictive restrictions in a VAR.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Test a joint set of lag coefficients with a Wald statistic. Granger predictability is</span>
+<span class="sd">not evidence of a structural causal mechanism.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Inspect the restricted coefficient indices before interpreting the p-value.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx1b.m -- Lutkepohl [1991], section</span>
 <span class="sd">3.6: Wald test for no Granger-causality from income/consumption to</span>
 <span class="sd">investment in the VAR(2) model estimated in varx1a.py (same</span>
 <span class="sd">log-differenced Lutkepohl.asc data), i.e. H0: theta[4] = theta[7] =</span>
@@ -4198,7 +4457,8 @@ the free parameter gamma by weighted least squares.</p>
 <span class="sd">`RR = [design([4;7;13;16]) zeros(4,5)]` is only used to build the</span>
 <span class="sd">constraint function `C(theta) = RR @ theta` -- it is not a restriction</span>
 <span class="sd">passed to `varx_estimate` here, so it's translated as a direct 4-element</span>
-<span class="sd">index/select into theta rather than via `design`."""</span>
+<span class="sd">index/select into theta rather than via `design`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -4326,7 +4586,20 @@ the free parameter gamma by weighted least squares.</p>
 </details>
 <details class="example">
 <summary>Wald test for no instantaneous causality in a VAR — ects/varx1c.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx1c.m -- Lutkepohl [1991], section</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Contemporaneous residual dependence.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Test restrictions on the residual covariance parameterization. Contemporaneous</span>
+<span class="sd">correlation alone does not identify a causal direction.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the residual correlation matrix with the tested restriction.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx1c.m -- Lutkepohl [1991], section</span>
 <span class="sd">3.6: Wald test for no instantaneous causality from income/consumption to</span>
 <span class="sd">investment, on the ML estimate of the VAR(2) model from varx1a.py/</span>
 <span class="sd">varx1b.py's data. `varx_ls`/`varx_ml` map to `varx_estimate(...,</span>
@@ -4334,7 +4607,8 @@ the free parameter gamma by weighted least squares.</p>
 <span class="sd">21-element stacked coefficient vector followed by the 6-element vech of</span>
 <span class="sd">the Cholesky factor of Sigma (`varx_estimate`'s documented ML</span>
 <span class="sd">convention), so theta[23]/theta[24] (1-indexed) fall within that</span>
-<span class="sd">appended Cholesky block -- exactly as in the original."""</span>
+<span class="sd">appended Cholesky block -- exactly as in the original.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -5080,7 +5354,20 @@ explicit lag values in p_max, if given as an array).</p>
 </div><h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Larger restricted SUR system, two covariance variants compared — ects/varx4b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx4b.m -- Judge, Hill, Griffiths,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Restrictions across a three-equation system.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare two sets of cross-equation restrictions in a SUR model. Changing restrictions</span>
+<span class="sd">also changes the covariance used for weighting.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Count free coefficients in each model and verify the restricted equalities.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx4b.m -- Judge, Hill, Griffiths,</span>
 <span class="sd">Lutkepohl &amp; Lee [1988], pages 460-462: restricted SUR estimation of a</span>
 <span class="sd">3-equation system (log income on log prices + log quantity, 15 stacked</span>
 <span class="sd">coefficients restricted to 7/9 free parameters) on a 30-observation</span>
@@ -5092,7 +5379,8 @@ explicit lag values in p_max, if given as an array).</p>
 <span class="sd">restriction (`w`), (2) Sigma2 from a more tightly restricted 7-free-</span>
 <span class="sd">parameter version of the same `w` (indices 8 and 12 tied to the same</span>
 <span class="sd">free parameter as index 4), (3) the final restricted SUR fit run once</span>
-<span class="sd">with each Sigma."""</span>
+<span class="sd">with each Sigma.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -5167,7 +5455,20 @@ explicit lag values in p_max, if given as an array).</p>
 </details>
 <details class="example">
 <summary>Reduced form of a dynamic simultaneous-equations system — ects/varx2a.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx2a.m -- Lutkepohl [1991], chapter</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Adding exogenous regressors to a VAR.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Fit log-level endogenous series with a lagged exogenous investment series and a</span>
+<span class="sd">constant. Including levels does not establish stationarity.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Identify each lag block in the design before changing the lag order.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx2a.m -- Lutkepohl [1991], chapter</span>
 <span class="sd">10: estimation of the reduced form (10.2.4) of a system of dynamic</span>
 <span class="sd">simultaneous equations relating West German Income and Consumption to</span>
 <span class="sd">their own lag and lagged Investment, on the same 76-row Lutkepohl.asc</span>
@@ -5179,7 +5480,8 @@ explicit lag values in p_max, if given as an array).</p>
 <span class="sd">the exogenous [constant, Investment(t-1)] -- exactly the 4-column layout</span>
 <span class="sd">the original prints under the header "Inc(t-1)  Cons(t-1)  Constant</span>
 <span class="sd">Inv(t-1)". `results.B` (not a field on `VARXResult`) is reconstructed as</span>
-<span class="sd">`np.hstack([phi, beta])`, matching that same column order."""</span>
+<span class="sd">`np.hstack([phi, beta])`, matching that same column order.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -5291,7 +5593,20 @@ explicit lag values in p_max, if given as an array).</p>
 </details>
 <details class="example">
 <summary>Restricted seemingly-unrelated-regressions system, two-step GLS — ects/varx4a.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx4a.m -- Judge, Hill, Griffiths,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Seemingly unrelated regressions.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Fit two equations with restrictions, then use estimated cross-equation residual</span>
+<span class="sd">covariance for feasible GLS. This covariance describes errors, not regressors.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the initial and updated residual covariance estimates.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx4a.m -- Judge, Hill, Griffiths,</span>
 <span class="sd">Lutkepohl &amp; Lee [1988], "Introduction to the Theory and Practice of</span>
 <span class="sd">Econometrics", pages 444-455: restricted SUR (seemingly-unrelated-</span>
 <span class="sd">regressions) estimation of a 2-equation system with 10 stacked</span>
@@ -5304,7 +5619,8 @@ explicit lag values in p_max, if given as an array).</p>
 <span class="sd">weighting matrix (`varx_cls` -&gt; `varx_estimate(..., method="ls")` in</span>
 <span class="sd">both steps; `p=0` means no autoregressive lags, i.e. this is a pure</span>
 <span class="sd">restricted SUR regression via the VARX machinery, `results.B` here is</span>
-<span class="sd">just `result.beta` since `p=0` makes `result.phi` empty)."""</span>
+<span class="sd">just `result.beta` since `p=0` makes `result.phi` empty).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -5358,9 +5674,23 @@ explicit lag values in p_max, if given as an array).</p>
 </details>
 <details class="example">
 <summary>Restricted VAR via concentrated ML, vs. restricted least squares — ects/varx2c.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx2c.m -- identical setup to</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Restricted VARX likelihood.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Repeat the VARX restrictions with conditional maximum likelihood. Cross-equation</span>
+<span class="sd">residual covariance influences a restricted system fit.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare estimates and residual covariance with varx2b.py.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx2c.m -- identical setup to</span>
 <span class="sd">varx2b.py, but estimated via `varx_cml` -&gt; `varx_estimate_cml`</span>
-<span class="sd">(concentrated/iterated ML) instead of restricted LS."""</span>
+<span class="sd">(concentrated/iterated ML) instead of restricted LS.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -5476,7 +5806,20 @@ explicit lag values in p_max, if given as an array).</p>
 </details>
 <details class="example">
 <summary>Restricted VAR(2) via least squares and concentrated ML — ects/varx1d.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx1d.m -- Lutkepohl [1991], chapter 5:</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A restricted VAR.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Impose zero restrictions and compare least squares with conditional maximum likelihood.</span>
+<span class="sd">Selecting restrictions after inspecting significance changes inferential interpretation.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Reconstruct the full coefficient array and verify every imposed zero.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx1d.m -- Lutkepohl [1991], chapter 5:</span>
 <span class="sd">re-estimates the VAR(2) model from varx1a.py with 14 of its 21</span>
 <span class="sd">coefficients restricted to exactly 0 (the ones that came out</span>
 <span class="sd">non-significant in the unrestricted fit), leaving only 7 free</span>
@@ -5488,7 +5831,8 @@ explicit lag values in p_max, if given as an array).</p>
 <span class="sd">`RR = design(w)` builds the (21, 7) restriction matrix directly from the</span>
 <span class="sd">free-parameter index vector `w` (0 = restricted to r=0, k = maps to free</span>
 <span class="sd">parameter k), exactly matching `quanttoolbox`'s `restriction=(RR, r)`</span>
-<span class="sd">convention."""</span>
+<span class="sd">convention.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -5615,13 +5959,27 @@ explicit lag values in p_max, if given as an array).</p>
 </details>
 <details class="example">
 <summary>Restricted-coefficient VAR via restricted least squares — ects/varx2b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx2b.m -- Lutkepohl [1991], chapter</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Restricted VARX least squares.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Impose coefficient values, including a fixed one and fixed zeros. Restrictions reduce</span>
+<span class="sd">free coordinates rather than deleting observed variables.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Verify the imposed values directly in the fitted coefficient matrix.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx2b.m -- Lutkepohl [1991], chapter</span>
 <span class="sd">10: re-estimates the reduced-form dynamic simultaneous-equations model</span>
 <span class="sd">from varx2a.py with four coefficients restricted: the Inc(t-1)</span>
 <span class="sd">coefficient in the Inc(t) equation fixed at 1, and the Cons(t-1)/</span>
 <span class="sd">constant coefficients in the Inc(t) equation and the Inv(t-1)</span>
 <span class="sd">coefficient in the Cons(t) equation all fixed at 0 -- via `varx_cls` -&gt;</span>
-<span class="sd">`varx_estimate(..., method="ls")`."""</span>
+<span class="sd">`varx_estimate(..., method="ls")`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -5739,7 +6097,21 @@ explicit lag values in p_max, if given as an array).</p>
 </details>
 <details class="example">
 <summary>Simultaneous-equations system: OLS, GLS, and LIML compared — ects/varx5a.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx5a.m -- Judge, Hill, Griffiths,</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Structural and reduced-form systems.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare structural estimation methods and their implied reduced form. Identification</span>
+<span class="sd">restrictions and instrument validity are substantive assumptions; iterative fits need</span>
+<span class="sd">convergence checks.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare reduced-form predictions as well as structural coefficient tables.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx5a.m -- Judge, Hill, Griffiths,</span>
 <span class="sd">Lutkepohl &amp; Lee [1988], pages 636-663: a 3-equation simultaneous linear</span>
 <span class="sd">model estimated four ways -- OLS, GLS-2S, GLS-3S, LIML -- on a</span>
 <span class="sd">20-observation embedded dataset, recovering the structural Gamma/B</span>
@@ -5751,15 +6123,16 @@ explicit lag values in p_max, if given as an array).</p>
 <span class="sd">concentrated/iterated ML) for the LIML step, seeded from step 3's Sigma</span>
 <span class="sd">via `VARX_Tol = 1e-20`. `varx_estimate_cml` here always starts its own</span>
 <span class="sd">internal iteration from the identity matrix rather than accepting a</span>
-<span class="sd">seed Sigma -- since concentrated ML converges to the same fixed point</span>
-<span class="sd">regardless of starting Sigma (only the number of iterations to get there</span>
-<span class="sd">differs), this is translated as a plain `varx_estimate_cml(..., tol=</span>
-<span class="sd">1e-20)` call rather than trying to seed it.</span>
+<span class="sd">seed Sigma. The translation therefore calls `varx_estimate_cml` directly.</span>
+<span class="sd">Convergence to the same solution from different starting covariances is</span>
+<span class="sd">not guaranteed; inspect the fitted likelihood and convergence diagnostics.</span>
+<span class="sd">The historical tolerance 1e-20 is below ordinary floating-point resolution.</span>
 
 <span class="sd">`theta(1:9)` reshaped (row-major, truncating/ignoring the rest) into</span>
 <span class="sd">Gamma, and `theta(10:24)` reshaped into B, are both translated via the</span>
 <span class="sd">ported `reshaper` (row-major reshape/recycle) exactly as in the</span>
-<span class="sd">original."""</span>
+<span class="sd">original.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -5827,14 +6200,28 @@ explicit lag values in p_max, if given as an array).</p>
 </details>
 <details class="example">
 <summary>VAR lag-order selection — ects/varx1e.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx1e.m -- Lutkepohl [1991], chapter 5:</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Selecting a VAR lag order.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare information criteria across candidate lag lengths. Smaller scores balance fit</span>
+<span class="sd">and complexity; different criteria may choose different orders.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Record each criterion winner rather than choosing the best in-sample fit.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx1e.m -- Lutkepohl [1991], chapter 5:</span>
 <span class="sd">lag-order selection (BIC/AICa/AICc/SIC/FPE/AIC/HQ) for a VAR model on the</span>
 <span class="sd">same log-differenced West German investment/income/consumption data as</span>
 <span class="sd">varx1a.py, over p = 1..5.</span>
 
 <span class="sd">`varx_order(y, 1, seqa(1, 1, 5))` in the original again passes the scalar</span>
 <span class="sd">`1` for the exogenous regressor `x`, i.e. "just a constant"; `seqa(1,</span>
-<span class="sd">1, 5)` is the sequence 1, 2, 3, 4, 5 (`np.arange(1, 6)`)."""</span>
+<span class="sd">1, 5)` is the sequence 1, 2, 3, 4, 5 (`np.arange(1, 6)`).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -5953,11 +6340,25 @@ explicit lag values in p_max, if given as an array).</p>
 </details>
 <details class="example">
 <summary>VAR(0) equivalence to plain OLS — ects/varx3.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx3.m -- a trivial 5-observation</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""OLS as a zero-lag VAR.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Use a tiny design to check that a VAR with no autoregressive lags reduces to regression.</span>
+<span class="sd">This is a useful starting point before the larger VARX examples.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare fitted values and coefficient orientation with OLS.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx3.m -- a trivial 5-observation</span>
 <span class="sd">example comparing plain OLS against `varx_estimate(..., p=0)` on the</span>
 <span class="sd">same regressor matrix. With no autoregressive lags (p=0), VARX</span>
 <span class="sd">estimation collapses to OLS, so `theta`/`beta` from the second call</span>
-<span class="sd">should match `beta` from the first."""</span>
+<span class="sd">should match `beta` from the first.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -5987,7 +6388,20 @@ explicit lag values in p_max, if given as an array).</p>
 </details>
 <details class="example">
 <summary>VAR(2) on log-differenced macroeconomic data — ects/varx1a.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx1a.m -- Lutkepohl [1991],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A first vector autoregression.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Fit a VAR(2) to log differences of three economic series. Coefficient blocks correspond</span>
+<span class="sd">to lagged variables; the constant is a separate regressor.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Reduce the lag order and compare residual covariance.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx1a.m -- Lutkepohl [1991],</span>
 <span class="sd">"Introduction to Multiple Time Series Analysis", section 3.2.3:</span>
 <span class="sd">estimation of a VAR(2) process on log-differenced West German</span>
 <span class="sd">investment/income/consumption data (1960Q1-1978Q4, the first 76 of the</span>
@@ -6005,7 +6419,8 @@ explicit lag values in p_max, if given as an array).</p>
 <span class="sd">shorthand for "just a constant" (equivalent to `ones(n, 1)`); that is</span>
 <span class="sd">translated literally as `x = np.ones((n, 1))` below. `lag1` (first row</span>
 <span class="sd">undefined/NaN, replaced by `varx_estimate`'s own NaN-row-dropping logic)</span>
-<span class="sd">is translated as a plain first-difference with a leading NaN."""</span>
+<span class="sd">is translated as a plain first-difference with a leading NaN.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -6132,7 +6547,20 @@ explicit lag values in p_max, if given as an array).</p>
 </details>
 <details class="example">
 <summary>Wald test for no Granger-causality between VAR variables — ects/varx1b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx1b.m -- Lutkepohl [1991], section</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Testing predictive restrictions in a VAR.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Test a joint set of lag coefficients with a Wald statistic. Granger predictability is</span>
+<span class="sd">not evidence of a structural causal mechanism.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Inspect the restricted coefficient indices before interpreting the p-value.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx1b.m -- Lutkepohl [1991], section</span>
 <span class="sd">3.6: Wald test for no Granger-causality from income/consumption to</span>
 <span class="sd">investment in the VAR(2) model estimated in varx1a.py (same</span>
 <span class="sd">log-differenced Lutkepohl.asc data), i.e. H0: theta[4] = theta[7] =</span>
@@ -6142,7 +6570,8 @@ explicit lag values in p_max, if given as an array).</p>
 <span class="sd">`RR = [design([4;7;13;16]) zeros(4,5)]` is only used to build the</span>
 <span class="sd">constraint function `C(theta) = RR @ theta` -- it is not a restriction</span>
 <span class="sd">passed to `varx_estimate` here, so it's translated as a direct 4-element</span>
-<span class="sd">index/select into theta rather than via `design`."""</span>
+<span class="sd">index/select into theta rather than via `design`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -6270,7 +6699,20 @@ explicit lag values in p_max, if given as an array).</p>
 </details>
 <details class="example">
 <summary>Wald test for no instantaneous causality in a VAR — ects/varx1c.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/varx1c.m -- Lutkepohl [1991], section</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Contemporaneous residual dependence.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Test restrictions on the residual covariance parameterization. Contemporaneous</span>
+<span class="sd">correlation alone does not identify a causal direction.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the residual correlation matrix with the tested restriction.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/varx1c.m -- Lutkepohl [1991], section</span>
 <span class="sd">3.6: Wald test for no instantaneous causality from income/consumption to</span>
 <span class="sd">investment, on the ML estimate of the VAR(2) model from varx1a.py/</span>
 <span class="sd">varx1b.py's data. `varx_ls`/`varx_ml` map to `varx_estimate(...,</span>
@@ -6278,7 +6720,8 @@ explicit lag values in p_max, if given as an array).</p>
 <span class="sd">21-element stacked coefficient vector followed by the 6-element vech of</span>
 <span class="sd">the Cholesky factor of Sigma (`varx_estimate`'s documented ML</span>
 <span class="sd">convention), so theta[23]/theta[24] (1-indexed) fall within that</span>
-<span class="sd">appended Cholesky block -- exactly as in the original."""</span>
+<span class="sd">appended Cholesky block -- exactly as in the original.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -6807,10 +7250,24 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 </div><h3 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Filtered state with a 95% confidence band — ects/kalman3c.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman3c.m -- same model and data as</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Uncertainty around filtered states.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Build pointwise Gaussian bands from filtered-state covariance. These condition on known</span>
+<span class="sd">model parameters and are not prediction intervals for future observations.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase observation noise and compare band widths.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman3c.m -- same model and data as</span>
 <span class="sd">kalman3a.py; extracts the filtered first state component alpha(t) =</span>
 <span class="sd">a(t)[0] and its 95% confidence band alpha(t) +/- 1.96*sqrt(P(t)[0,0])</span>
-<span class="sd">(numeric core only, the original's plot is dropped)."""</span>
+<span class="sd">(numeric core only, the original's plot is dropped).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -6950,12 +7407,27 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 </details>
 <details class="example">
 <summary>General state-space filter from a steady-state start — ects/kalman3a.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman3a.m -- runs the Kalman filter for</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A multivariate state-space model.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Read Z, T, H, and Q as observation mapping, transition, observation covariance, and</span>
+<span class="sd">state-noise covariance. Stationary initialization supplies a prior before observing</span>
+<span class="sd">data.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase observation noise and inspect filtered-state uncertainty.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman3a.m -- runs the Kalman filter for</span>
 <span class="sd">a general fixed, time-invariant 2-state / 2-observation state-space</span>
 <span class="sd">model on the 100-observation Kalman3.asc series (embedded directly</span>
 <span class="sd">below), starting from the steady-state mean/covariance of the state,</span>
 <span class="sd">and prints the filtered state a(t) and its covariance P(t) for the</span>
-<span class="sd">first 10 observations."""</span>
+<span class="sd">first 10 observations.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -7096,7 +7568,20 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 </details>
 <details class="example">
 <summary>Local Linear Trend Kalman filter, fixed variance parameters — ects/kalman2a.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman2a.m -- Harvey [1990],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Filtering a level and a slope.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Run a local-linear-trend model with fixed noise parameters. Separate the latent level,</span>
+<span class="sd">its slope, and observation noise.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase slope noise and observe how quickly the estimated slope can change.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman2a.m -- Harvey [1990],</span>
 <span class="sd">"Forecasting, Structural Time Series and the Kalman Filter", pages</span>
 <span class="sd">89-90: runs the Kalman filter for a Local Linear Trend (LLT) model</span>
 <span class="sd">(state = [level, slope]) on 61 annual US GNP observations (1909-1969,</span>
@@ -7107,7 +7592,8 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 <span class="sd">`results.a_cond` (the filtered-ahead state a(t|t-1), used for the level</span>
 <span class="sd">sub-plot) maps to `result.a_pred`; `results.a` (the filtered state</span>
 <span class="sd">a(t|t), computed but only referenced for completeness in the original)</span>
-<span class="sd">maps to `result.a_filt`."""</span>
+<span class="sd">maps to `result.a_filt`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -7208,7 +7694,20 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 </details>
 <details class="example">
 <summary>Local Linear Trend model fit by time-domain ML, vs. Whittle — ects/kalman2c.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman2c.m -- Harvey [1990], pages</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Likelihood estimation before trend filtering.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Estimate trend-model noise scales with the Kalman likelihood. Compare the fitted path</span>
+<span class="sd">with kalman2b.py without expecting identical finite-sample estimates.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Inspect convergence and the estimated slope-noise scale.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman2c.m -- Harvey [1990], pages</span>
 <span class="sd">89-90: time-domain (exact) maximum-likelihood estimation of the Local</span>
 <span class="sd">Linear Trend model's (sigma_epsilon, sigma_eta, sigma_zeta) on the same</span>
 <span class="sd">61-observation Gnp.asc series as kalman2a.py/kalman2b.py, then runs the</span>
@@ -7216,7 +7715,8 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 <span class="sd">dropped).</span>
 
 <span class="sd">As in kalman1b.py/kalman1c.py, the original's `theta = sqrt(theta.^2)`</span>
-<span class="sd">inside `LLT_ml` is translated as `np.abs(theta)`."""</span>
+<span class="sd">inside `LLT_ml` is translated as `np.abs(theta)`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -7333,7 +7833,20 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 </details>
 <details class="example">
 <summary>Local Linear Trend model fit by Whittle (frequency-domain) ML — ects/kalman2b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman2b.m -- Harvey [1990], pages</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Whittle estimation before trend filtering.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Estimate local-linear-trend noise scales in the frequency domain, then filter in time.</span>
+<span class="sd">Standard deviations must be squared when constructing covariance matrices.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare with the fixed parameters in kalman2a.py.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman2b.m -- Harvey [1990], pages</span>
 <span class="sd">89-90: frequency-domain (Whittle) maximum-likelihood estimation of the</span>
 <span class="sd">Local Linear Trend model's (sigma_epsilon, sigma_eta, sigma_zeta) on the</span>
 <span class="sd">same 61-observation Gnp.asc series as kalman2a.py, then runs the Kalman</span>
@@ -7343,7 +7856,8 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 <span class="sd">`WHITTLE_algorithm = 1` (BFGS) and once with `WHITTLE_algorithm = 3`</span>
 <span class="sd">("scoring method") -- keeping only the second result. As established in</span>
 <span class="sd">`whittle1.py`/`whittle.py`'s module docstring, the port only has a single</span>
-<span class="sd">optimizer path (BFGS), so there is just one call here."""</span>
+<span class="sd">optimizer path (BFGS), so there is just one call here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -7448,7 +7962,20 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 </details>
 <details class="example">
 <summary>Local-level Kalman filter (Harvey 1990) — ects/panel1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/panel1.m -- despite its filename and the</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A first local-level filter.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Despite its historical filename, this is one univariate series, not panel-data</span>
+<span class="sd">regression. Separate the observed series from its latent level.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase observation-noise variance and predict how smoothing will change.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/panel1.m -- despite its filename and the</span>
 <span class="sd">tracker's earlier note ("panel-data example; no ported panel module</span>
 <span class="sd">yet"), this is actually a local-level (random-walk-plus-noise) Kalman</span>
 <span class="sd">filter example (Harvey 1990, pp.89-90) applied to a 71-observation</span>
@@ -7460,7 +7987,8 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 <span class="sd">The 71 observations from Purse.asc are embedded directly below, matching</span>
 <span class="sd">the project's convention of self-contained example scripts (numeric core</span>
 <span class="sd">only; the original's plot of y_t vs. the one-step-ahead prediction is</span>
-<span class="sd">dropped)."""</span>
+<span class="sd">dropped).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -7572,18 +8100,35 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 </details>
 <details class="example">
 <summary>ML recovery of all free state-space model parameters — ects/kalman3d.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman3d.m -- maximum-likelihood</span>
-<span class="sd">recovery of all 11 free parameters (Z diagonal, d[0], H diagonal, T,</span>
-<span class="sd">c, Q) of the general state-space model used in kalman3a.py/kalman3b.py/</span>
-<span class="sd">kalman3c.py, starting the optimizer from the model's own true parameter</span>
-<span class="sd">values (as the original does) and comparing the recovered estimates</span>
-<span class="sd">against them.</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Identification before state-space estimation.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">The unrestricted parameterization has latent-scale and location ambiguities. The</span>
+<span class="sd">teaching fit fixes observation loadings and intercepts before estimating noise and</span>
+<span class="sd">dynamics.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare fitted observation likelihoods rather than demanding exact recovery from 100</span>
+<span class="sd">observations.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman3d.m -- maximum-likelihood</span>
+<span class="sd">estimation of the general state-space model used in kalman3a.py/</span>
+<span class="sd">kalman3b.py/kalman3c.py. Unlike the original unrestricted 11-parameter fit,</span>
+<span class="sd">this example fixes Z=I and d=[10, 0] to define the latent scale and origin.</span>
+<span class="sd">It estimates the remaining eight noise and dynamic parameters, starting</span>
+<span class="sd">from their simulation values. Without identification restrictions the</span>
+<span class="sd">Hessian can be singular and standard errors invalid even if the fit runs.</span>
 
 <span class="sd">`theta([4 5 11]) = sqrt(theta([4 5 11]).^2)` in the original enforces</span>
 <span class="sd">H[0,0], H[1,1], Q &gt; 0 (indices 4, 5, 11 in MATLAB's 1-based numbering);</span>
 <span class="sd">translated as `np.abs(theta[[3, 4, 10]])` here. `a0`/`P0` are</span>
 <span class="sd">recomputed from the model's own steady state at every trial `theta`,</span>
-<span class="sd">exactly as in `ssm_ml_fun`."""</span>
+<span class="sd">exactly as in `ssm_ml_fun`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -7731,21 +8276,45 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 
 <span class="n">sv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
 
-<span class="n">ml_result</span> <span class="o">=</span> <span class="n">ml_estimation</span><span class="p">(</span><span class="n">ssm_ml_fun</span><span class="p">,</span> <span class="n">sv</span><span class="p">)</span>
+<span class="c1"># theta = R @ free_parameters + offset fixes the first three entries.</span>
+<span class="n">free_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="n">restriction_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">11</span><span class="p">)[:,</span> <span class="n">free_indices</span><span class="p">]</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">offset</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">sv</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">ml_result</span> <span class="o">=</span> <span class="n">ml_estimation</span><span class="p">(</span><span class="n">ssm_ml_fun</span><span class="p">,</span> <span class="n">sv</span><span class="p">[</span><span class="n">free_indices</span><span class="p">],</span> <span class="n">restriction</span><span class="o">=</span><span class="p">(</span><span class="n">restriction_matrix</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"optimizer converged:"</span><span class="p">,</span> <span class="n">ml_result</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"finite standard errors:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">ml_result</span><span class="o">.</span><span class="n">stderr</span><span class="p">)))</span>
 <span class="n">theta_hat</span> <span class="o">=</span> <span class="n">ml_result</span><span class="o">.</span><span class="n">theta</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2"> True           Estimated"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">" values         values"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">sv</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">]),</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">theta_hat</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">sv</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># fixed identification restrictions</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">ml_result</span><span class="o">.</span><span class="n">stderr</span><span class="p">))</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Same state-space filter via the time-varying code path — ects/kalman3b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman3b.m -- same model and data as</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Time-varying matrix representation.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Represent constant state-space matrices as repeated three-dimensional arrays. This</span>
+<span class="sd">changes the interface, not the underlying model.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare state estimates and likelihood with kalman3a.py.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman3b.m -- same model and data as</span>
 <span class="sd">kalman3a.py, but broadcasts the (constant) system matrices out to</span>
 <span class="sd">explicit per-period 3-D arrays and runs the Kalman filter through the</span>
 <span class="sd">time-varying code path, to confirm it reproduces the time-invariant</span>
-<span class="sd">path's results exactly (the whole point of the original's exercise)."""</span>
+<span class="sd">path's results exactly (the whole point of the original's exercise).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -7896,7 +8465,20 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 </details>
 <details class="example">
 <summary>Time-domain ML of Kalman noise variances, two starting states — ects/kalman1b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman1b.m -- Harvey [1990],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Likelihood sensitivity to initialization.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Fit a local-level model using two initial-state conventions. Estimation initialization</span>
+<span class="sd">and the initialization used to display filtered states are separate choices.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the first few filtered values with the last few.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman1b.m -- Harvey [1990],</span>
 <span class="sd">"Forecasting, Structural Time Series and the Kalman Filter", pages</span>
 <span class="sd">89-90: time-domain (exact) maximum-likelihood estimation of the</span>
 <span class="sd">local-level model's (sigma_epsilon, sigma_eta) on the same 71-</span>
@@ -7914,7 +8496,8 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 <span class="sd">per-observation `log_l` array (the natural per-observation log-density</span>
 <span class="sd">for this model), rather than a single pre-summed scalar (which</span>
 <span class="sd">`ml_estimation` would also accept, but only as a degenerate 1-observation</span>
-<span class="sd">case)."""</span>
+<span class="sd">case).</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -8045,7 +8628,20 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 </details>
 <details class="example">
 <summary>Time-domain vs. frequency-domain (Whittle) Kalman ML — ects/kalman1c.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman1c.m -- Harvey [1990],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Time-domain and frequency-domain estimation.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare exact Kalman likelihood with Whittle approximation on the same short series.</span>
+<span class="sd">Finite-sample estimates need not coincide.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare fitted noise standard deviations and resulting filtered paths.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman1c.m -- Harvey [1990],</span>
 <span class="sd">"Forecasting, Structural Time Series and the Kalman Filter", pages</span>
 <span class="sd">89-90: compares time-domain (exact) maximum likelihood against</span>
 <span class="sd">frequency-domain (Whittle) maximum likelihood estimation of the</span>
@@ -8056,7 +8652,8 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 <span class="sd">P0 = 0 during estimation, but the final filter run used to compare the</span>
 <span class="sd">two estimates' one-step-ahead predictions uses a0 = y[0], P0 = 0 (the</span>
 <span class="sd">original's own, slightly inconsistent, choice -- preserved here rather</span>
-<span class="sd">than "fixed")."""</span>
+<span class="sd">than "fixed").</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -8188,7 +8785,22 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 </details>
 <details class="example">
 <summary>Time-varying-beta model from a deliberately bad starting point — stats/kalman2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/kalman2.m -- same simulated</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Sensitivity to the initial state.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Repeat the changing-coefficient model with a fixed, poor initial state. Only the three noise scales are optimized; the fixed initial state is not a fitted</span>
+<span class="sd">parameter. A poor fixed initial state can distort fitted noise scales: in this</span>
+<span class="sd">run observation noise approaches its lower bound. Convergence does not validate</span>
+<span class="sd">that initialization assumption.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Change the fixed initial state and compare early predictions with later ones.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/kalman2.m -- same simulated</span>
 <span class="sd">time-varying-coefficient regression as kalman1.py, but with the Kalman</span>
 <span class="sd">filter's initial state a0 fixed at [-20, -20] (deliberately far from the</span>
 <span class="sd">truth) rather than estimated, to illustrate how quickly the filter</span>
@@ -8197,13 +8809,10 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 <span class="sd">`method="L-BFGS-B"`), and the same seeded-RNG substitution as kalman1.py</span>
 <span class="sd">all apply here too.</span>
 
-<span class="sd">Note (preserved faithfully from the original): `sv`/`lb`/`ub` are still</span>
-<span class="sd">5-dimensional and `theta[0:2]` are still optimized over, exactly as in</span>
-<span class="sd">kalman1.py -- but since a0 is fixed externally here rather than being</span>
-<span class="sd">set from `theta[0:2]` inside the likelihood, those two optimizer</span>
-<span class="sd">dimensions have no effect on the objective. This looks like a leftover</span>
-<span class="sd">from kalman1.py's script that was never trimmed down; it's kept as-is</span>
-<span class="sd">rather than "fixed", since the goal is an exact translation."""</span>
+<span class="sd">The original optimizes five coordinates although its initial state is fixed,</span>
+<span class="sd">leaving two coordinates absent from the likelihood. This teaching version</span>
+<span class="sd">removes those inactive coordinates and fits only the three noise scales.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
@@ -8234,39 +8843,53 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_neg_sum_logl</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="n">th</span> <span class="o">=</span> <span class="n">theta</span><span class="o">**</span><span class="mi">2</span>
-    <span class="n">p0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">th</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nobs</span><span class="p">),</span> <span class="n">th</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">p0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">th</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nobs</span><span class="p">),</span> <span class="n">th</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">p0</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">nobs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">ssm</span> <span class="o">=</span> <span class="n">StateSpaceModel</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t_mat</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">r_mat</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">kalman_filter</span><span class="p">(</span><span class="n">ssm</span><span class="p">,</span> <span class="n">y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">a0_fixed</span><span class="p">,</span> <span class="n">p0</span><span class="p">)</span>
     <span class="k">return</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">log_l</span><span class="p">))</span>
 
 
-<span class="n">sv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">lb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">])</span>
-<span class="n">ub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">])</span>
+<span class="n">sv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">lb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.00001</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">])</span>
+<span class="n">ub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">)</span>
 
 <span class="n">opt_result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">_neg_sum_logl</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"L-BFGS-B"</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"optimizer converged:"</span><span class="p">,</span> <span class="n">opt_result</span><span class="o">.</span><span class="n">success</span><span class="p">,</span> <span class="s2">"message:"</span><span class="p">,</span> <span class="n">opt_result</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
 <span class="n">theta</span> <span class="o">=</span> <span class="n">opt_result</span><span class="o">.</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"theta (unused a0 dims, sigma_epsilon^2, sigma_b0^2, sigma_b1^2):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"theta (sigma_epsilon^2, sigma_b0^2, sigma_b1^2):"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
-<span class="n">p0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
-<span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nobs</span><span class="p">),</span> <span class="n">theta</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">p0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nobs</span><span class="p">),</span> <span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">p0</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">nobs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">ssm</span> <span class="o">=</span> <span class="n">StateSpaceModel</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t_mat</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">r_mat</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">kalman_filter</span><span class="p">(</span><span class="n">ssm</span><span class="p">,</span> <span class="n">y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">a0_fixed</span><span class="p">,</span> <span class="n">p0</span><span class="p">)</span>
 <span class="n">a_cond</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">a_pred</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nobs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">s, true b0, filtered b0, true b1, filtered b1 -- first/last 10:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">s, true b0, predicted b0, true b1, predicted b1 -- first/last 10:"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">a_cond</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">b1</span><span class="p">,</span> <span class="n">a_cond</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]])[:</span><span class="mi">10</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">a_cond</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">b1</span><span class="p">,</span> <span class="n">a_cond</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]])[</span><span class="o">-</span><span class="mi">10</span><span class="p">:],</span> <span class="mi">4</span><span class="p">))</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Time-varying-beta regression via bounded maximum likelihood — stats/kalman1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/stats/kalman1.m -- simulates a 200-</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Estimating changing regression coefficients.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Fit noise parameters, then inspect one-step predicted states. Predicted states precede</span>
+<span class="sd">the current observation; filtered states incorporate it.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare a_pred with a_filt to see the effect of each observation.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/stats/kalman1.m -- simulates a 200-</span>
 <span class="sd">observation time-varying-coefficient regression y_t = b0_t + x1_t*b1_t +</span>
 <span class="sd">u_t, where b0_t and b1_t are independent random walks starting at 10 and</span>
 <span class="sd">4 respectively, then recovers (a0, sigma_epsilon, sigma_b0, sigma_b1) by</span>
@@ -8288,7 +8911,8 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 
 <span class="sd">The original draws from MATLAB's unseeded `randn`; a fixed seed</span>
 <span class="sd">(`np.random.default_rng(0)`) is substituted here, in the same call order</span>
-<span class="sd">(b0 innovations, b1 innovations, x1, u) as the original."""</span>
+<span class="sd">(b0 innovations, b1 innovations, x1, u) as the original.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
@@ -8332,6 +8956,7 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 <span class="n">ub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">])</span>
 
 <span class="n">opt_result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">_neg_sum_logl</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"L-BFGS-B"</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"optimizer converged:"</span><span class="p">,</span> <span class="n">opt_result</span><span class="o">.</span><span class="n">success</span><span class="p">,</span> <span class="s2">"message:"</span><span class="p">,</span> <span class="n">opt_result</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
 <span class="n">theta</span> <span class="o">=</span> <span class="n">opt_result</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">theta</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
 
@@ -8346,14 +8971,27 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 <span class="n">a_cond</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">a_pred</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nobs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">s, true b0, filtered b0, true b1, filtered b1 -- first/last 10:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">s, true b0, predicted b0, true b1, predicted b1 -- first/last 10:"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">a_cond</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">b1</span><span class="p">,</span> <span class="n">a_cond</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]])[:</span><span class="mi">10</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">a_cond</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">b1</span><span class="p">,</span> <span class="n">a_cond</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]])[</span><span class="o">-</span><span class="mi">10</span><span class="p">:],</span> <span class="mi">4</span><span class="p">))</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>Time-varying-coefficient model with variances estimated by ML — ects/kalman4b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman4b.m -- same simulated</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Estimating coefficient process noise.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Estimate three noise scales before filtering the simulated regression. Known simulation</span>
+<span class="sd">parameters are a reference, not guaranteed finite-sample estimates.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Repeat with another random seed and compare parameter recovery.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman4b.m -- same simulated</span>
 <span class="sd">time-varying-coefficient regression as kalman4a.py, but instead of using</span>
 <span class="sd">the true (sigma_epsilon, sigma_beta1, sigma_beta2), estimates them by</span>
 <span class="sd">maximum likelihood (starting from sv = [1, 1, 1]) and re-runs the</span>
@@ -8361,7 +8999,8 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 <span class="sd">recovered beta_t path against the simulated true path.</span>
 
 <span class="sd">As in kalman1b.py/kalman2c.py/kalman3d.py, `theta = sqrt(theta.^2)` is</span>
-<span class="sd">translated as `np.abs(theta)`."""</span>
+<span class="sd">translated as `np.abs(theta)`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -8429,7 +9068,20 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 </details>
 <details class="example">
 <summary>Time-varying-coefficient regression recovered by a Kalman filter — ects/kalman4a.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman4a.m -- simulates a</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Regression coefficients as latent states.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Use time-varying observation matrices to filter random-walk coefficients. Filtering only</span>
+<span class="sd">uses observations available up to the current date.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Increase coefficient process noise and inspect responsiveness to new observations.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman4a.m -- simulates a</span>
 <span class="sd">200-observation time-varying-coefficient regression y_t = x_t1*beta1_t +</span>
 <span class="sd">x_t2*beta2_t + eps_t, where beta1_t and beta2_t follow independent</span>
 <span class="sd">random walks (`recserar(sigma*randn(nT,1), 0, 1.0)` with AR coefficient</span>
@@ -8439,7 +9091,8 @@ vec(P_bar) = (I - T ⊗ T)^-1 vec(R Q R').</p>
 <span class="sd">compares the filtered estimate against the simulated true path.</span>
 
 <span class="sd">The original draws from MATLAB's unseeded `randn`/`rand`; a fixed seed</span>
-<span class="sd">(`np.random.default_rng(0)`) is substituted here."""</span>
+<span class="sd">(`np.random.default_rng(0)`) is substituted here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -8995,7 +9648,20 @@ y_t = mu_t + eps_t, mu_t = mu_{t-1} + eta_t via Whittle estimation of
 </div><h3 id="examples_3">Examples<a class="headerlink" href="#examples_3" title="Permanent link">&para;</a></h3>
 <details class="example">
 <summary>Local Linear Trend model fit by Whittle (frequency-domain) ML — ects/kalman2b.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman2b.m -- Harvey [1990], pages</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Whittle estimation before trend filtering.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Estimate local-linear-trend noise scales in the frequency domain, then filter in time.</span>
+<span class="sd">Standard deviations must be squared when constructing covariance matrices.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare with the fixed parameters in kalman2a.py.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman2b.m -- Harvey [1990], pages</span>
 <span class="sd">89-90: frequency-domain (Whittle) maximum-likelihood estimation of the</span>
 <span class="sd">Local Linear Trend model's (sigma_epsilon, sigma_eta, sigma_zeta) on the</span>
 <span class="sd">same 61-observation Gnp.asc series as kalman2a.py, then runs the Kalman</span>
@@ -9005,7 +9671,8 @@ y_t = mu_t + eps_t, mu_t = mu_{t-1} + eta_t via Whittle estimation of
 <span class="sd">`WHITTLE_algorithm = 1` (BFGS) and once with `WHITTLE_algorithm = 3`</span>
 <span class="sd">("scoring method") -- keeping only the second result. As established in</span>
 <span class="sd">`whittle1.py`/`whittle.py`'s module docstring, the port only has a single</span>
-<span class="sd">optimizer path (BFGS), so there is just one call here."""</span>
+<span class="sd">optimizer path (BFGS), so there is just one call here.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9110,11 +9777,25 @@ y_t = mu_t + eps_t, mu_t = mu_{t-1} + eta_t via Whittle estimation of
 </details>
 <details class="example">
 <summary>Raw periodogram of a 4-observation series — maths/pdgm1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/pdgm1.m -- raw periodogram of a</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""FFT coefficients and spectral scaling.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Trace a four-observation series into its periodogram. The scaled and unscaled versions</span>
+<span class="sd">differ by a constant normalization, not by frequency content.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Multiply the observations by two and check that spectral power grows fourfold.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/maths/pdgm1.m -- raw periodogram of a</span>
 <span class="sd">4-observation series, unscaled and scaled by 1/(2*pi). Despite the</span>
 <span class="sd">tracker's earlier note, this is a small numeric example, not a plot;</span>
 <span class="sd">`pdgm(y)`/`pdgm(y,1)` map directly to</span>
-<span class="sd">`periodogram(y, scaling=False)`/`periodogram(y, scaling=True)`."""</span>
+<span class="sd">`periodogram(y, scaling=False)`/`periodogram(y, scaling=True)`.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9134,8 +9815,22 @@ y_t = mu_t + eps_t, mu_t = mu_{t-1} + eta_t via Whittle estimation of
 </details>
 <details class="example">
 <summary>Raw periodogram of an 8-observation series — maths/pdgm2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/maths/pdgm2.m -- same as pdgm1.py, on an</span>
-<span class="sd">8-observation series."""</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Periodogram frequency resolution.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Repeat the FFT calculation on eight observations. Read frequencies in radians per</span>
+<span class="sd">observation and distinguish the FFT coefficients from their squared magnitudes.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare the frequency spacing with pdgm1.py before changing the observations.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/maths/pdgm2.m -- same as pdgm1.py, on an</span>
+<span class="sd">8-observation series.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9155,7 +9850,20 @@ y_t = mu_t + eps_t, mu_t = mu_{t-1} + eta_t via Whittle estimation of
 </details>
 <details class="example">
 <summary>Time-domain vs. frequency-domain (Whittle) Kalman ML — ects/kalman1c.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/kalman1c.m -- Harvey [1990],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Time-domain and frequency-domain estimation.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Compare exact Kalman likelihood with Whittle approximation on the same short series.</span>
+<span class="sd">Finite-sample estimates need not coincide.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare fitted noise standard deviations and resulting filtered paths.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/kalman1c.m -- Harvey [1990],</span>
 <span class="sd">"Forecasting, Structural Time Series and the Kalman Filter", pages</span>
 <span class="sd">89-90: compares time-domain (exact) maximum likelihood against</span>
 <span class="sd">frequency-domain (Whittle) maximum likelihood estimation of the</span>
@@ -9166,7 +9874,8 @@ y_t = mu_t + eps_t, mu_t = mu_{t-1} + eta_t via Whittle estimation of
 <span class="sd">P0 = 0 during estimation, but the final filter run used to compare the</span>
 <span class="sd">two estimates' one-step-ahead predictions uses a0 = y[0], P0 = 0 (the</span>
 <span class="sd">original's own, slightly inconsistent, choice -- preserved here rather</span>
-<span class="sd">than "fixed")."""</span>
+<span class="sd">than "fixed").</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -9298,7 +10007,20 @@ y_t = mu_t + eps_t, mu_t = mu_{t-1} + eta_t via Whittle estimation of
 </details>
 <details class="example">
 <summary>Whittle estimation with a custom Bloomfield spectral density — ects/whittle2.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/whittle2.m -- fits a Bloomfield</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Supplying a custom spectral density.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Fit a fourth-order Bloomfield spectrum with an analytical Jacobian. Exponentiation</span>
+<span class="sd">ensures a positive spectrum; normalization must match the periodogram.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Change the spectral order and compare fit with parameter count.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/whittle2.m -- fits a Bloomfield</span>
 <span class="sd">exponential spectral density (Dzhaparidze [1986], p.125) of order 4 to</span>
 <span class="sd">the 500-observation Whittle2.asc series (embedded directly below) via</span>
 <span class="sd">Whittle (frequency-domain) maximum likelihood, using a custom `sdf_fn`</span>
@@ -9311,7 +10033,8 @@ y_t = mu_t + eps_t, mu_t = mu_{t-1} + eta_t via Whittle estimation of
 <span class="sd">0` positional arguments in `whittle_estimation(y, sdf, sv, 0, 0)`</span>
 <span class="sd">(restriction, weights) are the GAUSS/MATLAB-toolbox "use the default"</span>
 <span class="sd">sentinel and map to `restriction=None, weights=1.0`, i.e. the keyword</span>
-<span class="sd">defaults -- so they're simply omitted below."""</span>
+<span class="sd">defaults -- so they're simply omitted below.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
@@ -9397,7 +10120,20 @@ y_t = mu_t + eps_t, mu_t = mu_{t-1} + eta_t via Whittle estimation of
 </details>
 <details class="example">
 <summary>Whittle local-level MLE on real macroeconomic data — ects/whittle1.py</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">"""Translated from Examples/ects/whittle1.m -- Harvey [1990],</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A spectral fit of a local-level model.</span>
+
+<span class="sd">Learning goal</span>
+<span class="sd">-------------</span>
+<span class="sd">Estimate observation and state noise from a short historical series. Whittle likelihood</span>
+<span class="sd">is a frequency-domain approximation; estimated scales are not exact truths.</span>
+
+<span class="sd">Try it</span>
+<span class="sd">------</span>
+<span class="sd">Compare with the time-domain estimates in kalman1c.py.</span>
+
+<span class="sd">Source and implementation notes</span>
+<span class="sd">-------------------------------</span>
+<span class="sd">Translated from Examples/ects/whittle1.m -- Harvey [1990],</span>
 <span class="sd">"Forecasting, Structural Time Series and the Kalman Filter", pages</span>
 <span class="sd">89-90: estimate a local-level model's variance parameters in the</span>
 <span class="sd">frequency domain via Whittle maximum likelihood, on the same 71-</span>
@@ -9409,7 +10145,8 @@ y_t = mu_t + eps_t, mu_t = mu_{t-1} + eta_t via Whittle estimation of
 <span class="sd">single optimizer path (`scipy.optimize.minimize` with BFGS), since all</span>
 <span class="sd">three MATLAB variants solve the identical optimization problem and</span>
 <span class="sd">should converge to the same estimate -- so there is only one call here,</span>
-<span class="sd">not three."""</span>
+<span class="sd">not three.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 

@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/kalman2a.m -- Harvey [1990],
+"""Filtering a level and a slope.
+
+Learning goal
+-------------
+Run a local-linear-trend model with fixed noise parameters. Separate the latent level,
+its slope, and observation noise.
+
+Try it
+------
+Increase slope noise and observe how quickly the estimated slope can change.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/kalman2a.m -- Harvey [1990],
 "Forecasting, Structural Time Series and the Kalman Filter", pages
 89-90: runs the Kalman filter for a Local Linear Trend (LLT) model
 (state = [level, slope]) on 61 annual US GNP observations (1909-1969,
@@ -9,7 +22,8 @@ only, the original's dual-axes plot (level + slope) is dropped.
 `results.a_cond` (the filtered-ahead state a(t|t-1), used for the level
 sub-plot) maps to `result.a_pred`; `results.a` (the filtered state
 a(t|t), computed but only referenced for completeness in the original)
-maps to `result.a_filt`."""
+maps to `result.a_filt`.
+"""
 
 import numpy as np
 

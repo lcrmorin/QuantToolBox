@@ -1,6 +1,20 @@
-"""Translated from Examples/rpb/test_erc2.m -- Example 7 (page 80),
+"""Capital weights versus risk budgets.
+
+Learning goal
+-------------
+Compare a fixed allocation, equal risk budgets, and budgets numerically equal to that
+allocation. Equal capital weights do not generally imply equal risk.
+
+Try it
+------
+Increase one asset volatility and inspect its ERC weight.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_erc2.m -- Example 7 (page 80),
 Roncalli (2013). Risk contribution decomposition + risk budgeting at
-various target budgets."""
+various target budgets.
+"""
 
 import numpy as np
 

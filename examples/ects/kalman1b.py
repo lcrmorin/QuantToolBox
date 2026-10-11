@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/kalman1b.m -- Harvey [1990],
+"""Likelihood sensitivity to initialization.
+
+Learning goal
+-------------
+Fit a local-level model using two initial-state conventions. Estimation initialization
+and the initialization used to display filtered states are separate choices.
+
+Try it
+------
+Compare the first few filtered values with the last few.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/kalman1b.m -- Harvey [1990],
 "Forecasting, Structural Time Series and the Kalman Filter", pages
 89-90: time-domain (exact) maximum-likelihood estimation of the
 local-level model's (sigma_epsilon, sigma_eta) on the same 71-
@@ -16,7 +29,8 @@ smooth for the optimizer) is translated literally as `np.abs(theta)`.
 per-observation `log_l` array (the natural per-observation log-density
 for this model), rather than a single pre-summed scalar (which
 `ml_estimation` would also accept, but only as a degenerate 1-observation
-case)."""
+case).
+"""
 
 import numpy as np
 

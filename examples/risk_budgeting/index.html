@@ -1389,6 +1389,11 @@
 
 
 <h1 id="risk-budgeting-erc-var-and-es-contributions">Risk budgeting: ERC, VaR, and ES contributions<a class="headerlink" href="#risk-budgeting-erc-var-and-es-contributions" title="Permanent link">&para;</a></h1>
+<p><strong>Goal:</strong> distinguish an asset's capital weight from its share of portfolio risk.
+Read <a href="../mean_variance/">Mean-variance</a> first for covariance construction.</p>
+<p>Returns and covariance use one consistent horizon. VaR and ES below assume
+Gaussian returns with zero mean; they are parametric loss measures, not an
+empirical tail backtest. Multiplying by 100 changes decimals to percent.</p>
 <p>Translated from <code>Examples/rpb/test_erc1.m</code>, which reproduces Tables 2.2,
 2.3, and 2.4 (pages 81–82) of Roncalli, T. (2013), <em>Introduction to Risk
 Parity and Budgeting</em>.</p>
@@ -1434,7 +1439,7 @@ pct risk contribution: [70.43 15.93 13.64]
 99% ES: 55.62
 </code></pre></div>
 <p>The <code>20.87%</code> portfolio volatility and the <code>[70.43, 15.93, 13.64]</code> percent
-risk contribution split match the published Table 2.2 values exactly.</p>
+risk contribution split match the published Table 2.2 values at the displayed precision.</p>
 <h2 id="equal-risk-contribution-portfolio">Equal Risk Contribution portfolio<a class="headerlink" href="#equal-risk-contribution-portfolio" title="Permanent link">&para;</a></h2>
 <p>The same covariance matrix, but solving <em>for</em> the weights that make each
 asset's risk contribution equal (rather than decomposing a given,
@@ -1449,8 +1454,15 @@ unequal weight vector):</p>
 <div class="highlight"><pre><span></span><code>ERC weights: [0.1969 0.3244 0.4787]
 pct risk contribution: [33.33 33.33 33.33]
 </code></pre></div>
-<p>By construction, all three assets now contribute exactly one-third of
-total portfolio risk.</p>
+<p>Each asset contributes one-third of volatility within solver tolerance.
+The less volatile asset receives more capital, but correlations matter too.</p>
+<div class="highlight"><pre><span></span><code><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">rc_vol</span><span class="o">.</span><span class="n">pct_risk_contribution</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">erc</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">erc</span><span class="o">.</span><span class="n">pct_risk_contribution</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Try it:</strong> set all correlations to zero and refit ERC. Compare weights with
+normalized inverse volatilities. Then restore correlations and explain why
+inverse-volatility weights no longer generally equalize risk.</p>
 
 
 

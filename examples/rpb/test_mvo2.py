@@ -1,14 +1,28 @@
-"""Translated from Examples/rpb/test_mvo2.m -- Roncalli [2013], "Introduction
+"""Three ways to specify mean-variance portfolios.
+
+Learning goal
+-------------
+Compare a return-reward gamma, a target return, and a target volatility. Larger gamma
+emphasizes return in 0.5*w@cov@w - gamma*mu@w.
+
+Try it
+------
+Match an achieved return with a return-target solve and compare weights.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_mvo2.m -- Roncalli [2013], "Introduction
 to Risk Parity and Budgeting", Example 1 (pages 7-8): the same 4-asset
 mean-variance problem evaluated three ways -- the gamma-problem (pick a
-risk-aversion, solve directly), the mu-problem (pick a target expected
+return reward, solve directly), the mu-problem (pick a target expected
 return, bisect on gamma to hit it), and the sigma-problem (pick a target
 volatility, bisect on gamma to hit it). All three route through
 `compute_mvo_portfolio.m`'s three branches; here that's
 `mvo_frontier`/`mvo_target_portfolio`.
 
 The original passes `lb=0, ub=0` (MATLAB's "use the default -100/100 wide
-bounds" sentinel); passed through explicitly here as `lb=-100, ub=100`."""
+bounds" sentinel); passed through explicitly here as `lb=-100, ub=100`.
+"""
 
 import numpy as np
 

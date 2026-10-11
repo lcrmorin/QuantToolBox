@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/kalman2b.m -- Harvey [1990], pages
+"""Whittle estimation before trend filtering.
+
+Learning goal
+-------------
+Estimate local-linear-trend noise scales in the frequency domain, then filter in time.
+Standard deviations must be squared when constructing covariance matrices.
+
+Try it
+------
+Compare with the fixed parameters in kalman2a.py.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/kalman2b.m -- Harvey [1990], pages
 89-90: frequency-domain (Whittle) maximum-likelihood estimation of the
 Local Linear Trend model's (sigma_epsilon, sigma_eta, sigma_zeta) on the
 same 61-observation Gnp.asc series as kalman2a.py, then runs the Kalman
@@ -8,7 +21,8 @@ The original calls `whittle_local_linear_trend` twice -- once with
 `WHITTLE_algorithm = 1` (BFGS) and once with `WHITTLE_algorithm = 3`
 ("scoring method") -- keeping only the second result. As established in
 `whittle1.py`/`whittle.py`'s module docstring, the port only has a single
-optimizer path (BFGS), so there is just one call here."""
+optimizer path (BFGS), so there is just one call here.
+"""
 
 import numpy as np
 

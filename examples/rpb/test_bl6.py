@@ -1,4 +1,17 @@
-"""Translated from Examples/rpb/test_bl6.m -- same 4-asset setup as
+"""Cross-checking a tracking-error solution.
+
+Learning goal
+-------------
+Compare direct quadratic programming with the portfolio wrapper and target-based
+formulation. Agreement checks the formulation, not future investment performance.
+
+Try it
+------
+Change the benchmark and compare achieved tracking error again.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_bl6.m -- same 4-asset setup as
 test_bl5.py, demonstrating that a raw QP call and `te_portfolio` at a fixed
 gamma agree, then cross-checking that fixed-gamma solution against
 `te_target_portfolio`'s sigma-problem mode targeting the tracking error that
@@ -9,7 +22,8 @@ with `H=covMatrix`, `f=-gamma0*mu - covMatrix*x0` is exactly what
 `te_portfolio(x0, mu, covMatrix, gamma=gamma0, ...)` computes internally
 (see tracking_error.py's `r_lin = gamma*mu + cov_matrix @ x_benchmark`) --
 so it's translated directly as a `te_portfolio` call rather than a raw
-`solve_qp` call, and the two are verified to agree below."""
+`solve_qp` call, and the two are verified to agree below.
+"""
 
 import numpy as np
 

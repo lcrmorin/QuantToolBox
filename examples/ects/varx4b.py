@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/varx4b.m -- Judge, Hill, Griffiths,
+"""Restrictions across a three-equation system.
+
+Learning goal
+-------------
+Compare two sets of cross-equation restrictions in a SUR model. Changing restrictions
+also changes the covariance used for weighting.
+
+Try it
+------
+Count free coefficients in each model and verify the restricted equalities.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx4b.m -- Judge, Hill, Griffiths,
 Lutkepohl & Lee [1988], pages 460-462: restricted SUR estimation of a
 3-equation system (log income on log prices + log quantity, 15 stacked
 coefficients restricted to 7/9 free parameters) on a 30-observation
@@ -10,7 +23,8 @@ Three steps, exactly as the original: (1) Sigma1 from a 9-free-parameter
 restriction (`w`), (2) Sigma2 from a more tightly restricted 7-free-
 parameter version of the same `w` (indices 8 and 12 tied to the same
 free parameter as index 4), (3) the final restricted SUR fit run once
-with each Sigma."""
+with each Sigma.
+"""
 
 import numpy as np
 

@@ -1,6 +1,20 @@
-"""Translated from Examples/optim/explicit2.m -- explicit<->implicit
+"""Equality constraints as free coordinates.
+
+Learning goal
+-------------
+Translate x[0]=x[1] into a lower-dimensional parametrization. Different null-space bases
+can represent the same feasible set.
+
+Try it
+------
+Choose free coordinates, reconstruct x, and check the equality residual.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/optim/explicit2.m -- explicit<->implicit
 constraint conversion for a single equality constraint (x[0] = x[1]), plus
-a `design` matrix built from a category-index vector."""
+a `design` matrix built from a category-index vector.
+"""
 
 import numpy as np
 
