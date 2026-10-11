@@ -1,4 +1,17 @@
-"""Translated from Examples/maths/grad3.m -- numerical vs. analytical
+"""Differentiating a separable exponential.
+
+Learning goal
+-------------
+Each output depends on one coordinate, so differentiating their sum gives the coordinate
+derivatives. This shortcut does not construct a general vector-valued Jacobian.
+
+Try it
+------
+Increase the coordinates and observe how curvature affects finite-difference error.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/maths/grad3.m -- numerical vs. analytical
 gradient of the separable, elementwise function f(x) = x^2 * exp(x^2/3).
 
 The original MATLAB `numerical_gradient` accepts an elementwise-vectorized
@@ -7,7 +20,8 @@ function and returns an elementwise gradient. This package's
 the general vector case), so the elementwise function is summed first --
 since each term depends on a single x_i, the gradient of the sum w.r.t.
 x_i equals the elementwise derivative at x_i (see also grad1.m's
-translation in building_blocks.md, which uses the same trick)."""
+translation in building_blocks.md, which uses the same trick).
+"""
 
 import numpy as np
 

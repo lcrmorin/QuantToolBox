@@ -1,6 +1,20 @@
-"""Translated from Examples/maths/hess2.m -- numerical gradient and Hessian
+"""Curvature and mixed derivatives.
+
+Learning goal
+-------------
+Compare a numerical Hessian with its analytical diagonal and mixed entries. A gradient
+check alone does not validate curvature.
+
+Try it
+------
+Try larger and smaller finite-difference steps; the smallest step need not be best.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/maths/hess2.m -- numerical gradient and Hessian
 of the same function as grad2.m, at a point with a very small second
-coordinate (x2=1e-5), compared against their known analytical forms."""
+coordinate (x2=1e-5), compared against their known analytical forms.
+"""
 
 import numpy as np
 

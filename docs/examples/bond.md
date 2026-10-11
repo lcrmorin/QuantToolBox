@@ -1,5 +1,9 @@
 # Bond pricing and sector-level risk
 
+**Goal:** connect discounted cash flows to price, yield, and sensitivity.
+Start with the cash-flow schedule; the last payment combines coupon and principal.
+The final sector example is an optional extension to portfolio objectives.
+
 Present value, yield to maturity, and current yield for a simple
 cash-flow schedule, followed by a sector-level modified-duration/DTS
 quadratic-risk example for a small bond portfolio.
@@ -66,7 +70,7 @@ from quanttoolbox.bond.pricing import bond_duration, bond_convexity
 # A five-year zero-coupon bond at a 4% annually compounded yield.
 duration = bond_duration(5.0, [100.0], 0.04, method=2)
 convexity = bond_convexity(5.0, [100.0], 0.04, method=2)
-print(round(duration, 6))   # 4.807692 = 5 / 1.04
+print(round(duration, 6))  # 4.807692 = 5 / 1.04
 print(round(convexity, 6))  # 27.736686 = 5 * 6 / 1.04**2
 
 # Approximate relative price change for a 10-basis-point yield increase.
@@ -88,13 +92,13 @@ from targets, plus a linear carry term.
 ```python
 from quanttoolbox.bond.pricing import bond_portfolio_quadratic_form
 
-sector = np.array([1, 1, 2])          # bonds 0,1 in sector 1; bond 2 in sector 2
-md = np.array([2.0, 4.0, 6.0])         # modified duration per bond
-md_star = np.array([3.0, 6.0])         # per-sector MD target
-dts = np.array([1.0, 1.0, 2.0])        # duration-times-spread per bond
-dts_star = np.array([1.0, 2.0])        # per-sector DTS target
-carry = np.array([0.01, 0.02, 0.03])   # carry per bond
-w = np.array([0.5, 0.25, 0.25])        # portfolio weights
+sector = np.array([1, 1, 2])  # bonds 0,1 in sector 1; bond 2 in sector 2
+md = np.array([2.0, 4.0, 6.0])  # modified duration per bond
+md_star = np.array([3.0, 6.0])  # per-sector MD target
+dts = np.array([1.0, 1.0, 2.0])  # duration-times-spread per bond
+dts_star = np.array([1.0, 2.0])  # per-sector DTS target
+carry = np.array([0.01, 0.02, 0.03])  # carry per bond
+w = np.array([0.5, 0.25, 0.25])  # portfolio weights
 
 result = bond_portfolio_quadratic_form(
     sector,
@@ -124,3 +128,22 @@ in `q_j`/`r_j`/`c_j` on those objects.
 `bond_portfolio_quadratic_form_vs_benchmark` extends this with an
 active-share term against a benchmark weight vector; see its docstring
 for the full parameterization.
+
+
+## Check the price and the small-move approximation
+
+```python
+# Price is the sum of discounted payments, using the same compounding convention.
+assert np.isclose(price, np.sum(cash_flows * np.exp(-rate * t)))
+assert np.isclose(ytm, rate)
+p_before = bond_price(5.0, [100.0], 0.04, method=2)
+p_after = bond_price(5.0, [100.0], 0.04 + dr, method=2)
+exact_change = p_after / p_before - 1
+print("exact / duration-convexity relative change:", exact_change, relative_change)
+assert abs(exact_change - relative_change) < 1e-6
+```
+
+**Try it:** increase `dr` from 0.001 to 0.01 and compare the approximation error.
+Explain why a positive yield move lowers the price of these positive cash flows.
+The sector quadratic objective is a penalty score; it is not itself a bond price
+or a volatility estimate.

@@ -1,4 +1,17 @@
-"""Translated from Examples/rpb/test_lasso2.m -- Roncalli [2013],
+"""Static and reference-based regularization.
+
+Learning goal
+-------------
+Compare penalties toward zero with penalties toward existing equal-weight holdings.
+Budget constraints and penalty targets both affect the interpretation.
+
+Try it
+------
+Set penalties to zero before attributing any difference to regularization.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_lasso2.m -- Roncalli [2013],
 "Introduction to Risk Parity and Budgeting", Example 1 (page 53): the
 original sweeps 250 ridge/lasso penalty strengths and plots the resulting
 weight paths (4 subplots: ridge toward zero with a budget constraint,
@@ -22,7 +35,8 @@ here), which made an apples-to-apples comparison unreliable in this
 environment; `solve_qp`'s native (variable-splitting-free) L1 handling via
 cvxpy does not have that problem and returns sensible, well-conditioned
 weights throughout, consistent with test_lasso1.py's already-established
-output."""
+output.
+"""
 
 import numpy as np
 

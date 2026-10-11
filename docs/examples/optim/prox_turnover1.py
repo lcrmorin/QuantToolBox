@@ -1,11 +1,25 @@
-"""Translated from Examples/optim/prox_turnover1.m -- compares the L1
+"""Penalty versus turnover budget.
+
+Learning goal
+-------------
+Contrast soft thresholding with projection onto an L1 ball. A penalty strength and a
+ball radius are different inputs even when numerically equal.
+
+Try it
+------
+Tighten the ball radius and check the L1 distance from the reference holdings.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/optim/prox_turnover1.m -- compares the L1
 proximal (soft-thresholding) operator against the L1-ball projection (both
 its default sorted-cumsum algorithm and its `proximal_max`-based
 alternative) at two different starting points and lambda values.
 
 The original draws `v` from MATLAB's unseeded `rand`; a fixed seed
 (`np.random.default_rng(0)`) is substituted here for reproducibility, same
-convention used elsewhere in this port (see matrix1.py, building_blocks.md)."""
+convention used elsewhere in this port (see matrix1.py, building_blocks.md).
+"""
 
 import numpy as np
 

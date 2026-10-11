@@ -1,6 +1,23 @@
-"""Translated from Examples/svm/svm4.m -- soft margin SVM classification
+"""The dual soft-margin classifier.
+
+Learning goal
+-------------
+Solve the soft-margin problem through dual multipliers. Compare decision scores with
+svm3.py using the same data and C, allowing solver tolerance.
+
+Try it
+------
+Inspect which multipliers lie near zero or their upper bound C.
+
+The result.margin field is 1 / (beta @ beta), the squared geometric
+half-margin. The geometric half-margin is 1 / np.linalg.norm(beta).
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/svm/svm4.m -- soft margin SVM classification
 (binary hinge loss), dual formulation, at 4 different C values. Same
-17-point dataset as svm3.m."""
+17-point dataset as svm3.m.
+"""
 
 import numpy as np
 
@@ -31,5 +48,7 @@ y, x = data[:, 2], data[:, 0:2]
 
 for c in [0.01, 0.03, 0.05, 0.30]:
     r = svm_classification_dual(y, x, c=c, loss="hinge")
-    print(f"C={c}: beta0={round(r.beta0,6)} beta={np.round(r.beta,6)} margin={round(r.margin,6)}")
+    print(
+        f"C={c}: beta0={round(r.beta0, 6)} beta={np.round(r.beta, 6)} squared_half_margin={round(r.margin, 6)}"
+    )
     print(f"  support vectors: {r.support_vectors}")

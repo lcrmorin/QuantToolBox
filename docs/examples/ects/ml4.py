@@ -1,8 +1,22 @@
-"""Translated from Examples/ects/ml4.m -- Gaussian-MLE with numerical vs.
+"""Analytical derivatives in maximum likelihood.
+
+Learning goal
+-------------
+Supply a Gaussian regression score and Hessian, then compare with numerical derivatives.
+Keep track of whether the noise parameter represents variance or standard deviation.
+
+Try it
+------
+Perturb the starting point and compare the final likelihood and convergence.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/ml4.m -- Gaussian-MLE with numerical vs.
 analytical Jacobian/Hessian, comparing all three covariance estimators
 under both, on a 10-observation dataset. Note theta[4] is parametrized as
 sigma^2 directly here (not sigma), matching the original's own warning
-comment."""
+comment.
+"""
 
 import numpy as np
 

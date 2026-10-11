@@ -1,11 +1,25 @@
-"""Translated from Examples/ects/varx1e.m -- Lutkepohl [1991], chapter 5:
+"""Selecting a VAR lag order.
+
+Learning goal
+-------------
+Compare information criteria across candidate lag lengths. Smaller scores balance fit
+and complexity; different criteria may choose different orders.
+
+Try it
+------
+Record each criterion winner rather than choosing the best in-sample fit.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx1e.m -- Lutkepohl [1991], chapter 5:
 lag-order selection (BIC/AICa/AICc/SIC/FPE/AIC/HQ) for a VAR model on the
 same log-differenced West German investment/income/consumption data as
 varx1a.py, over p = 1..5.
 
 `varx_order(y, 1, seqa(1, 1, 5))` in the original again passes the scalar
 `1` for the exogenous regressor `x`, i.e. "just a constant"; `seqa(1,
-1, 5)` is the sequence 1, 2, 3, 4, 5 (`np.arange(1, 6)`)."""
+1, 5)` is the sequence 1, 2, 3, 4, 5 (`np.arange(1, 6)`).
+"""
 
 import io
 

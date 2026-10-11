@@ -1,5 +1,19 @@
-"""Translated from Examples/stats/pca1.m -- PCA on a 3-asset correlation
-matrix."""
+"""Explained variance with correlated variables.
+
+Learning goal
+-------------
+For three standardized variables with correlation 0.8, eigenvalues are 2.6, 0.2, 0.2.
+Eigenvector signs and bases within repeated eigenspaces are not unique.
+
+Try it
+------
+Set the correlation to zero and predict the explained-variance shares.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/stats/pca1.m -- PCA on a 3-asset correlation
+matrix.
+"""
 
 import numpy as np
 

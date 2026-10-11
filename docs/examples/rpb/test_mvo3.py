@@ -1,4 +1,17 @@
-"""Translated from Examples/rpb/test_mvo3.m -- Roncalli [2013], "Introduction
+"""Long-only and capped frontiers.
+
+Learning goal
+-------------
+Compare broad signed bounds, long-only weights, and a 40 percent cap. Constraints alter
+the feasible risk-return set and may make targets unattainable.
+
+Try it
+------
+Check achieved volatility and weight bounds for each target.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_mvo3.m -- Roncalli [2013], "Introduction
 to Risk Parity and Budgeting", Example 1 (page 10): the same sigma-problem
 target-matching as test_mvo2.py's section 3, now under three different
 weight-bound configurations (unconstrained-ish, long-only, long-only capped
@@ -23,7 +36,8 @@ earlier `init_global` call leaves `BISECTION_Tol` set. See
 `docs/matlab_bugs_found.md` for the full writeup. This translation produces
 the *correct* target-matching numbers (as `test_mvo3.m` would if it called
 `init_global` like its neighbors do), since `mvo_target_portfolio`'s Python
-`bisection` always has a well-defined tolerance."""
+`bisection` always has a well-defined tolerance.
+"""
 
 import numpy as np
 

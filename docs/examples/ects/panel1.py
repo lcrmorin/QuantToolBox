@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/panel1.m -- despite its filename and the
+"""A first local-level filter.
+
+Learning goal
+-------------
+Despite its historical filename, this is one univariate series, not panel-data
+regression. Separate the observed series from its latent level.
+
+Try it
+------
+Increase observation-noise variance and predict how smoothing will change.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/panel1.m -- despite its filename and the
 tracker's earlier note ("panel-data example; no ported panel module
 yet"), this is actually a local-level (random-walk-plus-noise) Kalman
 filter example (Harvey 1990, pp.89-90) applied to a 71-observation
@@ -10,7 +23,8 @@ accordingly.
 The 71 observations from Purse.asc are embedded directly below, matching
 the project's convention of self-contained example scripts (numeric core
 only; the original's plot of y_t vs. the one-step-ahead prediction is
-dropped)."""
+dropped).
+"""
 
 import numpy as np
 

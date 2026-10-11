@@ -1,8 +1,21 @@
-"""Translated from Examples/backtest/backtest5.m -- generate_backtest with
-a flat transaction cost (0.01) under monthly rebalancing (the original
-builds weekly and daily rebalancing schedules too, but overwrites both
-before use, so only the monthly one -- `RB_Dates = ones(nDates,1)`, i.e.
-every date is a rebalance -- is actually exercised; reproduced as-is)."""
+"""Compounding the cost of rebalancing.
+
+Learning goal
+-------------
+Rebalance on every trading date and compare gross and net wealth. Turnover times the fee
+rate is an approximation to cumulative drag, not an exact compounded return.
+
+Try it
+------
+Halve the fee rate and compare the change in final wealth.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/backtest/backtest5.m -- generate_backtest with
+a flat transaction cost (0.01) with rebalancing on every trading date.
+The original overwrites earlier schedules with `RB_Dates = ones(nDates,1)`;
+its comment calling this monthly rebalancing is misleading.
+"""
 
 import numpy as np
 
@@ -27,9 +40,7 @@ indices = return_to_price(r)
 weights = np.ones((n_dates, n_assets))
 weights = weights / np.sum(weights, axis=1, keepdims=True)
 
-rb_dates = np.ones(
-    n_dates
-)  # "monthly rebalancing" per the original's final overwrite -> every date
+rb_dates = np.ones(n_dates)  # every trading date is a rebalance
 
 result1 = generate_backtest(dates, weights, indices, rb_dates)
 tc = 0.01

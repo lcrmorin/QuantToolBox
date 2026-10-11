@@ -1,8 +1,22 @@
-"""Translated from Examples/svm/svm5.m -- hard margin dual on the first
+"""Hard and soft margin examples.
+
+Learning goal
+-------------
+Compare a separable 15-point sample with a 17-point soft-margin sample. Both the
+observations and penalty change, so the difference is not a controlled C experiment.
+
+Try it
+------
+Run several finite C values on the same 17-point dataset.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/svm/svm5.m -- hard margin dual on the first
 15 points, and soft margin dual (C=0.05) on the full 17-point dataset.
 (The original's parameter sweep over C=0..0.4 for plotting purposes is
 not re-translated separately -- svm3.py/svm4.py already demonstrate the
-same sweep pattern at 4 representative C values.)"""
+same sweep pattern at 4 representative C values.)
+"""
 
 import numpy as np
 

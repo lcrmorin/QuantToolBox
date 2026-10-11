@@ -1,14 +1,29 @@
-"""Translated from Examples/rpb/test_bl5.m -- a second, independent 4-asset
+"""Prior uncertainty and portfolio risk.
+
+Learning goal
+-------------
+With P=I and equal prior and view covariances, the posterior mean is the midpoint of
+prior and views. Posterior mean uncertainty is not automatically asset-return
+covariance.
+
+Try it
+------
+Verify the midpoint identity, then compare weights under the two covariance choices.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_bl5.m -- a second, independent 4-asset
 Black-Litterman + tracking-error worked example (no book page cited in the
-original). Every asset gets a direct view (`P=I`, `Q=mu`, full confidence
-`Omega=Sigma_epsilon=covMatrix`) -- an unusually strong-conviction setup
-that pulls the posterior most of the way from the equilibrium prior toward
-the raw sample means.
+original). Every asset gets a direct view (`P=I`, `Q=mu`, equal prior and view uncertainty
+`Omega=Sigma_epsilon=covMatrix`). The posterior mean is halfway between
+the equilibrium prior and the specified return views; this is not full confidence.
+The two covariance choices below illustrate sensitivity, not a claim that
+posterior mean uncertainty is interchangeable with asset-return covariance.
 
 Four blocks, each comparing the resulting active portfolio (x) against the
 x0 benchmark:
 
-1. gamma-problem MVO (mu_BL, Sigma_BL) at the implied risk-aversion gamma0.
+1. gamma-problem MVO (mu_BL, Sigma_BL) at the implied return-reward gamma0.
 2. sigma-problem TE-target=1% (mu_BL, Sigma_BL), i.e. `te_target_portfolio`.
 3. gamma-problem MVO (mu_BL, covMatrix) -- same posterior mean, but
    optimized against the *original* (pre-view) covariance rather than the
@@ -17,7 +32,8 @@ x0 benchmark:
 
 The original's final block repeats block 2 verbatim (mu_BL, Sigma_BL again)
 -- included here too for a faithful translation, and it does reproduce
-identical numbers, as expected."""
+identical numbers, as expected.
+"""
 
 import numpy as np
 

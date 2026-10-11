@@ -1,8 +1,22 @@
-"""Translated from Examples/ects/varx3.m -- a trivial 5-observation
+"""OLS as a zero-lag VAR.
+
+Learning goal
+-------------
+Use a tiny design to check that a VAR with no autoregressive lags reduces to regression.
+This is a useful starting point before the larger VARX examples.
+
+Try it
+------
+Compare fitted values and coefficient orientation with OLS.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx3.m -- a trivial 5-observation
 example comparing plain OLS against `varx_estimate(..., p=0)` on the
 same regressor matrix. With no autoregressive lags (p=0), VARX
 estimation collapses to OLS, so `theta`/`beta` from the second call
-should match `beta` from the first."""
+should match `beta` from the first.
+"""
 
 import numpy as np
 

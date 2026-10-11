@@ -1,7 +1,21 @@
-"""Translated from Examples/rpb/test_lasso3.m (byte-identical to
+"""When an L1 penalty cannot help.
+
+Learning goal
+-------------
+For nonnegative weights summing to one, their L1 norm is always one. An L1 penalty
+toward zero is then constant; a penalty toward existing holdings can still matter.
+
+Try it
+------
+Compare zero-target L1 weights with the unpenalized long-only solution.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_lasso3.m (byte-identical to
 test_lasso4.m) -- MVO/ridge/lasso/mixed-penalty portfolios via the
 consolidated solve_qp (replacing the original's separate quadprog_ridge/
-quadprog_lasso/quadprog_mixed calls -- see optim/quadprog.py docstring)."""
+quadprog_lasso/quadprog_mixed calls -- see optim/quadprog.py docstring).
+"""
 
 import numpy as np
 

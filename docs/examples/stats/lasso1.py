@@ -1,9 +1,23 @@
-"""Translated from Examples/stats/lasso1.m -- penalized-form lasso path at
+"""A lasso coefficient path.
+
+Learning goal
+-------------
+Follow coefficients and their L1 norm as the penalty rises. Training mean squared error
+measures fit; the number of nonzero coefficients is only a complexity proxy.
+
+Try it
+------
+Count nonzero coefficients with a small tolerance instead of exact equality.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/stats/lasso1.m -- penalized-form lasso path at
 5 lambda values (numeric core only; the original's 501-point tau-sweep and
 its multi-line coefficient-path plot are dropped -- the same lambda
 values and dataset are already used by lasso2.py, which this extends with
 R^2/degrees-of-freedom/complexity reporting to match lasso1.m's own
-output table)."""
+output table).
+"""
 
 import numpy as np
 
@@ -35,16 +49,16 @@ x = standardize(data[:, 1:6])
 beta_ols = np.linalg.inv(x.T @ x) @ (x.T @ y)
 tss = np.mean(y**2)
 
-print("lambda  |beta|         tau=sum|beta| rss     R2      df  complexity")
+print("lambda  |beta|         tau=sum|beta| mse     R2      df  complexity")
 for lam in [0.0, 0.9, 2.5, 5.5, 7.5]:
     beta, _ = lasso_ccd(y, x, lambda_=lam, n_iters=200)
     u = y - x @ beta
-    rss = np.mean(u**2)
-    r2 = 1 - rss / tss
+    mse = np.mean(u**2)
+    r2 = 1 - mse / tss
     tau = np.sum(np.abs(beta))
     df = int(np.sum(np.abs(beta) >= 1e-6))
     complexity = 1.0 / df if df > 0 else np.inf
     print(
-        f"{lam:6.2f}  {np.round(beta, 4)}  tau={tau:.4f}  rss={rss:.4f}  "
+        f"{lam:6.2f}  {np.round(beta, 4)}  tau={tau:.4f}  mse={mse:.4f}  "
         f"R2={r2:.4f}  df={df}  complexity={complexity:.4f}"
     )

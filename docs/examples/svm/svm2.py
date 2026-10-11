@@ -1,5 +1,22 @@
-"""Translated from Examples/svm/svm2.m -- hard margin SVM classification,
-dual formulation (same 15-point dataset as svm1.m)."""
+"""The dual hard-margin classifier.
+
+Learning goal
+-------------
+Use dual multipliers to identify support vectors in a separable two-class dataset.
+Indices are zero-based and geometric distance uses the norm of beta.
+
+Try it
+------
+Compare the decision scores with the primal solution in the guided SVM page.
+
+The result.margin field is 1 / (beta @ beta), the squared geometric
+half-margin. The geometric half-margin is 1 / np.linalg.norm(beta).
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/svm/svm2.m -- hard margin SVM classification,
+dual formulation (same 15-point dataset as svm1.m).
+"""
 
 import numpy as np
 
@@ -29,6 +46,6 @@ y, x = data[:, 2], data[:, 0:2]
 r = svm_classification_dual(y, x, c=None)
 print("beta0:", round(r.beta0, 8))
 print("beta:", np.round(r.beta, 8))
-print("margin:", round(r.margin, 8))
+print("squared half-margin:", round(r.margin, 8))
 print("support vectors (0-indexed):", r.support_vectors)
 print("alpha at support vectors:", np.round(r.alpha[r.support_vectors], 8))

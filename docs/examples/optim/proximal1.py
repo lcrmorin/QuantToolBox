@@ -1,4 +1,17 @@
-"""Translated from Examples/optim/proximal1.m -- proximal projections onto
+"""Projection onto intersecting constraints.
+
+Learning goal
+-------------
+Compare projections onto boxes, equalities, inequalities, and their intersection. Check
+feasibility and the convergence status of iterative projection.
+
+Try it
+------
+Tighten a bound and inspect which constraints become active.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/optim/proximal1.m -- proximal projections onto
 boxes, single/multiple inequality constraints, single/multiple equality
 constraints, and combined linear-constraint sets, on a fixed random
 starting point.
@@ -15,7 +28,8 @@ So there is no second variant left to compare here -- each constraint
 type is projected onto once below, rather than twice.
 
 The original draws x from MATLAB's unseeded `rand`; a fixed seed
-(`np.random.default_rng(0)`) is substituted here."""
+(`np.random.default_rng(0)`) is substituted here.
+"""
 
 import numpy as np
 

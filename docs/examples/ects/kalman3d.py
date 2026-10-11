@@ -1,15 +1,32 @@
-"""Translated from Examples/ects/kalman3d.m -- maximum-likelihood
-recovery of all 11 free parameters (Z diagonal, d[0], H diagonal, T,
-c, Q) of the general state-space model used in kalman3a.py/kalman3b.py/
-kalman3c.py, starting the optimizer from the model's own true parameter
-values (as the original does) and comparing the recovered estimates
-against them.
+"""Identification before state-space estimation.
+
+Learning goal
+-------------
+The unrestricted parameterization has latent-scale and location ambiguities. The
+teaching fit fixes observation loadings and intercepts before estimating noise and
+dynamics.
+
+Try it
+------
+Compare fitted observation likelihoods rather than demanding exact recovery from 100
+observations.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/kalman3d.m -- maximum-likelihood
+estimation of the general state-space model used in kalman3a.py/
+kalman3b.py/kalman3c.py. Unlike the original unrestricted 11-parameter fit,
+this example fixes Z=I and d=[10, 0] to define the latent scale and origin.
+It estimates the remaining eight noise and dynamic parameters, starting
+from their simulation values. Without identification restrictions the
+Hessian can be singular and standard errors invalid even if the fit runs.
 
 `theta([4 5 11]) = sqrt(theta([4 5 11]).^2)` in the original enforces
 H[0,0], H[1,1], Q > 0 (indices 4, 5, 11 in MATLAB's 1-based numbering);
 translated as `np.abs(theta[[3, 4, 10]])` here. `a0`/`P0` are
 recomputed from the model's own steady state at every trial `theta`,
-exactly as in `ssm_ml_fun`."""
+exactly as in `ssm_ml_fun`.
+"""
 
 import io
 
@@ -157,9 +174,19 @@ def ssm_ml_fun(theta: np.ndarray) -> np.ndarray:
 
 sv = np.array([1.0, 1.0, 10.0, 2.0, 1.0, 0.5, 0.3, 0.2, 1.0, 4.0, 1.0])
 
-ml_result = ml_estimation(ssm_ml_fun, sv)
+# theta = R @ free_parameters + offset fixes the first three entries.
+free_indices = np.arange(3, 11)
+restriction_matrix = np.eye(11)[:, free_indices]
+offset = np.zeros(11)
+offset[:3] = sv[:3]
+ml_result = ml_estimation(ssm_ml_fun, sv[free_indices], restriction=(restriction_matrix, offset))
+print("optimizer converged:", ml_result.converged)
+print("finite standard errors:", np.all(np.isfinite(ml_result.stderr)))
 theta_hat = ml_result.theta
 
 print("\n True           Estimated")
 print(" values         values")
 print(np.round(np.column_stack([sv, theta_hat]), 5))
+
+assert np.allclose(theta_hat[:3], sv[:3])  # fixed identification restrictions
+assert np.all(np.isfinite(ml_result.stderr))

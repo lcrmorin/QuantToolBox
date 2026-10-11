@@ -1,8 +1,22 @@
-"""Translated from Examples/ects/kalman3b.m -- same model and data as
+"""Time-varying matrix representation.
+
+Learning goal
+-------------
+Represent constant state-space matrices as repeated three-dimensional arrays. This
+changes the interface, not the underlying model.
+
+Try it
+------
+Compare state estimates and likelihood with kalman3a.py.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/kalman3b.m -- same model and data as
 kalman3a.py, but broadcasts the (constant) system matrices out to
 explicit per-period 3-D arrays and runs the Kalman filter through the
 time-varying code path, to confirm it reproduces the time-invariant
-path's results exactly (the whole point of the original's exercise)."""
+path's results exactly (the whole point of the original's exercise).
+"""
 
 import io
 

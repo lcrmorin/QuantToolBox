@@ -1,11 +1,25 @@
-"""Translated from Examples/ects/quantile2.m -- Monte Carlo comparison of
+"""Monte Carlo comparison of OLS and LAD.
+
+Learning goal
+-------------
+Compare coefficient distributions over repeated heteroskedastic samples. Their spread is
+estimator variability, not the standard error of the Monte Carlo mean.
+
+Try it
+------
+Increase repetitions and separate simulation noise from differences between estimators.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/quantile2.m -- Monte Carlo comparison of
 OLS vs. LAD (median quantile regression) under heteroskedastic noise:
 mean and standard error of each estimator's slope coefficient across many
 simulated datasets (numeric core only; the original's kernel-density plot
 of the two estimators' sampling distributions is dropped).
 
 The original draws x/sigma/u from MATLAB's unseeded `rand`/`randn`; a
-fixed seed (`np.random.default_rng(0)`) is substituted here."""
+fixed seed (`np.random.default_rng(0)`) is substituted here.
+"""
 
 import numpy as np
 

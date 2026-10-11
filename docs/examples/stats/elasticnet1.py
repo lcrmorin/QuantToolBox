@@ -1,6 +1,21 @@
-"""Translated from Examples/stats/elasticnet1.m and elasticnet2.m --
-elastic net regression path at two different alpha (L1/L2 mix) values,
-on the same 15-observation dataset used in ridge1.m/lasso1.m."""
+"""Mixing L1 and L2 penalties.
+
+Learning goal
+-------------
+Compare two elastic-net mixing parameters on standardized predictors. L1 encourages
+zeros; L2 stabilizes correlated coefficients. This is a two-point comparison, not a full
+path.
+
+Try it
+------
+Add intermediate mixing parameters while holding the overall penalty fixed.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/stats/elasticnet1.m and elasticnet2.m --
+elastic net regression at two different alpha (L1/L2 mix) values,
+on the same 15-observation dataset used in ridge1.m/lasso1.m.
+"""
 
 import numpy as np
 
@@ -31,4 +46,4 @@ x = standardize(data[:, 1:6])
 
 for alpha, lam in [(0.50, 1.0), (0.25, 1.0)]:
     beta, path = elastic_net_ccd(y, x, lambda_=lam, alpha=alpha, n_iters=200)
-    print(f"alpha={alpha}, lambda={lam}: beta={np.round(beta,4)}")
+    print(f"alpha={alpha}, lambda={lam}: beta={np.round(beta, 4)}")

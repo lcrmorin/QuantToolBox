@@ -1,5 +1,19 @@
-"""Translated from Examples/maths/pdgm2.m -- same as pdgm1.py, on an
-8-observation series."""
+"""Periodogram frequency resolution.
+
+Learning goal
+-------------
+Repeat the FFT calculation on eight observations. Read frequencies in radians per
+observation and distinguish the FFT coefficients from their squared magnitudes.
+
+Try it
+------
+Compare the frequency spacing with pdgm1.py before changing the observations.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/maths/pdgm2.m -- same as pdgm1.py, on an
+8-observation series.
+"""
 
 import numpy as np
 

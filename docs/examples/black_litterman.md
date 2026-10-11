@@ -1,5 +1,12 @@
 # Black-Litterman
 
+**Goal:** translate two beliefs into matrix rows and inspect how uncertainty
+controls the update. Read [Mean-variance](mean_variance.md) first.
+
+Use one return horizon throughout. `pi` is an excess return; `mu_tilde` and the
+absolute view in `Q` are total returns. `Omega` stores view-error **variances**,
+not standard deviations. Larger entries represent less confidence.
+
 Translated from `Examples/rpb/test_bl1.m`, which reproduces the example
 on page 24 of Roncalli, T. (2013), *Introduction to Risk Parity and
 Budgeting*.
@@ -18,15 +25,13 @@ from quanttoolbox.portfolio.black_litterman import (
 )
 
 sigma = np.array([0.15, 0.20, 0.25, 0.30])
-rho_vech = np.array(
-    [1.00, 0.10, 1.00, 0.40, 0.70, 1.00, 0.50, 0.40, 0.80, 1.00]
-)
+rho_vech = np.array([1.00, 0.10, 1.00, 0.40, 0.70, 1.00, 0.50, 0.40, 0.80, 1.00])
 rho = xpnd(rho_vech, method=1)
 cov_matrix = corr_to_cov(sigma, rho)
 
-x = np.array([0.40, 0.30, 0.20, 0.10])   # reference (e.g. market-cap) weights
-r = 0.03                                  # risk-free rate
-sharpe_ratio = 0.25                       # assumed market Sharpe ratio
+x = np.array([0.40, 0.30, 0.20, 0.10])  # reference (e.g. market-cap) weights
+r = 0.03  # risk-free rate
+sharpe_ratio = 0.25  # assumed market Sharpe ratio
 
 # Step 1: back out the implied equilibrium excess returns
 irp = implied_risk_premia(x, cov_matrix, sharpe_ratio)
@@ -60,5 +65,23 @@ Notice how the posterior expected returns move toward the views: asset
 1's posterior return (`4.39%`) shifts down from its equilibrium value
 (`5.47%`) toward the view target (`4%`), and the asset‑2‑minus‑asset‑3
 spread narrows from its equilibrium value toward the `-1%` view target,
-each moving proportionally to how confident the corresponding view's
-`Omega` entry says it is.
+with the joint update determined by the prior covariance and view uncertainty.
+Correlations allow a view on one asset to change other assets too.
+
+
+## Weaken the views
+
+```python
+weak_views = black_litterman_moments(mu_tilde, gamma_matrix, P, Q, 1e6 * Omega)
+print("prior view returns:", np.round(P @ mu_tilde, 4))
+print("posterior view returns:", np.round(P @ bl.mu_bar, 4))
+print("view targets:", Q)
+assert np.linalg.norm(weak_views.mu_bar - mu_tilde) < np.linalg.norm(bl.mu_bar - mu_tilde)
+```
+
+The posterior need not hit `Q` exactly: the views have finite uncertainty.
+`gamma_matrix = tau * cov_matrix` is prior uncertainty about the mean;
+it is distinct from the scalar return-reward `gamma` used in portfolio optimization.
+
+**Try it:** reduce only the second view's variance and inspect both view returns.
+Keep the first variance and prior fixed so the experiment has one changing input.

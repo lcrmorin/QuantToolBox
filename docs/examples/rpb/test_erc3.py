@@ -1,5 +1,19 @@
-"""Translated from Examples/rpb/test_erc3.m -- Example 17 (page 123),
-Roncalli (2013). RB portfolio with unequal target budgets."""
+"""Unequal risk-contribution targets.
+
+Learning goal
+-------------
+Allocate to 20/20/30/30 risk budgets in a correlated four-asset model. Check convergence
+and achieved contributions rather than expecting those capital weights.
+
+Try it
+------
+Switch to equal budgets and compare both allocations and risk shares.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_erc3.m -- Example 17 (page 123),
+Roncalli (2013). RB portfolio with unequal target budgets.
+"""
 
 import numpy as np
 

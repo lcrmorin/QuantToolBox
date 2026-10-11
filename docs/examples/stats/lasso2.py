@@ -1,5 +1,19 @@
-"""Translated from Examples/stats/lasso2.m -- penalized-form lasso
-(regLasso2) at several lambda values, on the same 15-obs dataset."""
+"""Lasso versus unpenalized least squares.
+
+Learning goal
+-------------
+Start at zero penalty, then inspect which standardized coefficients vanish. Correlated
+predictors can exchange weight along the path.
+
+Try it
+------
+Compare the zero-penalty fitted values with ordinary least squares.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/stats/lasso2.m -- penalized-form lasso
+(regLasso2) at several lambda values, on the same 15-obs dataset.
+"""
 
 import numpy as np
 
@@ -31,5 +45,5 @@ beta_ols = np.linalg.inv(x.T @ x) @ (x.T @ y)
 
 for lam in [0.0, 0.9, 2.5, 5.5, 7.5]:
     beta, _ = lasso_ccd(y, x, lambda_=lam, n_iters=200)
-    rss = np.mean((y - x @ beta) ** 2)
-    print(f"lambda={lam}: beta={np.round(beta,4)} rss={round(rss,4)}")
+    mse = np.mean((y - x @ beta) ** 2)
+    print(f"lambda={lam}: beta={np.round(beta, 4)} mse={round(mse, 4)}")

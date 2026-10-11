@@ -1,9 +1,24 @@
-"""Translated from Examples/ects/kalman3a.m -- runs the Kalman filter for
+"""A multivariate state-space model.
+
+Learning goal
+-------------
+Read Z, T, H, and Q as observation mapping, transition, observation covariance, and
+state-noise covariance. Stationary initialization supplies a prior before observing
+data.
+
+Try it
+------
+Increase observation noise and inspect filtered-state uncertainty.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/kalman3a.m -- runs the Kalman filter for
 a general fixed, time-invariant 2-state / 2-observation state-space
 model on the 100-observation Kalman3.asc series (embedded directly
 below), starting from the steady-state mean/covariance of the state,
 and prints the filtered state a(t) and its covariance P(t) for the
-first 10 observations."""
+first 10 observations.
+"""
 
 import io
 

@@ -1,6 +1,20 @@
-"""Translated from Examples/ects/ml3.m -- Beta-distribution MLE (LGD --
+"""A beta likelihood for bounded observations.
+
+Learning goal
+-------------
+Fit a beta distribution to loss-given-default observations between zero and one.
+Distribution shape parameters must stay positive.
+
+Try it
+------
+Compare the fitted mean with the sample mean and inspect behavior near the endpoints.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/ml3.m -- Beta-distribution MLE (LGD --
 Loss Given Default -- modeling), comparing the Hessian/OPG/HC covariance
-estimators, on 13 observed LGD values."""
+estimators, on 13 observed LGD values.
+"""
 
 import numpy as np
 from scipy.stats import beta as beta_dist

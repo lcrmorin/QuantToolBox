@@ -1,6 +1,19 @@
-"""Translated from Examples/ects/quantile1.m -- illustrates that
-minimizing the pinball (check) loss recovers the same quantile as the
-standard sorted-sample quantile estimator, compared against the true
+"""Quantiles as asymmetric-loss minimizers.
+
+Learning goal
+-------------
+Minimize pinball loss for a scalar location. A finite-sample minimizer need not equal an
+interpolated NumPy quantile; multiple minimizers can exist.
+
+Try it
+------
+Try a small even-sized sample and inspect the loss between its middle observations.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/quantile1.m -- illustrates that
+minimizing the pinball (check) loss estimates a sample quantile, compared
+with NumPy's interpolated sample quantile and the true
 Normal quantile function (numeric core only; the original's comparison
 plot is dropped).
 
@@ -8,7 +21,8 @@ The original draws y from MATLAB's unseeded `randn`; a fixed seed
 (`np.random.default_rng(0)`) is substituted here. `quantile`/`sort`-based
 quantile estimation uses plain `np.quantile` directly (not a ported
 quanttoolbox function -- there's nothing toolbox-specific to translate
-here, same as other examples that lean on bare NumPy/pandas idioms)."""
+here, same as other examples that lean on bare NumPy/pandas idioms).
+"""
 
 import numpy as np
 from scipy.optimize import minimize_scalar

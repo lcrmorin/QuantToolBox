@@ -1,11 +1,25 @@
-"""Translated from Examples/backtest/backtest4.m -- generate_backtest with
+"""Turnover and trading costs.
+
+Learning goal
+-------------
+Prices are deliberately flat, so wealth changes isolate trading costs. Fees also change
+subsequent holdings; static turnover need not exactly match the cost-aware backtest.
+
+Try it
+------
+Set all transaction costs to zero and check that wealth stays flat after inception.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/backtest/backtest4.m -- generate_backtest with
 per-asset bid/ask transaction costs, comparing turnover computed inside
 the backtest against `static_turnover` computed independently from the
 rebalance-date weights.
 
 The original explicitly seeds MATLAB's RNG (`rng(123456789)`); NumPy's
 generator is seeded the same way for a comparable (not bit-identical --
-different RNG algorithms) run."""
+different RNG algorithms) run.
+"""
 
 import numpy as np
 

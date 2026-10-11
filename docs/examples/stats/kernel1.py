@@ -1,9 +1,23 @@
-"""Translated from Examples/stats/kernel1.m -- Gaussian-kernel density
+"""Bandwidth and marginal density estimates.
+
+Learning goal
+-------------
+Estimate separate Gaussian kernel densities for two related series. These are marginal
+densities, not their joint distribution or a dependence estimate.
+
+Try it
+------
+Change bandwidth and compare smoothness while checking approximate area under the curve.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/stats/kernel1.m -- Gaussian-kernel density
 estimate of two correlated series (numeric core only; the original's plot
 of both density curves is dropped).
 
 The original draws x from MATLAB's unseeded `randn`; a fixed seed
-(`np.random.default_rng(0)`) is substituted here."""
+(`np.random.default_rng(0)`) is substituted here.
+"""
 
 import numpy as np
 

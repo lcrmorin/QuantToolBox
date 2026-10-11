@@ -1,10 +1,24 @@
-"""Translated from Examples/ects/varx2b.m -- Lutkepohl [1991], chapter
+"""Restricted VARX least squares.
+
+Learning goal
+-------------
+Impose coefficient values, including a fixed one and fixed zeros. Restrictions reduce
+free coordinates rather than deleting observed variables.
+
+Try it
+------
+Verify the imposed values directly in the fitted coefficient matrix.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx2b.m -- Lutkepohl [1991], chapter
 10: re-estimates the reduced-form dynamic simultaneous-equations model
 from varx2a.py with four coefficients restricted: the Inc(t-1)
 coefficient in the Inc(t) equation fixed at 1, and the Cons(t-1)/
 constant coefficients in the Inc(t) equation and the Inv(t-1)
 coefficient in the Cons(t) equation all fixed at 0 -- via `varx_cls` ->
-`varx_estimate(..., method="ls")`."""
+`varx_estimate(..., method="ls")`.
+"""
 
 import io
 

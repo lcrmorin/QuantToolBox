@@ -1,7 +1,21 @@
-"""Translated from Examples/ects/kalman3c.m -- same model and data as
+"""Uncertainty around filtered states.
+
+Learning goal
+-------------
+Build pointwise Gaussian bands from filtered-state covariance. These condition on known
+model parameters and are not prediction intervals for future observations.
+
+Try it
+------
+Increase observation noise and compare band widths.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/kalman3c.m -- same model and data as
 kalman3a.py; extracts the filtered first state component alpha(t) =
 a(t)[0] and its 95% confidence band alpha(t) +/- 1.96*sqrt(P(t)[0,0])
-(numeric core only, the original's plot is dropped)."""
+(numeric core only, the original's plot is dropped).
+"""
 
 import io
 

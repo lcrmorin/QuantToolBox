@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/varx4a.m -- Judge, Hill, Griffiths,
+"""Seemingly unrelated regressions.
+
+Learning goal
+-------------
+Fit two equations with restrictions, then use estimated cross-equation residual
+covariance for feasible GLS. This covariance describes errors, not regressors.
+
+Try it
+------
+Compare the initial and updated residual covariance estimates.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/varx4a.m -- Judge, Hill, Griffiths,
 Lutkepohl & Lee [1988], "Introduction to the Theory and Practice of
 Econometrics", pages 444-455: restricted SUR (seemingly-unrelated-
 regressions) estimation of a 2-equation system with 10 stacked
@@ -11,7 +24,8 @@ covariance estimate, then re-estimate using that Sigma as the GLS
 weighting matrix (`varx_cls` -> `varx_estimate(..., method="ls")` in
 both steps; `p=0` means no autoregressive lags, i.e. this is a pure
 restricted SUR regression via the VARX machinery, `results.B` here is
-just `result.beta` since `p=0` makes `result.phi` empty)."""
+just `result.beta` since `p=0` makes `result.phi` empty).
+"""
 
 import numpy as np
 

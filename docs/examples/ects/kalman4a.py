@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/kalman4a.m -- simulates a
+"""Regression coefficients as latent states.
+
+Learning goal
+-------------
+Use time-varying observation matrices to filter random-walk coefficients. Filtering only
+uses observations available up to the current date.
+
+Try it
+------
+Increase coefficient process noise and inspect responsiveness to new observations.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/kalman4a.m -- simulates a
 200-observation time-varying-coefficient regression y_t = x_t1*beta1_t +
 x_t2*beta2_t + eps_t, where beta1_t and beta2_t follow independent
 random walks (`recserar(sigma*randn(nT,1), 0, 1.0)` with AR coefficient
@@ -8,7 +21,8 @@ filter (Z_t = x_t, a random-walk state-space model with T=I) and
 compares the filtered estimate against the simulated true path.
 
 The original draws from MATLAB's unseeded `randn`/`rand`; a fixed seed
-(`np.random.default_rng(0)`) is substituted here."""
+(`np.random.default_rng(0)`) is substituted here.
+"""
 
 import numpy as np
 

@@ -1,4 +1,18 @@
-"""Translated from Examples/stats/cov1.m -- OLS in closed form vs. maximum
+"""Uncertainty estimates for regression.
+
+Learning goal
+-------------
+Compare OLS and Gaussian maximum likelihood with Hessian, outer-product, and sandwich
+covariance estimates. Coefficient estimates and their standard errors answer different
+questions.
+
+Try it
+------
+Increase the sample size and compare the scale of the standard errors.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/stats/cov1.m -- OLS in closed form vs. maximum
 likelihood (Gaussian log-likelihood, same model), comparing standard
 errors from the Hessian, OPG, and "sandwich" (HC) covariance estimators.
 
@@ -11,7 +25,8 @@ directly (`cov="hessian"`, `"opg"`, `"hc"`), used here instead.
 The original draws x/u from MATLAB's unseeded `rand`/`randn`; a fixed seed
 (`np.random.default_rng(0)`) is substituted here. `ml_ols.m` (the
 per-observation log-density) is inlined below rather than kept as a
-separate file, matching its role as a helper, not a standalone example."""
+separate file, matching its role as a helper, not a standalone example.
+"""
 
 import numpy as np
 
@@ -25,9 +40,10 @@ x = 10 * (rng.random((n, 2)) - 0.5)
 u = sigma_true * rng.standard_normal(n)
 y = x @ beta_true + u
 
-beta_hat = np.linalg.inv(x.T @ x) @ (x.T @ y)
+beta_hat = np.linalg.lstsq(x, y, rcond=None)[0]
 u_hat = y - x @ beta_hat
-sigma_hat = np.std(u_hat, ddof=1)
+# Residual degrees of freedom are n - k, even without an intercept.
+sigma_hat = np.sqrt((u_hat @ u_hat) / (n - x.shape[1]))
 cov_beta = (sigma_hat**2) * np.linalg.inv(x.T @ x)
 stderr_ols = np.sqrt(np.diag(cov_beta))
 

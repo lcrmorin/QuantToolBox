@@ -1,6 +1,20 @@
-"""Translated from Examples/rpb/test_box1.m -- ERC and box-constrained
+"""Risk budgets under allocation limits.
+
+Learning goal
+-------------
+Tight boxes around initial holdings can prevent equal risk contributions. Wider boxes
+approach the unrestricted ERC allocation.
+
+Try it
+------
+Compare risk contributions, not just weights, as the box widens.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_box1.m -- ERC and box-constrained
 ("C-ERC") risk budgeting portfolios at progressively wider bounds around
-a starting position."""
+a starting position.
+"""
 
 import numpy as np
 

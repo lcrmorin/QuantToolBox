@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/gmm1.m -- linear regression estimated
+"""OLS, likelihood, and moment conditions.
+
+Learning goal
+-------------
+Fit the same regression through several estimators, then impose a coefficient
+restriction. Missing observations and moment weights affect what can be compared.
+
+Try it
+------
+Check the imposed coefficient and compare the unrestricted fitted values.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/gmm1.m -- linear regression estimated
 three ways (OLS, Gaussian MLE, GMM with moment conditions matching OLS's
 normal equations plus a second-moment condition), each in an unconstrained
 and a beta[3]=1 restricted form, on a 10-observation dataset with one
@@ -9,7 +22,8 @@ the same beta[3]=1 restriction, by hard-wiring it inside the moment
 function instead of using the RR/r restriction machinery) is not
 re-translated separately -- `theta6` below already demonstrates the
 restriction via `gmm_estimation`'s own `restriction=` parameter, the same
-mechanism `ols_estimation`/`ml_estimation` use for `theta2`/`theta4`."""
+mechanism `ols_estimation`/`ml_estimation` use for `theta2`/`theta4`.
+"""
 
 import numpy as np
 

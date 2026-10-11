@@ -1,6 +1,20 @@
-"""Translated from Examples/rpb/test_bl2.m -- Black-Litterman sensitivity
+"""How views change portfolio weights.
+
+Learning goal
+-------------
+Vary view returns, uncertainty, and prior scaling while keeping the return-reward gamma
+fixed. Omega contains variances; a larger Omega means weaker views.
+
+Try it
+------
+Increase only one view variance and compare the posterior portfolio with the benchmark.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_bl2.m -- Black-Litterman sensitivity
 analysis across 6 scenarios (base case + 5 view/uncertainty/tau variants),
-each solved as a fixed-risk-aversion MVO portfolio."""
+each solved as a fixed-return-reward MVO portfolio.
+"""
 
 import numpy as np
 
@@ -66,5 +80,5 @@ for s in scenarios:
 
 for i, r_ in enumerate(results):
     print(
-        f"scenario {i}: weights={np.round(r_['weights'],4)} mu={round(r_['mu'],5)} te={round(r_['te'],5)}"
+        f"scenario {i}: weights={np.round(r_['weights'], 4)} mu={round(r_['mu'], 5)} te={round(r_['te'], 5)}"
     )

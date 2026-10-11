@@ -1,4 +1,17 @@
-"""Translated from Examples/ects/kalman4b.m -- same simulated
+"""Estimating coefficient process noise.
+
+Learning goal
+-------------
+Estimate three noise scales before filtering the simulated regression. Known simulation
+parameters are a reference, not guaranteed finite-sample estimates.
+
+Try it
+------
+Repeat with another random seed and compare parameter recovery.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/ects/kalman4b.m -- same simulated
 time-varying-coefficient regression as kalman4a.py, but instead of using
 the true (sigma_epsilon, sigma_beta1, sigma_beta2), estimates them by
 maximum likelihood (starting from sv = [1, 1, 1]) and re-runs the
@@ -6,7 +19,8 @@ time-varying Kalman filter with the estimated variances, comparing the
 recovered beta_t path against the simulated true path.
 
 As in kalman1b.py/kalman2c.py/kalman3d.py, `theta = sqrt(theta.^2)` is
-translated as `np.abs(theta)`."""
+translated as `np.abs(theta)`.
+"""
 
 import numpy as np
 

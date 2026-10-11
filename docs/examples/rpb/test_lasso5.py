@@ -1,6 +1,20 @@
-"""Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed
+"""Choosing the regularization target.
+
+Learning goal
+-------------
+Compare shrinkage toward equal weights and toward a nonuniform allocation. The target is
+part of the model, not merely a numerical setting.
+
+Try it
+------
+Use identical targets in both cases and check that the corresponding solutions agree.
+
+Source and implementation notes
+-------------------------------
+Translated from Examples/rpb/test_lasso5.m -- ridge/lasso/mixed
 portfolios with two different ridge/lasso target vectors (equal-weight
-and a custom 20/20/30/30 target)."""
+and a custom 20/20/30/30 target).
+"""
 
 import numpy as np
 

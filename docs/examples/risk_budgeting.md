@@ -1,5 +1,12 @@
 # Risk budgeting: ERC, VaR, and ES contributions
 
+**Goal:** distinguish an asset's capital weight from its share of portfolio risk.
+Read [Mean-variance](mean_variance.md) first for covariance construction.
+
+Returns and covariance use one consistent horizon. VaR and ES below assume
+Gaussian returns with zero mean; they are parametric loss measures, not an
+empirical tail backtest. Multiplying by 100 changes decimals to percent.
+
 Translated from `Examples/rpb/test_erc1.m`, which reproduces Tables 2.2,
 2.3, and 2.4 (pages 81–82) of Roncalli, T. (2013), *Introduction to Risk
 Parity and Budgeting*.
@@ -52,7 +59,7 @@ pct risk contribution: [70.43 15.93 13.64]
 ```
 
 The `20.87%` portfolio volatility and the `[70.43, 15.93, 13.64]` percent
-risk contribution split match the published Table 2.2 values exactly.
+risk contribution split match the published Table 2.2 values at the displayed precision.
 
 ## Equal Risk Contribution portfolio
 
@@ -75,5 +82,15 @@ ERC weights: [0.1969 0.3244 0.4787]
 pct risk contribution: [33.33 33.33 33.33]
 ```
 
-By construction, all three assets now contribute exactly one-third of
-total portfolio risk.
+Each asset contributes one-third of volatility within solver tolerance.
+The less volatile asset receives more capital, but correlations matter too.
+
+```python
+assert np.isclose(rc_vol.pct_risk_contribution.sum(), 1.0)
+assert np.isclose(erc.weights.sum(), 1.0)
+assert np.allclose(erc.pct_risk_contribution, np.full(3, 1 / 3), atol=1e-5)
+```
+
+**Try it:** set all correlations to zero and refit ERC. Compare weights with
+normalized inverse volatilities. Then restore correlations and explain why
+inverse-volatility weights no longer generally equalize risk.
