@@ -442,6 +442,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#duration-and-convexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duration and convexity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sector-level-modified-durationdts-risk" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1380,6 +1391,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#duration-and-convexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duration and convexity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sector-level-modified-durationdts-risk" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1428,19 +1450,52 @@ priced off a flat 3.7% continuously-compounded discount rate.</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"price:"</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
 
 <span class="n">ytm</span> <span class="o">=</span> <span class="n">bond_ytm</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"ytm:"</span><span class="p">,</span> <span class="n">ytm</span><span class="p">)</span>  <span class="c1"># -&gt; recovers 0.037, within the bisection tolerance</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"ytm:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">ytm</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>  <span class="c1"># -&gt; recovers 0.037 within the solver tolerance</span>
 
 <span class="n">cy</span> <span class="o">=</span> <span class="n">coupon_yield</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"coupon yield:"</span><span class="p">,</span> <span class="n">cy</span><span class="p">)</span>
 </code></pre></div>
 <p>Output:</p>
 <div class="highlight"><pre><span></span><code>price: 105.51453826978027
-ytm: 0.036998748779296875
+ytm: 0.037
 coupon yield: 0.047386834856974556
 </code></pre></div>
-<p><code>bond_ytm</code> recovers the original discount rate from the price alone,
-via <code>optim.bisection.bisection</code> (see <a href="../building_blocks/">Building
-blocks</a>) rather than a hand-rolled search loop.</p>
+<p><code>bond_ytm</code> uses a bracketed solver with an expanding search interval. It
+supports negative yields and yields above 100%. Cash flows must be
+nonnegative, with at least one positive payment in the future, so the
+solution is unique. A time-zero payment is allowed, but the supplied price
+must exceed the total paid at time zero. Invalid schedules raise
+<code>ValueError</code>; failure to bracket or converge raises <code>RuntimeError</code>.</p>
+<p>Times are year fractions, and rates are decimals. <code>method=1</code> means
+continuous compounding; <code>method=2</code> means annual compounding and requires a
+rate greater than -1. Use the same method when pricing and recovering a
+yield. The functions value exactly the payments supplied: they do not
+construct coupon schedules or adjust for accrued interest or settlement.</p>
+<p><code>coupon_yield</code> retains the original MATLAB first-payment / price ratio.
+This is an annual current yield only if the first payment is the annual
+coupon, without principal. It does not identify coupons or annualize them.</p>
+<h2 id="duration-and-convexity">Duration and convexity<a class="headerlink" href="#duration-and-convexity" title="Permanent link">&para;</a></h2>
+<p><code>bond_duration</code> returns the sensitivity <code>-P'/P</code> by default.
+<code>modified=False</code> instead returns the present-value-weighted payment time
+(Macaulay duration for annual compounding). <code>bond_convexity</code> returns
+<code>P''/P</code>, using the same rate convention as pricing. Both require
+nonnegative cash flows with at least one positive payment.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.bond.pricing</span><span class="w"> </span><span class="kn">import</span> <span class="n">bond_duration</span><span class="p">,</span> <span class="n">bond_convexity</span>
+
+<span class="c1"># A five-year zero-coupon bond at a 4% annually compounded yield.</span>
+<span class="n">duration</span> <span class="o">=</span> <span class="n">bond_duration</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">],</span> <span class="mf">0.04</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">convexity</span> <span class="o">=</span> <span class="n">bond_convexity</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">],</span> <span class="mf">0.04</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>   <span class="c1"># 4.807692 = 5 / 1.04</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">convexity</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>  <span class="c1"># 27.736686 = 5 * 6 / 1.04**2</span>
+
+<span class="c1"># Approximate relative price change for a 10-basis-point yield increase.</span>
+<span class="n">dr</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">relative_change</span> <span class="o">=</span> <span class="o">-</span><span class="n">duration</span> <span class="o">*</span> <span class="n">dr</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">convexity</span> <span class="o">*</span> <span class="n">dr</span><span class="o">**</span><span class="mi">2</span>
+</code></pre></div>
+<p>With continuous compounding, duration is the weighted payment time and
+convexity is the weighted squared payment time. The second-order price
+approximation is useful for small yield changes, not a replacement for
+repricing large moves.</p>
 <h2 id="sector-level-modified-durationdts-risk">Sector-level modified-duration/DTS risk<a class="headerlink" href="#sector-level-modified-durationdts-risk" title="Permanent link">&para;</a></h2>
 <p>A 3-bond portfolio split across two sectors, penalized for deviating
 its per-sector modified duration (MD) and duration-times-spread (DTS)
