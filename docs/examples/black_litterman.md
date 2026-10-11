@@ -83,5 +83,46 @@ The posterior need not hit `Q` exactly: the views have finite uncertainty.
 `gamma_matrix = tau * cov_matrix` is prior uncertainty about the mean;
 it is distinct from the scalar return-reward `gamma` used in portfolio optimization.
 
-**Try it:** reduce only the second view's variance and inspect both view returns.
-Keep the first variance and prior fixed so the experiment has one changing input.
+## Change confidence in just one view
+
+Keep the first view and the prior fixed. Multiply only the second view's
+variance by the factor on the horizontal axis. Moving right means **less**
+confidence in the belief that asset 2 underperforms asset 3 by one percentage point.
+
+![Posterior view returns as only the second view’s uncertainty changes](../assets/examples/black-litterman-confidence.png)
+
+??? example "Python code for this figure (run blocks in page order)"
+
+    ```python
+    import matplotlib.pyplot as plt
+
+    factors = np.logspace(-3, 3, 101)
+    view_returns = []
+    for factor in factors:
+        uncertainty = Omega.copy()
+        uncertainty[1, 1] *= factor
+        posterior = black_litterman_moments(mu_tilde, gamma_matrix, P, Q, uncertainty)
+        view_returns.append(P @ posterior.mu_bar)
+    view_returns = np.array(view_returns)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
+    for j, title in enumerate(
+        ["Asset 1 return: unchanged view uncertainty", "Asset 2 minus asset 3: changing uncertainty"]
+    ):
+        axes[j].semilogx(factors, 100 * view_returns[:, j], label="Posterior")
+        axes[j].axhline(100 * Q[j], color="tab:orange", linestyle="--", label="View target")
+        axes[j].axhline(100 * (P @ mu_tilde)[j], color="gray", linestyle=":", label="Prior")
+        axes[j].axvline(1, color="gray", linewidth=0.7)
+        axes[j].set(
+            xlabel="Second-view variance multiplier (larger = weaker)",
+            ylabel="Expected return / spread (%)",
+            title=title,
+        )
+        axes[j].legend(fontsize=9)
+        axes[j].grid(alpha=0.2)
+    plt.show()
+    ```
+
+With strong confidence, the second posterior spread approaches its target.
+Weakening it leaves the prior and the first view to shape the result. The
+first posterior return also moves: correlations couple the two updates, even
+though the first view's own uncertainty never changes.

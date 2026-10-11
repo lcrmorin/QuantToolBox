@@ -105,7 +105,39 @@ assert np.allclose(g_numerical, g_true, rtol=1e-5, atol=1e-5)
 assert np.allclose(h_numerical, h_true, rtol=1e-3, atol=1e-3)
 ```
 
-**Try it:** vary the finite-difference step `dh` over `1e-3`, `1e-5`, and
-`1e-7`. Truncation error falls initially, but subtracting nearly equal floating
-point values eventually increases rounding error. Keep every logarithm argument
-positive, including at perturbed evaluation points.
+## Smaller steps eventually make derivatives worse
+
+Sweep the relative step `dh` rather than selecting one value. Each curve is
+the largest absolute discrepancy from the analytical derivative above.
+The gradient and Hessian have different units, so compare methods within
+each panel rather than their heights across panels.
+
+![Gradient and Hessian errors over a range of finite-difference steps](../assets/examples/finite-difference-error.png)
+
+??? example "Python code for this figure (run blocks in page order)"
+
+    ```python
+    import matplotlib.pyplot as plt
+
+    steps = np.logspace(-10, -1, 70)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
+    for method in ["forward", "central"]:
+        errors = [
+            np.max(np.abs(numerical_gradient(fun_sum, x0, dh=h, method=method) - g_true)) for h in steps
+        ]
+        axes[0].loglog(steps, errors, label=method.capitalize())
+    h_errors = [np.max(np.abs(numerical_hessian(fun_sum, x0, dh=h) - h_true)) for h in steps]
+    axes[1].loglog(steps, h_errors, color="tab:purple", label="Numerical Hessian")
+    axes[0].set(title="Gradient: central differences reduce truncation error")
+    axes[1].set(title="Hessian: cancellation is more severe")
+    for ax in axes:
+        ax.set(xlabel="Relative finite-difference step dh", ylabel="Maximum absolute error")
+        ax.grid(which="both", alpha=0.15)
+        ax.legend(fontsize=9)
+    plt.show()
+    ```
+
+At large steps (right), truncation error dominates. At tiny steps (left),
+subtracting nearly equal floating-point values amplifies rounding error.
+The lowest part of each curve is the useful region for this function and
+scale, not a universal step size. All perturbed logarithm arguments remain positive.

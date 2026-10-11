@@ -63,41 +63,85 @@ the geometric half-margin, so we calculate the distance explicitly above.
 
 ## Draw the geometry
 
-```python
-import matplotlib.pyplot as plt
-
-fig, ax = plt.subplots(figsize=(8, 4.5))
-for label, color in [(1, "tab:blue"), (-1, "tab:orange")]:
-    mask = y == label
-    ax.scatter(x[mask, 0], x[mask, 1], color=color, label=f"class {label:+d}")
-ax.scatter(
-    x[support_vectors, 0],
-    x[support_vectors, 1],
-    s=150,
-    facecolors="none",
-    edgecolors="black",
-    label="support vectors",
-)
-x1 = np.linspace(0, 10, 200)
-for score, style in [(0, "-"), (-1, "--"), (1, "--")]:
-    x2 = (score - result.beta0 - result.beta[0] * x1) / result.beta[1]
-    ax.plot(x1, x2, style, color="gray", label="decision boundary" if score == 0 else None)
-ax.set(
-    xlabel="Feature 1",
-    ylabel="Feature 2",
-    xlim=(0, 10),
-    ylim=(0, 8),
-    title="Decision boundary and margin lines",
-)
-ax.set_aspect("equal", adjustable="box")
-ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1.0))
-fig.tight_layout()
-plt.show()
-```
-
 ![Decision boundary, margin lines, and three circled support vectors](../assets/examples/svm-geometry.png)
 
-**Try it:** move one point across the boundary and use a finite `c` for a
-soft-margin fit. Inspect signed scores below one; these are margin violations,
-while scores below zero are misclassifications. Compare several `c` values
-on the same data before attributing a change to regularization.
+??? example "Python code for this figure (run blocks in page order)"
+
+    ```python
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    for label, color in [(1, "tab:blue"), (-1, "tab:orange")]:
+        mask = y == label
+        ax.scatter(x[mask, 0], x[mask, 1], color=color, label=f"class {label:+d}")
+    ax.scatter(
+        x[support_vectors, 0],
+        x[support_vectors, 1],
+        s=150,
+        facecolors="none",
+        edgecolors="black",
+        label="support vectors",
+    )
+    x1 = np.linspace(0, 10, 200)
+    for score, style in [(0, "-"), (-1, "--"), (1, "--")]:
+        x2 = (score - result.beta0 - result.beta[0] * x1) / result.beta[1]
+        ax.plot(x1, x2, style, color="gray", label="decision boundary" if score == 0 else None)
+    ax.set(
+        xlabel="Feature 1",
+        ylabel="Feature 2",
+        xlim=(0, 10),
+        ylim=(0, 8),
+        title="Decision boundary and margin lines",
+    )
+    ax.set_aspect("equal", adjustable="box")
+    ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1.0))
+    fig.tight_layout()
+    plt.show()
+    ```
+
+## Soft margins: compare penalties on the same data
+
+Move one positive point into the other class's region, then keep that dataset
+fixed. Each panel changes only `c`. Circles mark observations inside the
+margin or misclassified; the title distinguishes those two cases.
+
+![Soft-margin boundaries on a fixed contaminated dataset for three penalty strengths](../assets/examples/svm-soft-margins.png)
+
+??? example "Python code for this figure (run blocks in page order)"
+
+    ```python
+    x_soft = x.copy()
+    x_soft[0] = [7.0, 4.0]
+    xx, yy = np.meshgrid(np.linspace(0, 10, 180), np.linspace(0, 8, 150))
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4), layout="constrained", sharex=True, sharey=True)
+    for ax, penalty in zip(axes, [0.01, 0.1, 10.0], strict=True):
+        soft = svm_classification_primal(y, x_soft, c=penalty)
+        signed = y * (soft.beta0 + x_soft @ soft.beta)
+        violations = signed < 1 - 1e-5
+        errors = signed < 0
+        grid_scores = soft.beta0 + soft.beta[0] * xx + soft.beta[1] * yy
+        ax.contour(xx, yy, grid_scores, levels=[-1, 0, 1], colors="gray", linestyles=["--", "-", "--"])
+        for label, color in [(1, "tab:blue"), (-1, "tab:orange")]:
+            mask = y == label
+            ax.scatter(x_soft[mask, 0], x_soft[mask, 1], color=color, label=f"class {label:+d}")
+        ax.scatter(
+            x_soft[violations, 0], x_soft[violations, 1], s=110, facecolors="none", edgecolors="black"
+        )
+        ax.annotate(
+            "moved point", (7, 4), xytext=(5.2, 0.9), fontsize=8, arrowprops={"arrowstyle": "->"}
+        )
+        ax.set(
+            xlabel="Feature 1",
+            xlim=(0, 10),
+            ylim=(0, 8),
+            title=f"C={penalty:g}: {errors.sum()} errors\n{violations.sum()} margin violations",
+        )
+        ax.set_aspect("equal", adjustable="box")
+    axes[0].set_ylabel("Feature 2")
+    axes[0].legend(fontsize=8, loc="upper left")
+    plt.show()
+    ```
+
+A larger `c` makes violations more expensive, but does not guarantee that every
+point can be classified correctly. A point can be correctly classified and
+still lie inside the margin: its signed score is between zero and one.

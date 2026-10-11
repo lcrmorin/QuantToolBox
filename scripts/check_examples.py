@@ -2,6 +2,8 @@
 
 Run from the repository root with the package and its docs/viz dependencies
 installed: ``python scripts/check_examples.py``. No figures are displayed.
+Add ``--render-plots --pattern "*.md"`` to regenerate the guided-page images
+from the same Python blocks readers run, in their documented order.
 Markdown blocks share state within a page, in reading order; pages and
 standalone scripts never share state. The JSON report retains stdout,
 stderr, return codes, and durations so warnings can be reviewed explicitly.
@@ -17,6 +19,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import textwrap
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
@@ -26,7 +29,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def run_example(path, timeout):
+def run_example(path, timeout, render_plots=False):
     start = time.monotonic()
     env = os.environ.copy()
     env["PYTHONPATH"] = str(ROOT / "src") + os.pathsep + env.get("PYTHONPATH", "")
@@ -36,8 +39,22 @@ def run_example(path, timeout):
     env["OMP_NUM_THREADS"] = "1"
     if path.suffix == ".md":
         blocks = re.findall(r"```python\s*\n(.*?)```", path.read_text(), re.S)
-        code = "\n\n".join(blocks)
-        if "plt.show()" in code:
+        code = "\n\n".join(textwrap.dedent(block) for block in blocks)
+        if render_plots:
+            images = re.findall(
+                r"!\[[^\]]*\]\((\.\./assets/examples/[^)]+\.png)\)", path.read_text()
+            )
+            if len(images) != code.count("plt.show()"):
+                raise ValueError(f"{path}: each plot needs one documented image")
+            for relative_image in images:
+                target = (path.parent / relative_image).resolve()
+                target.parent.mkdir(parents=True, exist_ok=True)
+                code = code.replace(
+                    "plt.show()",
+                    f'plt.gcf().savefig({str(target)!r}, dpi=160); plt.close("all")',
+                    1,
+                )
+        else:
             # Render figures on Agg, then close them instead of opening GUI windows.
             code = code.replace("plt.show()", 'plt.gcf().canvas.draw(); plt.close("all")')
         command = [sys.executable, "-c", code]
@@ -70,6 +87,9 @@ def run_example(path, timeout):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--render-plots", action="store_true", help="Regenerate guided-page PNGs from their code"
+    )
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--timeout", type=int, default=300)
     parser.add_argument("--pattern", default="*", help="Match filenames, e.g. 'svm*'")
@@ -92,7 +112,7 @@ def main():
     }
     args.report.parent.mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(max_workers=args.jobs) as pool:
-        futures = [pool.submit(run_example, p, args.timeout) for p in paths]
+        futures = [pool.submit(run_example, p, args.timeout, args.render_plots) for p in paths]
         for future in as_completed(futures):
             result = future.result()
             report["results"].append(result)

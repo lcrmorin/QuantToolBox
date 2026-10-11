@@ -1,87 +1,180 @@
-# Bond pricing and sector-level risk
+# Bond pricing: cash flows, yield, and approximation error
 
-**Goal:** connect discounted cash flows to price, yield, and sensitivity.
-Start with the cash-flow schedule; the last payment combines coupon and principal.
-The final sector example is an optional extension to portfolio objectives.
+A bond exchanges a price today for payments in the future. We will price a
+five-year bond, see which payments contribute most to its value, and compare
+exact repricing with duration and convexity approximations.
 
-Present value, yield to maturity, and current yield for a simple
-cash-flow schedule, followed by a sector-level modified-duration/DTS
-quadratic-risk example for a small bond portfolio.
+Use the **same bond throughout**: principal 100, annual coupon 5, and a flat
+3.7% continuously compounded yield. Time is in years; rates are decimals.
 
-## Price, yield to maturity, and current yield
+## From future payments to today's price
 
-A 5-year bond paying a 5 coupon annually plus 100 principal at maturity,
-priced off a flat 3.7% continuously-compounded discount rate.
+The final payment is 105: the last coupon plus principal. The chart separates
+those two components and compares each payment with its discounted value.
+The price is the sum of the orange bars, not the sum of the future payments.
 
-```python
-import numpy as np
-from quanttoolbox.bond.pricing import bond_price, bond_ytm, coupon_yield
+![Coupons and principal versus discounted payments, with each payment’s share of the bond price](../assets/examples/bond-cash-flows.png)
 
-t = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
-cash_flows = np.array([5.0, 5.0, 5.0, 5.0, 105.0])
-rate = 0.037
+??? example "Python code for this figure (run blocks in page order)"
 
-price = bond_price(t, cash_flows, rate, method=1)
-print("price:", price)
+    ```python
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from quanttoolbox.bond.pricing import (
+        bond_price,
+        bond_ytm,
+        coupon_yield,
+        bond_duration,
+        bond_convexity,
+    )
 
-ytm = bond_ytm(t, cash_flows, price)
-print("ytm:", round(ytm, 5))  # -> recovers 0.037 within the solver tolerance
+    t = np.arange(1.0, 6.0)
+    coupons = np.full(5, 5.0)
+    principal = np.array([0.0, 0.0, 0.0, 0.0, 100.0])
+    cash_flows = coupons + principal
+    rate = 0.037
+    pv = cash_flows * np.exp(-rate * t)
+    price = bond_price(t, cash_flows, rate, method=1)
+    ytm = bond_ytm(t, cash_flows, price, method=1)
+    assert np.isclose(price, pv.sum())
+    assert np.isclose(ytm, rate)
 
-cy = coupon_yield(t, cash_flows, rate)
-print("coupon yield:", cy)
-```
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
+    axes[0].bar(t - 0.18, coupons, width=0.36, label="Coupon")
+    axes[0].bar(t - 0.18, principal, bottom=coupons, width=0.36, label="Principal", color="tab:cyan")
+    axes[0].bar(t + 0.18, pv, width=0.36, label="Present value", color="tab:orange")
+    for year, payment, value in zip(t, cash_flows, pv, strict=True):
+        axes[0].text(year - 0.18, payment + 2, f"{payment:.0f}", ha="center", fontsize=9)
+        axes[0].text(year + 0.18, value + 2, f"{value:.1f}", ha="center", fontsize=9)
+    axes[0].set(
+        xlabel="Payment year",
+        ylabel="Amount per 100 principal",
+        title="Cash flows and discounted cash flows",
+        xticks=t,
+        ylim=(0, 140),
+    )
+    axes[0].legend(loc="upper left", fontsize=9)
+    axes[1].bar(t, 100 * pv / price, color="tab:orange")
+    axes[1].set(
+        xlabel="Payment year",
+        ylabel="Share of price (%)",
+        xticks=t,
+        title=f"Present values add up to {price:.2f}",
+    )
+    fig.suptitle("Most of this bond's value arrives at maturity")
+    plt.show()
+    ```
 
-Output:
+The price is **105.51**. About 83% comes from the year-five payment, so distant
+cash flows dominate this bond's sensitivity to yield. The current yield,
+`coupon_yield(t, cash_flows, rate)`, is about 4.74%: coupon divided by price.
+It differs from the 3.7% yield to maturity, which accounts for all payments
+and the redemption at 100.
 
-```text
-price: 105.51453826978027
-ytm: 0.037
-coupon yield: 0.047386834856974556
-```
+## Higher yields mean lower prices
 
-`bond_ytm` uses a bracketed solver with an expanding search interval. It
-supports negative yields and yields above 100%. Cash flows must be
-nonnegative, with at least one positive payment in the future, so the
-solution is unique. A time-zero payment is allowed, but the supplied price
-must exceed the total paid at time zero. Invalid schedules raise
-`ValueError`; failure to bracket or converge raises `RuntimeError`.
+Reprice all five cash flows at each yield. The marked point is our starting
+price; the horizontal line is principal value. The curved shape is important:
+a straight-line approximation is only local.
 
-Times are year fractions, and rates are decimals. `method=1` means
-continuous compounding; `method=2` means annual compounding and requires a
-rate greater than -1. Use the same method when pricing and recovering a
-yield. The functions value exactly the payments supplied: they do not
-construct coupon schedules or adjust for accrued interest or settlement.
+![Exact bond price decreases nonlinearly as the continuous yield rises](../assets/examples/bond-price-yield.png)
 
-`coupon_yield` retains the original MATLAB first-payment / price ratio.
-This is an annual current yield only if the first payment is the annual
-coupon, without principal. It does not identify coupons or annualize them.
+??? example "Python code for this figure (run blocks in page order)"
 
-## Duration and convexity
+    ```python
+    yields = np.linspace(-0.01, 0.10, 161)
+    prices = np.array([bond_price(t, cash_flows, y, method=1) for y in yields])
+    fig, ax = plt.subplots(figsize=(8, 4), layout="constrained")
+    ax.plot(100 * yields, prices, label="Exact discounted cash flows")
+    ax.axhline(100, color="gray", linestyle=":", label="Principal value (100)")
+    ax.scatter([100 * rate], [price], color="tab:orange", zorder=3)
+    ax.annotate(
+        f"3.7% yield → {price:.2f}",
+        (100 * rate, price),
+        xytext=(5.3, 112),
+        arrowprops={"arrowstyle": "->"},
+    )
+    ax.set(
+        xlabel="Continuously compounded yield (%)",
+        ylabel="Bond price",
+        title="Price falls as the discount rate rises",
+    )
+    ax.legend()
+    ax.grid(alpha=0.2)
+    plt.show()
+    ```
 
-`bond_duration` returns the sensitivity `-P'/P` by default.
-`modified=False` instead returns the present-value-weighted payment time
-(Macaulay duration for annual compounding). `bond_convexity` returns
-`P''/P`, using the same rate convention as pricing. Both require
-nonnegative cash flows with at least one positive payment.
+## How much does the approximation miss?
 
-```python
-from quanttoolbox.bond.pricing import bond_duration, bond_convexity
+Duration gives the tangent line at the starting yield. Convexity adds the
+curvature term. Both are calculated for the **same coupon bond and continuous
+compounding convention** used above:
 
-# A five-year zero-coupon bond at a 4% annually compounded yield.
-duration = bond_duration(5.0, [100.0], 0.04, method=2)
-convexity = bond_convexity(5.0, [100.0], 0.04, method=2)
-print(round(duration, 6))  # 4.807692 = 5 / 1.04
-print(round(convexity, 6))  # 27.736686 = 5 * 6 / 1.04**2
+`relative price change ≈ -duration × yield change + ½ × convexity × yield change²`
 
-# Approximate relative price change for a 10-basis-point yield increase.
-dr = 0.001
-relative_change = -duration * dr + 0.5 * convexity * dr**2
-```
+The left panel compares changes in price. The right panel magnifies the signed
+error, **approximation minus exact**, in basis points of the initial price.
+One basis point here is 0.01% of 105.51; it is not a basis point of yield.
 
-With continuous compounding, duration is the weighted payment time and
-convexity is the weighted squared payment time. The second-order price
-approximation is useful for small yield changes, not a replacement for
-repricing large moves.
+![Exact repricing compared with duration and convexity approximations, plus signed approximation errors](../assets/examples/bond-approximation.png)
+
+??? example "Python code for this figure (run blocks in page order)"
+
+    ```python
+    duration = bond_duration(t, cash_flows, rate, method=1)
+    convexity = bond_convexity(t, cash_flows, rate, method=1)
+    shifts = np.linspace(-0.02, 0.02, 201)  # -200 to +200 yield basis points
+    exact = np.array([bond_price(t, cash_flows, rate + dr, method=1) for dr in shifts]) / price - 1
+    linear = -duration * shifts
+    quadratic = linear + 0.5 * convexity * shifts**2
+    assert np.isclose(exact[100], 0)
+    assert np.max(np.abs(quadratic - exact)) < np.max(np.abs(linear - exact))
+
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
+    for values, label, style in [
+        (exact, "Exact", "-"),
+        (linear, "Duration only", "--"),
+        (quadratic, "Duration + convexity", "-."),
+    ]:
+        axes[0].plot(10000 * shifts, 100 * values, style, label=label)
+    axes[0].set(ylabel="Change in bond price (%)", title="Local approximations to repricing")
+    axes[0].legend(fontsize=9)
+    axes[1].plot(
+        10000 * shifts, 10000 * (linear - exact), "--", color="tab:orange", label="Duration only"
+    )
+    axes[1].plot(
+        10000 * shifts,
+        10000 * (quadratic - exact),
+        "-.",
+        color="tab:green",
+        label="Duration + convexity",
+    )
+    axes[1].set(
+        ylabel="Approximation error (bp of initial price)",
+        title="Errors grow away from the starting yield",
+    )
+    axes[1].legend(fontsize=9)
+    for ax in axes:
+        ax.set_xlabel("Yield change (basis points)")
+        ax.axhline(0, color="gray", linewidth=0.7)
+        ax.axvline(0, color="gray", linewidth=0.7)
+        ax.grid(alpha=0.2)
+    plt.show()
+    ```
+
+Duration alone understates the price for moves in either direction because
+the price curve is convex. Adding convexity substantially reduces the error
+over this range, but does not make a finite Taylor expansion exact. Both
+approximations meet the exact curve at zero yield change.
+
+## Compounding and schedule conventions
+
+`method=1` discounts continuously; `method=2` compounds annually and requires
+a yield above -100%. Use the same method for pricing, yield, duration, and
+convexity. The functions value the supplied payments; they do not construct
+coupon schedules or adjust for accrued interest. The first-payment/price
+ratio is an annual current yield only when that first payment is an annual
+coupon without principal.
 
 ## Sector-level modified-duration/DTS risk
 
@@ -129,21 +222,6 @@ in `q_j`/`r_j`/`c_j` on those objects.
 active-share term against a benchmark weight vector; see its docstring
 for the full parameterization.
 
-
-## Check the price and the small-move approximation
-
-```python
-# Price is the sum of discounted payments, using the same compounding convention.
-assert np.isclose(price, np.sum(cash_flows * np.exp(-rate * t)))
-assert np.isclose(ytm, rate)
-p_before = bond_price(5.0, [100.0], 0.04, method=2)
-p_after = bond_price(5.0, [100.0], 0.04 + dr, method=2)
-exact_change = p_after / p_before - 1
-print("exact / duration-convexity relative change:", exact_change, relative_change)
-assert abs(exact_change - relative_change) < 1e-6
-```
-
-**Try it:** increase `dr` from 0.001 to 0.01 and compare the approximation error.
-Explain why a positive yield move lowers the price of these positive cash flows.
-The sector quadratic objective is a penalty score; it is not itself a bond price
-or a volatility estimate.
+This sector objective is a penalty score, not a bond price or a volatility.
+The cash-flow and repricing charts above describe a single instrument; this
+optional extension measures portfolio deviations from sector targets.

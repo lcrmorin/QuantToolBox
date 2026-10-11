@@ -59,6 +59,43 @@ need not decrease monotonically: inspect the second coefficient above.
 Ridge usually does not produce exact zeros. A test set is needed to assess
 whether this loss of training fit improves prediction.
 
+## See the entire ridge path
+
+![Ridge coefficient paths and training error as the penalty increases](../assets/examples/ridge-path.png)
+
+??? example "Python code for this figure (run blocks in page order)"
+
+    ```python
+    import matplotlib.pyplot as plt
+
+    penalties = np.logspace(-3, 3, 90)
+    coefficients = np.array([ridge(y, x, lambda_=lam)[0] for lam in penalties])
+    training_mse = np.mean((y[:, None] - x @ coefficients.T) ** 2, axis=0)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
+    for j in range(x.shape[1]):
+        axes[0].semilogx(penalties, coefficients[:, j], label=f"Predictor {j + 1}")
+    axes[0].axhline(0, color="gray", linewidth=0.7)
+    axes[0].set(
+        xlabel="Ridge penalty",
+        ylabel="Standardized coefficient",
+        title="Individual coefficients need not shrink monotonically",
+    )
+    axes[0].legend(fontsize=8)
+    axes[1].semilogx(penalties, training_mse, color="tab:red")
+    axes[1].set(
+        xlabel="Ridge penalty",
+        ylabel="Training mean squared error",
+        title="Stronger shrinkage gives up training fit",
+    )
+    for ax in axes:
+        ax.grid(alpha=0.2)
+    plt.show()
+    ```
+
+The second coefficient initially moves further from zero. Shrinkage applies
+to the overall coefficient norm, not monotonically to every coordinate.
+The training-error curve cannot tell us which penalty predicts best.
+
 ## OLS and robust regression
 
 Translated from `Examples/ects/ols1.m` and `Examples/ects/robust1.m`,
@@ -119,6 +156,75 @@ for name, fit in fitters.items():
     print(f"{name}: coefficient change = {change:.3f}")
 ```
 
-**Try it:** change the outlier size, then put an outlier in a predictor instead.
-Resistance to response outliers does not imply resistance to high-leverage
-predictor observations. For iterative fits, also inspect the convergence flag.
+## Move the outlier and watch the fit respond
+
+Sweep a response outlier in the left panel. In the right panel, instead move
+one predictor value while keeping that observation's response fixed. The
+horizontal axes have different units; the panels demonstrate two distinct
+ways an observation can affect the fit.
+
+![OLS, Huber, and LAD coefficient sensitivity to response and predictor outliers](../assets/examples/regression-outlier-sensitivity.png)
+
+??? example "Python code for this figure (run blocks in page order)"
+
+    ```python
+    from quanttoolbox.stats.regression.quantile import quantile_regression
+
+
+    # Use the exact median-regression LP for LAD so iteration limits do not
+    # masquerade as changes in sensitivity along the curve.
+    def fitted_coefficients(response, design):
+        huber = huber_regression(response, design, c=1.345)
+        return [
+            ols_estimation(response, design).beta,
+            huber.beta,
+            quantile_regression(response, design, 0.5)[0],
+        ], huber.converged
+
+
+    baseline, _ = fitted_coefficients(y, x)
+    response_shifts = np.linspace(0, 50, 26)
+    predictor_shifts = np.linspace(0, 50, 26)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
+    for ax, shifts, which in zip(
+        axes, [response_shifts, predictor_shifts], ["response", "predictor"], strict=True
+    ):
+        changes, huber_ok = [], []
+        for shift in shifts:
+            response, design = y.copy(), x.copy()
+            if which == "response":
+                response[0] += shift
+            else:
+                design[0, 1] += shift  # first non-intercept predictor
+            estimates, converged = fitted_coefficients(response, design)
+            changes.append(
+                [np.linalg.norm(b - original) for b, original in zip(estimates, baseline, strict=True)]
+            )
+            huber_ok.append(converged)
+        changes = np.array(changes)
+        for j, name in enumerate(["OLS", "Huber", "LAD (exact LP)"]):
+            ax.plot(shifts, changes[:, j], label=name)
+        unfinished = ~np.array(huber_ok)
+        if unfinished.any():
+            ax.scatter(
+                shifts[unfinished],
+                changes[unfinished, 1],
+                marker="x",
+                color="black",
+                label="Huber iteration limit",
+                zorder=4,
+            )
+        ax.set(
+            xlabel=f"Amount added to first {which} observation",
+            ylabel="Coefficient change from clean fit (L2 norm)",
+            title=f"Contamination in the {which}",
+        )
+        ax.legend(fontsize=8)
+        ax.grid(alpha=0.2)
+    plt.show()
+    ```
+
+A robust response loss limits some effects of a large response residual.
+It does not automatically protect against an observation whose predictor
+values give it high leverage. These curves measure coefficient sensitivity,
+not out-of-sample accuracy; any crosses flag unfinished Huber iterations.

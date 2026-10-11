@@ -91,6 +91,43 @@ assert np.isclose(erc.weights.sum(), 1.0)
 assert np.allclose(erc.pct_risk_contribution, np.full(3, 1 / 3), atol=1e-5)
 ```
 
-**Try it:** set all correlations to zero and refit ERC. Compare weights with
-normalized inverse volatilities. Then restore correlations and explain why
-inverse-volatility weights no longer generally equalize risk.
+## Compare money allocated with risk contributed
+
+The first panel compares capital weights with risk shares for the original
+portfolio. The second holds inverse-volatility weights fixed while adding
+correlations, then shows how ERC restores equal risk contributions.
+
+![Capital versus risk shares and the effect of correlation on inverse-volatility and ERC allocations](../assets/examples/risk-budget-comparison.png)
+
+??? example "Python code for this figure (run blocks in page order)"
+
+    ```python
+    import matplotlib.pyplot as plt
+
+    inverse_vol = (1 / sigma) / np.sum(1 / sigma)
+    diagonal_cov = np.diag(sigma**2)
+    independent = risk_contribution(inverse_vol, diagonal_cov).pct_risk_contribution
+    correlated = risk_contribution(inverse_vol, cov_matrix).pct_risk_contribution
+    assert np.allclose(independent, 1 / 3)
+    asset = np.arange(3)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
+    axes[0].bar(asset - 0.18, 100 * x, width=0.36, label="Capital weight")
+    axes[0].bar(asset + 0.18, 100 * rc_vol.pct_risk_contribution, width=0.36, label="Risk share")
+    axes[0].set(title="50% of capital produces about 70% of risk")
+    for offset, shares, label in [
+        (-0.25, independent, "Inverse vol, zero correlations"),
+        (0, correlated, "Inverse vol, given correlations"),
+        (0.25, erc.pct_risk_contribution, "ERC, given correlations"),
+    ]:
+        axes[1].bar(asset + offset, 100 * shares, width=0.25, label=label)
+    axes[1].axhline(100 / 3, color="black", linestyle=":", linewidth=1)
+    axes[1].set(title="Correlations break the inverse-vol shortcut")
+    for ax in axes:
+        ax.set(xticks=asset, xticklabels=["Asset 1", "Asset 2", "Asset 3"], ylabel="Share (%)")
+        ax.legend(fontsize=8, loc="upper center", bbox_to_anchor=(0.5, -0.12))
+    plt.show()
+    ```
+
+Inverse-volatility weighting equalizes risk when the covariance is diagonal.
+With these correlations it no longer does, even though the capital weights
+are unchanged. ERC changes the holdings to restore one-third risk shares.

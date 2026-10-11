@@ -78,6 +78,62 @@ assert np.min(long_only.weights) >= -1e-7
 assert np.allclose(te.weights, x_benchmark, atol=1e-6)
 ```
 
-**Try it:** compare gamma values 0, 0.5, and 1 under the same long-only bounds.
-Record expected return and volatility, not just weights. These are model
-forecasts; this calculation does not establish realized performance.
+## Watch the allocation move along the frontier
+
+Only gamma changes in each curve. Both portfolios must sum to one; one permits
+shorting and the other does not. The weight chart shows why a smooth change
+in the objective can push an asset to its zero-weight bound.
+
+![Risk-return curves with and without shorting and long-only weights as gamma increases](../assets/examples/mean-variance-frontier.png)
+
+??? example "Python code for this figure (run blocks in page order)"
+
+    ```python
+    import matplotlib.pyplot as plt
+
+    gammas = np.linspace(0, 1, 61)
+    signed = [mvo_portfolio(mu, cov_matrix, gamma=g) for g in gammas]
+    positive = [mvo_portfolio(mu, cov_matrix, gamma=g, lb=0.0, ub=1.0) for g in gammas]
+    weights = np.array([p.weights for p in positive])
+    assert np.allclose(weights.sum(axis=1), 1)
+    assert weights.min() >= -1e-7
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
+    for portfolios, label in [(signed, "Shorting allowed"), (positive, "Long-only")]:
+        axes[0].plot(
+            [100 * p.volatility for p in portfolios],
+            [100 * p.expected_return for p in portfolios],
+            label=label,
+        )
+    for i in [0, 30, 60]:
+        p = positive[i]
+        axes[0].scatter(100 * p.volatility, 100 * p.expected_return, color="tab:orange")
+        axes[0].annotate(
+            f"γ={gammas[i]:.1f}",
+            (100 * p.volatility, 100 * p.expected_return),
+            xytext=(5, -12),
+            textcoords="offset points",
+            fontsize=9,
+        )
+    axes[0].set(
+        xlabel="Annual volatility (%)",
+        ylabel="Expected annual return (%)",
+        title="More emphasis on return moves the portfolio",
+    )
+    axes[0].legend(fontsize=9)
+    for j in range(4):
+        axes[1].plot(gammas, 100 * weights[:, j], label=f"Asset {j + 1}")
+    axes[1].set(
+        xlabel="Return-reward gamma",
+        ylabel="Capital weight (%)",
+        title="Long-only allocations hit their bounds",
+    )
+    axes[1].legend(fontsize=9)
+    for ax in axes:
+        ax.grid(alpha=0.2)
+    plt.show()
+    ```
+
+Gamma zero minimizes variance. Increasing gamma rewards expected return,
+changing both risk and weights; it does not increase every holding. The
+long-only constraint narrows the available choices. These curves describe
+model expectations, not realized investment performance.

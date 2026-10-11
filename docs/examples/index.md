@@ -1,5 +1,7 @@
 # Examples
 
+The guided pages include rendered plots and expandable code that creates them.
+Read the charts first; expand the code to reproduce them, running blocks in page order.
 Start with a guided example, then use the standalone scripts to investigate
 one assumption at a time. There are **eight guided pages and 87 runnable scripts**.
 The scripts retain their historical filenames; the titles below describe what
@@ -24,6 +26,12 @@ To check every script and guided page in fresh processes, without opening plots:
 
 ```sh
 python scripts/check_examples.py
+```
+
+To regenerate the guided pages’ figures directly from their displayed code:
+
+```sh
+python scripts/check_examples.py --render-plots --pattern "*.md" --report reports/guided-examples-execution.json
 ```
 
 The report in `reports/examples-execution.json` records output, warnings,
