@@ -1621,7 +1621,9 @@
 
 
 <h1 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h1>
-<p>Start with a guided example, then use the standalone scripts to investigate
+<p>The guided pages include rendered plots and expandable code that creates them.
+Read the charts first; expand the code to reproduce them, running blocks in page order.
+Start with a guided example, then use the standalone scripts to investigate
 one assumption at a time. There are <strong>eight guided pages and 87 runnable scripts</strong>.
 The scripts retain their historical filenames; the titles below describe what
 you will learn. Original MATLAB coverage is tracked separately in the
@@ -1637,6 +1639,9 @@ seed. Numerical results may differ slightly with solver and library versions.
 A seed makes a demonstration reproducible; it does not validate the model.</p>
 <p>To check every script and guided page in fresh processes, without opening plots:</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/check_examples.py
+</code></pre></div>
+<p>To regenerate the guided pages’ figures directly from their displayed code:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/check_examples.py<span class="w"> </span>--render-plots<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.md"</span><span class="w"> </span>--report<span class="w"> </span>reports/guided-examples-execution.json
 </code></pre></div>
 <p>The report in <code>reports/examples-execution.json</code> records output, warnings,
 completion status, and duration. A successful exit is an execution check;

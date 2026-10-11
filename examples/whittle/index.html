@@ -610,6 +610,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#see-sampling-variation-across-repeated-series" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See sampling variation across repeated series
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#custom-spectral-densities" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1391,6 +1402,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#see-sampling-variation-across-repeated-series" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See sampling variation across repeated series
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#custom-spectral-densities" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1476,8 +1498,57 @@ does not guarantee recovery within any particular interval.</p>
 <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">converged</span>
 <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">))</span>
 </code></pre></div>
-<p><strong>Try it:</strong> change the seed, then increase the sample size. Compare estimation
-errors across several samples before drawing conclusions about accuracy.</p>
+<h2 id="see-sampling-variation-across-repeated-series">See sampling variation across repeated series<a class="headerlink" href="#see-sampling-variation-across-repeated-series" title="Permanent link">&para;</a></h2>
+<p>One series can give an unusually high or low estimate. Here each dot is a
+new fit, using 20 fixed seeds at each sample size. The dashed line is the
+simulation truth, not another estimate. Larger samples should generally
+concentrate the estimates, although a small experiment need not improve
+monotonically for every seed.</p>
+<p><img alt="Repeated noise-scale estimates at sample sizes 100, 500, and 2000" src="../../assets/examples/whittle-sampling-variation.png" /></p>
+<details class="example">
+<summary>Python code for this figure (run blocks in page order)</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">sample_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">2000</span><span class="p">]</span>
+<span class="n">estimates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">converged</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sample_sizes</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+        <span class="n">simulation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span> <span class="o">+</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">sigma_eta_true</span> <span class="o">*</span> <span class="n">simulation</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
+        <span class="n">observations</span> <span class="o">=</span> <span class="n">level</span> <span class="o">+</span> <span class="n">sigma_epsilon_true</span> <span class="o">*</span> <span class="n">simulation</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">whittle_local_level</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="n">sv</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]))</span>
+        <span class="n">estimates</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">seed</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">theta</span>
+        <span class="n">converged</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">seed</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">converged</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">estimates</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.14</span><span class="p">,</span> <span class="mf">0.14</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>  <span class="c1"># spread dots; no additional randomness</span>
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+    <span class="p">[</span><span class="s2">"Observation-noise standard deviation"</span><span class="p">,</span> <span class="s2">"State-noise standard deviation"</span><span class="p">]</span>
+<span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">good</span> <span class="o">=</span> <span class="n">converged</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">axes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">offsets</span><span class="p">[</span><span class="n">good</span><span class="p">],</span> <span class="n">estimates</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">good</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:blue"</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">~</span><span class="n">good</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">axes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">offsets</span><span class="p">[</span><span class="o">~</span><span class="n">good</span><span class="p">],</span> <span class="n">estimates</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">~</span><span class="n">good</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"red"</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">truth</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:orange"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"True noise scale"</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+        <span class="n">xticks</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+        <span class="n">xticklabels</span><span class="o">=</span><span class="n">sample_sizes</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Observations per series"</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Estimated standard deviation"</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Converged fits per sample size:"</span><span class="p">,</span> <span class="n">converged</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+</details>
+<p>The spread of dots shows sampling variation that a single fitted result hides.
+Red crosses, if present, retain fits that did not converge rather than silently
+excluding them. Twenty repetitions illustrate the mechanism; they do not
+establish confidence-interval coverage.</p>
 <h2 id="custom-spectral-densities">Custom spectral densities<a class="headerlink" href="#custom-spectral-densities" title="Permanent link">&para;</a></h2>
 <p><code>whittle_estimation</code> takes an arbitrary <code>sdf_fn(lambda, theta)</code> — the
 built-in <code>whittle_local_level</code>/<code>whittle_local_linear_trend</code> are thin

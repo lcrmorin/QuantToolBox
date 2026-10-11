@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#bond-pricing-and-sector-level-risk" class="md-skip">
+        <a href="#bond-pricing-cash-flows-yield-and-approximation-error" class="md-skip">
           Skip to content
         </a>
       
@@ -431,10 +431,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#price-yield-to-maturity-and-current-yield" class="md-nav__link">
+  <a href="#from-future-payments-to-todays-price" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Price, yield to maturity, and current yield
+        From future payments to today's price
       
     </span>
   </a>
@@ -442,10 +442,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#duration-and-convexity" class="md-nav__link">
+  <a href="#higher-yields-mean-lower-prices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Duration and convexity
+        Higher yields mean lower prices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-much-does-the-approximation-miss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How much does the approximation miss?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compounding-and-schedule-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compounding and schedule conventions
       
     </span>
   </a>
@@ -457,17 +479,6 @@
     <span class="md-ellipsis">
       
         Sector-level modified-duration/DTS risk
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#check-the-price-and-the-small-move-approximation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Check the price and the small-move approximation
       
     </span>
   </a>
@@ -1391,10 +1402,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#price-yield-to-maturity-and-current-yield" class="md-nav__link">
+  <a href="#from-future-payments-to-todays-price" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Price, yield to maturity, and current yield
+        From future payments to today's price
       
     </span>
   </a>
@@ -1402,10 +1413,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#duration-and-convexity" class="md-nav__link">
+  <a href="#higher-yields-mean-lower-prices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Duration and convexity
+        Higher yields mean lower prices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-much-does-the-approximation-miss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How much does the approximation miss?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compounding-and-schedule-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compounding and schedule conventions
       
     </span>
   </a>
@@ -1417,17 +1450,6 @@
     <span class="md-ellipsis">
       
         Sector-level modified-duration/DTS risk
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#check-the-price-and-the-small-move-approximation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Check the price and the small-move approximation
       
     </span>
   </a>
@@ -1454,73 +1476,163 @@
   
 
 
-<h1 id="bond-pricing-and-sector-level-risk">Bond pricing and sector-level risk<a class="headerlink" href="#bond-pricing-and-sector-level-risk" title="Permanent link">&para;</a></h1>
-<p><strong>Goal:</strong> connect discounted cash flows to price, yield, and sensitivity.
-Start with the cash-flow schedule; the last payment combines coupon and principal.
-The final sector example is an optional extension to portfolio objectives.</p>
-<p>Present value, yield to maturity, and current yield for a simple
-cash-flow schedule, followed by a sector-level modified-duration/DTS
-quadratic-risk example for a small bond portfolio.</p>
-<h2 id="price-yield-to-maturity-and-current-yield">Price, yield to maturity, and current yield<a class="headerlink" href="#price-yield-to-maturity-and-current-yield" title="Permanent link">&para;</a></h2>
-<p>A 5-year bond paying a 5 coupon annually plus 100 principal at maturity,
-priced off a flat 3.7% continuously-compounded discount rate.</p>
+<h1 id="bond-pricing-cash-flows-yield-and-approximation-error">Bond pricing: cash flows, yield, and approximation error<a class="headerlink" href="#bond-pricing-cash-flows-yield-and-approximation-error" title="Permanent link">&para;</a></h1>
+<p>A bond exchanges a price today for payments in the future. We will price a
+five-year bond, see which payments contribute most to its value, and compare
+exact repricing with duration and convexity approximations.</p>
+<p>Use the <strong>same bond throughout</strong>: principal 100, annual coupon 5, and a flat
+3.7% continuously compounded yield. Time is in years; rates are decimals.</p>
+<h2 id="from-future-payments-to-todays-price">From future payments to today's price<a class="headerlink" href="#from-future-payments-to-todays-price" title="Permanent link">&para;</a></h2>
+<p>The final payment is 105: the last coupon plus principal. The chart separates
+those two components and compares each payment with its discounted value.
+The price is the sum of the orange bars, not the sum of the future payments.</p>
+<p><img alt="Coupons and principal versus discounted payments, with each payment’s share of the bond price" src="../../assets/examples/bond-cash-flows.png" /></p>
+<details class="example">
+<summary>Python code for this figure (run blocks in page order)</summary>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.bond.pricing</span><span class="w"> </span><span class="kn">import</span> <span class="n">bond_price</span><span class="p">,</span> <span class="n">bond_ytm</span><span class="p">,</span> <span class="n">coupon_yield</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.bond.pricing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">bond_price</span><span class="p">,</span>
+    <span class="n">bond_ytm</span><span class="p">,</span>
+    <span class="n">coupon_yield</span><span class="p">,</span>
+    <span class="n">bond_duration</span><span class="p">,</span>
+    <span class="n">bond_convexity</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>
-<span class="n">cash_flows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">105.0</span><span class="p">])</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">)</span>
+<span class="n">coupons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">principal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">])</span>
+<span class="n">cash_flows</span> <span class="o">=</span> <span class="n">coupons</span> <span class="o">+</span> <span class="n">principal</span>
 <span class="n">rate</span> <span class="o">=</span> <span class="mf">0.037</span>
-
+<span class="n">pv</span> <span class="o">=</span> <span class="n">cash_flows</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">rate</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
 <span class="n">price</span> <span class="o">=</span> <span class="n">bond_price</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"price:"</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
+<span class="n">ytm</span> <span class="o">=</span> <span class="n">bond_ytm</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">price</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">ytm</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
 
-<span class="n">ytm</span> <span class="o">=</span> <span class="n">bond_ytm</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"ytm:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">ytm</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>  <span class="c1"># -&gt; recovers 0.037 within the solver tolerance</span>
-
-<span class="n">cy</span> <span class="o">=</span> <span class="n">coupon_yield</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"coupon yield:"</span><span class="p">,</span> <span class="n">cy</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="mf">0.18</span><span class="p">,</span> <span class="n">coupons</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.36</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Coupon"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="mf">0.18</span><span class="p">,</span> <span class="n">principal</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="n">coupons</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.36</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Principal"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:cyan"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="mf">0.18</span><span class="p">,</span> <span class="n">pv</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.36</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Present value"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:orange"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">year</span><span class="p">,</span> <span class="n">payment</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">pv</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">year</span> <span class="o">-</span> <span class="mf">0.18</span><span class="p">,</span> <span class="n">payment</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">payment</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">year</span> <span class="o">+</span> <span class="mf">0.18</span><span class="p">,</span> <span class="n">value</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Payment year"</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Amount per 100 principal"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Cash flows and discounted cash flows"</span><span class="p">,</span>
+    <span class="n">xticks</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
+    <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">140</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">pv</span> <span class="o">/</span> <span class="n">price</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:orange"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Payment year"</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Share of price (%)"</span><span class="p">,</span>
+    <span class="n">xticks</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Present values add up to </span><span class="si">{</span><span class="n">price</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"Most of this bond's value arrives at maturity"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
-<p>Output:</p>
-<div class="highlight"><pre><span></span><code>price: 105.51453826978027
-ytm: 0.037
-coupon yield: 0.047386834856974556
+</details>
+<p>The price is <strong>105.51</strong>. About 83% comes from the year-five payment, so distant
+cash flows dominate this bond's sensitivity to yield. The current yield,
+<code>coupon_yield(t, cash_flows, rate)</code>, is about 4.74%: coupon divided by price.
+It differs from the 3.7% yield to maturity, which accounts for all payments
+and the redemption at 100.</p>
+<h2 id="higher-yields-mean-lower-prices">Higher yields mean lower prices<a class="headerlink" href="#higher-yields-mean-lower-prices" title="Permanent link">&para;</a></h2>
+<p>Reprice all five cash flows at each yield. The marked point is our starting
+price; the horizontal line is principal value. The curved shape is important:
+a straight-line approximation is only local.</p>
+<p><img alt="Exact bond price decreases nonlinearly as the continuous yield rises" src="../../assets/examples/bond-price-yield.png" /></p>
+<details class="example">
+<summary>Python code for this figure (run blocks in page order)</summary>
+<div class="highlight"><pre><span></span><code><span class="n">yields</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mi">161</span><span class="p">)</span>
+<span class="n">prices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">bond_price</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">yields</span><span class="p">])</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">yields</span><span class="p">,</span> <span class="n">prices</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Exact discounted cash flows"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Principal value (100)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rate</span><span class="p">],</span> <span class="p">[</span><span class="n">price</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:orange"</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">"3.7% yield → </span><span class="si">{</span><span class="n">price</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">rate</span><span class="p">,</span> <span class="n">price</span><span class="p">),</span>
+    <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mf">5.3</span><span class="p">,</span> <span class="mi">112</span><span class="p">),</span>
+    <span class="n">arrowprops</span><span class="o">=</span><span class="p">{</span><span class="s2">"arrowstyle"</span><span class="p">:</span> <span class="s2">"-&gt;"</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Continuously compounded yield (%)"</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Bond price"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Price falls as the discount rate rises"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
-<p><code>bond_ytm</code> uses a bracketed solver with an expanding search interval. It
-supports negative yields and yields above 100%. Cash flows must be
-nonnegative, with at least one positive payment in the future, so the
-solution is unique. A time-zero payment is allowed, but the supplied price
-must exceed the total paid at time zero. Invalid schedules raise
-<code>ValueError</code>; failure to bracket or converge raises <code>RuntimeError</code>.</p>
-<p>Times are year fractions, and rates are decimals. <code>method=1</code> means
-continuous compounding; <code>method=2</code> means annual compounding and requires a
-rate greater than -1. Use the same method when pricing and recovering a
-yield. The functions value exactly the payments supplied: they do not
-construct coupon schedules or adjust for accrued interest or settlement.</p>
-<p><code>coupon_yield</code> retains the original MATLAB first-payment / price ratio.
-This is an annual current yield only if the first payment is the annual
-coupon, without principal. It does not identify coupons or annualize them.</p>
-<h2 id="duration-and-convexity">Duration and convexity<a class="headerlink" href="#duration-and-convexity" title="Permanent link">&para;</a></h2>
-<p><code>bond_duration</code> returns the sensitivity <code>-P'/P</code> by default.
-<code>modified=False</code> instead returns the present-value-weighted payment time
-(Macaulay duration for annual compounding). <code>bond_convexity</code> returns
-<code>P''/P</code>, using the same rate convention as pricing. Both require
-nonnegative cash flows with at least one positive payment.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.bond.pricing</span><span class="w"> </span><span class="kn">import</span> <span class="n">bond_duration</span><span class="p">,</span> <span class="n">bond_convexity</span>
+</details>
+<h2 id="how-much-does-the-approximation-miss">How much does the approximation miss?<a class="headerlink" href="#how-much-does-the-approximation-miss" title="Permanent link">&para;</a></h2>
+<p>Duration gives the tangent line at the starting yield. Convexity adds the
+curvature term. Both are calculated for the <strong>same coupon bond and continuous
+compounding convention</strong> used above:</p>
+<p><code>relative price change ≈ -duration × yield change + ½ × convexity × yield change²</code></p>
+<p>The left panel compares changes in price. The right panel magnifies the signed
+error, <strong>approximation minus exact</strong>, in basis points of the initial price.
+One basis point here is 0.01% of 105.51; it is not a basis point of yield.</p>
+<p><img alt="Exact repricing compared with duration and convexity approximations, plus signed approximation errors" src="../../assets/examples/bond-approximation.png" /></p>
+<details class="example">
+<summary>Python code for this figure (run blocks in page order)</summary>
+<div class="highlight"><pre><span></span><code><span class="n">duration</span> <span class="o">=</span> <span class="n">bond_duration</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">convexity</span> <span class="o">=</span> <span class="n">bond_convexity</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">shifts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mi">201</span><span class="p">)</span>  <span class="c1"># -200 to +200 yield basis points</span>
+<span class="n">exact</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">bond_price</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cash_flows</span><span class="p">,</span> <span class="n">rate</span> <span class="o">+</span> <span class="n">dr</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">dr</span> <span class="ow">in</span> <span class="n">shifts</span><span class="p">])</span> <span class="o">/</span> <span class="n">price</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">linear</span> <span class="o">=</span> <span class="o">-</span><span class="n">duration</span> <span class="o">*</span> <span class="n">shifts</span>
+<span class="n">quadratic</span> <span class="o">=</span> <span class="n">linear</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">convexity</span> <span class="o">*</span> <span class="n">shifts</span><span class="o">**</span><span class="mi">2</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">exact</span><span class="p">[</span><span class="mi">100</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">quadratic</span> <span class="o">-</span> <span class="n">exact</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">linear</span> <span class="o">-</span> <span class="n">exact</span><span class="p">))</span>
 
-<span class="c1"># A five-year zero-coupon bond at a 4% annually compounded yield.</span>
-<span class="n">duration</span> <span class="o">=</span> <span class="n">bond_duration</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">],</span> <span class="mf">0.04</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">convexity</span> <span class="o">=</span> <span class="n">bond_convexity</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">],</span> <span class="mf">0.04</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>  <span class="c1"># 4.807692 = 5 / 1.04</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">convexity</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>  <span class="c1"># 27.736686 = 5 * 6 / 1.04**2</span>
-
-<span class="c1"># Approximate relative price change for a 10-basis-point yield increase.</span>
-<span class="n">dr</span> <span class="o">=</span> <span class="mf">0.001</span>
-<span class="n">relative_change</span> <span class="o">=</span> <span class="o">-</span><span class="n">duration</span> <span class="o">*</span> <span class="n">dr</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">convexity</span> <span class="o">*</span> <span class="n">dr</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="n">exact</span><span class="p">,</span> <span class="s2">"Exact"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">linear</span><span class="p">,</span> <span class="s2">"Duration only"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">quadratic</span><span class="p">,</span> <span class="s2">"Duration + convexity"</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">),</span>
+<span class="p">]:</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">10000</span> <span class="o">*</span> <span class="n">shifts</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">values</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">"Change in bond price (%)"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Local approximations to repricing"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="mi">10000</span> <span class="o">*</span> <span class="n">shifts</span><span class="p">,</span> <span class="mi">10000</span> <span class="o">*</span> <span class="p">(</span><span class="n">linear</span> <span class="o">-</span> <span class="n">exact</span><span class="p">),</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:orange"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Duration only"</span>
+<span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="mi">10000</span> <span class="o">*</span> <span class="n">shifts</span><span class="p">,</span>
+    <span class="mi">10000</span> <span class="o">*</span> <span class="p">(</span><span class="n">quadratic</span> <span class="o">-</span> <span class="n">exact</span><span class="p">),</span>
+    <span class="s2">"-."</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"tab:green"</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"Duration + convexity"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Approximation error (bp of initial price)"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Errors grow away from the starting yield"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Yield change (basis points)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
-<p>With continuous compounding, duration is the weighted payment time and
-convexity is the weighted squared payment time. The second-order price
-approximation is useful for small yield changes, not a replacement for
-repricing large moves.</p>
+</details>
+<p>Duration alone understates the price for moves in either direction because
+the price curve is convex. Adding convexity substantially reduces the error
+over this range, but does not make a finite Taylor expansion exact. Both
+approximations meet the exact curve at zero yield change.</p>
+<h2 id="compounding-and-schedule-conventions">Compounding and schedule conventions<a class="headerlink" href="#compounding-and-schedule-conventions" title="Permanent link">&para;</a></h2>
+<p><code>method=1</code> discounts continuously; <code>method=2</code> compounds annually and requires
+a yield above -100%. Use the same method for pricing, yield, duration, and
+convexity. The functions value the supplied payments; they do not construct
+coupon schedules or adjust for accrued interest. The first-payment/price
+ratio is an annual current yield only when that first payment is an annual
+coupon without principal.</p>
 <h2 id="sector-level-modified-durationdts-risk">Sector-level modified-duration/DTS risk<a class="headerlink" href="#sector-level-modified-durationdts-risk" title="Permanent link">&para;</a></h2>
 <p>A 3-bond portfolio split across two sectors, penalized for deviating
 its per-sector modified duration (MD) and duration-times-spread (DTS)
@@ -1559,20 +1671,9 @@ in <code>q_j</code>/<code>r_j</code>/<code>c_j</code> on those objects.
 <code>bond_portfolio_quadratic_form_vs_benchmark</code> extends this with an
 active-share term against a benchmark weight vector; see its docstring
 for the full parameterization.</p>
-<h2 id="check-the-price-and-the-small-move-approximation">Check the price and the small-move approximation<a class="headerlink" href="#check-the-price-and-the-small-move-approximation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Price is the sum of discounted payments, using the same compounding convention.</span>
-<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cash_flows</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">rate</span> <span class="o">*</span> <span class="n">t</span><span class="p">)))</span>
-<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">ytm</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
-<span class="n">p_before</span> <span class="o">=</span> <span class="n">bond_price</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">],</span> <span class="mf">0.04</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">p_after</span> <span class="o">=</span> <span class="n">bond_price</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">],</span> <span class="mf">0.04</span> <span class="o">+</span> <span class="n">dr</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">exact_change</span> <span class="o">=</span> <span class="n">p_after</span> <span class="o">/</span> <span class="n">p_before</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"exact / duration-convexity relative change:"</span><span class="p">,</span> <span class="n">exact_change</span><span class="p">,</span> <span class="n">relative_change</span><span class="p">)</span>
-<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">exact_change</span> <span class="o">-</span> <span class="n">relative_change</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
-</code></pre></div>
-<p><strong>Try it:</strong> increase <code>dr</code> from 0.001 to 0.01 and compare the approximation error.
-Explain why a positive yield move lowers the price of these positive cash flows.
-The sector quadratic objective is a penalty score; it is not itself a bond price
-or a volatility estimate.</p>
+<p>This sector objective is a penalty score, not a bond price or a volatility.
+The cash-flow and repricing charts above describe a single instrument; this
+optional extension measures portfolio deviations from sector targets.</p>
 
 
 

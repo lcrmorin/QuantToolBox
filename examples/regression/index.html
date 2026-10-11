@@ -571,6 +571,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#see-the-entire-ridge-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See the entire ridge path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ols-and-robust-regression" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -586,6 +597,17 @@
     <span class="md-ellipsis">
       
         A controlled outlier experiment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#move-the-outlier-and-watch-the-fit-respond" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Move the outlier and watch the fit respond
       
     </span>
   </a>
@@ -1369,6 +1391,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#see-the-entire-ridge-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See the entire ridge path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ols-and-robust-regression" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1384,6 +1417,17 @@
     <span class="md-ellipsis">
       
         A controlled outlier experiment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#move-the-outlier-and-watch-the-fit-respond" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Move the outlier and watch the fit respond
       
     </span>
   </a>
@@ -1461,6 +1505,39 @@ decrease, while training MSE increases. Individual coefficient magnitudes
 need not decrease monotonically: inspect the second coefficient above.
 Ridge usually does not produce exact zeros. A test set is needed to assess
 whether this loss of training fit improves prediction.</p>
+<h2 id="see-the-entire-ridge-path">See the entire ridge path<a class="headerlink" href="#see-the-entire-ridge-path" title="Permanent link">&para;</a></h2>
+<p><img alt="Ridge coefficient paths and training error as the penalty increases" src="../../assets/examples/ridge-path.png" /></p>
+<details class="example">
+<summary>Python code for this figure (run blocks in page order)</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">penalties</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+<span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ridge</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lam</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">penalties</span><span class="p">])</span>
+<span class="n">training_mse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">coefficients</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">penalties</span><span class="p">,</span> <span class="n">coefficients</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Predictor </span><span class="si">{</span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Ridge penalty"</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Standardized coefficient"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Individual coefficients need not shrink monotonically"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">penalties</span><span class="p">,</span> <span class="n">training_mse</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:red"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Ridge penalty"</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Training mean squared error"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Stronger shrinkage gives up training fit"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+</details>
+<p>The second coefficient initially moves further from zero. Shrinkage applies
+to the overall coefficient norm, not monotonically to every coordinate.
+The training-error curve cannot tell us which penalty predicts best.</p>
 <h2 id="ols-and-robust-regression">OLS and robust regression<a class="headerlink" href="#ols-and-robust-regression" title="Permanent link">&para;</a></h2>
 <p>Translated from <code>Examples/ects/ols1.m</code> and <code>Examples/ects/robust1.m</code>,
 which share the same small dataset.</p>
@@ -1510,9 +1587,74 @@ with its own clean-data fit; the norms measure sensitivity, not forecasting qual
     <span class="n">change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fit</span><span class="p">(</span><span class="n">y_contaminated</span><span class="p">)</span> <span class="o">-</span> <span class="n">fit</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: coefficient change = </span><span class="si">{</span><span class="n">change</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>Try it:</strong> change the outlier size, then put an outlier in a predictor instead.
-Resistance to response outliers does not imply resistance to high-leverage
-predictor observations. For iterative fits, also inspect the convergence flag.</p>
+<h2 id="move-the-outlier-and-watch-the-fit-respond">Move the outlier and watch the fit respond<a class="headerlink" href="#move-the-outlier-and-watch-the-fit-respond" title="Permanent link">&para;</a></h2>
+<p>Sweep a response outlier in the left panel. In the right panel, instead move
+one predictor value while keeping that observation's response fixed. The
+horizontal axes have different units; the panels demonstrate two distinct
+ways an observation can affect the fit.</p>
+<p><img alt="OLS, Huber, and LAD coefficient sensitivity to response and predictor outliers" src="../../assets/examples/regression-outlier-sensitivity.png" /></p>
+<details class="example">
+<summary>Python code for this figure (run blocks in page order)</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">quanttoolbox.stats.regression.quantile</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantile_regression</span>
+
+
+<span class="c1"># Use the exact median-regression LP for LAD so iteration limits do not</span>
+<span class="c1"># masquerade as changes in sensitivity along the curve.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fitted_coefficients</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">design</span><span class="p">):</span>
+    <span class="n">huber</span> <span class="o">=</span> <span class="n">huber_regression</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">1.345</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">ols_estimation</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">design</span><span class="p">)</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span>
+        <span class="n">huber</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span>
+        <span class="n">quantile_regression</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="p">],</span> <span class="n">huber</span><span class="o">.</span><span class="n">converged</span>
+
+
+<span class="n">baseline</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fitted_coefficients</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">response_shifts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">26</span><span class="p">)</span>
+<span class="n">predictor_shifts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">26</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">shifts</span><span class="p">,</span> <span class="n">which</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">axes</span><span class="p">,</span> <span class="p">[</span><span class="n">response_shifts</span><span class="p">,</span> <span class="n">predictor_shifts</span><span class="p">],</span> <span class="p">[</span><span class="s2">"response"</span><span class="p">,</span> <span class="s2">"predictor"</span><span class="p">],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">):</span>
+    <span class="n">changes</span><span class="p">,</span> <span class="n">huber_ok</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="n">shifts</span><span class="p">:</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">design</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">which</span> <span class="o">==</span> <span class="s2">"response"</span><span class="p">:</span>
+            <span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">shift</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">design</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">shift</span>  <span class="c1"># first non-intercept predictor</span>
+        <span class="n">estimates</span><span class="p">,</span> <span class="n">converged</span> <span class="o">=</span> <span class="n">fitted_coefficients</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">design</span><span class="p">)</span>
+        <span class="n">changes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">original</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">original</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">estimates</span><span class="p">,</span> <span class="n">baseline</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+        <span class="p">)</span>
+        <span class="n">huber_ok</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">converged</span><span class="p">)</span>
+    <span class="n">changes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">changes</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s2">"OLS"</span><span class="p">,</span> <span class="s2">"Huber"</span><span class="p">,</span> <span class="s2">"LAD (exact LP)"</span><span class="p">]):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shifts</span><span class="p">,</span> <span class="n">changes</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">unfinished</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">huber_ok</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">unfinished</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+            <span class="n">shifts</span><span class="p">[</span><span class="n">unfinished</span><span class="p">],</span>
+            <span class="n">changes</span><span class="p">[</span><span class="n">unfinished</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">marker</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"Huber iteration limit"</span><span class="p">,</span>
+            <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Amount added to first </span><span class="si">{</span><span class="n">which</span><span class="si">}</span><span class="s2"> observation"</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Coefficient change from clean fit (L2 norm)"</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Contamination in the </span><span class="si">{</span><span class="n">which</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+</details>
+<p>A robust response loss limits some effects of a large response residual.
+It does not automatically protect against an observation whose predictor
+values give it high leverage. These curves measure coefficient sensitivity,
+not out-of-sample accuracy; any crosses flag unfinished Huber iterations.</p>
 
 
 
